@@ -1,0 +1,137 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.python-version
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyre/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+*.log
+
+# Virtual environments and package/build output
+.venv/
+venv/
+env/
+ENV/
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+site/
+
+# Jupyter and local notebooks
+.ipynb_checkpoints/
+
+# IDEs and OS files
+.vscode/
+.idea/
+*.code-workspace
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and run reports
+logs/
+*.log
+
+# SynthReel generated workspace
+src/workspace/temp/
+src/workspace/output/
+src/workspace/cache/
+src/workspace/downloads/
+
+# Persistent local media banks: keep folders/docs, ignore heavy/private media
+src/workspace/assets/background_music/*
+!src/workspace/assets/background_music/.gitkeep
+src/workspace/assets/transitions/*
+!src/workspace/assets/transitions/.gitkeep
+src/workspace/voice_refs/*
+!src/workspace/voice_refs/.gitkeep
+!src/workspace/assets/README.md
+
+# Media generated or downloaded during runs
+*.mp4
+*.mov
+*.m4v
+*.avi
+*.mkv
+*.webm
+*.mp3
+*.wav
+*.m4a
+*.flac
+*.ogg
+*.aac
+*.ass
+*.srt
+*.vtt
+
+# Keep repository docs/placeholders even with broad media rules
+!README.md
+!**/README.md
+!**/.gitkeep
+!clonador-voz/assets/*.png
+!clonador-voz/assets/*.jpg
+!clonador-voz/assets/*.jpeg
+
+# Voice cloner local outputs and temporary files
+clonador-voz/outs/
+clonador-voz/src/workspace/temp/
+clonador-voz/src/workspace/output/
+clonador-voz/src/workspace/cache/
+clonador-voz/gradio_cached_examples/
+
+# ML model/checkpoint artifacts
+*.ckpt
+*.safetensors
+*.pt
+*.pth
+*.bin
+*.onnx
+*.gguf
+*.pkl
+*.npz
+*.npy
+checkpoints/
+models/
+runs/
+wandb/
+lightning_logs/
+tensorboard/
+
+# FFmpeg and processing scratch
+*.tmp
+*.temp
+*.part
+*.cache
+*.ffconcat
+*.y4m
+
+# Local databases and state
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar
