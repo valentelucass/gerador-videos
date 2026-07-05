@@ -122,11 +122,11 @@ def sanitizar_busca_pexels(busca: str) -> str:
         "symbolic",
         "tension",
     }
-    if not 2 <= len(palavras) <= 3:
+    palavras_limpas = [palavra for palavra in palavras if palavra not in termos_abstratos]
+    palavras_limpas = palavras_limpas[:3]
+    if not palavras_limpas:
         return ""
-    if any(palavra in termos_abstratos for palavra in palavras):
-        return ""
-    return " ".join(palavras)
+    return " ".join(palavras_limpas)
 
 
 def sanitizar_texto_tts(texto: str) -> str:

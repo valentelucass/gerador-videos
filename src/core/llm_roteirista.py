@@ -51,11 +51,11 @@ REGRAS DE IDIOMA E SINTAXE (CRÍTICO PARA O TTS):
 
 REGRAS DE RITMO E EDIÇÃO (CRÍTICO PARA RETENÇÃO):
 - O motor Text-First depende da duração real da narração, não apenas do número de cenas.
-- Cada "texto" deve ser um parágrafo narrativo extenso, com contexto suficiente para sustentar a voz rápida.
+- Cada "texto" deve ser um parágrafo narrativo extenso. É OBRIGATÓRIO que CADA "texto" tenha entre 3 a 5 frases longas e detalhadas.
 - NÃO resuma demais. A IA deve priorizar contagem de palavras e retenção, mesmo que uma cena precise ficar mais longa.
-- INÍCIO FRENÉTICO: As primeiras 3 cenas devem ter frases de alto impacto e muito curtas.
+- INÍCIO FRENÉTICO: As primeiras 3 cenas devem ter frases de alto impacto.
 - DESENVOLVIMENTO: Ritmo ágil, mas com parágrafos completos e informativos.
-- CONCLUSÃO: O ÚLTIMO objeto do array DEVE fazer o encerramento claro da história. Não corte o assunto pela metade.
+- CONCLUSÃO: O ÚLTIMO objeto do array DEVE fazer o encerramento claro da história.
 
 REGRAS DE BUSCA VISUAL (PEXELS):
 - A chave "busca" DEVE ser em INGLÊS com 2 a 3 palavras LITERAIS (ex: "astronaut walking", "desert red planet").
@@ -65,22 +65,20 @@ REGRAS DE BUSCA VISUAL (PEXELS):
 - Se a ideia for abstrata, traduza para imagem concreta (ex: em vez de "mystery", use "old locked door" ou "ancient stone map").
 
 REGRAS DE TAMANHO E MONETIZAÇÃO (CRÍTICO):
-- A voz clonada fala muito rápido, cerca de 220 palavras por minuto.
-- 'versao_longa': DEVE conter no mínimo 230 palavras no total, distribuídas em 14 a 18 objetos no array.
-- 'versao_curta': DEVE conter no mínimo 160 palavras no total, distribuídas em 7 a 10 objetos no array.
-- Se qualquer versão ficar abaixo dessa contagem mínima, o sistema falhará e abortará o pipeline. Não entregue roteiro curto.
+- 'versao_longa': DEVE conter no mínimo 230 palavras no total, distribuídas em 8 a 10 objetos no array.
+- 'versao_curta': DEVE conter no mínimo 160 palavras no total, distribuídas em 4 a 6 objetos no array.
+- Se qualquer versão ficar abaixo dessa contagem mínima, o sistema falhará.
 
 SAÍDA OBRIGATÓRIA (APENAS JSON, SEM COMENTÁRIOS):
 O exemplo abaixo mostra apenas o formato. A resposta final deve preencher cenas suficientes para bater a contagem mínima.
 {
   "versao_longa": [
-    {"texto": "O ano é dois mil e cinquenta.", "busca": "rocket launch sky"},
-    {"texto": "A humanidade finalmente deixou a Terra.", "busca": "space ship orbit"},
-    {"texto": "E o destino não é amigável.", "busca": "red planet surface"}
+    {"texto": "O ano é dois mil e cinquenta, e a humanidade finalmente encontrou a resposta para a maior pergunta de todas. Depois de décadas de exploração silenciosa, nossos sinais de rádio foram interceptados por algo além das estrelas. A mensagem não era um convite de paz, mas um aviso terrível para não olharmos para trás.", "busca": "satellite dish night"},
+    {"texto": "No centro de controle da agência espacial, as telas começaram a piscar em vermelho enquanto um código desconhecido invadia os sistemas principais. Os cientistas correram para desconectar os servidores, mas já era tarde demais para impedir o vazamento dos dados. Aquele arquivo escondia a localização de uma arma capaz de alterar a órbita do planeta.", "busca": "control room screens"}
   ],
   "versao_curta": [
-    {"texto": "Marte será o nosso próximo lar.", "busca": "red planet surface"},
-    {"texto": "Mas a primeira cidade humana será um inferno.", "busca": "astronaut walking"}
+    {"texto": "Marte será o nosso próximo lar, mas a primeira cidade humana será construída sobre um cemitério escondido. O que os telescópios não mostraram foi a vasta rede de túneis que existe logo abaixo da superfície empoeirada.", "busca": "red planet surface"},
+    {"texto": "Nenhum astronauta estava preparado para encontrar os restos petrificados de uma civilização que tentou escapar do mesmo destino que nos aguarda.", "busca": "astronaut walking desert"}
   ]
 }
 """
@@ -102,8 +100,8 @@ class LLMRoteirista:
     VERSAO_LONGA = "versao_longa"
     VERSAO_CURTA = "versao_curta"
     MIN_CENAS = {
-        VERSAO_LONGA: 12,
-        VERSAO_CURTA: 6,
+        VERSAO_LONGA: 5,
+        VERSAO_CURTA: 2,
     }
     MIN_PALAVRAS = {
         VERSAO_LONGA: MIN_WORDS_LONGA,
@@ -230,11 +228,9 @@ Resposta quebrada:
 Regras obrigatorias:
 - Retorne somente JSON valido.
 - A raiz deve ser um objeto com as chaves "versao_longa" e "versao_curta".
-- "versao_longa" deve conter de quatorze a dezoito objetos e somar no minimo duzentas e trinta palavras.
-- "versao_curta" deve conter de sete a dez objetos e somar no minimo cento e sessenta palavras.
+- "versao_longa" deve conter de oito a dez objetos e somar no minimo duzentas e trinta palavras. Cada texto deve ter três a cinco frases longas.
+- "versao_curta" deve conter de quatro a seis objetos e somar no minimo cento e sessenta palavras. Cada texto deve ter três a cinco frases longas.
 - Cada texto deve ser um paragrafo narrativo extenso, com contexto suficiente para a voz rapida.
-- As primeiras tres cenas devem ter ritmo frenetico e alto impacto.
-- As duas versoes precisam ter gancho forte, meio e conclusao definitiva, sem encerramento abrupto.
 - Cada objeto deve ter exatamente as chaves "texto" e "busca".
 - "texto" deve estar em portugues brasileiro com acentuacao correta, preservando acentos como á, é, í, ó, ú, ã, õ e ç.
 - "busca" deve estar em ingles, com duas a tres palavras, usando apenas objetos, locais fisicos ou acoes fisicas filmaveis.
@@ -243,18 +239,6 @@ Regras obrigatorias:
 - Dentro do valor de "texto" use apenas letras, espacos, virgulas e pontos finais.
 - Remova aspas, parenteses, asteriscos, emojis, digitos e acronimos nao pronunciaveis.
 - Nao use markdown, comentarios, numeracao ou explicacoes.
-
-Formato das chaves, mas sua resposta final deve preencher a quantidade completa de cenas:
-{{
-  "versao_longa": [
-    {{"texto": "A primeira cena abre com impacto imediato.", "busca": "rocket launch sky"}},
-    {{"texto": "A conclusão fecha o assunto sem corte abrupto.", "busca": "earth from space"}}
-  ],
-  "versao_curta": [
-    {{"texto": "O gancho aparece logo no início.", "busca": "red planet surface"}},
-    {{"texto": "A conclusão fecha a ideia principal.", "busca": "rocket launch sky"}}
-  ]
-}}
 """.strip()
 
 def _parse_http_response(response: requests.Response) -> str:

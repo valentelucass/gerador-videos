@@ -52,7 +52,7 @@ class Settings:
     """Runtime configuration loaded from environment variables."""
 
     pexels_api_key: str = os.getenv("PEXELS_API_KEY", "")
-    llm_model: str = os.getenv("LLM_MODEL", "mistral:latest")
+    llm_model: str = os.getenv("LLM_MODEL", "qwen2.5-coder:7b")
     ffmpeg_bin: str = os.getenv("FFMPEG_BIN", "ffmpeg")
     ffprobe_bin: str = os.getenv("FFPROBE_BIN", "ffprobe")
     default_width: int = int(os.getenv("VIDEO_WIDTH", "1080"))
