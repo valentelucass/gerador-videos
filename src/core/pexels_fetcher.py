@@ -70,17 +70,19 @@ class PexelsFetcher:
         query: str,
         midias_usadas: set[str],
         storage_path: str | Path,
+        orientacao: str | None = None,
     ) -> dict[str, Any]:
         """Searches, selects and downloads the best media for a scene.
 
         Priority order:
-        1. Portrait video not used in the current job.
+        1. Portrait video not used in the current job, unless orientacao is fixed.
            A 30% layout-variation draw skips this step and starts on landscape.
         2. Landscape video not used in the current job.
         3. High-resolution photo not used in the current job.
         """
 
         query = self._normalizar_query(query)
+        orientacao_fixa = self._normalizar_orientacao(orientacao)
         storage_dir = Path(storage_path)
         storage_dir.mkdir(parents=True, exist_ok=True)
         usadas = {str(media_id) for media_id in midias_usadas}
@@ -88,30 +90,43 @@ class PexelsFetcher:
         self._require_api_key()
         self.logger.info("Pexels: buscando midia para '%s'", query)
 
-        for orientacao in self._ordem_busca_videos():
-            videos = self._buscar_videos(query, orientacao)
-            video = self._selecionar_video(videos, usadas, orientacao)
+        for orientacao_busca in self._ordem_busca_videos(orientacao_fixa):
+            videos = self._buscar_videos(query, orientacao_busca)
+            video = self._selecionar_video(videos, usadas, orientacao_busca)
             if video is not None:
-                return self._baixar_video(video, orientacao, storage_dir)
+                return self._baixar_video(video, orientacao_busca, storage_dir)
 
-        for orientacao in ("portrait", None):
-            fotos = self._buscar_fotos(query, orientacao)
-            foto = self._selecionar_foto(fotos, usadas)
+        for orientacao_busca in self._ordem_busca_fotos(orientacao_fixa):
+            fotos = self._buscar_fotos(query, orientacao_busca)
+            foto = self._selecionar_foto(fotos, usadas, orientacao_busca)
             if foto is not None:
-                return self._baixar_foto(foto, orientacao or self._orientacao(foto), storage_dir)
+                return self._baixar_foto(foto, orientacao_busca or self._orientacao(foto), storage_dir)
 
         raise PexelsNoResultsError(f"Nenhuma midia valida encontrada no Pexels para: {query}")
 
-    def _ordem_busca_videos(self) -> tuple[str, ...]:
+    def _ordem_busca_videos(self, orientacao: str | None = None) -> tuple[str, ...]:
+        if orientacao is not None:
+            return (orientacao,)
         if random.random() < 0.30:
             self.logger.info("Pexels: variacao visual ativada; pulando video portrait e buscando landscape.")
             return ("landscape",)
         return ("portrait", "landscape")
 
-    def buscar_midia(self, termo: str, midias_usadas: set[str]) -> dict[str, Any]:
+    @staticmethod
+    def _ordem_busca_fotos(orientacao: str | None = None) -> tuple[str | None, ...]:
+        if orientacao is not None:
+            return (orientacao,)
+        return ("portrait", None)
+
+    def buscar_midia(
+        self,
+        termo: str,
+        midias_usadas: set[str],
+        orientacao: str | None = None,
+    ) -> dict[str, Any]:
         """Backward-compatible alias for the previous placeholder method."""
 
-        return self.obter_midia_para_cena(termo, midias_usadas, TEMP_DIR)
+        return self.obter_midia_para_cena(termo, midias_usadas, TEMP_DIR, orientacao=orientacao)
 
     def _buscar_videos(self, query: str, orientacao: str) -> list[dict[str, Any]]:
         self.logger.info("Pexels: tentando video %s", orientacao)
@@ -213,6 +228,7 @@ class PexelsFetcher:
         self,
         fotos: list[dict[str, Any]],
         midias_usadas: set[str],
+        orientacao_alvo: str | None = None,
     ) -> dict[str, Any] | None:
         for foto in fotos:
             media_id = str(foto.get("id", ""))
@@ -224,6 +240,11 @@ class PexelsFetcher:
 
             largura = self._to_int(foto.get("width")) or 0
             altura = self._to_int(foto.get("height")) or 0
+            if orientacao_alvo is not None and self._orientacao(foto) != orientacao_alvo:
+                continue
+            if orientacao_alvo == "landscape" and not self._foto_compativel_16_9(largura, altura):
+                self.logger.info("Pexels: foto id=%s fora do aspecto 16:9", media_id)
+                continue
             if max(largura, altura) < self.min_photo_long_side:
                 self.logger.info("Pexels: foto id=%s abaixo da resolucao minima", media_id)
                 continue
@@ -359,6 +380,18 @@ class PexelsFetcher:
         return query
 
     @staticmethod
+    def _normalizar_orientacao(orientacao: str | None) -> str | None:
+        if orientacao is None:
+            return None
+
+        valor = orientacao.strip().lower()
+        if not valor:
+            return None
+        if valor not in {"portrait", "landscape", "square"}:
+            raise ValueError("orientacao deve ser 'portrait', 'landscape', 'square' ou None.")
+        return valor
+
+    @staticmethod
     def _orientacao(media: dict[str, Any]) -> str:
         largura = PexelsFetcher._to_int(media.get("width")) or 0
         altura = PexelsFetcher._to_int(media.get("height")) or 0
@@ -367,6 +400,12 @@ class PexelsFetcher:
         if largura > altura:
             return "landscape"
         return "square"
+
+    @staticmethod
+    def _foto_compativel_16_9(largura: int, altura: int) -> bool:
+        if largura <= 0 or altura <= 0:
+            return False
+        return abs((largura / altura) - (16 / 9)) <= 0.08
 
     @staticmethod
     def _area(media: dict[str, Any]) -> int:

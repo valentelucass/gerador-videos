@@ -14,13 +14,15 @@ except ImportError:  # pragma: no cover - optional until requirements are instal
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 SRC_DIR = ROOT_DIR / "src"
-WORKSPACE_DIR = SRC_DIR / "workspace"
+WORKSPACE_DIR = ROOT_DIR / "workspace"
 TEMP_DIR = WORKSPACE_DIR / "temp"
 OUTPUT_DIR = WORKSPACE_DIR / "output"
 ASSETS_DIR = WORKSPACE_DIR / "assets"
 BACKGROUND_MUSIC_DIR = ASSETS_DIR / "background_music"
-TRANSITIONS_DIR = ASSETS_DIR / "transitions"
+TRANSITIONS_DIR = ASSETS_DIR / "transitions" / "vertical"
 VOICE_REFS_DIR = WORKSPACE_DIR / "voice_refs"
+ENTRADAS_VERTICAL_DIR = ROOT_DIR / "entradas" / "vertical"
+ENTRADAS_HORIZONTAL_DIR = ROOT_DIR / "entradas" / "horizontal"
 LOGS_DIR = ROOT_DIR / "logs"
 
 

@@ -6,7 +6,6 @@ marked as expected failures describe business rules that are not enforced yet.
 
 from __future__ import annotations
 
-import json
 import re
 import sys
 import tempfile
@@ -14,13 +13,15 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+import numpy as np
+import soundfile as sf
+
 ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from src.core.editor_ffmpeg import FFmpegEngine
 from src.core.legendas_ass import GeradorLegendasASS
-from src.core.llm_roteirista import LLMRoteirista, LLMRoteiristaError, _validar_versoes
 from src.core.pexels_fetcher import PexelsFetcher, PexelsNoResultsError
 from src.core.pipeline import VideoPipeline
 
@@ -37,53 +38,6 @@ def _word_timestamps(words: list[str], step: float = 0.25) -> list[dict[str, flo
 
 
 class DurationContractAuditTests(unittest.TestCase):
-    def test_llm_validator_should_reject_scripts_below_real_audio_duration_budget(self) -> None:
-        long_script = [_scene() for _ in range(12)]
-        short_script = [_scene() for _ in range(6)]
-
-        with self.assertRaises(LLMRoteiristaError):
-            _validar_versoes(
-                {
-                    LLMRoteirista.VERSAO_LONGA: long_script,
-                    LLMRoteirista.VERSAO_CURTA: short_script,
-                }
-            )
-
-    def test_llm_repair_failure_aborts_without_generic_fallback(self) -> None:
-        class StubResponse:
-            status_code = 200
-
-            def __init__(self, llm_response: str) -> None:
-                self._llm_response = llm_response
-                self.text = json.dumps({"response": llm_response})
-
-            def raise_for_status(self) -> None:
-                return None
-
-            def json(self) -> dict[str, str]:
-                return {"response": self._llm_response}
-
-        class StubSession:
-            def __init__(self) -> None:
-                self.calls: list[str] = []
-                self.responses = [
-                    "isso nao e json",
-                    json.dumps({"versao_longa": [], "versao_curta": []}),
-                ]
-
-            def post(self, url: str, json: dict[str, object], timeout: int) -> StubResponse:
-                self.calls.append(str(json["prompt"]))
-                return StubResponse(self.responses.pop(0))
-
-        session = StubSession()
-        roteirista = LLMRoteirista(model="test-model", session=session)
-
-        with self.assertRaisesRegex(LLMRoteiristaError, "sem fallback generico"):
-            roteirista.gerar_roteiro("Roma antiga")
-
-        self.assertEqual(len(session.calls), 2)
-        self.assertIn("Converta a resposta abaixo", session.calls[1])
-
     def test_broll_break_rule_says_split_long_scene_in_half(self) -> None:
         cases = [
             (3.0, [3.0]),
@@ -101,6 +55,47 @@ class DurationContractAuditTests(unittest.TestCase):
                 )
 
                 self.assertEqual(durations, expected)
+
+
+class TTSSegmentationAuditTests(unittest.TestCase):
+    def test_pipeline_generates_tts_per_scene_then_concatenates_and_cleans_segments(self) -> None:
+        class StubTTS:
+            def __init__(self) -> None:
+                self.calls: list[tuple[str, str]] = []
+
+            def narrar(self, texto: str, output_path: str | Path, voz: str) -> str:
+                self.calls.append((texto, voz))
+                sample_rate = 8000
+                samples = np.full(sample_rate // 20, len(self.calls) / 10, dtype=np.float32)
+                sf.write(str(output_path), samples, sample_rate, format="WAV")
+                return str(output_path)
+
+        cenas = [
+            {"texto": "Primeira cena oficial.", "busca": "city street"},
+            {"texto": "Segunda cena oficial.", "busca": "old map"},
+        ]
+
+        with tempfile.TemporaryDirectory() as tmp:
+            output_path = Path(tmp) / "narracao.wav"
+            tts = StubTTS()
+            pipeline = VideoPipeline(tts=tts)  # type: ignore[arg-type]
+
+            narracao = pipeline._gerar_narracao_por_cenas(cenas, output_path, voz="lucas_clone")
+
+            audio, sample_rate = sf.read(str(narracao))
+            segmentos_dir = Path(tmp) / "narracao_segmentos_tts"
+            segmentos_dir_exists = segmentos_dir.exists()
+
+        self.assertEqual(
+            tts.calls,
+            [
+                ("Primeira cena oficial.", "lucas_clone"),
+                ("Segunda cena oficial.", "lucas_clone"),
+            ],
+        )
+        self.assertEqual(sample_rate, 8000)
+        self.assertEqual(len(audio), 800)
+        self.assertFalse(segmentos_dir_exists)
 
 
 class SubtitleIntegrityAuditTests(unittest.TestCase):

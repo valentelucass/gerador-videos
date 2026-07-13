@@ -50,19 +50,33 @@ logs/
 *.log
 
 # SynthReel generated workspace
-src/workspace/temp/
-src/workspace/output/
-src/workspace/cache/
-src/workspace/downloads/
+workspace/temp/
+workspace/output/
+workspace/cache/
+workspace/downloads/
+workspace/lotes_preparados/
+workspace/lotes_horizontais/
 
 # Persistent local media banks: keep folders/docs, ignore heavy/private media
-src/workspace/assets/background_music/*
-!src/workspace/assets/background_music/.gitkeep
-src/workspace/assets/transitions/*
-!src/workspace/assets/transitions/.gitkeep
-src/workspace/voice_refs/*
-!src/workspace/voice_refs/.gitkeep
-!src/workspace/assets/README.md
+workspace/assets/background_music/*
+!workspace/assets/background_music/.gitkeep
+workspace/assets/transitions/*
+!workspace/assets/transitions/.gitkeep
+workspace/voice_refs/*
+!workspace/voice_refs/.gitkeep
+!workspace/assets/README.md
+
+# Horizontal assets
+workspace/assets/horizontal/trilhas/*
+!workspace/assets/horizontal/trilhas/.gitkeep
+workspace/assets/horizontal/overlays/*
+!workspace/assets/horizontal/overlays/.gitkeep
+workspace/assets/horizontal/fundos_estaticos/*
+!workspace/assets/horizontal/fundos_estaticos/.gitkeep
+
+# User inputs
+entradas/
+entradas_lotes/
 
 # Media generated or downloaded during runs
 *.mp4

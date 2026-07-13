@@ -10,11 +10,13 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+import soundfile as sf
+
 try:
     from src.config.settings import BACKGROUND_MUSIC_DIR, OUTPUT_DIR, TEMP_DIR, TRANSITIONS_DIR
     from src.core.editor_ffmpeg import FFmpegEngine
     from src.core.legendas_ass import GeradorLegendasASS
-    from src.core.llm_roteirista import LLMRoteirista
     from src.core.pexels_fetcher import PexelsFetcher, PexelsFetcherError
     from src.core.tts_clonador import TTSManager
     from src.core.whisper_sync import WhisperSync
@@ -29,7 +31,6 @@ except ModuleNotFoundError:
     from src.config.settings import BACKGROUND_MUSIC_DIR, OUTPUT_DIR, TEMP_DIR, TRANSITIONS_DIR
     from src.core.editor_ffmpeg import FFmpegEngine
     from src.core.legendas_ass import GeradorLegendasASS
-    from src.core.llm_roteirista import LLMRoteirista
     from src.core.pexels_fetcher import PexelsFetcher, PexelsFetcherError
     from src.core.tts_clonador import TTSManager
     from src.core.whisper_sync import WhisperSync
@@ -55,7 +56,6 @@ class VideoPipeline:
         whisper_sync: WhisperSync | None = None,
         pexels: PexelsFetcher | None = None,
         editor: FFmpegEngine | None = None,
-        roteirista: LLMRoteirista | None = None,
         legendas: GeradorLegendasASS | None = None,
     ) -> None:
         self.logger = get_logger(__name__)
@@ -63,7 +63,6 @@ class VideoPipeline:
         self.whisper_sync = whisper_sync
         self.pexels = pexels
         self.editor = editor
-        self.roteirista = roteirista
         self.legendas = legendas
         self.random = random.SystemRandom()
         self.temp_root = TEMP_DIR / "pipeline"
@@ -77,62 +76,53 @@ class VideoPipeline:
 
     def executar(
         self,
-        tema: str,
+        metadata: dict[str, Any],
         voz: str = "lucas_clone",
         limpar_artefatos: bool = True,
         usar_musica: bool = True,
         usar_transicoes: bool = True,
         usar_legendas: bool = True,
     ) -> dict[str, Any]:
-        """Runs the production pipeline for both long and short versions."""
+        """Runs one prepared metadata.json version without local LLM generation."""
 
-        tema = tema.strip()
-        if not tema:
-            raise ValueError("tema nao pode ser vazio.")
+        if not isinstance(metadata, dict):
+            raise ValueError("Pipeline Text-First em lote recebe apenas um dicionario metadata.")
 
-        job_name = self._job_name(tema)
+        tema = self._tema_metadata(metadata)
+        nome_versao = self._normalizar_nome_versao(str(metadata.get("versao", "versao_longa")))
+        cenas = self._cenas_metadata(metadata)
+        midias_locais = self._normalizar_midias_locais(metadata.get("midias_locais"))
+        output_filename = str(
+            metadata.get("output_filename")
+            or f"synthreel_{self._slug(tema)}_{nome_versao}.mp4"
+        )
+        job_name = self._job_name(f"{tema}_{nome_versao}")
         reporter = RunReporter(tema=tema, job_name=job_name)
 
         try:
-            self.logger.info("Pipeline: gerando roteiro via LLM")
-            reporter.stage("llm", "Gerando roteiro via Ollama.", modelo=self._roteirista().model)
-            roteiros = self._validar_roteiros(self._roteirista().gerar_roteiro(tema))
-            resultados: dict[str, Any] = {}
-
-            for nome_versao in ("versao_longa", "versao_curta"):
-                self.logger.info("=== Iniciando processamento da %s ===", nome_versao.upper())
-                reporter.stage(
-                    "versao",
-                    f"Iniciando processamento da {nome_versao}.",
-                    versao=nome_versao,
-                )
-                resultados[nome_versao] = self._executar_cenas(
-                    cenas=roteiros[nome_versao],
-                    job_name=job_name,
-                    nome_versao=nome_versao,
-                    audio_filename=self._audio_filename_for_voice(voz),
-                    video_sem_audio_filename="video_sem_audio.mp4",
-                    video_final_filename=f"synthreel_{job_name}_{nome_versao}.mp4",
-                    voz=voz,
-                    reporter=reporter,
-                    roteiro_source=f"ollama:{self._roteirista().model}",
-                    limpar_artefatos=limpar_artefatos,
-                    usar_musica=usar_musica,
-                    usar_transicoes=usar_transicoes,
-                    usar_legendas=usar_legendas,
-                )
-
-            resultado = {
-                "videos": {
-                    nome: dados["video_final"]
-                    for nome, dados in resultados.items()
-                },
-                "versoes": resultados,
-                "log_dir": str(reporter.log_dir.resolve()),
-                "summary_md": str(reporter.summary_md.resolve()),
-                "summary_json": str(reporter.summary_json.resolve()),
-                "execution_log": str(reporter.execution_log.resolve()),
-            }
+            reporter.stage(
+                "metadata",
+                "Metadata externo recebido; LLM local ignorado.",
+                versao=nome_versao,
+                total_midias_locais=len(midias_locais["todos"]) if midias_locais else 0,
+                output_filename=output_filename,
+            )
+            resultado = self._executar_cenas(
+                cenas=cenas,
+                job_name=job_name,
+                nome_versao=nome_versao,
+                audio_filename=self._audio_filename_for_voice(voz),
+                video_sem_audio_filename="video_sem_audio.mp4",
+                video_final_filename=output_filename,
+                voz=voz,
+                reporter=reporter,
+                roteiro_source=str(metadata.get("source", "metadata.json")),
+                limpar_artefatos=limpar_artefatos,
+                usar_musica=usar_musica,
+                usar_transicoes=usar_transicoes,
+                usar_legendas=usar_legendas,
+                midias_locais=midias_locais,
+            )
             reporter.complete(resultado)
             self.last_result = resultado
             return resultado
@@ -191,6 +181,7 @@ class VideoPipeline:
         usar_musica: bool,
         usar_transicoes: bool,
         usar_legendas: bool,
+        midias_locais: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         self._preparar_workspace(job_name, nome_versao)
         cenas = self._validar_cenas(cenas)
@@ -206,8 +197,8 @@ class VideoPipeline:
         texto_unico = " ".join(cena["texto"] for cena in cenas)
 
         audio_path = self.temp_dir / audio_filename
-        self.logger.info("Pipeline: etapa TTS %s", nome_versao)
-        audio_gerado = Path(self._tts().narrar(texto_unico, audio_path, voz=voz))
+        self.logger.info("Pipeline: etapa TTS %s em %s cenas", nome_versao, len(cenas))
+        audio_gerado = self._gerar_narracao_por_cenas(cenas, audio_path, voz=voz)
         reporter.set_tts(texto=texto_unico, voz=voz, output_path=audio_gerado, versao=nome_versao)
 
         self.logger.info("Pipeline: etapa Whisper %s", nome_versao)
@@ -252,6 +243,7 @@ class VideoPipeline:
                 total_cenas=total_cenas,
                 duracao_total_video=duracao_total_video,
                 falhas_midia_local=falhas_midia_local,
+                midias_locais=midias_locais,
             )
             if cena_usou_fallback_local:
                 falhas_midia_local += 1
@@ -366,6 +358,126 @@ class VideoPipeline:
         self.last_result = resultado
         return resultado
 
+    def _gerar_narracao_por_cenas(
+        self,
+        cenas: list[dict[str, str]],
+        output_path: Path,
+        voz: str,
+    ) -> Path:
+        segmentos_dir = output_path.parent / f"{output_path.stem}_segmentos_tts"
+        segmentos_dir.mkdir(parents=True, exist_ok=True)
+        suffix = output_path.suffix or ".mp3"
+        audio_segmentos: list[Path] = []
+        cleanup_paths: list[Path] = []
+
+        try:
+            for indice, cena in enumerate(cenas, start=1):
+                texto_cena = str(cena["texto"]).strip()
+                segmento_path = segmentos_dir / f"{output_path.stem}_cena_{indice:03d}{suffix}"
+                cleanup_paths.append(segmento_path)
+
+                self.logger.info(
+                    "Pipeline: TTS cena %s/%s voz=%s caracteres=%s",
+                    indice,
+                    len(cenas),
+                    voz,
+                    len(texto_cena),
+                )
+                audio_gerado = Path(self._tts().narrar(texto_cena, segmento_path, voz=voz))
+                cleanup_paths.append(audio_gerado)
+                audio_segmentos.append(audio_gerado)
+
+            self._concatenar_audios_soundfile(audio_segmentos, output_path)
+            return output_path.resolve()
+        except Exception:
+            output_path.unlink(missing_ok=True)
+            raise
+        finally:
+            self._limpar_segmentos_tts(cleanup_paths, segmentos_dir)
+
+    def _concatenar_audios_soundfile(self, audio_paths: list[Path], output_path: Path) -> None:
+        if not audio_paths:
+            raise RuntimeError("Nenhum audio intermediario de TTS foi gerado.")
+
+        chunks: list[np.ndarray] = []
+        sample_rate: int | None = None
+        channels: int | None = None
+
+        for indice, audio_path in enumerate(audio_paths, start=1):
+            if not audio_path.exists() or audio_path.stat().st_size == 0:
+                raise RuntimeError(f"Audio intermediario de TTS invalido: {audio_path}")
+
+            data, current_sample_rate = sf.read(str(audio_path), always_2d=True)
+            if data.size == 0:
+                raise RuntimeError(f"Audio intermediario de TTS vazio: {audio_path}")
+
+            current_channels = int(data.shape[1])
+            if sample_rate is None:
+                sample_rate = int(current_sample_rate)
+                channels = current_channels
+            elif current_sample_rate != sample_rate:
+                raise RuntimeError(
+                    "Audios intermediarios de TTS possuem sample rates diferentes: "
+                    f"esperado {sample_rate}, cena {indice} retornou {current_sample_rate}."
+                )
+            elif current_channels != channels:
+                raise RuntimeError(
+                    "Audios intermediarios de TTS possuem canais diferentes: "
+                    f"esperado {channels}, cena {indice} retornou {current_channels}."
+                )
+
+            chunks.append(data)
+
+        if sample_rate is None:
+            raise RuntimeError("Nao foi possivel detectar o sample rate da narracao.")
+
+        audio_final = np.concatenate(chunks, axis=0)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        write_kwargs: dict[str, str] = {}
+        file_format = self._soundfile_format(output_path)
+        subtype = self._soundfile_subtype(output_path)
+        if file_format:
+            write_kwargs["format"] = file_format
+        if subtype:
+            write_kwargs["subtype"] = subtype
+
+        sf.write(str(output_path), audio_final, sample_rate, **write_kwargs)
+        if not output_path.exists() or output_path.stat().st_size == 0:
+            raise RuntimeError(f"Falha ao concatenar narracao final em: {output_path}")
+
+        self.logger.info(
+            "Pipeline: narracao final concatenada com %s segmentos em %s",
+            len(audio_paths),
+            output_path,
+        )
+
+    @staticmethod
+    def _soundfile_format(output_path: Path) -> str | None:
+        if output_path.suffix.lower() == ".mp3":
+            return "MP3"
+        return None
+
+    @staticmethod
+    def _soundfile_subtype(output_path: Path) -> str | None:
+        if output_path.suffix.lower() == ".mp3":
+            return "MPEG_LAYER_III"
+        return None
+
+    @staticmethod
+    def _limpar_segmentos_tts(paths: list[Path], segmentos_dir: Path) -> None:
+        vistos: set[str] = set()
+        for path in paths:
+            key = str(path.resolve())
+            if key in vistos:
+                continue
+            vistos.add(key)
+            path.unlink(missing_ok=True)
+
+        try:
+            segmentos_dir.rmdir()
+        except OSError:
+            pass
+
     def _renderizar_segmentos_cena(
         self,
         indice: int,
@@ -376,8 +488,17 @@ class VideoPipeline:
         total_cenas: int,
         duracao_total_video: float,
         falhas_midia_local: int,
+        midias_locais: dict[str, Any] | None = None,
     ) -> tuple[list[Path], list[dict[str, Any]], bool]:
         duracao_total = float(cena["duracao"])
+        midias_cena = self._midias_locais_para_cena(midias_locais, indice)
+        if not midias_cena and midias_locais and indice == 1:
+            midias_cena = list(midias_locais.get("todos") or [])
+        if midias_cena:
+            cena = {
+                **cena,
+                "_midias_locais_count": len(midias_cena),
+            }
         duracoes = self._duracoes_segmentos_visuais(
             cena=cena,
             indice=indice,
@@ -408,7 +529,15 @@ class VideoPipeline:
                 "fim_visual_segmento": round(inicio_visual + duracao_segmento, 3),
             }
 
-            midia = self._obter_midia_com_fallback(indice_visual, cena_segmento, midias_usadas)
+            if midias_locais:
+                midia = self._obter_midia_local_curada(
+                    indice_cena=indice,
+                    indice_visual=indice_visual,
+                    indice_segmento=segmento_indice,
+                    midias_locais=midias_locais,
+                )
+            else:
+                midia = self._obter_midia_com_fallback(indice_visual, cena_segmento, midias_usadas)
             fallback_local = bool(midia.get("fallback_local"))
             cena_segmento["fallback_midia_local"] = fallback_local
             if fallback_local and not cena_usou_fallback_local:
@@ -496,6 +625,13 @@ class VideoPipeline:
         if duracao_total <= 0:
             return [0.5]
 
+        midias_locais_count = int(cena.get("_midias_locais_count") or 0)
+        if indice == 1 and midias_locais_count > 1:
+            segmentos = max(1, midias_locais_count)
+            duracoes = [round(duracao_total / segmentos, 3) for _ in range(segmentos)]
+            duracoes[-1] = round(duracao_total - sum(duracoes[:-1]), 3)
+            return duracoes
+
         inicio_audio = float(cena.get("inicio_audio", 0.0))
         fim_audio = float(cena.get("fim_audio", inicio_audio + duracao_total))
         duracao_audio = round(max(0.0, fim_audio - inicio_audio), 3)
@@ -505,6 +641,41 @@ class VideoPipeline:
         primeira_metade = round(duracao_total / 2, 3)
         segunda_metade = round(duracao_total - primeira_metade, 3)
         return [primeira_metade, segunda_metade]
+
+    def _obter_midia_local_curada(
+        self,
+        *,
+        indice_cena: int,
+        indice_visual: int,
+        indice_segmento: int,
+        midias_locais: dict[str, Any],
+    ) -> dict[str, Any]:
+        candidatos = self._midias_locais_para_cena(midias_locais, indice_cena)
+        if not candidatos:
+            candidatos = list(midias_locais.get("todos") or [])
+        if not candidatos:
+            raise RuntimeError("Nenhuma midia local curada disponivel para renderizacao.")
+
+        posicao = (indice_segmento - 1) % len(candidatos)
+        midia = dict(candidatos[posicao])
+        midia["id"] = f"local_{indice_visual:02d}_{midia['id']}"
+        self.logger.info(
+            "Pipeline: usando midia local cena=%s segmento=%s arquivo=%s",
+            indice_cena,
+            indice_segmento,
+            Path(str(midia["path_local"])).name,
+        )
+        return midia
+
+    @staticmethod
+    def _midias_locais_para_cena(
+        midias_locais: dict[str, Any] | None,
+        indice_cena: int,
+    ) -> list[dict[str, Any]]:
+        if not midias_locais:
+            return []
+        por_cena = midias_locais.get("por_cena") or {}
+        return list(por_cena.get(indice_cena) or por_cena.get(str(indice_cena)) or [])
 
     def _obter_midia_com_fallback(
         self,
@@ -933,6 +1104,107 @@ class VideoPipeline:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.output_root.mkdir(parents=True, exist_ok=True)
 
+    def _normalizar_midias_locais(self, midias: Any) -> dict[str, Any] | None:
+        if not midias:
+            return None
+        if not isinstance(midias, list):
+            raise ValueError("metadata.midias_locais deve ser uma lista.")
+
+        todos: list[dict[str, Any]] = []
+        por_cena: dict[int, list[dict[str, Any]]] = {}
+        for indice, item in enumerate(midias, start=1):
+            path, cena_indice = self._extrair_item_midia_local(item)
+            if not path.exists() or path.stat().st_size == 0:
+                raise FileNotFoundError(f"Midia local invalida: {path}")
+
+            width, height = self._editor().obter_dimensoes(path)
+            orientacao = self._orientacao_por_dimensoes(width, height)
+            media = {
+                "id": f"{indice:03d}_{self._slug(path.stem)}",
+                "tipo": "video",
+                "path_local": str(path.resolve()),
+                "precisa_de_grid": orientacao == "landscape",
+                "is_photo": False,
+                "orientacao": orientacao,
+                "width": width,
+                "height": height,
+                "pexels_url": None,
+                "autor": "curadoria local",
+                "download_url": None,
+                "fallback_local": False,
+                "source": "local_curado",
+            }
+            todos.append(media)
+            cena_indice = cena_indice or self._indice_cena_por_nome(path)
+            if cena_indice is not None:
+                por_cena.setdefault(cena_indice, []).append(media)
+
+        if not todos:
+            raise ValueError("metadata.midias_locais nao possui videos validos.")
+        return {"todos": todos, "por_cena": por_cena}
+
+    @staticmethod
+    def _extrair_item_midia_local(item: Any) -> tuple[Path, int | None]:
+        if isinstance(item, (str, Path)):
+            return Path(item), None
+        if not isinstance(item, dict):
+            raise ValueError("Cada item de midias_locais deve ser string ou objeto JSON.")
+
+        raw_path = item.get("path") or item.get("path_local") or item.get("arquivo")
+        if not raw_path:
+            raise ValueError("Item de midias_locais sem path/path_local/arquivo.")
+
+        raw_cena = item.get("cena") or item.get("indice_cena") or item.get("scene")
+        cena_indice: int | None = None
+        if raw_cena not in (None, ""):
+            try:
+                cena_indice = int(raw_cena)
+            except (TypeError, ValueError) as exc:
+                raise ValueError(f"Indice de cena invalido em midias_locais: {raw_cena}") from exc
+
+        return Path(str(raw_path)), cena_indice
+
+    @staticmethod
+    def _indice_cena_por_nome(path: Path) -> int | None:
+        match = re.match(r"cena_(\d+)(?:_|$)", path.stem, flags=re.IGNORECASE)
+        if not match:
+            return None
+        return int(match.group(1))
+
+    @staticmethod
+    def _orientacao_por_dimensoes(width: int, height: int) -> str:
+        if height > width:
+            return "portrait"
+        if width > height:
+            return "landscape"
+        return "square"
+
+    @staticmethod
+    def _tema_metadata(metadata: dict[str, Any]) -> str:
+        for key in ("tema", "nome_do_tema", "titulo", "title", "nome", "assunto"):
+            value = metadata.get(key)
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+        return "video"
+
+    @staticmethod
+    def _cenas_metadata(metadata: dict[str, Any]) -> list[dict[str, Any]]:
+        cenas = metadata.get("cenas")
+        if cenas is None:
+            cenas = metadata.get("scenes")
+        if not isinstance(cenas, list):
+            raise ValueError("metadata deve conter uma lista em cenas.")
+        return cenas
+
+    @staticmethod
+    def _normalizar_nome_versao(nome_versao: str) -> str:
+        valor = nome_versao.strip().lower().replace("-", "_").replace(" ", "_")
+        if valor in {"longa", "longo", "long", "tiktok", "kwai"}:
+            return "versao_longa"
+        if valor in {"curta", "curto", "short", "shorts", "reels"}:
+            return "versao_curta"
+        return valor or "versao_longa"
+
     def _tts(self) -> TTSManager:
         if self.tts is None:
             self.tts = TTSManager()
@@ -952,11 +1224,6 @@ class VideoPipeline:
         if self.editor is None:
             self.editor = FFmpegEngine()
         return self.editor
-
-    def _roteirista(self) -> LLMRoteirista:
-        if self.roteirista is None:
-            self.roteirista = LLMRoteirista()
-        return self.roteirista
 
     def _legendas(self) -> GeradorLegendasASS:
         if self.legendas is None:

@@ -127,22 +127,18 @@ class FFmpegEngine:
         input_path: str | Path,
         output_path: str | Path,
     ) -> Path:
-        """Applies the 16:9 fallback grid: blurred top/bottom and centered video."""
+        """Applies the 16:9 fallback grid by stacking three clean video copies."""
 
         input_file = self._require_input(input_path)
         output_file = self._prepare_output(output_path)
         row_height = self.height // 3
-        center_height = self.height - (row_height * 2)
 
         filter_complex = (
-            "[0:v]split=3[main][top_src][bottom_src];"
-            f"[top_src]scale={self.width}:{row_height}:force_original_aspect_ratio=increase,"
-            f"crop={self.width}:{row_height},boxblur=luma_radius=25:luma_power=1[top];"
-            f"[bottom_src]scale={self.width}:{row_height}:force_original_aspect_ratio=increase,"
-            f"crop={self.width}:{row_height},boxblur=luma_radius=25:luma_power=1[bottom];"
-            f"[main]scale={self.width}:{center_height}:force_original_aspect_ratio=decrease,"
-            f"pad={self.width}:{center_height}:(ow-iw)/2:(oh-ih)/2:color=black[center];"
-            "[top][center][bottom]vstack=inputs=3,setsar=1,format=yuv420p[v]"
+            f"[0:v]scale={self.width}:{row_height}:force_original_aspect_ratio=increase,"
+            f"crop={self.width}:{row_height},setsar=1,split=3[v1][v2][v3];"
+            "[v1][v2][v3]vstack=inputs=3[stacked];"
+            f"[stacked]scale={self.width}:{self.height}:force_original_aspect_ratio=increase,"
+            f"crop={self.width}:{self.height},setsar=1,format=yuv420p[v]"
         )
 
         args = [
@@ -583,6 +579,33 @@ class FFmpegEngine:
         except (FileNotFoundError, subprocess.CalledProcessError) as exc:
             raise RuntimeError(f"Falha ao obter duracao com ffprobe: {input_file}") from exc
         return float(result.stdout.strip())
+
+    def obter_dimensoes(self, input_path: str | Path) -> tuple[int, int]:
+        """Returns the first video stream width and height using ffprobe."""
+
+        input_file = self._require_input(input_path)
+        command = [
+            self.ffprobe_bin,
+            "-v",
+            "error",
+            "-select_streams",
+            "v:0",
+            "-show_entries",
+            "stream=width,height",
+            "-of",
+            "csv=s=x:p=0",
+            str(input_file),
+        ]
+        try:
+            result = subprocess.run(command, check=True, capture_output=True, text=True)
+        except (FileNotFoundError, subprocess.CalledProcessError) as exc:
+            raise RuntimeError(f"Falha ao obter dimensoes com ffprobe: {input_file}") from exc
+
+        output = result.stdout.strip()
+        if "x" not in output:
+            raise RuntimeError(f"ffprobe nao retornou dimensoes validas para: {input_file}")
+        width_raw, height_raw = output.split("x", 1)
+        return int(width_raw), int(height_raw)
 
     def _run_ffmpeg(self, args: Iterable[str], step_name: str) -> subprocess.CompletedProcess[str]:
         command = [self.ffmpeg_bin, "-hide_banner", "-loglevel", "error", "-y", *args]
