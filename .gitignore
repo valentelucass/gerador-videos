@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+!.env.*.example
 *.pem
 *.key
 *.crt
@@ -41,6 +42,8 @@ site/
 .vscode/
 .idea/
 *.code-workspace
+.fleet/
+.vite/
 .DS_Store
 Thumbs.db
 desktop.ini
@@ -50,33 +53,45 @@ logs/
 *.log
 
 # SynthReel generated workspace
-workspace/temp/
-workspace/output/
-workspace/cache/
-workspace/downloads/
-workspace/lotes_preparados/
-workspace/lotes_horizontais/
+backend/workspace/temp/
+backend/workspace/output/
+backend/workspace/cache/
+backend/workspace/downloads/
+backend/workspace/lotes_preparados/
+backend/workspace/lotes_horizontais/
+frontend/node_modules/
+frontend/dist/
+frontend/.eslintcache
+frontend/*.tsbuildinfo
 
 # Persistent local media banks: keep folders/docs, ignore heavy/private media
-workspace/assets/background_music/*
-!workspace/assets/background_music/.gitkeep
-workspace/assets/transitions/*
-!workspace/assets/transitions/.gitkeep
-workspace/voice_refs/*
-!workspace/voice_refs/.gitkeep
-!workspace/assets/README.md
+backend/workspace/assets/background_music/*
+!backend/workspace/assets/background_music/.gitkeep
+backend/workspace/assets/transitions/*
+!backend/workspace/assets/transitions/.gitkeep
+backend/workspace/voice_refs/*
+!backend/workspace/voice_refs/.gitkeep
+!backend/workspace/assets/README.md
 
 # Horizontal assets
-workspace/assets/horizontal/trilhas/*
-!workspace/assets/horizontal/trilhas/.gitkeep
-workspace/assets/horizontal/overlays/*
-!workspace/assets/horizontal/overlays/.gitkeep
-workspace/assets/horizontal/fundos_estaticos/*
-!workspace/assets/horizontal/fundos_estaticos/.gitkeep
+backend/workspace/assets/horizontal/trilhas/*
+!backend/workspace/assets/horizontal/trilhas/.gitkeep
+backend/workspace/assets/horizontal/overlays/*
+!backend/workspace/assets/horizontal/overlays/.gitkeep
+backend/workspace/assets/horizontal/fundos_estaticos/*
+!backend/workspace/assets/horizontal/fundos_estaticos/.gitkeep
 
 # User inputs
-entradas/
-entradas_lotes/
+backend/entradas/
+backend/entradas_lotes/
+backend/.synthreel/
+backend/.pytest_cache/
+backend/.coverage
+backend/htmlcov/
+
+# API/runtime local state
+backend/instance/
+backend/.uv-cache/
 
 # Media generated or downloaded during runs
 *.mp4
