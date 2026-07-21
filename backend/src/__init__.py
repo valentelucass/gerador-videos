@@ -1,2 +1,5 @@
-"""SynthReel text-first video engine."""
+"""Aplicação do slideshow para YouTube."""
+
+
+
 

@@ -1,2 +1,1 @@
-"""Core microservices for SynthReel."""
-
+"""Componentes exclusivos da esteira horizontal."""

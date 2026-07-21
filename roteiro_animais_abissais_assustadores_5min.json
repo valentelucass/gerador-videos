@@ -1,0 +1,1419 @@
+{
+  "title": "Os animais abissais mais assustadores do fundo do mar",
+  "language": "pt-BR",
+  "narrator_gender": "female",
+  "background": "black",
+  "background_animation": "movimento_sutil",
+  "blocks": [
+    {
+      "id": "block_01",
+      "text": "Nas profundezas do oceano vivem animais abissais tão estranhos que parecem pesadelos vivos. Antes de descer até esse mundo sem Sol, deixe o like e se inscreva no canal. Agora, prepare-se para encarar os habitantes mais assustadores do fundo do mar. No abismo, até o silêncio parece esconder algo pronto para atacar.",
+      "scenes": [
+        {
+          "id": "scene_01",
+          "image": "Ocean_abyss_black_water_particles_202607210000.jpeg",
+          "visual": {
+            "subject": "Abismo oceânico sem fim",
+            "action": "engole o último feixe de luz",
+            "setting": "água preta com partículas suspensas",
+            "framing": "plano geral monumental",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_02",
+          "image": "Abyssal_creatures_emerging_from_…_202607210000.jpeg",
+          "visual": {
+            "subject": "Silhuetas de criaturas abissais",
+            "action": "surgem por instantes da escuridão",
+            "setting": "fundo oceânico negro",
+            "framing": "plano amplo em contraluz",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_03",
+          "image": "Tiny_submarine_descends_chasm_202607210000.jpeg",
+          "visual": {
+            "subject": "Submarino minúsculo",
+            "action": "desce em direção a uma fenda impossível",
+            "setting": "paredes rochosas gigantes",
+            "framing": "plano aberto lateral",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_04",
+          "image": "Submersible_headlights_in_abyss_202607210000.jpeg",
+          "visual": {
+            "subject": "Faróis do submersível",
+            "action": "recortam uma nuvem de sedimento",
+            "setting": "abismo azul-preto",
+            "framing": "câmera subjetiva frontal",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_05",
+          "image": "Eye_blinks_in_dark_water_202607210000.jpeg",
+          "visual": {
+            "subject": "Olho desconhecido no escuro",
+            "action": "pisca perto da lente",
+            "setting": "água sem luz solar",
+            "framing": "close-up extremo",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_02",
+      "text": "Abaixo de mil metros, a pressão aumenta a cada mergulho e o frio devora qualquer calor. Ali, a escuridão não é um cenário: é uma regra. Para sobreviver, cada animal precisou transformar o próprio corpo em uma ferramenta de caça ou fuga. Ali, poucos segundos podem custar a única refeição possível.",
+      "scenes": [
+        {
+          "id": "scene_06",
+          "image": "Submarine_depth_gauge_dark_cabin_202607210000.jpeg",
+          "visual": {
+            "subject": "Medidor de profundidade de um submarino",
+            "action": "marca uma descida vertiginosa",
+            "setting": "cabine escura iluminada em azul",
+            "framing": "close-up dramático",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_07",
+          "image": "Colossal_underwater_wall_void_202607210000.jpeg",
+          "visual": {
+            "subject": "Parede submarina colossal",
+            "action": "desaparece no vazio",
+            "setting": "rochas negras e partículas",
+            "framing": "plano geral vertical",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_08",
+          "image": "Diver_in_silhouette_abyss_202607210000.jpeg",
+          "visual": {
+            "subject": "Mergulhador em silhueta",
+            "action": "parece minúsculo diante do abismo",
+            "setting": "luz de lanterna fraca",
+            "framing": "plano aberto",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_09",
+          "image": "Cold_current_sweep_bottom_smoke_202607210000.jpeg",
+          "visual": {
+            "subject": "Corrente fria e sedimento",
+            "action": "varrem o fundo como fumaça",
+            "setting": "planície abissal",
+            "framing": "plano baixo cinematográfico",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_10",
+          "image": "Translucent_creature_recoils_bod…_202607210000.jpeg",
+          "visual": {
+            "subject": "Pequena criatura translúcida",
+            "action": "recolhe o corpo para sobreviver",
+            "setting": "escuridão azul profunda",
+            "framing": "macro lateral",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_03",
+      "text": "O peixe-pescador talvez seja o rosto mais cruel desse mundo. Seu corpo parece saído de uma lenda de terror, mas sua estratégia é precisa: uma luz balança diante da cabeça, convidando uma presa distraída para perto de dentes enormes. Aquela luz não oferece comida; ela anuncia um fim imediato.",
+      "scenes": [
+        {
+          "id": "scene_11",
+          "image": "Predator_emerging_from_darkness_202607210000.jpeg",
+          "visual": {
+            "subject": "Peixe-pescador abissal gigantesco",
+            "action": "flutua imóvel antes de atacar",
+            "setting": "água negra absoluta",
+            "framing": "close-up frontal ameaçador",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_12",
+          "image": "Bioluminescent_lure_pulsing_deep…_202607210000.jpeg",
+          "visual": {
+            "subject": "Isca bioluminescente",
+            "action": "pulsa como uma estrela solitária",
+            "setting": "vazio azul-escuro",
+            "framing": "macro extremo",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_13",
+          "image": "Anglerfish_teeth_glowing_lure_202607210000.jpeg",
+          "visual": {
+            "subject": "Dentes transparentes do peixe-pescador",
+            "action": "brilham sob a própria isca",
+            "setting": "escuridão total",
+            "framing": "macro frontal",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_14",
+          "image": "Fish_swims_towards_light_202607210000.jpeg",
+          "visual": {
+            "subject": "Pequeno peixe inocente",
+            "action": "nada em direção à luz",
+            "setting": "partículas luminosas no abismo",
+            "framing": "plano médio lateral",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "UMA LUZ...",
+              "NUNCA É SÓ LUZ"
+            ],
+            "at": "start"
+          }
+        },
+        {
+          "id": "scene_15",
+          "image": "Predator_shadow_behind_prey_202607210000.jpeg",
+          "visual": {
+            "subject": "Sombra do predador",
+            "action": "cresce atrás da presa",
+            "setting": "fundo preto azulado",
+            "framing": "câmera baixa de suspense",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_04",
+      "text": "Quando a distância desaparece, a boca se abre num instante. Não há perseguição longa, nem aviso. No abismo, desperdiçar energia pode ser fatal. Por isso, muitos predadores esperam no escuro até que a própria curiosidade da vítima faça todo o trabalho. Quem se aproxima entrega ao predador toda chance de escapar.",
+      "scenes": [
+        {
+          "id": "scene_16",
+          "image": "Anglerfish_mouth_opens_explosively_202607210000.jpeg",
+          "visual": {
+            "subject": "Boca do peixe-pescador",
+            "action": "se abre de forma explosiva",
+            "setting": "água turva iluminada em azul",
+            "framing": "close-up congelado",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_17",
+          "image": "Gigantic_anglerfish_attacking_bl…_202607210000.jpeg",
+          "visual": {
+            "subject": "Presa em fuga",
+            "action": "some diante de uma fileira de dentes",
+            "setting": "abismo escuro",
+            "framing": "plano lateral rápido",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_18",
+          "image": "Articulated_jaw_advances_expecta…_202607210000.jpeg",
+          "visual": {
+            "subject": "Mandíbula articulada",
+            "action": "avança além do esperado",
+            "setting": "fundo sem luz",
+            "framing": "macro dramático",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_19",
+          "image": "Particle_cloud_explodes_after_at…_202607210000.jpeg",
+          "visual": {
+            "subject": "Nuvem de partículas",
+            "action": "explode após o ataque",
+            "setting": "coluna d água negra",
+            "framing": "plano fechado",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_20",
+          "image": "Anglerfish_returns_to_immobility_202607210000.jpeg",
+          "visual": {
+            "subject": "Peixe-pescador saciado",
+            "action": "retorna à imobilidade",
+            "setting": "escuridão silenciosa",
+            "framing": "plano médio frontal",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_05",
+      "text": "O peixe-víbora leva essa aparência ainda mais longe. Seus dentes são longos demais para caber na boca de um animal comum, e seu corpo escuro quase desaparece na água. Só a luz azul do próprio organismo denuncia que ele está ali. Cada movimento aparece quando já é tarde demais para fugir.",
+      "scenes": [
+        {
+          "id": "scene_21",
+          "image": "Viperfish_with_enormous_teeth_202607210000.jpeg",
+          "visual": {
+            "subject": "Peixe-víbora com dentes enormes",
+            "action": "encara a câmera sem piscar",
+            "setting": "oceano negro",
+            "framing": "close-up frontal",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_22",
+          "image": "Row_of_fangs_past_lips_202607210000.jpeg",
+          "visual": {
+            "subject": "Fileira de presas finas",
+            "action": "ultrapassa os lábios fechados",
+            "setting": "luz azul mínima",
+            "framing": "macro extremo",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_23",
+          "image": "Viperfish_vanishing_into_darkness_202607210000.jpeg",
+          "visual": {
+            "subject": "Corpo alongado do peixe-víbora",
+            "action": "some na escuridão",
+            "setting": "partículas bioluminescentes",
+            "framing": "plano diagonal",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_24",
+          "image": "Viperfish_emerging_from_light_202607210000.jpeg",
+          "visual": {
+            "subject": "Fotóforos azuis",
+            "action": "pulsam pelo ventre do predador",
+            "setting": "abismo profundo",
+            "framing": "macro lateral",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_25",
+          "image": "Viperfish_shark_undulating_in_dark_202607210000.jpeg",
+          "visual": {
+            "subject": "Peixe-víbora em silhueta",
+            "action": "surge atrás de uma luz fraca",
+            "setting": "vazio submarino",
+            "framing": "plano aberto de terror",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_06",
+      "text": "Outro caçador parece ter sido construído apenas com dentes: o peixe-dragão. Ele usa uma luz vermelha que quase nenhum outro animal consegue enxergar. É como caçar com uma lanterna secreta, invisível para quem está prestes a ser encontrado. Sua vantagem nasce onde os outros enxergam apenas vazio.",
+      "scenes": [
+        {
+          "id": "scene_26",
+          "image": "Black_dragonfish_needle_mouth_abyss_202607210000.jpeg",
+          "visual": {
+            "subject": "Peixe-dragão negro",
+            "action": "revela a boca repleta de agulhas",
+            "setting": "abismo sem luz",
+            "framing": "macro frontal",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_27",
+          "image": "Red_light_cuts_dark_blue_202607210000.jpeg",
+          "visual": {
+            "subject": "Luz vermelha discreta",
+            "action": "corta o azul escuro",
+            "setting": "água profunda",
+            "framing": "close-up abstrato",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_28",
+          "image": "Dragonfish_hunting_black_background_202607210000.jpeg",
+          "visual": {
+            "subject": "Peixe-dragão caçando",
+            "action": "desliza sem mover as nadadeiras",
+            "setting": "fundo preto",
+            "framing": "plano lateral baixo",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_29",
+          "image": "Small_prey_eye_dark_water_202607210000.jpeg",
+          "visual": {
+            "subject": "Olho de presa pequena",
+            "action": "reflete uma luz que não entende",
+            "setting": "coluna d água escura",
+            "framing": "macro de suspense",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_30",
+          "image": "Creature_cornered_in_dark_abyss_202607210000.jpeg",
+          "visual": {
+            "subject": "Predador com mandíbula aberta",
+            "action": "emerge do lado da lente",
+            "setting": "escuridão azul",
+            "framing": "câmera subjetiva",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_07",
+      "text": "Nem todo monstro do fundo do mar ataca com rapidez. A enguia-pelicano parece frágil até abrir uma boca tão grande que seu corpo inteiro vira uma rede. Quando alimento é raro, engolir qualquer oportunidade pode ser a única regra. Uma refeição perdida pode significar semanas sem outra oportunidade.",
+      "scenes": [
+        {
+          "id": "scene_31",
+          "image": "Pelican_eel_in_abyss_202607210000.jpeg",
+          "visual": {
+            "subject": "Enguia-pelicano de boca fechada",
+            "action": "flutua como uma sombra fina",
+            "setting": "abismo azul-preto",
+            "framing": "plano médio lateral",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "DENTES PARA O ESCURO"
+            ],
+            "at": "start"
+          }
+        },
+        {
+          "id": "scene_32",
+          "image": "Pelican_eel_opens_mouth_202607210000.jpeg",
+          "visual": {
+            "subject": "Enguia-pelicano",
+            "action": "abre a bolsa da boca de forma colossal",
+            "setting": "água escura",
+            "framing": "plano frontal exagerado",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_33",
+          "image": "Jaw_swallowing_cloud_of_fish_202607210000.jpeg",
+          "visual": {
+            "subject": "Mandíbula em forma de rede",
+            "action": "engole uma nuvem de pequenos peixes",
+            "setting": "partículas suspensas",
+            "framing": "plano amplo",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_34",
+          "image": "Eel_folds_in_black_202607210000.jpeg",
+          "visual": {
+            "subject": "Corpo elástico da enguia",
+            "action": "se dobra no vazio",
+            "setting": "fundo totalmente negro",
+            "framing": "plano diagonal",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_35",
+          "image": "Eel's_luminous_tail_fades_distance_202607210000.jpeg",
+          "visual": {
+            "subject": "Cauda luminosa da enguia",
+            "action": "desaparece ao longe",
+            "setting": "profundidade infinita",
+            "framing": "plano geral",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_08",
+      "text": "Há ainda criaturas que não precisam de dentes para causar desconforto. O isópode-gigante parece um parente monstruoso do tatuzinho de jardim. No fundo do oceano, porém, ele cresce até o tamanho de um cachorro e espera por restos que caem do alto. Até a lentidão desses animais esconde uma eficiência assustadora.",
+      "scenes": [
+        {
+          "id": "scene_36",
+          "image": "Giant_isopod_walks_over_mud_202607210000.jpeg",
+          "visual": {
+            "subject": "Isópode-gigante enorme",
+            "action": "caminha lentamente sobre o lodo",
+            "setting": "planície abissal",
+            "framing": "plano baixo",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_37",
+          "image": "Carapace_reflects_submersible_li…_202607210000.jpeg",
+          "visual": {
+            "subject": "Carapaça segmentada",
+            "action": "reflete a luz do submersível",
+            "setting": "sedimento escuro",
+            "framing": "macro lateral",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_38",
+          "image": "Isopod_next_to_robot_202607210000.jpeg",
+          "visual": {
+            "subject": "Isópode ao lado de um robô",
+            "action": "revela uma escala absurda",
+            "setting": "fundo marinho preto",
+            "framing": "plano aberto",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_39",
+          "image": "Giant_isopod_moving_among_debris_202607210000.jpeg",
+          "visual": {
+            "subject": "Patas articuladas",
+            "action": "movem-se entre restos no solo",
+            "setting": "luz azul fria",
+            "framing": "close-up detalhado",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_40",
+          "image": "Giant_isopods_near_carcass_202607210000.jpeg",
+          "visual": {
+            "subject": "Grupo de isópodes",
+            "action": "cerca uma carcaça distante",
+            "setting": "abismo silencioso",
+            "framing": "plano amplo sombrio",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_09",
+      "text": "O tubarão-cobra carrega uma aparência antiga demais para parecer real. Seu corpo serpentino, os dentes em fileiras e o ataque repentino lembram um fóssil que nunca aceitou desaparecer. Ele vive longe da superfície, onde quase ninguém consegue observá-lo. É um sobrevivente antigo, adaptado a lugares onde humanos raramente chegam.",
+      "scenes": [
+        {
+          "id": "scene_41",
+          "image": "Snake-shark_slithers_in_dark_water_202607210000.jpeg",
+          "visual": {
+            "subject": "Tubarão-cobra",
+            "action": "serpenteia diante da câmera",
+            "setting": "água azul muito escura",
+            "framing": "plano médio lateral",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_42",
+          "image": "Viperfish_teeth_open_mouth_202607210000.jpeg",
+          "visual": {
+            "subject": "Fileiras de dentes recurvados",
+            "action": "aparecem dentro da boca aberta",
+            "setting": "abismo profundo",
+            "framing": "macro frontal",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_43",
+          "image": "Snake_shark_attacking_in_sediment_202607210000.jpeg",
+          "visual": {
+            "subject": "Tubarão-cobra em ataque",
+            "action": "lança o corpo para frente",
+            "setting": "nuvem de sedimento",
+            "framing": "plano dinâmico",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_44",
+          "image": "Snake-shark_disappearing_among_r…_202607210000.jpeg",
+          "visual": {
+            "subject": "Brânquias ornamentadas",
+            "action": "ondulam no escuro",
+            "setting": "luz de submersível",
+            "framing": "close-up lateral",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_45",
+          "image": "Predator's_belly_pulsing_deep_abyss_202607210000.jpeg",
+          "visual": {
+            "subject": "Silhueta serpentina",
+            "action": "desaparece entre rochas negras",
+            "setting": "fenda abissal",
+            "framing": "plano geral",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_10",
+      "text": "Mais abaixo, o arquiteuthis, ou lula-gigante, transforma a falta de visão em mistério. Seus tentáculos podem alcançar comprimentos assustadores. Quase nunca é filmada viva, então cada encontro parece uma prova de que o oceano ainda esconde coisas grandes demais. Esse encontro mostra como ainda conhecemos pouco esse mundo.",
+      "scenes": [
+        {
+          "id": "scene_46",
+          "image": "Giant_Lula_surges_from_ink_202607210000.jpeg",
+          "visual": {
+            "subject": "Lula-gigante colossal",
+            "action": "surge entre nuvens de tinta",
+            "setting": "abismo azul-preto",
+            "framing": "plano geral monumental",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_47",
+          "image": "Giant_squid_eye_spotlight_202607210000.jpeg",
+          "visual": {
+            "subject": "Olho enorme de lula-gigante",
+            "action": "reflete o farol de um submarino",
+            "setting": "escuridão profunda",
+            "framing": "macro extremo",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_48",
+          "image": "Giant_squid_tentacles_dark_water_202607210000.jpeg",
+          "visual": {
+            "subject": "Tentáculos compridos",
+            "action": "cruzam diante da lente",
+            "setting": "água escura com partículas",
+            "framing": "plano subjetivo",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_49",
+          "image": "Submarine_passing_giant_squid_sh…_202607210000.jpeg",
+          "visual": {
+            "subject": "Submarino pequeno",
+            "action": "passa ao lado de uma sombra colossal",
+            "setting": "fundo sem fim",
+            "framing": "plano aberto lateral",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "O ABISMO AINDA ESCONDE",
+              "COISAS GIGANTESCAS..."
+            ],
+            "at": "start"
+          }
+        },
+        {
+          "id": "scene_50",
+          "image": "Giant_squid_in_deep_water_202607210000.jpeg",
+          "visual": {
+            "subject": "Lula-gigante em silhueta",
+            "action": "some no azul absoluto",
+            "setting": "coluna d água profunda",
+            "framing": "plano distante",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_11",
+      "text": "A escassez de comida cria soluções ainda mais estranhas. O peixe-engolidor-negro consegue engolir presas maiores do que ele próprio. Depois, sua barriga se estica como um balão escuro, carregando uma refeição enorme por um mundo onde a próxima pode nunca aparecer. A fome transforma limites do corpo em soluções aparentemente impossíveis.",
+      "scenes": [
+        {
+          "id": "scene_51",
+          "image": "Black_swallower_fish_large_belly_202607210000.jpeg",
+          "visual": {
+            "subject": "Peixe-engolidor-negro",
+            "action": "flutua com barriga desproporcional",
+            "setting": "abismo negro",
+            "framing": "plano médio lateral",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_52",
+          "image": "Black-swallower_fish_engulfing_prey_202607210000.jpeg",
+          "visual": {
+            "subject": "Mandíbula expansível",
+            "action": "envolve uma presa maior",
+            "setting": "água azul escura",
+            "framing": "macro dramático",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_53",
+          "image": "Dark_predator_body_reveals_prey_202607210000.jpeg",
+          "visual": {
+            "subject": "Corpo translúcido escuro",
+            "action": "revela a forma da presa engolida",
+            "setting": "luz fraca",
+            "framing": "close-up científico",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_54",
+          "image": "Black_swallower_fish_carrying_meal_202607210000.jpeg",
+          "visual": {
+            "subject": "Predador solitário",
+            "action": "desaparece carregando a refeição",
+            "setting": "vazio submarino",
+            "framing": "plano amplo",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_55",
+          "image": "Small_fish_avoid_shadow_abyss_202607210000.jpeg",
+          "visual": {
+            "subject": "Pequenos peixes ao longe",
+            "action": "evitam uma sombra imóvel",
+            "setting": "profundidade escura",
+            "framing": "plano geral",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_12",
+      "text": "Mesmo com robôs, câmeras e sonares, enxergamos apenas uma pequena parte desse reino. Cada mergulho revela uma criatura nova, uma adaptação impossível ou um comportamento que desafia o que imaginamos sobre a vida. O abismo continua guardando seus segredos. Cada mergulho prova que o desconhecido continua depois da luz.",
+      "scenes": [
+        {
+          "id": "scene_56",
+          "image": "Robotic_vehicle_descends_crevice_202607210000.jpeg",
+          "visual": {
+            "subject": "Veículo robótico de exploração",
+            "action": "desce por uma fenda estreita",
+            "setting": "paredes rochosas gigantes",
+            "framing": "plano aberto",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_57",
+          "image": "Mechanical_arm_illuminates_creature_202607210000.jpeg",
+          "visual": {
+            "subject": "Braço mecânico",
+            "action": "ilumina uma criatura escondida",
+            "setting": "fundo oceânico escuro",
+            "framing": "plano subjetivo",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_58",
+          "image": "Luminous_sonar_map_revealing_val…_202607210000.jpeg",
+          "visual": {
+            "subject": "Mapa sonar luminoso",
+            "action": "revela vales profundos",
+            "setting": "interface científica azul",
+            "framing": "plano superior",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_59",
+          "image": "Unknown_shadow_crosses_lighthous…_202607210000.jpeg",
+          "visual": {
+            "subject": "Sombra desconhecida",
+            "action": "cruza o limite do farol",
+            "setting": "escuridão completa",
+            "framing": "plano de suspense",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_60",
+          "image": "Submarine_emerging_from_abyss_202607210000.jpeg",
+          "visual": {
+            "subject": "Submarino deixando o abismo",
+            "action": "parece pequeno diante do vazio",
+            "setting": "coluna d água negra",
+            "framing": "plano geral",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_13",
+      "text": "Esses animais não são monstros inventados. São sobreviventes de um ambiente que obriga cada espécie a ser extrema. Quanto mais descemos, mais a superfície parece distante. Se esse mergulho te deixou inquieto, siga o canal para encarar o próximo mistério. Quantas criaturas ainda não vimos sob essa escuridão absoluta?",
+      "scenes": [
+        {
+          "id": "scene_61",
+          "image": "Abyssal_predator_montage_flashes…_202607210000.jpeg",
+          "visual": {
+            "subject": "Montagem de predadores abissais",
+            "action": "surge em flashes na escuridão",
+            "setting": "oceano preto e azul",
+            "framing": "plano cinematográfico",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_62",
+          "image": "Bioluminescent_eye_fades_out_void_202607210000.jpeg",
+          "visual": {
+            "subject": "Olho bioluminescente",
+            "action": "apaga lentamente",
+            "setting": "vazio total",
+            "framing": "macro extremo",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_63",
+          "image": "Ghostly_jellyfish_ascends_toward…_202607210000.jpeg",
+          "visual": {
+            "subject": "Água-viva fantasmagórica",
+            "action": "sobe em direção a uma luz distante",
+            "setting": "abismo sereno",
+            "framing": "plano geral centralizado",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_64",
+          "image": "Submarine_silhouette_deep_ocean_202607210000.jpeg",
+          "visual": {
+            "subject": "Último feixe de luz",
+            "action": "desaparece sobre o oceano profundo",
+            "setting": "silhueta de submarino",
+            "framing": "plano aberto",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        },
+        {
+          "id": "scene_65",
+          "image": "Abyssal_horror_documentary_final…_202607210000.jpeg",
+          "visual": {
+            "subject": "Escuridão abissal absoluta",
+            "action": "engole a câmera",
+            "setting": "partículas quase invisíveis",
+            "framing": "plano final minimalista",
+            "details": "documentário de terror abissal, escala exagerada e ameaçadora, anatomia biologicamente crível, contraste azul petróleo e preto, faróis duros, partículas densas, ultra detalhado, horizontal 16:9, sem texto, sem logotipos, sem marcas d água"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    }
+  ]
+}

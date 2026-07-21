@@ -1,28 +1,22 @@
 {
-  "name": "synthreel-frontend",
+  "name": "synthreel-panel",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 127.0.0.1 --port 5173",
-    "start": "concurrently -n api,web -c cyan,magenta \"cd .. && set WATCHFILES_FORCE_POLLING=true&& python -m uvicorn backend.src.api.app:app --host 127.0.0.1 --port 8000 --reload\" \"vite --host 127.0.0.1 --port 5173\"",
-    "build": "tsc -b && vite build",
-    "lint": "oxlint",
-    "preview": "vite preview"
+    "start": "vite",
+    "dev": "vite",
+    "build": "tsc -b && vite build"
   },
   "dependencies": {
-    "lucide-react": "^1.25.0",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "@vitejs/plugin-react": "latest",
+    "typescript": "latest",
+    "vite": "latest",
+    "react": "latest",
+    "react-dom": "latest"
   },
   "devDependencies": {
-    "@types/node": "^24.13.2",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.3",
-    "concurrently": "^9.2.1",
-    "oxlint": "^1.71.0",
-    "typescript": "~6.0.2",
-    "vite": "^8.1.1"
+    "@types/react": "latest",
+    "@types/react-dom": "latest"
   }
 }
