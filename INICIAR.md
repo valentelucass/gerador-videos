@@ -1,24 +1,20 @@
-# Iniciar o painel local
+# Iniciar o SynthReel local
 
-Abra dois terminais na raiz deste projeto.
-
-No primeiro:
-
-```powershell
-cd backend
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-uvicorn src.main:app --reload --port 8000
-```
-
-No segundo:
+Em um único terminal:
 
 ```powershell
 cd frontend
 npm install
-npm run dev
+npm start
 ```
+
+O comando inicia o backend em `http://localhost:8000` e o painel Vite juntos.
+Ao pressionar `Ctrl+C` ou encerrar esse terminal, os dois processos são
+encerrados.
+
+Não execute um segundo `npm start` enquanto o primeiro estiver aberto. O
+iniciador agora avisa qual porta está ocupada, em vez de abrir o painel em outra
+porta.
 
 Abra o endereço mostrado pelo Vite, normalmente `http://localhost:5173`.
 

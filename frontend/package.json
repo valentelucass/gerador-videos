@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "vite",
-    "dev": "vite",
+    "start": "node scripts/start.mjs",
+    "dev": "node scripts/start.mjs",
     "build": "tsc -b && vite build"
   },
   "dependencies": {

@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
+
+from .core.tts_neural import TTSNeuralEngine
 
 
 class VisualBrief(BaseModel):
@@ -59,6 +62,12 @@ class SceneSounds(BaseModel):
 
 class Scene(BaseModel):
     id: str = Field(pattern=r"^[a-zA-Z0-9_-]+$")
+    # É a referência editorial obrigatória da cena. O arquivo físico pode
+    # preservar o nome autodescritivo que o Google Flow gerar.
+    image_id: int = Field(ge=1)
+    # Chave curta em inglês, criada junto com o roteiro. Ela aproxima o JSON
+    # do nome descritivo que o Google Flow escolhe ao baixar a imagem.
+    asset_key: str | None = Field(default=None, pattern=r"^[a-z0-9]+(?:-[a-z0-9]+){1,7}$")
     image: str = Field(min_length=3)
     visual: VisualBrief
     transition: Transition
@@ -83,6 +92,9 @@ class Script(BaseModel):
     title: str = Field(min_length=3)
     language: str = Field(pattern=r"^[a-z]{2,3}(?:-[A-Z]{2})?$")
     narrator_gender: Literal["male", "female"]
+    # A voz é parte do roteiro, nunca uma escolha do envelope de renderização.
+    # O validador abaixo ainda completa roteiros legados que não tinham o campo.
+    voice: str = Field(min_length=3)
     # Mantido para compatibilidade com roteiros já produzidos. O arquivo real
     # de fundo é escolhido no painel e salvo no manifesto do trabalho.
     background: str = "black"
@@ -91,8 +103,128 @@ class Script(BaseModel):
     background_animation: Literal["none", "movimento_sutil", "movimento_lateral", "pulsacao"] = "movimento_sutil"
     blocks: list[Block] = Field(min_length=1)
 
+    @model_validator(mode="before")
+    @classmethod
+    def add_voice_to_legacy_scripts(cls, value: object) -> object:
+        """Completa somente roteiros antigos, sem aceitar override externo."""
+        if not isinstance(value, dict) or value.get("voice") is not None:
+            return value
+
+        language = value.get("language")
+        if not isinstance(language, str):
+            return value
+        narrator_gender = value.get("narrator_gender")
+        try:
+            voice = TTSNeuralEngine.default_voice_for(
+                language, narrator_gender if isinstance(narrator_gender, str) else "male"
+            )
+        except ValueError:
+            # Deixa o Pydantic reportar o erro original de idioma/campos.
+            return value
+        return {**value, "voice": voice}
+
+    @model_validator(mode="after")
+    def validate_neural_voice(self) -> "Script":
+        try:
+            self.voice = TTSNeuralEngine.validate_voice(self.language, self.voice)
+            voice_gender = TTSNeuralEngine.gender_for_voice(self.language, self.voice)
+        except ValueError as exc:
+            raise ValueError(str(exc)) from exc
+        if voice_gender != self.narrator_gender:
+            raise ValueError(
+                f"A voz {self.voice} exige narrator_gender='{voice_gender}'."
+            )
+        return self
+
 
 class RenderRequest(BaseModel):
     script: Script
-    background_image: str = Field(min_length=3)
-    voice: str | None = None
+    # O nome do JSON é a referência editorial da cena. Quando o operador
+    # envia um arquivo com outro nome, este mapa resolve somente a fonte física
+    # usada na renderização, sem reescrever o roteiro.
+    image_bindings: dict[str, str] = Field(default_factory=dict)
+    # Vínculos escolhidos conscientemente no painel atual. O campo legado
+    # ``image_bindings`` é aceito para não quebrar clientes antigos, mas não
+    # pode mais carregar o antigo pareamento automático por ordem de upload.
+    manual_image_bindings: dict[str, str] = Field(default_factory=dict)
+    # Ordem dos arquivos enviados nesta tela. É uma salvaguarda para que o
+    # servidor consiga concluir os vínculos automáticos mesmo se a página
+    # estiver com um estado React desatualizado.
+    uploaded_images: list[str] = Field(default_factory=list)
+    # O painel pode omitir o fundo. Nesse caso a API usa o fundo padrão
+    # aprovado, em vez de impedir a renderização.
+    background_image: str | None = None
+    # Nome de arquivo escolhido no catálogo do painel. A API confere se ele
+    # pertence à pasta de trilhas antes de iniciar o trabalho.
+    music_name: str | None = None
+
+    @field_validator("image_bindings")
+    @classmethod
+    def only_filename_image_bindings(cls, value: dict[str, str]) -> dict[str, str]:
+        for expected_name, uploaded_name in value.items():
+            for label, name in (("nome do JSON", expected_name), ("arquivo enviado", uploaded_name)):
+                if (
+                    not name
+                    or Path(name).name != name
+                    or "/" in name
+                    or "\\" in name
+                    or name in {".", ".."}
+                ):
+                    raise ValueError(f"image_bindings: {label} deve ser somente o nome do arquivo.")
+        return value
+
+    @field_validator("manual_image_bindings")
+    @classmethod
+    def only_filename_manual_image_bindings(cls, value: dict[str, str]) -> dict[str, str]:
+        return cls.only_filename_image_bindings(value)
+
+    @field_validator("uploaded_images")
+    @classmethod
+    def only_filename_uploaded_images(cls, value: list[str]) -> list[str]:
+        for name in value:
+            if not name or Path(name).name != name or "/" in name or "\\" in name or name in {".", ".."}:
+                raise ValueError("uploaded_images deve conter somente nomes de arquivos.")
+        return value
+
+    # Clientes antigos podem ainda enviar ``voice`` neste envelope. Campos
+    # extras são ignorados deliberadamente para que nada fora do JSON altere a
+    # voz já validada em ``script.voice``.
+    model_config = {"extra": "ignore"}
+
+
+class ValidationRequest(BaseModel):
+    """Envelope de validação com compatibilidade para o corpo legado.
+
+    O primeiro painel enviava o ``Script`` diretamente para ``/api/validate``.
+    O painel novo pode acrescentar ``image_bindings`` sem obrigar clientes
+    antigos a mudar de uma vez.
+    """
+
+    script: Script
+    image_bindings: dict[str, str] = Field(default_factory=dict)
+    manual_image_bindings: dict[str, str] = Field(default_factory=dict)
+    uploaded_images: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="before")
+    @classmethod
+    def accept_legacy_script_body(cls, value: object) -> object:
+        if isinstance(value, dict) and "script" not in value:
+            return {"script": value}
+        return value
+
+    @field_validator("image_bindings")
+    @classmethod
+    def only_filename_image_bindings(cls, value: dict[str, str]) -> dict[str, str]:
+        # Mantém o mesmo contrato do envelope de renderização, sem introduzir
+        # caminhos arbitrários durante uma simples validação.
+        return RenderRequest.only_filename_image_bindings(value)
+
+    @field_validator("manual_image_bindings")
+    @classmethod
+    def only_filename_manual_image_bindings(cls, value: dict[str, str]) -> dict[str, str]:
+        return RenderRequest.only_filename_image_bindings(value)
+
+    @field_validator("uploaded_images")
+    @classmethod
+    def only_filename_uploaded_images(cls, value: list[str]) -> list[str]:
+        return RenderRequest.only_filename_uploaded_images(value)

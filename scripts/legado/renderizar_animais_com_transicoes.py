@@ -15,6 +15,7 @@ import random
 import re
 import shutil
 import subprocess
+from dataclasses import dataclass
 from pathlib import Path
 
 from renderizar_teste_animais import FFMPEG, FFPROBE, IMAGE_ORDER, IMAGES, MUSIC, OUTPUT, SCRIPT
@@ -81,6 +82,18 @@ FULLSCREEN_FOCUS_POINTS = (
     (0.55, 0.50, 72),
 )
 BACKGROUND_ANIMATIONS = ("none", "movimento_sutil", "movimento_lateral", "pulsacao")
+TIMING_TOLERANCE = 1 / FPS
+
+
+@dataclass(frozen=True)
+class SceneTimingPlan:
+    """Cronograma acústico por cena, sempre relativo ao início da narração."""
+
+    starts: list[float]
+    speech_durations: list[float]
+    clip_durations: list[float]
+    visual_locks: list[bool]
+    annotation_starts: list[float | None]
 
 
 def background_animation_filter(animation: str) -> str:
@@ -101,9 +114,29 @@ def background_animation_filter(animation: str) -> str:
             "crop=1920:1080"
         )
     if animation == "movimento_lateral":
-        return "scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080"
+        # A translação acontece antes do crop por perspectiva; assim o fundo
+        # desliza em coordenadas subpixel, sem travar em saltos de 1 pixel.
+        return (
+            "scale=2048:1152:force_original_aspect_ratio=increase,crop=2048:1152,"
+            "perspective="
+            f"x0='64+28*sin(0.13*on/{BACKGROUND_FPS})':y0='36':"
+            f"x1='1984+28*sin(0.13*on/{BACKGROUND_FPS})':y1='36':"
+            f"x2='64+28*sin(0.13*on/{BACKGROUND_FPS})':y2='1116':"
+            f"x3='1984+28*sin(0.13*on/{BACKGROUND_FPS})':y3='1116':"
+            "interpolation=cubic:eval=frame,crop=1920:1080"
+        )
     if animation == "pulsacao":
-        return "scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080"
+        # Fecha e abre a janela de origem em torno do centro, criando um pulso
+        # geométrico contínuo — não apenas alteração de brilho.
+        return (
+            "scale=2048:1152:force_original_aspect_ratio=increase,crop=2048:1152,"
+            "perspective="
+            f"x0='64+11*sin(0.45*on/{BACKGROUND_FPS})':y0='36+6*sin(0.45*on/{BACKGROUND_FPS})':"
+            f"x1='1984-11*sin(0.45*on/{BACKGROUND_FPS})':y1='36+6*sin(0.45*on/{BACKGROUND_FPS})':"
+            f"x2='64+11*sin(0.45*on/{BACKGROUND_FPS})':y2='1116-6*sin(0.45*on/{BACKGROUND_FPS})':"
+            f"x3='1984-11*sin(0.45*on/{BACKGROUND_FPS})':y3='1116-6*sin(0.45*on/{BACKGROUND_FPS})':"
+            "interpolation=cubic:eval=frame,crop=1920:1080"
+        )
     choices = ", ".join(BACKGROUND_ANIMATIONS)
     raise ValueError(f"Animação de fundo inválida: {animation}. Use: {choices}.")
 
@@ -209,15 +242,41 @@ def annotation_emoji_time(annotation_start: float, lines: list[str]) -> float:
     )
 
 
-def annotation_window(start: float, duration: float, moment: str, lines: list[str], emoji: str | None = None) -> tuple[float, float]:
+def annotation_window(
+    start: float,
+    duration: float,
+    moment: str,
+    lines: list[str],
+    emoji: str | None = None,
+    end_limit: float | None = None,
+    scheduled_start: float | None = None,
+) -> tuple[float, float]:
+    """Calcula a janela da anotação, respeitando uma trava visual quando houver.
+
+    A CTA inicial/intermediária não pode atravessar o primeiro quadro da
+    próxima fala. Do contrário, a transição revela outra imagem enquanto o
+    pedido de like/inscrição ainda está na tela. Na última cena não há limite:
+    a imagem final permanece até a CTA terminar.
+    """
     display_duration = annotation_duration(lines, emoji)
-    event_start = moment_in_scene(start, duration, moment)
-    if moment == "middle":
-        event_start -= display_duration / 2
-    elif moment == "end":
-        event_start -= display_duration
+    if scheduled_start is not None:
+        event_start = scheduled_start
+    else:
+        event_start = moment_in_scene(start, duration, moment)
+        if moment == "middle":
+            event_start -= display_duration / 2
+        elif moment == "end":
+            event_start -= display_duration
     event_start = max(start, event_start)
-    return event_start, event_start + display_duration
+    event_end = event_start + display_duration
+    if end_limit is not None:
+        event_end = min(event_end, end_limit)
+    return event_start, max(event_start, event_end)
+
+
+def time_window(start: float, end: float) -> str:
+    """Faixa semiaberta: no quadro de troca a anotação já saiu da tela."""
+    return f"gte(t,{start:.3f})*lt(t,{end:.3f})"
 
 
 def escape_filter_path(path: Path) -> str:
@@ -252,7 +311,7 @@ def typing_annotation_filters(
                 f"text='{escape_drawtext(line[:char_count])}':fontcolor=0xFFD429:fontsize=102:"
                 "borderw=5:bordercolor=black@0.96:"
                 f"x=(w-text_w)/2:y={y_center}-text_h/2:"
-                f"enable='between(t,{cursor:.3f},{next_cursor:.3f})'{output}"
+                f"enable='{time_window(cursor, next_cursor)}'{output}"
             )
             current = output
             cursor = next_cursor
@@ -261,7 +320,7 @@ def typing_annotation_filters(
             f"{current}drawtext=fontfile='{escape_filter_path(ANNOTATION_FONT)}':"
             f"text='{escape_drawtext(line)}':fontcolor=0xFFD429:fontsize=102:"
             "borderw=5:bordercolor=black@0.96:"
-            f"x=(w-text_w)/2:y={y_center}-text_h/2:enable='between(t,{cursor:.3f},{annotation_end:.3f})'{output}"
+            f"x=(w-text_w)/2:y={y_center}-text_h/2:enable='{time_window(cursor, annotation_end)}'{output}"
         )
         current = output
         cursor += ANNOTATION_LINE_GAP
@@ -272,7 +331,7 @@ def typing_annotation_filters(
             f"{current}drawtext=fontfile='{escape_filter_path(EMOJI_FONT)}':"
             f"text='{escape_drawtext(emoji)}':fontcolor=white:fontsize=82:"
             "borderw=2:bordercolor=black@0.92:"
-            f"x='w/2+300':y='{emoji_y}':enable='between(t,{cursor:.3f},{annotation_end:.3f})'{output}"
+            f"x='w/2+300':y='{emoji_y}':enable='{time_window(cursor, annotation_end)}'{output}"
         )
         current = output
     return current
@@ -290,6 +349,131 @@ def media_duration(path: Path) -> float:
         check=True, text=True, capture_output=True,
     )
     return float(result.stdout.strip())
+
+
+def _timing_number(entry: dict, field: str, index: int) -> float:
+    """Lê um número finito do contrato de timings, sem coerções silenciosas."""
+    value = entry.get(field)
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(float(value)):
+        raise ValueError(f"timings.scenes[{index}].{field} deve ser um número finito em segundos.")
+    return float(value)
+
+
+def load_scene_timing_plan(
+    timings_path: Path,
+    scene_specs: list[dict],
+    narration_duration: float,
+) -> SceneTimingPlan:
+    """Carrega o mapa acústico opcional usado para iniciar cada cena na fala.
+
+    Contrato::
+
+        {
+          "scene_count": 2,
+          "scenes": [
+            {"id": "scene_01", "start": 0.0, "duration": 4.2},
+            {"id": "scene_02", "start": 4.2, "duration": 5.1}
+          ]
+        }
+
+    ``scene_count`` é opcional, mas quando fornecido protege contra o uso de um
+    mapa de outro roteiro. O início de uma transição é o ``start`` da próxima
+    cena; por isso o clipe anterior é estendido somente pelo tempo visual da
+    transição, sem deslocar a entrada acústica do próximo bloco.
+    """
+    if not timings_path.is_file():
+        raise FileNotFoundError(f"Arquivo de timings não encontrado: {timings_path}")
+    try:
+        payload = json.loads(timings_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Arquivo de timings contém JSON inválido: {timings_path}") from exc
+    if not isinstance(payload, dict):
+        raise ValueError("O arquivo de timings deve ser um objeto JSON com a lista 'scenes'.")
+
+    declared_count = payload.get("scene_count")
+    if declared_count is not None:
+        if isinstance(declared_count, bool) or not isinstance(declared_count, int):
+            raise ValueError("timings.scene_count deve ser um inteiro quando informado.")
+        if declared_count != len(scene_specs):
+            raise ValueError(
+                f"timings.scene_count ({declared_count}) não corresponde às {len(scene_specs)} cenas do roteiro."
+            )
+
+    entries = payload.get("scenes")
+    if not isinstance(entries, list):
+        raise ValueError("O arquivo de timings deve conter uma lista 'scenes'.")
+    if len(entries) != len(scene_specs):
+        raise ValueError(
+            f"O arquivo de timings possui {len(entries)} cenas, mas o roteiro possui {len(scene_specs)}."
+        )
+
+    starts: list[float] = []
+    speech_durations: list[float] = []
+    visual_locks: list[bool] = []
+    annotation_starts: list[float | None] = []
+    for index, (entry, scene) in enumerate(zip(entries, scene_specs, strict=True)):
+        if not isinstance(entry, dict):
+            raise ValueError(f"timings.scenes[{index}] deve ser um objeto.")
+        expected_id = scene.get("id")
+        if entry.get("id") != expected_id:
+            raise ValueError(
+                f"timings.scenes[{index}].id deve ser {expected_id!r}, recebido {entry.get('id')!r}."
+            )
+        start = _timing_number(entry, "start", index)
+        duration = _timing_number(entry, "duration", index)
+        if start < 0:
+            raise ValueError(f"timings.scenes[{index}].start não pode ser negativo.")
+        if duration <= 0:
+            raise ValueError(f"timings.scenes[{index}].duration deve ser maior que zero.")
+        lock_visual = entry.get("lock_visual", False)
+        if not isinstance(lock_visual, bool):
+            raise ValueError(f"timings.scenes[{index}].lock_visual deve ser booleano quando informado.")
+        annotation_start = entry.get("annotation_start")
+        if annotation_start is not None:
+            if isinstance(annotation_start, bool) or not isinstance(annotation_start, (int, float)) or not math.isfinite(float(annotation_start)):
+                raise ValueError(f"timings.scenes[{index}].annotation_start deve ser um número finito quando informado.")
+            annotation_start = float(annotation_start)
+            if annotation_start < start - TIMING_TOLERANCE or annotation_start > start + duration + TIMING_TOLERANCE:
+                raise ValueError(f"timings.scenes[{index}].annotation_start deve ficar dentro da fala da cena.")
+        starts.append(start)
+        speech_durations.append(duration)
+        visual_locks.append(lock_visual)
+        annotation_starts.append(annotation_start)
+
+    if starts and starts[0] > TIMING_TOLERANCE:
+        raise ValueError(
+            "timings.scenes[0].start deve ser 0 (com tolerância de um quadro) para alinhar a primeira cena à narração."
+        )
+    for index in range(1, len(starts)):
+        previous_start = starts[index - 1]
+        previous_end = previous_start + speech_durations[index - 1]
+        if starts[index] <= previous_start + TIMING_TOLERANCE:
+            raise ValueError("Os starts do arquivo de timings devem ser estritamente crescentes por cena.")
+        if previous_end > starts[index] + TIMING_TOLERANCE:
+            raise ValueError(
+                f"timings.scenes[{index - 1}] sobrepõe timings.scenes[{index}]; uma cena não pode começar antes da fala anterior terminar."
+            )
+
+    final_end = starts[-1] + speech_durations[-1]
+    if final_end > narration_duration + TIMING_TOLERANCE:
+        raise ValueError(
+            f"O último timing termina em {final_end:.3f}s, depois da narração ({narration_duration:.3f}s)."
+        )
+
+    clip_durations = [
+        starts[index + 1] - starts[index] + TRANSITION_DURATION
+        for index in range(len(starts) - 1)
+    ]
+    clip_durations.append(narration_duration - starts[-1])
+    if any(duration <= TIMING_TOLERANCE for duration in clip_durations):
+        raise ValueError("Os timings deixam uma cena curta demais para a composição em 24 fps.")
+
+    return SceneTimingPlan(starts, speech_durations, clip_durations, visual_locks, annotation_starts)
+
+
+def _frames_for_duration(seconds: float) -> int:
+    """Arredonda para cima sem criar um quadro extra por erro de ponto flutuante."""
+    return max(1, math.ceil(seconds * FPS - 1e-9))
 
 
 def scene_filter(frames: int) -> str:
@@ -428,8 +612,11 @@ def create_narration_if_needed(voice: Path, payload: dict) -> None:
     narration = " ".join(block["text"] for block in payload["blocks"])
     if not narration.strip():
         raise ValueError("O roteiro não contém texto para gerar a narração.")
+    selected_voice = payload.get("voice", "pt-BR-AntonioNeural")
+    if not isinstance(selected_voice, str) or not selected_voice.strip():
+        raise ValueError("O roteiro deve declarar uma voz neural válida em 'voice'.")
     execute([
-        "edge-tts", "--voice", "pt-BR-AntonioNeural", "--rate=-10%",
+        "edge-tts", "--voice", selected_voice.strip(), "--rate=-10%",
         "--text", narration, "--write-media", str(voice),
     ])
 
@@ -442,6 +629,9 @@ def main(
     script_path: Path | None = None,
     output_dir_override: Path | None = None,
     background_path: Path | None = None,
+    image_directory: Path | None = None,
+    timings_path: Path | None = None,
+    narration_path: Path | None = None,
 ) -> None:
     selected_music = resolve_music(music_name)
     selected_script = (script_path or SCRIPT).resolve()
@@ -455,12 +645,15 @@ def main(
     output_stem = "animais_fundo_do_mar" if script_path is None else re.sub(r"[^a-z0-9]+", "_", selected_script.stem.lower()).strip("_")
     output_dir = output_dir_override.resolve() if output_dir_override is not None else (OUTPUT if script_path is None else OUTPUT.parent / output_stem)
     output_dir.mkdir(parents=True, exist_ok=True)
-    voice = output_dir / "narracao.mp3"
+    voice = (narration_path or output_dir / "narracao.mp3").resolve()
     final = music_output_path(selected_music, custom_music=music_name is not None, output_dir=output_dir, output_stem=output_stem)
     clips = output_dir / "cenas_com_movimento"
     selected_background = (background_path or BACKGROUND).resolve()
+    selected_images = (image_directory or IMAGES).resolve()
     if not selected_background.is_file():
         raise FileNotFoundError(f"Fundo ausente para a renderização: {selected_background}")
+    if not selected_images.is_dir():
+        raise FileNotFoundError(f"Diretório de imagens ausente para a renderização: {selected_images}")
     if not ANNOTATION_FONT.is_file():
         raise FileNotFoundError(f"Fonte de anotação ausente: {ANNOTATION_FONT}")
     if not EMOJI_FONT.is_file():
@@ -474,34 +667,67 @@ def main(
     background_light = background_light_filter(selected_background_animation)
     if len(scene_specs) != len(image_order):
         raise ValueError("O roteiro e a lista de imagens precisam ter a mesma quantidade de cenas.")
-    missing_images = [name for name in image_order if not (IMAGES / name).is_file()]
+    missing_images = [name for name in image_order if not (selected_images / name).is_file()]
     if missing_images:
         raise FileNotFoundError("Imagens-fonte ausentes:\n" + "\n".join(missing_images))
     # O roteiro decide quais cenas são fullscreen e em que direção cada uma
     # sai. Assim, o render final preserva a dinâmica aprovada no preview.
     modes = layout_modes_from_script(scene_specs)
     exits = transition_exits_from_script(scene_specs)
-    create_narration_if_needed(voice, payload)
+    if narration_path is None:
+        create_narration_if_needed(voice, payload)
+    elif not voice.is_file():
+        raise FileNotFoundError(f"Narração sincronizada não encontrada: {voice}")
 
-    # Cada cena absorve a sobreposição da transição, mantendo o final alinhado à narração.
+    # Sem mapa acústico, mantém-se exatamente a distribuição uniforme legada.
+    # Com --timings, cada troca começa no start da próxima fala: a sobreposição
+    # ganha duração visual extra no clipe anterior, nunca desloca a cena seguinte.
     narration_duration = media_duration(voice)
-    target_scene_duration = (narration_duration + TRANSITION_DURATION * (len(image_order) - 1)) / len(image_order)
-    frames = math.ceil(target_scene_duration * FPS)
-    scene_duration = frames / FPS
-    scene_interval = scene_duration - TRANSITION_DURATION
+    if timings_path is None:
+        target_scene_duration = (narration_duration + TRANSITION_DURATION * (len(image_order) - 1)) / len(image_order)
+        frames = math.ceil(target_scene_duration * FPS)
+        scene_duration = frames / FPS
+        scene_interval = scene_duration - TRANSITION_DURATION
+        scene_starts = [index * scene_interval for index in range(len(scene_specs))]
+        speech_durations = [scene_duration] * len(scene_specs)
+        clip_durations = [scene_duration] * len(scene_specs)
+        scene_frames = [frames] * len(scene_specs)
+        # Compatibilidade para a execução legada sem mapa acústico. As CTAs
+        # canônicas continuam protegidas mesmo nesse modo manual.
+        visual_locks = [
+            isinstance(scene.get("annotation"), dict)
+            and scene["annotation"].get("emoji") in {"👍", "🔔"}
+            for scene in scene_specs
+        ]
+        annotation_starts = [None] * len(scene_specs)
+    else:
+        timing_plan = load_scene_timing_plan(timings_path, scene_specs, narration_duration)
+        scene_starts = timing_plan.starts
+        speech_durations = timing_plan.speech_durations
+        visual_locks = timing_plan.visual_locks
+        annotation_starts = timing_plan.annotation_starts
+        scene_frames = [_frames_for_duration(duration) for duration in timing_plan.clip_durations]
+        # Os arquivos de entrada precisam acabar em um quadro inteiro, mas os
+        # offsets do xfade continuam sendo os timestamps acústicos originais.
+        clip_durations = [frames / FPS for frames in scene_frames]
+    transition_starts = [
+        scene_starts[index + 1] - scene_starts[index] if index < len(scene_specs) - 1 else 0.0
+        for index in range(len(scene_specs))
+    ]
 
     # Todos os efeitos são declarados por intenção no JSON. Não existe fallback
     # por índice, porcentagem ou repetição previsível.
     sound_events: list[tuple[str, float]] = []
     annotations: list[tuple[list[str], float, float, str | None]] = []
     for index, scene in enumerate(scene_specs):
-        scene_start = index * scene_interval
+        scene_start = scene_starts[index]
+        speech_duration = speech_durations[index]
         sounds = scene.get("sounds", {})
         if not isinstance(sounds, dict):
             raise ValueError(f"{scene.get('id', f'cena {index + 1}')}.sounds deve ser um objeto.")
         if index < len(scene_specs) - 1:
             for effect in effect_ids(sounds.get("transition", []), f"{scene.get('id', index)}.sounds.transition"):
-                sound_events.append((effect, (index + 1) * scene_interval))
+                sound_events.append((effect, scene_starts[index + 1]))
         context = sounds.get("context")
         if context is not None:
             if not isinstance(context, dict):
@@ -509,7 +735,7 @@ def main(
             context_effects = effect_ids(context.get("type"), f"{scene.get('id', index)}.sounds.context.type")
             if len(context_effects) != 1:
                 raise ValueError("sounds.context.type deve identificar exatamente um efeito.")
-            sound_events.append((context_effects[0], moment_in_scene(scene_start, scene_duration, context.get("at", "middle"))))
+            sound_events.append((context_effects[0], moment_in_scene(scene_start, speech_duration, context.get("at", "middle"))))
         annotation = scene.get("annotation")
         if annotation is not None:
             if not isinstance(annotation, dict):
@@ -522,8 +748,19 @@ def main(
             emoji = annotation.get("emoji")
             if emoji is not None and (not isinstance(emoji, str) or not emoji.strip() or len(emoji) > 8):
                 raise ValueError(f"{scene.get('id', index)}.annotation.emoji deve ser um emoji curto opcional.")
+            # Uma CTA só pode aparecer sobre a própria cena enquanto ainda há
+            # outra fala a seguir. A última cena fica livre para completar sua
+            # leitura, mantendo a imagem final em vez de introduzir um corte.
+            next_scene_start = scene_starts[index + 1] if index < len(scene_specs) - 1 else None
+            end_limit = next_scene_start if visual_locks[index] else None
             annotation_start, annotation_end = annotation_window(
-                scene_start, scene_duration, annotation.get("at", "start"), [line.strip() for line in lines], emoji
+                scene_start,
+                speech_duration,
+                annotation.get("at", "start"),
+                [line.strip() for line in lines],
+                emoji,
+                end_limit=end_limit,
+                scheduled_start=annotation_starts[index],
             )
             annotations.append(([line.strip() for line in lines], annotation_start, annotation_end, emoji))
             # A digitação começa com a primeira letra; isso preserva o clique
@@ -545,6 +782,7 @@ def main(
     rendered_clips: list[Path] = []
     fullscreen_index = 0
     for index, image_name in enumerate(image_order):
+        frames = scene_frames[index]
         clip = clips / f"cena_{index + 1:02d}.mp4"
         # Cartões preservam o desenho atualizado. A tela cheia usa um zoom
         # contínuo com foco editorial, sem os degraus do zoompan.
@@ -554,7 +792,7 @@ def main(
         else:
             filter_graph = scene_filter(frames)
         execute([
-            str(FFMPEG), "-y", "-loop", "1", "-framerate", str(FPS), "-i", str(IMAGES / image_name),
+            str(FFMPEG), "-y", "-loop", "1", "-framerate", str(FPS), "-i", str(selected_images / image_name),
             "-filter_complex", filter_graph, "-map", "[out]", "-an",
             "-frames:v", str(frames), "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22", "-pix_fmt", "yuv420p", "-r", str(FPS), str(clip),
         ])
@@ -606,7 +844,7 @@ def main(
 
             # A mesma composição precisa acompanhar a saída cartão -> tela
             # cheia. Antes, ela só animava a entrada no sentido inverso.
-            exit_start = scene_duration - TRANSITION_DURATION
+            exit_start = transition_starts[index] if index < len(rendered_clips) - 1 else clip_durations[index]
             exiting = centered_x
             if index < len(rendered_clips) - 1 and modes[index + 1] == "fullscreen":
                 if exits[index] == "to_left":
@@ -624,7 +862,7 @@ def main(
                 f"[shadow_source{index}]format=rgba,colorchannelmixer=rr=0:gg=0:bb=0:aa=0.42,boxblur=18:2{shadow}"
             )
             filters.append(
-                f"{background_labels[index]}trim=duration={scene_duration:.3f},setpts=PTS-STARTPTS[background_trim{index}]"
+                f"{background_labels[index]}trim=duration={clip_durations[index]:.3f},setpts=PTS-STARTPTS[background_trim{index}]"
             )
             filters.append(
                 f"[background_trim{index}]{shadow}overlay=x='({card_x})+18':y='(main_h-overlay_h)/2+22':format=auto{shadow_layer}"
@@ -636,10 +874,12 @@ def main(
         scene_labels.append(output)
 
     video_label = scene_labels[0]
-    elapsed = scene_duration
     for index in range(1, len(scene_labels)):
         output = "[transitioned_video]" if index == len(scene_labels) - 1 else f"[transition_{index}]"
-        offset = elapsed - TRANSITION_DURATION
+        # A próxima imagem começa a ser revelada no timestamp acústico dela.
+        # Os clipes anteriores foram estendidos por TRANSITION_DURATION para
+        # que esse offset não antecipe nem atrase o começo da fala.
+        offset = scene_starts[index]
         previous_mode = modes[index - 1]
         current_mode = modes[index]
         if previous_mode == "card" and current_mode == "card":
@@ -662,12 +902,11 @@ def main(
                 f"{video_label}{scene_labels[index]}xfade=transition=fade:duration={TRANSITION_DURATION:.3f}:offset={offset:.3f}{output}"
             )
         video_label = output
-        elapsed += scene_duration - TRANSITION_DURATION
     for index, (lines, annotation_start, annotation_end, emoji) in enumerate(annotations):
         base = f"[annotation_base{index}]"
         blur = f"[annotation_blur{index}]"
         blurred = f"[annotation_layer{index}]"
-        enabled = f"between(t,{annotation_start:.3f},{annotation_end:.3f})"
+        enabled = time_window(annotation_start, annotation_end)
         filters.append(f"{video_label}split=2{base}[annotation_source{index}]")
         filters.append(f"[annotation_source{index}]boxblur=22:6:enable='{enabled}'{blur}")
         filters.append(f"{base}{blur}overlay=0:0:enable='{enabled}'{blurred}")
@@ -767,6 +1006,24 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         help="imagem de fundo escolhida pelo painel para esta renderização",
     )
+    parser.add_argument(
+        "--diretorio-imagens",
+        type=Path,
+        help="diretório isolado com os arquivos de cena, preservando os nomes declarados no roteiro",
+    )
+    parser.add_argument(
+        "--timings",
+        type=Path,
+        help=(
+            "JSON acústico por cena: {'scenes': [{'id': 'scene_01', 'start': 0.0, 'duration': 4.2}]}; "
+            "quando omitido, preserva a divisão uniforme legada"
+        ),
+    )
+    parser.add_argument(
+        "--narracao",
+        type=Path,
+        help="faixa de narração já sincronizada pelo orquestrador, incluindo pausas de CTA",
+    )
     return parser.parse_args()
 
 
@@ -780,4 +1037,7 @@ if __name__ == "__main__":
         script_path=args.roteiro,
         output_dir_override=args.saida,
         background_path=args.fundo,
+        image_directory=args.diretorio_imagens,
+        timings_path=args.timings,
+        narration_path=args.narracao,
     )
