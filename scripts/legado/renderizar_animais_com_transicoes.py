@@ -83,6 +83,14 @@ FULLSCREEN_FOCUS_POINTS = (
 )
 BACKGROUND_ANIMATIONS = ("none", "movimento_sutil", "movimento_lateral", "pulsacao")
 TIMING_TOLERANCE = 1 / FPS
+# O compositor nunca deve crescer junto com o vídeo inteiro. Estes limites
+# mantêm cada invocação pesada do FFmpeg pequena o bastante para a máquina de
+# 16 GiB usada pelo painel, sem limitar a duração total do roteiro.
+MAX_SCENES_PER_SEGMENT = 12
+MAX_SEGMENT_SECONDS = 90.0
+# Proteção adicional do FFmpeg: se um grafo tentar reter frames demais, ele
+# falha com uma mensagem diagnóstica antes de esgotar a memória do Windows.
+MAX_FILTER_BUFFERED_FRAMES = 128
 
 
 @dataclass(frozen=True)
@@ -96,8 +104,26 @@ class SceneTimingPlan:
     annotation_starts: list[float | None]
 
 
-def background_animation_filter(animation: str) -> str:
+@dataclass(frozen=True)
+class RenderSegment:
+    """Faixa visual independente, com uma cena de guarda na fronteira.
+
+    A cena ``handoff_index`` aparece no fim do segmento anterior durante os
+    dez quadros de xfade. O próximo segmento a reprocessa, mas descarta esses
+    mesmos quadros iniciais. Assim o concat final não cria lacuna nem duplica
+    a transição.
+    """
+
+    start_index: int
+    end_index: int
+    handoff_index: int | None
+    trim_start: float
+    output_duration: float
+
+
+def background_animation_filter(animation: str, frame_offset: int = 0) -> str:
     """Aplica deslocamento interpolado: sem os saltos de um crop por pixel."""
+    frame = f"(on+{max(0, frame_offset)})"
     if animation == "none":
         return "scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080"
     if animation == "movimento_sutil":
@@ -106,10 +132,10 @@ def background_animation_filter(animation: str) -> str:
         return (
             "scale=2048:1152:force_original_aspect_ratio=increase,crop=2048:1152,"
             "perspective="
-            f"x0='64+14*sin(0.20*on/{BACKGROUND_FPS})':y0='36+8*cos(0.17*on/{BACKGROUND_FPS})':"
-            f"x1='1984+14*sin(0.20*on/{BACKGROUND_FPS})':y1='36+8*cos(0.17*on/{BACKGROUND_FPS})':"
-            f"x2='64+14*sin(0.20*on/{BACKGROUND_FPS})':y2='1116+8*cos(0.17*on/{BACKGROUND_FPS})':"
-            f"x3='1984+14*sin(0.20*on/{BACKGROUND_FPS})':y3='1116+8*cos(0.17*on/{BACKGROUND_FPS})':"
+            f"x0='64+14*sin(0.20*{frame}/{BACKGROUND_FPS})':y0='36+8*cos(0.17*{frame}/{BACKGROUND_FPS})':"
+            f"x1='1984+14*sin(0.20*{frame}/{BACKGROUND_FPS})':y1='36+8*cos(0.17*{frame}/{BACKGROUND_FPS})':"
+            f"x2='64+14*sin(0.20*{frame}/{BACKGROUND_FPS})':y2='1116+8*cos(0.17*{frame}/{BACKGROUND_FPS})':"
+            f"x3='1984+14*sin(0.20*{frame}/{BACKGROUND_FPS})':y3='1116+8*cos(0.17*{frame}/{BACKGROUND_FPS})':"
             "interpolation=cubic:eval=frame,"
             "crop=1920:1080"
         )
@@ -119,10 +145,10 @@ def background_animation_filter(animation: str) -> str:
         return (
             "scale=2048:1152:force_original_aspect_ratio=increase,crop=2048:1152,"
             "perspective="
-            f"x0='64+28*sin(0.13*on/{BACKGROUND_FPS})':y0='36':"
-            f"x1='1984+28*sin(0.13*on/{BACKGROUND_FPS})':y1='36':"
-            f"x2='64+28*sin(0.13*on/{BACKGROUND_FPS})':y2='1116':"
-            f"x3='1984+28*sin(0.13*on/{BACKGROUND_FPS})':y3='1116':"
+            f"x0='64+28*sin(0.13*{frame}/{BACKGROUND_FPS})':y0='36':"
+            f"x1='1984+28*sin(0.13*{frame}/{BACKGROUND_FPS})':y1='36':"
+            f"x2='64+28*sin(0.13*{frame}/{BACKGROUND_FPS})':y2='1116':"
+            f"x3='1984+28*sin(0.13*{frame}/{BACKGROUND_FPS})':y3='1116':"
             "interpolation=cubic:eval=frame,crop=1920:1080"
         )
     if animation == "pulsacao":
@@ -131,37 +157,38 @@ def background_animation_filter(animation: str) -> str:
         return (
             "scale=2048:1152:force_original_aspect_ratio=increase,crop=2048:1152,"
             "perspective="
-            f"x0='64+11*sin(0.45*on/{BACKGROUND_FPS})':y0='36+6*sin(0.45*on/{BACKGROUND_FPS})':"
-            f"x1='1984-11*sin(0.45*on/{BACKGROUND_FPS})':y1='36+6*sin(0.45*on/{BACKGROUND_FPS})':"
-            f"x2='64+11*sin(0.45*on/{BACKGROUND_FPS})':y2='1116-6*sin(0.45*on/{BACKGROUND_FPS})':"
-            f"x3='1984-11*sin(0.45*on/{BACKGROUND_FPS})':y3='1116-6*sin(0.45*on/{BACKGROUND_FPS})':"
+            f"x0='64+11*sin(0.45*{frame}/{BACKGROUND_FPS})':y0='36+6*sin(0.45*{frame}/{BACKGROUND_FPS})':"
+            f"x1='1984-11*sin(0.45*{frame}/{BACKGROUND_FPS})':y1='36+6*sin(0.45*{frame}/{BACKGROUND_FPS})':"
+            f"x2='64+11*sin(0.45*{frame}/{BACKGROUND_FPS})':y2='1116-6*sin(0.45*{frame}/{BACKGROUND_FPS})':"
+            f"x3='1984-11*sin(0.45*{frame}/{BACKGROUND_FPS})':y3='1116-6*sin(0.45*{frame}/{BACKGROUND_FPS})':"
             "interpolation=cubic:eval=frame,crop=1920:1080"
         )
     choices = ", ".join(BACKGROUND_ANIMATIONS)
     raise ValueError(f"Animação de fundo inválida: {animation}. Use: {choices}.")
 
 
-def background_light_filter(animation: str) -> str:
+def background_light_filter(animation: str, time_offset: float = 0.0) -> str:
     """Anima luz e cor ao longo do tempo, sem mover nem reamostrar a grade."""
+    time = f"(t+{max(0.0, time_offset):.6f})"
     if animation == "none":
         return "eq=contrast=1.07:brightness=-0.035:saturation=0.76"
     if animation == "movimento_sutil":
         return (
-            "eq=contrast='1.075+0.008*sin(0.18*t)':"
-            "brightness='-0.035+0.008*sin(0.42*t)':"
-            "saturation='0.76+0.018*sin(0.17*t)':eval=frame"
+            f"eq=contrast='1.075+0.008*sin(0.18*{time})':"
+            f"brightness='-0.035+0.008*sin(0.42*{time})':"
+            f"saturation='0.76+0.018*sin(0.17*{time})':eval=frame"
         )
     if animation == "movimento_lateral":
         return (
-            "eq=contrast='1.07+0.010*sin(0.24*t)':"
-            "brightness='-0.035+0.010*sin(0.31*t+0.8)':"
-            "saturation='0.77+0.020*sin(0.20*t)':eval=frame"
+            f"eq=contrast='1.07+0.010*sin(0.24*{time})':"
+            f"brightness='-0.035+0.010*sin(0.31*{time}+0.8)':"
+            f"saturation='0.77+0.020*sin(0.20*{time})':eval=frame"
         )
     if animation == "pulsacao":
         return (
-            "eq=contrast='1.075+0.015*sin(0.55*t)':"
-            "brightness='-0.035+0.012*sin(0.55*t)':"
-            "saturation='0.76+0.025*sin(0.55*t)':eval=frame"
+            f"eq=contrast='1.075+0.015*sin(0.55*{time})':"
+            f"brightness='-0.035+0.012*sin(0.55*{time})':"
+            f"saturation='0.76+0.025*sin(0.55*{time})':eval=frame"
         )
     choices = ", ".join(BACKGROUND_ANIMATIONS)
     raise ValueError(f"Animação de fundo inválida: {animation}. Use: {choices}.")
@@ -338,9 +365,17 @@ def typing_annotation_filters(
 
 
 def execute(command: list[str]) -> None:
-    result = subprocess.run(command, text=True, capture_output=True)
+    # O progresso normal do FFmpeg pode ter milhares de linhas em um vídeo
+    # longo. Não o acumulamos em RAM: guardamos apenas erros, que são o único
+    # texto necessário para diagnosticar uma falha deste subprocesso.
+    result = subprocess.run(
+        [command[0], "-hide_banner", "-loglevel", "error", *command[1:]],
+        text=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+    )
     if result.returncode:
-        raise RuntimeError(result.stderr[-4000:])
+        raise RuntimeError((result.stderr or "erro desconhecido do FFmpeg")[-4000:])
 
 
 def media_duration(path: Path) -> float:
@@ -598,8 +633,9 @@ def fullscreen_scene_filter(frames: int, focus_index: int) -> str:
 
 def clean_temporary_artifacts(clips: Path, voice: Path, filter_script: Path, output_dir: Path) -> None:
     """Remove somente arquivos de trabalho conhecidos, mantendo o MP4 final."""
-    if clips.is_dir():
-        shutil.rmtree(clips)
+    for directory in (clips, output_dir / "cenas_prontas", output_dir / "segmentos"):
+        if directory.is_dir():
+            shutil.rmtree(directory)
     for artifact in (voice, filter_script, output_dir / "imagens.ffconcat", output_dir / "video_sem_audio.mp4"):
         if artifact.is_file():
             artifact.unlink()
@@ -619,6 +655,343 @@ def create_narration_if_needed(voice: Path, payload: dict) -> None:
         "edge-tts", "--voice", selected_voice.strip(), "--rate=-10%",
         "--text", narration, "--write-media", str(voice),
     ])
+
+
+def build_render_segments(
+    scene_starts: list[float],
+    narration_duration: float,
+    tail_duration: float,
+) -> list[RenderSegment]:
+    """Divide a timeline em fragmentos de custo fixo.
+
+    O fragmento que termina antes de uma cena ``k`` inclui ``k`` como guarda
+    até o fim do xfade. O fragmento seguinte começa em ``k`` mas descarta os
+    mesmos dez frames. O resultado concatenado conserva cada transição uma
+    única vez, sem manter o vídeo inteiro no mesmo filter graph.
+    """
+    if not scene_starts:
+        raise ValueError("O roteiro não contém cenas para segmentar.")
+
+    total_duration = narration_duration + tail_duration
+    segments: list[RenderSegment] = []
+    start_index = 0
+    while start_index < len(scene_starts):
+        end_index = start_index
+        while end_index + 1 < len(scene_starts):
+            candidate = end_index + 1
+            count = candidate - start_index + 1
+            elapsed = scene_starts[candidate] - scene_starts[start_index]
+            if count > MAX_SCENES_PER_SEGMENT or elapsed > MAX_SEGMENT_SECONDS:
+                break
+            end_index = candidate
+
+        handoff_index = end_index + 1 if end_index + 1 < len(scene_starts) else None
+        trim_start = 0.0 if start_index == 0 else TRANSITION_DURATION
+        if handoff_index is None:
+            relative_end = total_duration - scene_starts[start_index]
+        else:
+            relative_end = (
+                scene_starts[handoff_index]
+                - scene_starts[start_index]
+                + TRANSITION_DURATION
+            )
+        output_duration = relative_end - trim_start
+        if output_duration <= TIMING_TOLERANCE:
+            raise ValueError("A segmentação visual gerou um fragmento sem duração útil.")
+        segments.append(RenderSegment(
+            start_index=start_index,
+            end_index=end_index,
+            handoff_index=handoff_index,
+            trim_start=trim_start,
+            output_duration=output_duration,
+        ))
+        start_index = handoff_index if handoff_index is not None else len(scene_starts)
+    return segments
+
+
+def _scene_canvas_path(canvas_dir: Path, index: int) -> Path:
+    return canvas_dir / f"cena_{index + 1:03d}.mp4"
+
+
+def render_scene_canvas(
+    index: int,
+    rendered_clips: list[Path],
+    canvas_dir: Path,
+    background: Path,
+    background_animation: str,
+    modes: list[str],
+    exits: list[str],
+    scene_starts: list[float],
+    transition_starts: list[float],
+    clip_durations: list[float],
+    tail_duration: float,
+) -> Path:
+    """Materializa uma cena 1920x1080 antes de entrar no xfade segmentado.
+
+    Cartões recebem fundo, sombra e movimentos neste passo isolado. Assim o
+    grafo de cada fragmento trabalha apenas com telas completas e não precisa
+    dividir uma única imagem de fundo para todas as cenas do roteiro.
+    """
+    source = rendered_clips[index]
+    scene_tail = tail_duration if index == len(rendered_clips) - 1 else 0.0
+    if modes[index] == "fullscreen" and not scene_tail:
+        return source
+
+    canvas_dir.mkdir(parents=True, exist_ok=True)
+    output = _scene_canvas_path(canvas_dir, index)
+    if output.is_file():
+        return output
+
+    duration = clip_durations[index] + scene_tail
+    frames = _frames_for_duration(duration)
+    padding = f",tpad=stop_mode=clone:stop_duration={scene_tail:.6f}" if scene_tail else ""
+    if modes[index] == "fullscreen":
+        filter_graph = (
+            f"[0:v]settb=1/{FPS},setpts=PTS-STARTPTS{padding},"
+            f"trim=duration={duration:.6f},format=yuv420p[out]"
+        )
+        execute([
+            str(FFMPEG), "-y", "-i", str(source),
+            "-filter_complex_threads", "1", "-filter_threads", "1",
+            "-filter_complex", filter_graph, "-map", "[out]", "-an",
+            "-frames:v", str(frames), "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22",
+            "-pix_fmt", "yuv420p", "-r", str(FPS), str(output),
+        ])
+        return output
+
+    centered_x = "(main_w-overlay_w)/2"
+    entry = centered_x
+    if index and modes[index - 1] == "fullscreen":
+        if exits[index - 1] == "to_left":
+            entry = f"main_w-(main_w-{centered_x})*t/{TRANSITION_DURATION:.3f}"
+        else:
+            entry = f"-overlay_w+({centered_x}+overlay_w)*t/{TRANSITION_DURATION:.3f}"
+    transition_start = transition_starts[index] if index < len(rendered_clips) - 1 else clip_durations[index]
+    exiting = centered_x
+    if index < len(rendered_clips) - 1 and modes[index + 1] == "fullscreen":
+        if exits[index] == "to_left":
+            exiting = f"{centered_x}-({centered_x}+overlay_w)*(t-{transition_start:.3f})/{TRANSITION_DURATION:.3f}"
+        elif exits[index] == "to_right":
+            exiting = f"{centered_x}+(main_w-{centered_x})*(t-{transition_start:.3f})/{TRANSITION_DURATION:.3f}"
+    card_x = (
+        f"if(lt(t,{TRANSITION_DURATION:.3f}),{entry},"
+        f"if(lt(t,{transition_start:.3f}),{centered_x},{exiting}))"
+    )
+    frame_offset = round(scene_starts[index] * BACKGROUND_FPS)
+    background_graph = (
+        f"[1:v]{background_animation_filter(background_animation, frame_offset)},"
+        "format=rgb24,lutrgb=r='min(255,val*5)':g='min(255,val*5)':b='min(255,val*5)',"
+        f"{background_light_filter(background_animation, scene_starts[index])},vignette=PI/4:eval=frame,"
+        f"fps={BACKGROUND_FPS},settb=1/{FPS},setsar=1,trim=duration={duration:.6f},setpts=PTS-STARTPTS[background]"
+    )
+    filter_graph = ";".join([
+        background_graph,
+        f"[0:v]settb=1/{FPS},setpts=PTS-STARTPTS{padding},split=2[card][shadow_source]",
+        "[shadow_source]format=rgba,colorchannelmixer=rr=0:gg=0:bb=0:aa=0.42,boxblur=18:2[shadow]",
+        f"[background][shadow]overlay=x='({card_x})+18':y='(main_h-overlay_h)/2+22':format=auto[shadow_layer]",
+        f"[shadow_layer][card]overlay=x='{card_x}':y='(main_h-overlay_h)/2':format=auto,"
+        f"trim=duration={duration:.6f},format=yuv420p[out]",
+    ])
+    execute([
+        str(FFMPEG), "-y", "-i", str(source), "-loop", "1", "-framerate", str(BACKGROUND_FPS),
+        "-t", f"{duration:.6f}", "-i", str(background),
+        "-filter_complex_threads", "1", "-filter_threads", "1",
+        "-filter_complex", filter_graph, "-map", "[out]", "-an",
+        "-frames:v", str(frames), "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22",
+        "-pix_fmt", "yuv420p", "-r", str(FPS), str(output),
+    ])
+    return output
+
+
+def render_visual_segment(
+    segment: RenderSegment,
+    segment_index: int,
+    segment_dir: Path,
+    scene_paths: list[Path],
+    scene_starts: list[float],
+    modes: list[str],
+    exits: list[str],
+) -> Path:
+    """Compõe somente uma janela pequena de xfade e devolve um MP4 sem áudio."""
+    render_end = segment.handoff_index if segment.handoff_index is not None else segment.end_index
+    indices = list(range(segment.start_index, render_end + 1))
+    if len(indices) > MAX_SCENES_PER_SEGMENT + 1:
+        raise RuntimeError("O fragmento excedeu o orçamento de cenas do compositor.")
+    segment_dir.mkdir(parents=True, exist_ok=True)
+    output = segment_dir / f"segmento_{segment_index + 1:03d}.mp4"
+    inputs: list[str] = []
+    filters: list[str] = []
+    base_start = scene_starts[segment.start_index]
+    labels: dict[int, str] = {}
+    for input_index, scene_index in enumerate(indices):
+        inputs.extend(["-i", str(scene_paths[scene_index])])
+        label = f"[scene_{scene_index}]"
+        relative_start = scene_starts[scene_index] - base_start
+        filters.append(
+            f"[{input_index}:v]settb=1/{FPS},setpts=PTS-STARTPTS+{relative_start:.6f}/TB{label}"
+        )
+        labels[scene_index] = label
+
+    video_label = labels[segment.start_index]
+    for scene_index in indices[1:]:
+        output_label = f"[transition_{scene_index}]"
+        offset = scene_starts[scene_index] - base_start
+        previous_mode = modes[scene_index - 1]
+        current_mode = modes[scene_index]
+        if previous_mode == "card" and current_mode == "card":
+            filters.append(
+                f"{video_label}{labels[scene_index]}xfade=transition=fade:duration={TRANSITION_DURATION:.6f}:offset={offset:.6f}{output_label}"
+            )
+        elif exits[scene_index - 1] == "to_left":
+            filters.append(
+                f"{video_label}{labels[scene_index]}xfade=transition=smoothleft:duration={TRANSITION_DURATION:.6f}:offset={offset:.6f}{output_label}"
+            )
+        elif exits[scene_index - 1] == "to_right":
+            filters.extend([
+                f"{video_label}hflip[flip_current_{scene_index}]",
+                f"{labels[scene_index]}hflip[flip_next_{scene_index}]",
+                f"[flip_current_{scene_index}][flip_next_{scene_index}]xfade=transition=smoothleft:duration={TRANSITION_DURATION:.6f}:offset={offset:.6f}[flip_mix_{scene_index}]",
+                f"[flip_mix_{scene_index}]hflip{output_label}",
+            ])
+        else:
+            filters.append(
+                f"{video_label}{labels[scene_index]}xfade=transition=fade:duration={TRANSITION_DURATION:.6f}:offset={offset:.6f}{output_label}"
+            )
+        video_label = output_label
+
+    filters.append(
+        f"{video_label}trim=start={segment.trim_start:.6f}:duration={segment.output_duration:.6f},"
+        "setpts=PTS-STARTPTS,format=yuv420p[out]"
+    )
+    execute([
+        str(FFMPEG), "-y", *inputs,
+        "-filter_complex_threads", "1", "-filter_threads", "1",
+        "-filter_buffered_frames", str(MAX_FILTER_BUFFERED_FRAMES),
+        "-filter_complex", ";".join(filters), "-map", "[out]", "-an",
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "21", "-pix_fmt", "yuv420p",
+        "-r", str(BACKGROUND_FPS), "-movflags", "+faststart", str(output),
+    ])
+    return output
+
+
+def concatenate_visual_segments(segment_paths: list[Path], output_dir: Path) -> Path:
+    """Une segmentos H.264 idênticos sem abrir todas as cenas novamente."""
+    if not segment_paths:
+        raise RuntimeError("Nenhum fragmento visual foi produzido.")
+    concat_file = output_dir / "segmentos.ffconcat"
+    lines = ["ffconcat version 1.0"]
+    for path in segment_paths:
+        escaped = path.resolve().as_posix().replace("'", r"'\\''")
+        lines.append(f"file '{escaped}'")
+    concat_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    output = output_dir / "video_sem_audio.mp4"
+    execute([
+        str(FFMPEG), "-y", "-safe", "0", "-f", "concat", "-i", str(concat_file),
+        "-c", "copy", "-movflags", "+faststart", str(output),
+    ])
+    return output
+
+
+def render_final_audio_and_annotations(
+    visual: Path,
+    narration: Path,
+    music: Path,
+    sound_events: list[tuple[str, float]],
+    annotations: list[tuple[list[str], float, float, str | None]],
+    narration_duration: float,
+    tail_duration: float,
+    output: Path,
+    filter_script: Path,
+    use_vintage_effect: bool = False,
+) -> None:
+    """Aplica textos e mixagem em um único vídeo já concatenado.
+
+    Não há mais dezenas de entradas de vídeo nesta etapa. A cadeia editorial
+    continua fiel ao compositor aprovado, porém trabalha sobre apenas uma
+    fonte visual, o que limita drasticamente as filas de frames.
+    """
+    filters: list[str] = []
+    video_label = "[0:v]"
+    for index, (lines, annotation_start, annotation_end, emoji) in enumerate(annotations):
+        base = f"[annotation_base{index}]"
+        blur = f"[annotation_blur{index}]"
+        blurred = f"[annotation_layer{index}]"
+        enabled = time_window(annotation_start, annotation_end)
+        filters.append(f"{video_label}split=2{base}[annotation_source{index}]")
+        filters.append(f"[annotation_source{index}]boxblur=22:6:enable='{enabled}'{blur}")
+        filters.append(f"{base}{blur}overlay=0:0:enable='{enabled}'{blurred}")
+        video_label = typing_annotation_filters(filters, blurred, index, lines, annotation_start, annotation_end, emoji)
+    if use_vintage_effect:
+        vintage_output = "[video_vintage]"
+        filters.append(f"{video_label}noise=alls=4:allf=t+u,eq=contrast=1.03:saturation=0.90{vintage_output}")
+        video_label = vintage_output
+    filters.append(
+        f"{video_label}trim=duration={narration_duration + tail_duration:.6f},format=yuv420p[video]"
+    )
+
+    voice_index = 1
+    music_index = 2
+    effect_input_start = 3
+    events_by_effect: dict[str, list[float]] = {}
+    for effect, event_time in sound_events:
+        events_by_effect.setdefault(effect, []).append(event_time)
+    sound_input_indices = {
+        effect: effect_input_start + index
+        for index, effect in enumerate(events_by_effect)
+    }
+    effect_labels: dict[str, list[str]] = {}
+    for effect, event_times in events_by_effect.items():
+        labels = [f"[{effect}_source_{index}]" for index in range(len(event_times))]
+        effect_labels[effect] = labels
+        duration = SOUND_CLIP_SECONDS.get(effect, 0.9)
+        volume = SOUND_VOLUMES.get(effect, 0.46)
+        lead_trim = SOUND_LEAD_TRIM.get(effect, 0.0)
+        filters.append(
+            f"[{sound_input_indices[effect]}:a]aresample=48000,atrim=start={lead_trim:.3f}:end={lead_trim + duration:.3f},volume={volume:.2f},"
+            f"asplit={len(labels)}{''.join(labels)}"
+        )
+    delayed: list[str] = []
+    for effect, event_times in events_by_effect.items():
+        for index, event_time in enumerate(event_times):
+            delay = round(event_time * 1000)
+            label = f"[{effect}_hit_{index}]"
+            filters.append(f"{effect_labels[effect][index]}adelay={delay}:all=1{label}")
+            delayed.append(label)
+    if delayed:
+        filters.append("".join(delayed) + f"amix=inputs={len(delayed)}:normalize=0[sfx_track]")
+    else:
+        filters.append("anullsrc=r=48000:cl=stereo,atrim=0:0[sfx_track]")
+    filters.extend([
+        f"[{voice_index}:a]aresample=48000,apad=pad_dur={tail_duration:.3f},asplit=2[voice_mix][voice_key]",
+        f"[{music_index}:a]aresample=48000,volume=0.20[music]",
+        "[music][voice_key]sidechaincompress=threshold=0.035:ratio=8:attack=20:release=250[ducked]",
+        "[voice_mix][ducked][sfx_track]amix=inputs=3:duration=first:normalize=0[audio]",
+    ])
+    filter_script.write_text(";".join(filters), encoding="utf-8")
+    inputs: list[str] = ["-i", str(visual), "-i", str(narration), "-stream_loop", "-1", "-i", str(music)]
+    for effect in events_by_effect:
+        inputs.extend(["-i", str(SOUND_EFFECTS[effect])])
+    execute([
+        str(FFMPEG), "-y", *inputs,
+        "-filter_complex_threads", "1", "-filter_threads", "1",
+        "-filter_buffered_frames", str(MAX_FILTER_BUFFERED_FRAMES),
+        "-filter_complex_script", str(filter_script), "-map", "[video]", "-map", "[audio]",
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "21", "-pix_fmt", "yuv420p",
+        "-r", str(BACKGROUND_FPS), "-c:a", "aac", "-b:a", "192k",
+        "-movflags", "+faststart", "-shortest", str(output),
+    ])
+
+
+def discard_consumed_scene_sources(
+    rendered_clips: list[Path],
+    canvas_paths: dict[int, Path],
+    before_index: int,
+) -> None:
+    """Libera intermediários que nenhum fragmento futuro pode reutilizar."""
+    for index in range(before_index):
+        for path in {rendered_clips[index], canvas_paths.get(index)}:
+            if path is not None and path.is_file():
+                path.unlink()
 
 
 def main(
@@ -663,8 +1036,6 @@ def main(
     # A opção explícita da linha de comando permite testar alternativas sem
     # editar o roteiro. Na ausência dela, usa-se a escolha salva no JSON.
     selected_background_animation = background_animation or payload.get("background_animation", "movimento_sutil")
-    background_filter = background_animation_filter(selected_background_animation)
-    background_light = background_light_filter(selected_background_animation)
     if len(scene_specs) != len(image_order):
         raise ValueError("O roteiro e a lista de imagens precisam ter a mesma quantidade de cenas.")
     missing_images = [name for name in image_order if not (selected_images / name).is_file()]
@@ -798,173 +1169,65 @@ def main(
         ])
         rendered_clips.append(clip)
 
-    video_inputs: list[str] = []
-    for clip in rendered_clips:
-        video_inputs.extend(["-i", str(clip)])
-    background_index = len(rendered_clips)
-    card_indices = [index for index, mode in enumerate(modes) if mode == "card"]
-    background_prefix = (
-        f"[{background_index}:v]{background_filter},"
-        f"format=rgb24,lutrgb=r='min(255,val*5)':g='min(255,val*5)':b='min(255,val*5)',"
-        f"{background_light},vignette=PI/4:eval=frame,"
-        f"fps={BACKGROUND_FPS},settb=1/{FPS},setsar=1"
-    )
-    filters: list[str] = []
-    background_labels: dict[int, str] = {}
-    if card_indices:
-        labels = "".join(f"[background_{index}]" for index in card_indices)
-        filters.append(f"{background_prefix},split={len(card_indices)}{labels}")
-        background_labels = {index: f"[background_{index}]" for index in card_indices}
-    else:
-        filters.append(f"{background_prefix}[background]")
+    # Cada fragmento abre no máximo treze entradas (doze cenas e a cena de
+    # guarda da transição). Isso substitui o antigo filter graph monolítico,
+    # que abria todas as cenas do vídeo e acabava esgotando a memória.
+    segments = build_render_segments(scene_starts, narration_duration, tail_duration)
+    canvas_dir = output_dir / "cenas_prontas"
+    segment_dir = output_dir / "segmentos"
+    canvas_paths: dict[int, Path] = {}
+    scene_paths = list(rendered_clips)
+    segment_paths: list[Path] = []
+    for segment_index, segment in enumerate(segments):
+        render_end = segment.handoff_index if segment.handoff_index is not None else segment.end_index
+        for index in range(segment.start_index, render_end + 1):
+            canvas_paths[index] = render_scene_canvas(
+                index,
+                rendered_clips,
+                canvas_dir,
+                selected_background,
+                selected_background_animation,
+                modes,
+                exits,
+                scene_starts,
+                transition_starts,
+                clip_durations,
+                tail_duration,
+            )
+            scene_paths[index] = canvas_paths[index]
+        segment_paths.append(render_visual_segment(
+            segment,
+            segment_index,
+            segment_dir,
+            scene_paths,
+            scene_starts,
+            modes,
+            exits,
+        ))
+        next_required = segment.handoff_index if segment.handoff_index is not None else len(rendered_clips)
+        discard_consumed_scene_sources(rendered_clips, canvas_paths, next_required)
 
-    # Cada cena vira uma tela completa antes de entrar na transição. O xfade
-    # smoothleft é a máscara que revela suavemente a próxima tela no preview
-    # de referência; para a ida oposta, ele é espelhado sem mudar os assets.
-    scene_labels: list[str] = []
-    for index in range(len(rendered_clips)):
-        output = f"[scene{index}]"
-        is_fullscreen = modes[index] == "fullscreen"
-        if is_fullscreen:
-            padding = f",tpad=stop_mode=clone:stop_duration={tail_duration:.3f}" if index == len(rendered_clips) - 1 and tail_duration else ""
-            filters.append(f"[{index}:v]settb=1/{FPS},setpts=PTS-STARTPTS{padding}{output}")
-        else:
-            card = f"[card{index}]"
-            shadow = f"[shadow{index}]"
-            shadow_layer = f"[shadow_layer{index}]"
-            centered_x = "(main_w-overlay_w)/2"
-            entry = centered_x
-            if index and modes[index - 1] == "fullscreen":
-                # Ao sair de fullscreen, o cartão acompanha a revelação: vem
-                # da direita quando a tela viaja à esquerda e vice-versa.
-                if exits[index - 1] == "to_left":
-                    entry = f"main_w-(main_w-{centered_x})*t/{TRANSITION_DURATION:.3f}"
-                else:
-                    entry = f"-overlay_w+({centered_x}+overlay_w)*t/{TRANSITION_DURATION:.3f}"
-
-            # A mesma composição precisa acompanhar a saída cartão -> tela
-            # cheia. Antes, ela só animava a entrada no sentido inverso.
-            exit_start = transition_starts[index] if index < len(rendered_clips) - 1 else clip_durations[index]
-            exiting = centered_x
-            if index < len(rendered_clips) - 1 and modes[index + 1] == "fullscreen":
-                if exits[index] == "to_left":
-                    exiting = f"{centered_x}-({centered_x}+overlay_w)*(t-{exit_start:.3f})/{TRANSITION_DURATION:.3f}"
-                elif exits[index] == "to_right":
-                    exiting = f"{centered_x}+(main_w-{centered_x})*(t-{exit_start:.3f})/{TRANSITION_DURATION:.3f}"
-            card_x = (
-                f"if(lt(t,{TRANSITION_DURATION:.3f}),{entry},"
-                f"if(lt(t,{exit_start:.3f}),{centered_x},{exiting}))"
-            )
-            filters.append(
-                f"[{index}:v]settb=1/{FPS},setpts=PTS-STARTPTS,split=2{card}[shadow_source{index}]"
-            )
-            filters.append(
-                f"[shadow_source{index}]format=rgba,colorchannelmixer=rr=0:gg=0:bb=0:aa=0.42,boxblur=18:2{shadow}"
-            )
-            filters.append(
-                f"{background_labels[index]}trim=duration={clip_durations[index]:.3f},setpts=PTS-STARTPTS[background_trim{index}]"
-            )
-            filters.append(
-                f"[background_trim{index}]{shadow}overlay=x='({card_x})+18':y='(main_h-overlay_h)/2+22':format=auto{shadow_layer}"
-            )
-            padding = f",tpad=stop_mode=clone:stop_duration={tail_duration:.3f}" if index == len(rendered_clips) - 1 and tail_duration else ""
-            filters.append(
-                f"{shadow_layer}{card}overlay=x='{card_x}':y='(main_h-overlay_h)/2':format=auto{padding}{output}"
-            )
-        scene_labels.append(output)
-
-    video_label = scene_labels[0]
-    for index in range(1, len(scene_labels)):
-        output = "[transitioned_video]" if index == len(scene_labels) - 1 else f"[transition_{index}]"
-        # A próxima imagem começa a ser revelada no timestamp acústico dela.
-        # Os clipes anteriores foram estendidos por TRANSITION_DURATION para
-        # que esse offset não antecipe nem atrase o começo da fala.
-        offset = scene_starts[index]
-        previous_mode = modes[index - 1]
-        current_mode = modes[index]
-        if previous_mode == "card" and current_mode == "card":
-            filters.append(
-                f"{video_label}{scene_labels[index]}xfade=transition=fade:duration={TRANSITION_DURATION:.3f}:offset={offset:.3f}{output}"
-            )
-        elif exits[index - 1] == "to_left":
-            filters.append(
-                f"{video_label}{scene_labels[index]}xfade=transition=smoothleft:duration={TRANSITION_DURATION:.3f}:offset={offset:.3f}{output}"
-            )
-        elif exits[index - 1] == "to_right":
-            filters.extend([
-                f"{video_label}hflip[flip_current_{index}]",
-                f"{scene_labels[index]}hflip[flip_next_{index}]",
-                f"[flip_current_{index}][flip_next_{index}]xfade=transition=smoothleft:duration={TRANSITION_DURATION:.3f}:offset={offset:.3f}[flip_mix_{index}]",
-                f"[flip_mix_{index}]hflip{output}",
-            ])
-        else:
-            filters.append(
-                f"{video_label}{scene_labels[index]}xfade=transition=fade:duration={TRANSITION_DURATION:.3f}:offset={offset:.3f}{output}"
-            )
-        video_label = output
-    for index, (lines, annotation_start, annotation_end, emoji) in enumerate(annotations):
-        base = f"[annotation_base{index}]"
-        blur = f"[annotation_blur{index}]"
-        blurred = f"[annotation_layer{index}]"
-        enabled = time_window(annotation_start, annotation_end)
-        filters.append(f"{video_label}split=2{base}[annotation_source{index}]")
-        filters.append(f"[annotation_source{index}]boxblur=22:6:enable='{enabled}'{blur}")
-        filters.append(f"{base}{blur}overlay=0:0:enable='{enabled}'{blurred}")
-        video_label = typing_annotation_filters(filters, blurred, index, lines, annotation_start, annotation_end, emoji)
-    if use_vintage_effect:
-        vintage_output = "[video_vintage]"
-        # Grão temporal muito leve, sem tremor geométrico ou perda de foco.
-        filters.append(f"{video_label}noise=alls=4:allf=t+u,eq=contrast=1.03:saturation=0.90{vintage_output}")
-        video_label = vintage_output
-
-    voice_index = background_index + 1
-    music_index = voice_index + 1
-    effect_input_start = music_index + 1
-    events_by_effect: dict[str, list[float]] = {}
-    for effect, event_time in sound_events:
-        events_by_effect.setdefault(effect, []).append(event_time)
-    sound_input_indices = {effect: effect_input_start + index for index, effect in enumerate(events_by_effect)}
-    effect_labels: dict[str, list[str]] = {}
-    for effect, event_times in events_by_effect.items():
-        labels = [f"[{effect}_source_{index}]" for index in range(len(event_times))]
-        effect_labels[effect] = labels
-        duration = SOUND_CLIP_SECONDS.get(effect, 0.9)
-        volume = SOUND_VOLUMES.get(effect, 0.46)
-        lead_trim = SOUND_LEAD_TRIM.get(effect, 0.0)
-        filters.append(
-            f"[{sound_input_indices[effect]}:a]aresample=48000,atrim=start={lead_trim:.3f}:end={lead_trim + duration:.3f},volume={volume:.2f},"
-            f"asplit={len(labels)}{''.join(labels)}"
+    visual = concatenate_visual_segments(segment_paths, output_dir)
+    expected_visual_duration = narration_duration + tail_duration
+    visual_duration = media_duration(visual)
+    if abs(visual_duration - expected_visual_duration) > 3 / FPS:
+        raise RuntimeError(
+            "A concatenação dos fragmentos ficou fora da duração acústica esperada "
+            f"({visual_duration:.3f}s em vez de {expected_visual_duration:.3f}s)."
         )
-    delayed: list[str] = []
-    for effect, event_times in events_by_effect.items():
-        for index, event_time in enumerate(event_times):
-            delay = round(event_time * 1000)
-            label = f"[{effect}_hit_{index}]"
-            # Os SFX são estéreo. Sem all=1, o FFmpeg atrasaria apenas um
-            # canal e deixaria o outro tocar indevidamente no início.
-            filters.append(f"{effect_labels[effect][index]}adelay={delay}:all=1{label}")
-            delayed.append(label)
-    if delayed:
-        filters.append("".join(delayed) + f"amix=inputs={len(delayed)}:normalize=0[sfx_track]")
-    else:
-        filters.append("anullsrc=r=48000:cl=stereo,atrim=0:0[sfx_track]")
-    filters.extend([
-        f"[{voice_index}:a]aresample=48000,apad=pad_dur={tail_duration:.3f},asplit=2[voice_mix][voice_key]",
-        f"[{music_index}:a]aresample=48000,volume=0.20[music]",
-        "[music][voice_key]sidechaincompress=threshold=0.035:ratio=8:attack=20:release=250[ducked]",
-        "[voice_mix][ducked][sfx_track]amix=inputs=3:duration=first:normalize=0[audio]",
-    ])
-
     filter_script = output_dir / "filtros_renderizacao.ffscript"
-    filter_script.write_text(";".join(filters), encoding="utf-8")
-    execute([
-        str(FFMPEG), "-y", *video_inputs, "-loop", "1", "-framerate", str(BACKGROUND_FPS), "-i", str(selected_background),
-        "-i", str(voice), "-stream_loop", "-1", "-i", str(selected_music),
-        *[item for effect in events_by_effect for item in ("-i", str(SOUND_EFFECTS[effect]))],
-        "-filter_complex_script", str(filter_script), "-map", video_label, "-map", "[audio]", "-c:v", "libx264",
-        "-preset", "veryfast", "-crf", "21", "-pix_fmt", "yuv420p", "-r", str(BACKGROUND_FPS), "-c:a", "aac", "-b:a", "192k",
-        "-movflags", "+faststart", "-shortest", str(final),
-    ])
+    render_final_audio_and_annotations(
+        visual,
+        voice,
+        selected_music,
+        sound_events,
+        annotations,
+        narration_duration,
+        tail_duration,
+        final,
+        filter_script,
+        use_vintage_effect,
+    )
     if not keep_intermediates:
         clean_temporary_artifacts(clips, voice, filter_script, output_dir)
     print(f"Vídeo pronto: {final} (animação do fundo: {selected_background_animation})")

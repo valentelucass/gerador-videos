@@ -165,6 +165,9 @@ button, select { cursor: pointer; }
 .asset-grid img { width: 100%; height: 64px; object-fit: cover; border: 1px solid #2c3540; border-radius: 6px; background: #070a0d; }
 .asset-grid figcaption { overflow: hidden; margin-top: 3px; color: #8e9aa7; font-size: .57rem; line-height: 1.1; text-overflow: ellipsis; white-space: nowrap; }
 .asset-grid-empty { grid-column: 1 / -1; margin: 3px 0; color: #7f8b98; font-size: .7rem; }
+.asset-grid-pagination { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 7px; color: #7f8b98; font-size: .62rem; }
+.asset-grid-pagination > div { display: flex; gap: 5px; }
+.asset-grid-pagination .button { padding: 5px 7px; font-size: .62rem; }
 
 .scene-bindings { min-height: 0; flex: 1 1 auto; display: flex; flex-direction: column; margin-top: 10px; padding-top: 9px; border-top: 1px solid #26303a; }
 .scene-bindings-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: #c8d1da; font-size: .7rem; font-weight: 720; }
@@ -217,6 +220,10 @@ button, select { cursor: pointer; }
 .status-detail { display: grid; min-width: 0; flex: 1; gap: 5px; }
 .status { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .status.working { color: #f3d536; }
+.timing-report { display: grid; gap: 7px; max-height: 250px; overflow-y: auto; margin-top: 10px; padding: 10px; border: 1px solid #5d4827; border-radius: 8px; background: #2e251a; color: #ffdc8d; font-size: .76rem; }
+.timing-warning { display: grid; gap: 2px; padding: 7px 0; border-top: 1px solid #5d4827; color: #ffcf70; line-height: 1.35; }
+.timing-warning:first-of-type { border-top: 0; padding-top: 0; }
+.timing-warning small { color: #d4c29b; }
 .render-error-detail { overflow: hidden; color: #dc9898; font: .65rem/1.25 ui-monospace, SFMono-Regular, Consolas, monospace; text-overflow: ellipsis; white-space: nowrap; }
 .statusbar > span:last-child { color: #67727e; white-space: nowrap; }
 .output-link { color: #f3d536; font-weight: 750; text-decoration: none; white-space: nowrap; }

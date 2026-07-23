@@ -55,10 +55,11 @@ ESTRUTURA E RITMO
 - Cada `blocks[].text` é a narração oficial daquele único plano; escreva em
   parágrafo natural, sem rubricas, sem título de seção e sem instruções de
   edição.
-- Planeje normalmente 10 a 12 cenas por minuto. Mantenha cada bloco entre 15
-  e 20 palavras sempre que o idioma permitir, com duração acústica estimada
+- Planeje normalmente 10 a 12 cenas por minuto. Mantenha cada bloco entre 8
+  e 12 palavras sempre que o idioma permitir, com duração acústica estimada
   entre 3 e 7 segundos. Nunca escreva uma cena que possa passar de 9 segundos
-  de fala.
+  de fala. Para vozes em inglês lentas, datas, vírgulas e enumerações alongam
+  a fala: prefira frases ainda menores nesses casos.
 - Dê a cada bloco uma informação, ação ou virada nova. Não repita fatos para
   preencher duração e não deixe uma imagem representar várias ideias sem
   conexão.

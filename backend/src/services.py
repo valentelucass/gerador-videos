@@ -18,6 +18,10 @@ ASSET_NAME_STOP_WORDS = frozenset({
     "a", "o", "as", "os", "de", "da", "do", "das", "dos", "e", "em", "na", "no", "com", "sem",
     "uma", "um", "para", "por", "the", "and", "of", "in", "with", "on", "at", "from", "image",
     "imagem", "horizontal", "cinematografico", "cinematografica", "documental", "realista", "detalhado",
+    # Termos amplos demais para decidir qual foto pertence a uma cena. Eles
+    # continuam legíveis no nome, mas não podem vencer uma correspondência
+    # específica como "E-Type racing mountain" ou "five cars crossroads".
+    "car", "cars", "classic", "british", "english", "road", "street", "country", "body",
     "arqueologia", "archaeology", "arqueologo", "archaeologist",
 })
 
@@ -54,6 +58,14 @@ VISUAL_SYNONYMS = (
     {"passagem", "corredor", "tunel", "passage", "tunnel"}, {"grade", "grate", "gate"},
     {"osso", "ossos", "cranio", "cranios", "bone", "bones", "skull", "skulls", "femur", "femurs"},
     {"boneca", "bonecas", "doll", "dolls"},
+    {"two", "ii", "second"},
+    {"turning", "turn", "curve", "cornering"},
+    {"monocoque", "chassis", "structure"},
+    {"model", "models", "evolution", "later", "beside"},
+    {"collection", "rare", "parked", "group"},
+    {"show", "displayed", "exhibition", "amsterdam"},
+    {"coachbuilder", "workshop", "leaving", "exit"},
+    {"arrival", "emerging", "darkness", "hotel"},
 )
 GENERIC_CONCEPTS = frozenset(
     f"semantic_concept_{index}"
@@ -97,7 +109,6 @@ def _scene_asset_score(block: object, scene: object, source_name: str) -> int:
     visual = scene.visual
     asset_terms = _normalized_terms(Path(source_name).stem)
     primary_terms = _normalized_terms(" ".join((visual.subject, visual.action, visual.setting)))
-    secondary_terms = _normalized_terms(" ".join((block.text, visual.framing, visual.details)))
     asset_key = getattr(scene, "asset_key", None)
     key_terms = _normalized_terms(asset_key.replace("-", " ")) if asset_key else set()
     # A chave é explícita e está no mesmo idioma dos nomes gerados pelo Flow;
@@ -105,7 +116,6 @@ def _scene_asset_score(block: object, scene: object, source_name: str) -> int:
     score = (
         10 * len(key_terms.intersection(asset_terms))
         + 3 * len(primary_terms.intersection(asset_terms))
-        + len(secondary_terms.intersection(asset_terms))
     )
     # Uma cena de montagem pode ser exportada como uma lista de lugares no
     # nome do arquivo, sem usar literalmente a palavra "montage". Quando o
@@ -119,6 +129,16 @@ def _scene_asset_score(block: object, scene: object, source_name: str) -> int:
     # ``asset_key`` e continua sendo a candidata natural.
     if "montage" in asset_terms and "montage" not in key_terms:
         score -= 25
+    # "Monocoque" e "chassis" são equivalentes estruturais, mas o primeiro
+    # costuma aparecer no roteiro e o segundo no nome exportado pela imagem.
+    # Essa ligação específica evita que uma foto comparativa seja confundida
+    # com uma foto de modelos estacionados.
+    if "monocoque" in key_terms and "chassis" in asset_terms:
+        score += 15
+    if "coachbuilder" in key_terms and "leaving" in asset_terms:
+        score += 15
+    if "curve" in key_terms and "turning" in asset_terms:
+        score += 15
     return score
 
 
@@ -131,6 +151,67 @@ def _has_specific_visual_evidence(block: object, scene: object, source_name: str
     primary_terms = _normalized_terms(" ".join((visual.subject, visual.action, visual.setting)))
     evidence = primary_terms.intersection(asset_terms)
     return bool(evidence - GENERIC_CONCEPTS - {"arqueologia", "archaeology", "arqueologo", "archaeologist"})
+
+
+def _assign_closed_batch(
+    scenes: list[tuple[object, object]], source_names: list[str],
+) -> dict[str, str]:
+    """Seleciona as melhores imagens de um lote completo, com sobras opcionais."""
+    scene_count = len(scenes)
+    source_count = len(source_names)
+    if source_count < scene_count:
+        raise ValueError("O pareamento global exige ao menos uma imagem por cena.")
+    scores = [
+        [_scene_asset_score(block, scene, source_name) for source_name in source_names]
+        for block, scene in scenes
+    ]
+    maximum = max(max(row) for row in scores)
+    # Algoritmo húngaro: escolhe o melhor conjunto global, em vez de deixar
+    # uma decisão local reservar uma imagem para a cena errada.
+    u = [0] * (scene_count + 1)
+    v = [0] * (source_count + 1)
+    matching = [0] * (source_count + 1)
+    previous = [0] * (source_count + 1)
+    for scene_index in range(1, scene_count + 1):
+        matching[0] = scene_index
+        column = 0
+        minimum = [float("inf")] * (source_count + 1)
+        used = [False] * (source_count + 1)
+        while True:
+            used[column] = True
+            row = matching[column]
+            delta = float("inf")
+            next_column = 0
+            for candidate in range(1, source_count + 1):
+                if used[candidate]:
+                    continue
+                cost = (maximum - scores[row - 1][candidate - 1]) * 1000 + candidate
+                value = cost - u[row] - v[candidate]
+                if value < minimum[candidate]:
+                    minimum[candidate] = value
+                    previous[candidate] = column
+                if minimum[candidate] < delta:
+                    delta = minimum[candidate]
+                    next_column = candidate
+            for candidate in range(source_count + 1):
+                if used[candidate]:
+                    u[matching[candidate]] += delta
+                    v[candidate] -= delta
+                else:
+                    minimum[candidate] -= delta
+            column = next_column
+            if matching[column] == 0:
+                break
+        while column:
+            parent = previous[column]
+            matching[column] = matching[parent]
+            column = parent
+
+    return {
+        scenes[matching[source_index] - 1][1].image: source_names[source_index - 1]
+        for source_index in range(1, source_count + 1)
+        if matching[source_index]
+    }
 
 
 def semantic_image_bindings(
@@ -156,6 +237,12 @@ def semantic_image_bindings(
         if len(matches) == 1:
             completed[scene.image] = matches[0]
             used_sources.add(matches[0])
+
+    remaining_scenes = [(block, scene) for block, scene in scenes if scene.image not in completed]
+    remaining_sources = [name for name in candidates if name not in used_sources]
+    if remaining_scenes and len(remaining_sources) >= len(remaining_scenes):
+        completed.update(_assign_closed_batch(remaining_scenes, remaining_sources))
+        return completed
 
     # O Flow pode salvar com seu próprio nome. Nesse caso usamos somente a
     # descrição autogerada e o brief visual, com associação um-para-um.

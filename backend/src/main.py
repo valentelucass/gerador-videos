@@ -2,10 +2,16 @@ from __future__ import annotations
 
 import json
 import logging
+import math
+import os
 import shutil
 import traceback
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
+from queue import Queue
+from tempfile import TemporaryDirectory
+from threading import Lock, Thread
 from uuid import uuid4
 
 from fastapi import BackgroundTasks, FastAPI, File, HTTPException, UploadFile
@@ -14,7 +20,7 @@ from fastapi.responses import PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
 from .config import BACKGROUND_DIR, FINAL_OUTPUT_DIR, IMAGE_DIR, MUSIC_DIR, SOUND_DIR, VOICE_PREVIEW_DIR, WORKSPACE
-from .core.horizontal_renderer import render
+from .core.horizontal_renderer import narration_duration, preview_scene_timing, render
 from .core.tts_neural import TTSNeuralEngine, VOICE_CATALOG
 from .models import RenderRequest, Script, ValidationRequest
 from .services import (
@@ -35,6 +41,42 @@ app.mount("/assets/voice-previews", StaticFiles(directory=VOICE_PREVIEW_DIR), na
 app.mount("/outputs", StaticFiles(directory=FINAL_OUTPUT_DIR), name="outputs")
 LOGGER = logging.getLogger("synthreel.api")
 
+# A fila é intencionalmente exclusiva da esteira horizontal. Um render 1080p
+# abre muitos streams e não pode disputar memória com outro FFmpeg pesado no
+# mesmo processo.
+_RENDER_MIN_FREE_DISK_ENV = "SYNTHREEL_HORIZONTAL_MIN_FREE_DISK_GIB"
+_DEFAULT_RENDER_MIN_FREE_DISK_GIB = 8.0
+_GIB = 1024 ** 3
+
+
+@dataclass(frozen=True)
+class _QueuedRender:
+    script: Script
+    background_image: str
+    music_name: str | None
+    image_bindings: dict[str, str]
+    job_dir: Path
+
+
+_RENDER_QUEUE: Queue[_QueuedRender] = Queue()
+_RENDER_QUEUE_LOCK = Lock()
+_RENDER_QUEUE_THREAD: Thread | None = None
+_RENDER_QUEUE_PENDING_IDS: list[str] = []
+_ACTIVE_RENDER_JOB_ID: str | None = None
+
+
+class RenderDiskSpaceError(RuntimeError):
+    """A reserva mínima de disco não está disponível para um job horizontal."""
+
+    def __init__(self, free_bytes: int, required_bytes: int, required_gib: float) -> None:
+        self.free_bytes = free_bytes
+        self.required_bytes = required_bytes
+        self.required_gib = required_gib
+        super().__init__(
+            "Espaço em disco insuficiente para iniciar a renderização "
+            f"({free_bytes / _GIB:.2f} GiB livres; reserva mínima: {required_gib:.2f} GiB)."
+        )
+
 
 def _complete_automatic_image_bindings(
     script: Script,
@@ -43,6 +85,16 @@ def _complete_automatic_image_bindings(
 ) -> dict[str, str]:
     """Completa somente vínculos semanticamente compatíveis com a cena."""
     return semantic_image_bindings(script, image_bindings, uploaded_images)
+
+
+def _timing_preview(script: Script) -> dict[str, object]:
+    """Sintetiza em diretório temporário para revelar cortes antes do render."""
+    with TemporaryDirectory(prefix="synthreel_timing_") as directory:
+        narration = Path(directory) / "narracao_previa.mp3"
+        boundaries = TTSNeuralEngine().synthesize_with_word_boundaries_sync(
+            " ".join(block.text for block in script.blocks), script.language, narration, script.voice,
+        )
+        return preview_scene_timing(script, boundaries, narration_duration(narration))
 
 
 @app.get("/api/catalog")
@@ -55,7 +107,14 @@ def validate(request: ValidationRequest) -> dict[str, object]:
     bindings = _complete_automatic_image_bindings(
         request.script, request.manual_image_bindings, request.uploaded_images,
     )
-    return validate_script(request.script, bindings)
+    report = validate_script(request.script, bindings)
+    if request.measure_timing and report["valid"]:
+        try:
+            report["timing"] = _timing_preview(request.script)
+        except Exception as exc:
+            LOGGER.exception("Pré-validação acústica falhou para %r.", request.script.title)
+            report["timing_error"] = f"Não foi possível medir a narração: {exc}"
+    return report
 
 
 @app.post("/api/prompts")
@@ -121,6 +180,75 @@ def _read_manifest(path: Path) -> dict[str, object]:
     return payload
 
 
+def _minimum_free_disk_bytes() -> tuple[int, float]:
+    """Lê a reserva de disco da esteira horizontal sem fixá-la no código.
+
+    ``SYNTHREEL_HORIZONTAL_MIN_FREE_DISK_GIB`` aceita um número decimal de
+    GiB. A leitura ocorre a cada job para permitir ajustes operacionais sem
+    reiniciar o painel.
+    """
+    raw_value = os.getenv(_RENDER_MIN_FREE_DISK_ENV, str(_DEFAULT_RENDER_MIN_FREE_DISK_GIB))
+    try:
+        gib = float(raw_value)
+    except ValueError:
+        gib = _DEFAULT_RENDER_MIN_FREE_DISK_GIB
+        LOGGER.warning(
+            "%s=%r é inválido; usando a reserva padrão de %.1f GiB.",
+            _RENDER_MIN_FREE_DISK_ENV,
+            raw_value,
+            gib,
+        )
+    if not math.isfinite(gib) or gib < 0:
+        LOGGER.warning(
+            "%s=%r precisa ser um número finito maior ou igual a zero; usando %.1f GiB.",
+            _RENDER_MIN_FREE_DISK_ENV,
+            raw_value,
+            _DEFAULT_RENDER_MIN_FREE_DISK_GIB,
+        )
+        gib = _DEFAULT_RENDER_MIN_FREE_DISK_GIB
+    return math.ceil(gib * _GIB), gib
+
+
+def _check_render_disk_headroom() -> None:
+    """Verifica a reserva de disco antes de criar temporários de FFmpeg."""
+    required_bytes, required_gib = _minimum_free_disk_bytes()
+    free_bytes = shutil.disk_usage(WORKSPACE).free
+    if free_bytes >= required_bytes:
+        return
+
+    raise RenderDiskSpaceError(free_bytes, required_bytes, required_gib)
+
+
+def _require_render_disk_headroom() -> None:
+    """Recusa um novo job antes de ele criar arquivos temporários pesados."""
+    try:
+        _check_render_disk_headroom()
+    except OSError as exc:
+        LOGGER.exception("Não foi possível medir o espaço do workspace horizontal.")
+        raise HTTPException(
+            status_code=503,
+            detail="Não foi possível verificar o espaço em disco para a renderização.",
+        ) from exc
+    except RenderDiskSpaceError as exc:
+        free_gib = exc.free_bytes / _GIB
+        required_gib = exc.required_gib
+
+        LOGGER.warning(
+            "Render horizontal recusado por espaço em disco: livre=%.2f GiB; reserva=%.2f GiB.",
+            free_gib,
+            required_gib,
+        )
+        raise HTTPException(
+            status_code=507,
+            detail={
+                "message": "Espaço em disco insuficiente para iniciar a renderização.",
+                "free_gib": round(free_gib, 2),
+                "required_free_gib": round(required_gib, 2),
+                "setting": _RENDER_MIN_FREE_DISK_ENV,
+            },
+        ) from exc
+
+
 def _append_job_event(job_dir: Path, event: str, **data: object) -> None:
     """Mantém um histórico JSONL independente do estado atual do manifesto."""
     payload = {
@@ -157,6 +285,15 @@ def _completed_job_archive(job_id: str) -> Path:
     return FINAL_OUTPUT_DIR / ".jobs" / f"{job_id}.json"
 
 
+def _workspace_job_directory(job_dir: Path) -> Path:
+    """Confere que uma limpeza jamais escape dos jobs horizontais."""
+    workspace = WORKSPACE.resolve()
+    target = job_dir.resolve()
+    if target.parent != workspace:
+        raise ValueError(f"Limpeza recusada para um lote fora do workspace: {target}")
+    return target
+
+
 def _archive_and_clean_completed_job(job_dir: Path, manifest: dict[str, object]) -> None:
     """Remove artefatos de trabalho somente depois da entrega estar publicada.
 
@@ -165,14 +302,76 @@ def _archive_and_clean_completed_job(job_dir: Path, manifest: dict[str, object])
     conclusão mesmo depois que a pasta UUID for removida. Falhas nunca passam
     por aqui: seus áudios, logs e eventos ficam disponíveis para diagnóstico.
     """
-    workspace = WORKSPACE.resolve()
-    target = job_dir.resolve()
-    if target.parent != workspace:
-        raise ValueError(f"Limpeza recusada para um lote fora do workspace: {target}")
+    target = _workspace_job_directory(job_dir)
     archive = _completed_job_archive(job_dir.name)
     archive.parent.mkdir(parents=True, exist_ok=True)
     _write_manifest(archive, manifest)
     shutil.rmtree(target)
+
+
+_FAILED_JOB_PRESERVED_ARTIFACTS = frozenset({
+    "manifest.json",
+    "render.log",
+    "events.jsonl",
+    "roteiro_painel.json",
+    "timings_cenas.json",
+})
+
+
+def _preserve_failed_job_artifact(artifact: Path) -> bool:
+    """Retém os diagnósticos estáveis sem depender do compositor usado."""
+    if artifact.name in _FAILED_JOB_PRESERVED_ARTIFACTS:
+        return True
+    normalized = artifact.name.casefold()
+    return artifact.suffix.casefold() == ".json" and normalized.startswith(("roteiro", "timings"))
+
+
+def _clean_failed_job_intermediates(job_dir: Path, logger: logging.Logger) -> dict[str, list[str]]:
+    """Remove temporários do job, preservando o diagnóstico do job.
+
+    Falhas precisam continuar auditáveis pelo painel. Por isso manifesto, log,
+    eventos, roteiro aprovado e time-codes não entram na limpeza. Como cada
+    job tem uma pasta isolada e validada, os demais filhos são descartáveis —
+    sem acoplar este guardrail aos nomes internos de um compositor específico.
+    """
+    target = _workspace_job_directory(job_dir)
+    removed: list[str] = []
+    errors: list[str] = []
+    if not target.is_dir():
+        return {"removed": removed, "errors": errors, "preserved": []}
+
+    candidates: list[Path] = []
+    preserved: list[str] = []
+    for artifact in target.iterdir():
+        if _preserve_failed_job_artifact(artifact):
+            preserved.append(artifact.name)
+            continue
+        candidates.append(artifact)
+
+    for artifact in candidates:
+        try:
+            # Nunca seguimos links: um arquivo malformado no job não pode
+            # apontar a limpeza para fora do workspace horizontal.
+            is_junction = getattr(artifact, "is_junction", lambda: False)()
+            if artifact.is_symlink() or is_junction:
+                if artifact.is_dir():
+                    artifact.rmdir()
+                else:
+                    artifact.unlink()
+            elif artifact.is_file():
+                artifact.unlink()
+            elif artifact.is_dir():
+                shutil.rmtree(artifact)
+            else:
+                continue
+            removed.append(artifact.name)
+        except OSError as exc:
+            errors.append(f"{artifact.name}: {exc}")
+            logger.warning("Não foi possível remover temporário de job falho %s: %s", artifact.name, exc)
+
+    if removed:
+        logger.info("Limpeza de falha removeu temporários: %s", ", ".join(removed))
+    return {"removed": removed, "errors": errors, "preserved": sorted(preserved)}
 
 
 def _update_render_progress(manifest_path: Path, progress: int, stage: str, logger: logging.Logger | None = None) -> None:
@@ -190,6 +389,8 @@ def _update_render_progress(manifest_path: Path, progress: int, stage: str, logg
 def _public_failure(exc: Exception) -> tuple[str, str]:
     """Separa orientação para o operador do detalhe técnico já salvo no log."""
     detail = str(exc).strip() or exc.__class__.__name__
+    if isinstance(exc, RenderDiskSpaceError):
+        return "insufficient_disk_space", detail
     if isinstance(exc, (ValueError, FileNotFoundError)):
         return "validation_or_asset_error", detail
     if "time-codes" in detail or "narração" in detail:
@@ -210,8 +411,20 @@ def _render_in_background(
     logger = _job_logger(job_dir)
     completed = False
     try:
-        logger.info("Job aceito para renderização: fundo=%s; música=%s", background_image, music_name or "sem trilha")
+        queued_manifest = _read_manifest(manifest_path)
+        queued_manifest.update({
+            "status": "rendering",
+            "progress": max(3, int(queued_manifest.get("progress", 0))),
+            "stage": "Renderização iniciada; preparando narração e composição",
+        })
+        queued_manifest.pop("queue_position", None)
+        _write_manifest(manifest_path, queued_manifest)
+        logger.info("Job retirado da fila: fundo=%s; música=%s", background_image, music_name or "sem trilha")
         _append_job_event(job_dir, "render_started", background_image=background_image, music_name=music_name)
+        # A fila pode esperar vários minutos. Revalidamos a reserva no instante
+        # em que o FFmpeg vai começar, pois outro processo pode ter ocupado o
+        # disco depois do aceite HTTP inicial.
+        _check_render_disk_headroom()
         _update_render_progress(manifest_path, 8, "Gerando narração e preparando a composição", logger)
         output = render(
             script,
@@ -249,6 +462,18 @@ def _render_in_background(
             "events_url": f"/api/jobs/{job_dir.name}/events",
         })
         _append_job_event(job_dir, "render_failed", code=code, error_type=exc.__class__.__name__, error=str(exc))
+        cleanup = _clean_failed_job_intermediates(job_dir, logger)
+        manifest["cleanup"] = {
+            "removed": cleanup["removed"],
+            "errors": cleanup["errors"],
+            "preserved": cleanup["preserved"],
+        }
+        _append_job_event(
+            job_dir,
+            "failed_intermediates_cleaned",
+            removed=cleanup["removed"],
+            errors=cleanup["errors"],
+        )
     finally:
         try:
             _write_manifest(manifest_path, manifest if "manifest" in locals() else _read_manifest(manifest_path))
@@ -263,8 +488,99 @@ def _render_in_background(
             LOGGER.exception("Não foi possível limpar o lote concluído %s.", job_dir.name)
 
 
+def _mark_queue_worker_failure(job: _QueuedRender, exc: Exception) -> None:
+    """Não deixa um job preso em ``rendering`` se a própria fila falhar."""
+    try:
+        manifest_path = job.job_dir / "manifest.json"
+        manifest = _read_manifest(manifest_path)
+        if manifest.get("status") in {"complete", "failed"}:
+            return
+        manifest.update({
+            "status": "failed",
+            "stage": "Falha interna na fila de renderização",
+            "error": "A fila de renderização encontrou uma falha interna. Abra o log técnico.",
+            "error_code": "queue_worker_error",
+            "error_detail": str(exc),
+            "error_type": exc.__class__.__name__,
+            "log_url": f"/api/jobs/{job.job_dir.name}/log",
+            "events_url": f"/api/jobs/{job.job_dir.name}/events",
+        })
+        cleanup = _clean_failed_job_intermediates(job.job_dir, LOGGER)
+        manifest["cleanup"] = {
+            "removed": cleanup["removed"],
+            "errors": cleanup["errors"],
+            "preserved": cleanup["preserved"],
+        }
+        _write_manifest(manifest_path, manifest)
+        _append_job_event(job.job_dir, "queue_worker_failed", error_type=exc.__class__.__name__, error=str(exc))
+        _append_job_event(
+            job.job_dir,
+            "failed_intermediates_cleaned",
+            removed=cleanup["removed"],
+            errors=cleanup["errors"],
+        )
+    except Exception:
+        LOGGER.exception("Não foi possível registrar a falha interna do job %s.", job.job_dir.name)
+
+
+def _render_queue_worker() -> None:
+    """Consome serialmente a única fila de FFmpeg pesado do processo."""
+    global _ACTIVE_RENDER_JOB_ID
+    while True:
+        job = _RENDER_QUEUE.get()
+        try:
+            with _RENDER_QUEUE_LOCK:
+                if job.job_dir.name in _RENDER_QUEUE_PENDING_IDS:
+                    _RENDER_QUEUE_PENDING_IDS.remove(job.job_dir.name)
+                _ACTIVE_RENDER_JOB_ID = job.job_dir.name
+            _render_in_background(
+                job.script,
+                job.background_image,
+                job.music_name,
+                job.image_bindings,
+                job.job_dir,
+            )
+        except Exception as exc:
+            # ``_render_in_background`` já converte erros esperados em um
+            # manifesto failed. Este bloco cobre apenas uma pane no worker.
+            LOGGER.exception("A fila de renderização falhou no job %s.", job.job_dir.name)
+            _mark_queue_worker_failure(job, exc)
+        finally:
+            with _RENDER_QUEUE_LOCK:
+                if _ACTIVE_RENDER_JOB_ID == job.job_dir.name:
+                    _ACTIVE_RENDER_JOB_ID = None
+            _RENDER_QUEUE.task_done()
+
+
+def _ensure_render_queue_worker() -> None:
+    """Inicia um único consumidor, inclusive quando a API não usa lifespan."""
+    global _RENDER_QUEUE_THREAD
+    with _RENDER_QUEUE_LOCK:
+        if _RENDER_QUEUE_THREAD is not None and _RENDER_QUEUE_THREAD.is_alive():
+            return
+        _RENDER_QUEUE_THREAD = Thread(
+            target=_render_queue_worker,
+            name="synthreel-horizontal-render-queue",
+            daemon=True,
+        )
+        _RENDER_QUEUE_THREAD.start()
+
+
+def _enqueue_render(job: _QueuedRender) -> int:
+    """Enfileira um job e retorna a posição observada no momento da entrada."""
+    _ensure_render_queue_worker()
+    with _RENDER_QUEUE_LOCK:
+        position = len(_RENDER_QUEUE_PENDING_IDS) + (1 if _ACTIVE_RENDER_JOB_ID else 0) + 1
+        # Registre o evento antes de liberar o item para o worker: assim um
+        # job muito curto nunca pode ser arquivado antes deste histórico.
+        _append_job_event(job.job_dir, "job_queued", queue_position=position)
+        _RENDER_QUEUE_PENDING_IDS.append(job.job_dir.name)
+        _RENDER_QUEUE.put(job)
+    return position
+
+
 @app.post("/api/render")
-def start_render(request: RenderRequest, background_tasks: BackgroundTasks) -> dict[str, object]:
+def start_render(request: RenderRequest) -> dict[str, object]:
     image_bindings = _complete_automatic_image_bindings(
         request.script, request.manual_image_bindings, request.uploaded_images,
     )
@@ -288,6 +604,7 @@ def start_render(request: RenderRequest, background_tasks: BackgroundTasks) -> d
             },
         )
     if report["missing_images"]:
+        scene_count = sum(len(block.scenes) for block in request.script.blocks)
         LOGGER.warning(
             "Render recusado por imagens sem vínculo: título=%r; pendentes=%s; enviadas=%s; vínculos_resolvidos=%s.",
             request.script.title,
@@ -300,7 +617,11 @@ def start_render(request: RenderRequest, background_tasks: BackgroundTasks) -> d
             detail={
                 "message": "Não foi possível associar todas as imagens às cenas do roteiro.",
                 "missing_images": report["missing_images"],
-                "hint": "Use 'Escolha manual por cena' para indicar qual arquivo enviado pertence a cada cena pendente.",
+                "hint": (
+                    f"Foram enviadas {len(request.uploaded_images)} imagem(ns) para {scene_count} cena(s). "
+                    "Os arquivos podem manter nomes descritivos; envie a foto que falta ou use "
+                    "'Escolha manual por cena' apenas quando uma foto existente realmente pertencer à cena pendente."
+                ),
             },
         )
     background_image = request.background_image or default_background_name()
@@ -318,6 +639,7 @@ def start_render(request: RenderRequest, background_tasks: BackgroundTasks) -> d
         ):
             raise HTTPException(status_code=422, detail="Escolha uma música válida do catálogo.")
 
+    _require_render_disk_headroom()
     job_dir = WORKSPACE / uuid4().hex
     job_dir.mkdir(parents=True)
     manifest = {
@@ -329,21 +651,39 @@ def start_render(request: RenderRequest, background_tasks: BackgroundTasks) -> d
         "background_image": background_image,
         "music_name": music_name,
         "validation": report,
-        "status": "rendering",
+        "status": "queued",
         "progress": 2,
-        "stage": "Trabalho aceito; aguardando renderização",
+        "stage": "Trabalho aceito; aguardando a vez na fila de renderização",
     }
     _write_manifest(job_dir / "manifest.json", manifest)
     _append_job_event(job_dir, "job_created", scene_count=sum(len(block.scenes) for block in request.script.blocks))
-    background_tasks.add_task(
-        _render_in_background,
-        request.script,
-        background_image,
-        music_name,
-        image_bindings,
-        job_dir,
-    )
-    return {"job_id": job_dir.name, "status": manifest["status"]}
+    try:
+        queue_position = _enqueue_render(_QueuedRender(
+            script=request.script,
+            background_image=background_image,
+            music_name=music_name,
+            image_bindings=image_bindings,
+            job_dir=job_dir,
+        ))
+    except Exception as exc:
+        LOGGER.exception("Não foi possível enfileirar o job horizontal %s.", job_dir.name)
+        manifest.update({
+            "status": "failed",
+            "stage": "Falha ao entrar na fila de renderização",
+            "error": "Não foi possível iniciar a fila de renderização.",
+            "error_code": "queue_unavailable",
+            "error_detail": str(exc),
+            "error_type": exc.__class__.__name__,
+            "log_url": f"/api/jobs/{job_dir.name}/log",
+            "events_url": f"/api/jobs/{job_dir.name}/events",
+        })
+        _write_manifest(job_dir / "manifest.json", manifest)
+        _append_job_event(job_dir, "queue_unavailable", error_type=exc.__class__.__name__, error=str(exc))
+        raise HTTPException(
+            status_code=503,
+            detail="A fila de renderização não pôde ser iniciada. Tente novamente.",
+        ) from exc
+    return {"job_id": job_dir.name, "status": manifest["status"], "queue_position": queue_position}
 
 
 PREVIEW_TEXT = {

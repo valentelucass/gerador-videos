@@ -1,0 +1,1527 @@
+{
+  "title": "Five British Cars That Defined a Generation",
+  "language": "en-US",
+  "narrator_gender": "male",
+  "voice": "en-US-RogerNeural",
+  "background": "black",
+  "background_animation": "movimento_sutil",
+  "blocks": [
+    {
+      "id": "block_01",
+      "text": "Britain built cars that became family memories, national symbols, and cinematic legends.",
+      "scenes": [
+        {
+          "id": "scene_01",
+          "image_id": 1,
+          "asset_key": "british-classic-cars-misty-road",
+          "image": "cena_01.png",
+          "visual": {
+            "subject": "five classic British cars in silhouette",
+            "action": "parked in a dramatic staggered lineup",
+            "setting": "misty English country road at dawn",
+            "framing": "wide low-angle cinematic lineup, horizontal 16:9",
+            "details": "soft morning fog, period-correct body shapes, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": {
+              "type": "click",
+              "at": "start"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_02",
+      "text": "Before we begin, subscribe and leave a like if classic cars still make you stop and look twice.",
+      "scenes": [
+        {
+          "id": "scene_02",
+          "image_id": 2,
+          "asset_key": "british-classic-cars-static-lineup",
+          "image": "cena_02.png",
+          "visual": {
+            "subject": "five classic British cars in silhouette",
+            "action": "remaining still while soft light moves across their bodywork",
+            "setting": "same misty English country road at dawn",
+            "framing": "medium-wide documentary composition matching the previous scene, horizontal 16:9",
+            "details": "same lineup and atmosphere as previous scene, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "click",
+              "at": "start"
+            }
+          },
+          "annotation": {
+            "lines": [
+              "LEAVE A LIKE",
+              "AND SUBSCRIBE"
+            ],
+            "at": "start",
+            "emoji": "👍"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_03",
+      "text": "Our journey spans postwar necessity, luxury, speed, adventure, and British character.",
+      "scenes": [
+        {
+          "id": "scene_03",
+          "image_id": 3,
+          "asset_key": "vintage-britain-roadmap-miniatures",
+          "image": "cena_03.png",
+          "visual": {
+            "subject": "vintage British road map with five miniature classic cars",
+            "action": "forming a route across Britain",
+            "setting": "wooden table beside old driving gloves and keys",
+            "framing": "overhead documentary still life, horizontal 16:9",
+            "details": "aged paper texture without readable writing, model silhouettes distinct, no visible text, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_04",
+      "text": "These cars were not perfect, and some were famously demanding, but none of them could ever be called forgettable.",
+      "scenes": [
+        {
+          "id": "scene_04",
+          "image_id": 4,
+          "asset_key": "worn-classic-dashboard-controls",
+          "image": "cena_04.png",
+          "visual": {
+            "subject": "weathered classic British car dashboard and mechanical controls",
+            "action": "showing charming wear and imperfect craftsmanship",
+            "setting": "dim traditional garage with hand tools",
+            "framing": "close documentary detail shot, horizontal 16:9",
+            "details": "patina, analog switches, worn leather, no visible text, badges, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_05",
+      "text": "The first began as an answer to fuel shortages, yet became one of the most recognized shapes ever built.",
+      "scenes": [
+        {
+          "id": "scene_05",
+          "image_id": 5,
+          "asset_key": "postwar-compact-car-prototype",
+          "image": "cena_05.png",
+          "visual": {
+            "subject": "small 1950s British compact car prototype",
+            "action": "standing beside fuel cans and ration-era street scenery",
+            "setting": "austere postwar English city street",
+            "framing": "wide historical documentary reconstruction, horizontal 16:9",
+            "details": "muted period colors, modest surroundings, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_06",
+      "text": "In 1959, Alec Issigonis introduced the space-saving Mini.",
+      "scenes": [
+        {
+          "id": "scene_06",
+          "image_id": 6,
+          "asset_key": "classic-mini-english-street",
+          "image": "cena_06.png",
+          "visual": {
+            "subject": "1959 classic Mini in period form",
+            "action": "driving through a narrow English street",
+            "setting": "late-1950s urban Britain with brick shops",
+            "framing": "low tracking-style side view, horizontal 16:9",
+            "details": "historically accurate compact proportions, period clothing, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_07",
+      "text": "Its engine sat sideways, allowing most of the small body to be used for passengers rather than machinery.",
+      "scenes": [
+        {
+          "id": "scene_07",
+          "image_id": 7,
+          "asset_key": "mini-transverse-engine-cutaway",
+          "image": "cena_07.png",
+          "visual": {
+            "subject": "cutaway-style classic Mini body",
+            "action": "revealing a sideways engine and spacious passenger cabin",
+            "setting": "clean engineering workshop with period tools",
+            "framing": "three-quarter technical documentary view, horizontal 16:9",
+            "details": "mechanical components clearly visible, no labels, text, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "paper_flip",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_08",
+      "text": "Early cars wore Austin Seven or Morris Mini-Minor badges, because Mini had not yet become a separate brand.",
+      "scenes": [
+        {
+          "id": "scene_08",
+          "image_id": 8,
+          "asset_key": "early-mini-grille-comparison",
+          "image": "cena_08.png",
+          "visual": {
+            "subject": "two early Minis with different grille designs",
+            "action": "parked side by side for comparison",
+            "setting": "1959 British dealership forecourt",
+            "framing": "front three-quarter documentary composition, horizontal 16:9",
+            "details": "period-correct Austin and Morris styling without readable badges, no text, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_09",
+      "text": "The Mini was economical, affordable, and practical, but its sharp handling revealed an unexpectedly playful personality.",
+      "scenes": [
+        {
+          "id": "scene_09",
+          "image_id": 9,
+          "asset_key": "mini-cornering-country-lane",
+          "image": "cena_09.png",
+          "visual": {
+            "subject": "classic Mini on a winding road",
+            "action": "cornering with visible body movement",
+            "setting": "green English countryside lane",
+            "framing": "dynamic low front three-quarter shot, horizontal 16:9",
+            "details": "subtle tire motion and lively handling, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_10",
+      "text": "Racing engineer John Cooper recognized that potential and helped transform the humble commuter into a serious competition machine.",
+      "scenes": [
+        {
+          "id": "scene_10",
+          "image_id": 10,
+          "asset_key": "racing-engineer-mini-workshop",
+          "image": "cena_10.png",
+          "visual": {
+            "subject": "John Cooper-inspired racing engineer and classic Mini",
+            "action": "examining suspension and engine components",
+            "setting": "small 1960s motorsport workshop",
+            "framing": "medium documentary scene, horizontal 16:9",
+            "details": "period overalls, mechanical detail, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_11",
+      "text": "A Mini won the Monte Carlo Rally in 1964, proving that small size could defeat far more powerful rivals.",
+      "scenes": [
+        {
+          "id": "scene_11",
+          "image_id": 11,
+          "asset_key": "mini-snow-rally-hairpin",
+          "image": "cena_11.png",
+          "visual": {
+            "subject": "rally-prepared classic Mini",
+            "action": "charging through a snowy mountain hairpin",
+            "setting": "1964 Monte Carlo-style rally stage",
+            "framing": "dramatic wide action shot, horizontal 16:9",
+            "details": "snow spray, auxiliary lamps without branding, no visible text, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "celebration",
+              "at": "end"
+            }
+          },
+          "annotation": {
+            "lines": [
+              "MONTE CARLO",
+              "1964"
+            ],
+            "at": "middle",
+            "emoji": "🏆"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_12",
+      "text": "Movies, musicians, families, and racers adopted it, turning a practical solution into a symbol of swinging Britain.",
+      "scenes": [
+        {
+          "id": "scene_12",
+          "image_id": 12,
+          "asset_key": "mini-swinging-london-culture",
+          "image": "cena_12.png",
+          "visual": {
+            "subject": "colorful classic Mini surrounded by 1960s culture",
+            "action": "parked near fashionable pedestrians and musicians",
+            "setting": "lively London street during the swinging sixties",
+            "framing": "wide vibrant documentary reconstruction, horizontal 16:9",
+            "details": "period clothing and architecture, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_13",
+      "text": "By 1986, five million Minis had been produced, an extraordinary achievement for such a simple original idea.",
+      "scenes": [
+        {
+          "id": "scene_13",
+          "image_id": 13,
+          "asset_key": "mini-factory-production-lines",
+          "image": "cena_13.png",
+          "visual": {
+            "subject": "large assembly hall filled with classic Minis",
+            "action": "showing rows of completed cars",
+            "setting": "1980s British automobile factory",
+            "framing": "high wide documentary view, horizontal 16:9",
+            "details": "dense production lines and varied colors, no visible text, badges, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_14",
+      "text": "Britain's next icon left clever packaging behind for mud and hard work.",
+      "scenes": [
+        {
+          "id": "scene_14",
+          "image_id": 14,
+          "asset_key": "land-rover-muddy-farmland",
+          "image": "cena_14.png",
+          "visual": {
+            "subject": "mud-covered Land Rover Series I",
+            "action": "leaving a paved road toward rough farmland",
+            "setting": "rainy British countryside with stone walls",
+            "framing": "wide rear three-quarter documentary shot, horizontal 16:9",
+            "details": "rugged terrain and utilitarian shape, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_15",
+      "text": "Land Rover Series I debuted at Amsterdam's 1948 Motor Show.",
+      "scenes": [
+        {
+          "id": "scene_15",
+          "image_id": 15,
+          "asset_key": "series-one-amsterdam-show",
+          "image": "cena_15.png",
+          "visual": {
+            "subject": "1948 Land Rover Series I",
+            "action": "displayed among period visitors",
+            "setting": "Amsterdam motor show reconstruction",
+            "framing": "wide eye-level historical documentary scene, horizontal 16:9",
+            "details": "simple exhibition lighting, period clothing, no readable signs, badges, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "camera_shutter",
+              "at": "start"
+            }
+          },
+          "annotation": {
+            "lines": [
+              "AMSTERDAM",
+              "1948"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_16",
+      "text": "Steel shortages led to an aluminum body, easily repaired far from workshops.",
+      "scenes": [
+        {
+          "id": "scene_16",
+          "image_id": 16,
+          "asset_key": "aluminum-body-solihull-line",
+          "image": "cena_16.png",
+          "visual": {
+            "subject": "unfinished aluminum Land Rover body panels",
+            "action": "being fitted by factory workers",
+            "setting": "postwar Solihull production line",
+            "framing": "medium industrial documentary view, horizontal 16:9",
+            "details": "bare metal surfaces, hand tools, no visible text, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_17",
+      "text": "Maurice and Spencer Wilks designed an agricultural vehicle, not an icon.",
+      "scenes": [
+        {
+          "id": "scene_17",
+          "image_id": 17,
+          "asset_key": "wilks-brothers-farm-prototype",
+          "image": "cena_17.png",
+          "visual": {
+            "subject": "Maurice and Spencer Wilks-inspired engineers",
+            "action": "studying a rugged utility vehicle prototype",
+            "setting": "Welsh farm field beside a stone farmhouse",
+            "framing": "medium-wide historical reconstruction, horizontal 16:9",
+            "details": "practical clothing, sketchbook without readable text, no logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_18",
+      "text": "Farmers quickly understood it, and the British Army placed its first Land Rover orders during 1949.",
+      "scenes": [
+        {
+          "id": "scene_18",
+          "image_id": 18,
+          "asset_key": "series-one-soldiers-farmers",
+          "image": "cena_18.png",
+          "visual": {
+            "subject": "early Land Rover Series I with soldiers and farmers",
+            "action": "being loaded with crates and field equipment",
+            "setting": "muddy British rural yard in 1949",
+            "framing": "wide documentary tableau, horizontal 16:9",
+            "details": "period uniforms and workwear, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_19",
+      "text": "A longer-wheelbase Land Rover arrived in 1953, carrying more people and equipment.",
+      "scenes": [
+        {
+          "id": "scene_19",
+          "image_id": 19,
+          "asset_key": "land-rover-wheelbase-comparison",
+          "image": "cena_19.png",
+          "visual": {
+            "subject": "short and long wheelbase Land Rover Series I vehicles",
+            "action": "parked together for a clear size comparison",
+            "setting": "1953 country estate service yard",
+            "framing": "side-profile comparison shot, horizontal 16:9",
+            "details": "period-correct proportions, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_20",
+      "text": "In 1956, Land Rovers drove from London to Singapore, proving endurance.",
+      "scenes": [
+        {
+          "id": "scene_20",
+          "image_id": 20,
+          "asset_key": "expedition-land-rovers-river",
+          "image": "cena_20.png",
+          "visual": {
+            "subject": "two expedition Land Rovers",
+            "action": "crossing a remote tropical river",
+            "setting": "1950s overland route between Europe and Asia",
+            "framing": "wide cinematic documentary action, horizontal 16:9",
+            "details": "mud, water, canvas equipment, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_21",
+      "text": "The Series I was slow and basic by modern standards, but its honesty became the foundation of the Defender legend.",
+      "scenes": [
+        {
+          "id": "scene_21",
+          "image_id": 21,
+          "asset_key": "series-one-rocky-climb",
+          "image": "cena_21.png",
+          "visual": {
+            "subject": "weathered Land Rover Series I",
+            "action": "climbing a steep rocky trail",
+            "setting": "remote highland landscape under gray skies",
+            "framing": "low wide action shot, horizontal 16:9",
+            "details": "visible suspension articulation, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_22",
+      "text": "Where Land Rover celebrated toughness, Jaguar created a sports car that seemed to arrive directly from the future.",
+      "scenes": [
+        {
+          "id": "scene_22",
+          "image_id": 22,
+          "asset_key": "etype-reveal-beside-landrover",
+          "image": "cena_22.png",
+          "visual": {
+            "subject": "Jaguar E-Type under a silk cover",
+            "action": "being revealed beside a rugged Land Rover",
+            "setting": "dark studio bridging utility and elegance",
+            "framing": "wide dramatic reveal, horizontal 16:9",
+            "details": "strong contrast and flowing body silhouette, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_23",
+      "text": "Jaguar's E-Type debuted in Geneva in 1961, stunning journalists immediately.",
+      "scenes": [
+        {
+          "id": "scene_23",
+          "image_id": 23,
+          "asset_key": "etype-geneva-journalists",
+          "image": "cena_23.png",
+          "visual": {
+            "subject": "1961 Jaguar E-Type coupe",
+            "action": "surrounded by excited journalists and photographers",
+            "setting": "Geneva launch venue reconstruction",
+            "framing": "wide historical documentary scene, horizontal 16:9",
+            "details": "flashbulbs and period suits, no readable signage, badges, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "camera_shutter",
+              "at": "start"
+            }
+          },
+          "annotation": {
+            "lines": [
+              "GENEVA",
+              "1961"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_24",
+      "text": "Demand for demonstration drives became so intense that Jaguar rushed a second E-Type from Coventry through the night.",
+      "scenes": [
+        {
+          "id": "scene_24",
+          "image_id": 24,
+          "asset_key": "etype-night-drive-geneva",
+          "image": "cena_24.png",
+          "visual": {
+            "subject": "second Jaguar E-Type roadster",
+            "action": "speeding through the night toward Geneva",
+            "setting": "wet European highway under headlights",
+            "framing": "dynamic front three-quarter tracking view, horizontal 16:9",
+            "details": "rain reflections and urgent motion, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_25",
+      "text": "Its long bonnet and flowing body were shaped by Malcolm Sayer, an engineer with deep aerodynamic experience.",
+      "scenes": [
+        {
+          "id": "scene_25",
+          "image_id": 25,
+          "asset_key": "etype-aerodynamic-design-studio",
+          "image": "cena_25.png",
+          "visual": {
+            "subject": "Jaguar E-Type body profile",
+            "action": "displayed beside aerodynamic drafting tools",
+            "setting": "1960s automotive design studio",
+            "framing": "clean side-profile documentary composition, horizontal 16:9",
+            "details": "curved body lines and wind-tunnel forms, no readable drawings, text, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_26",
+      "text": "Its 3.8-liter engine delivered 265 horsepower and 150-mile-per-hour performance.",
+      "scenes": [
+        {
+          "id": "scene_26",
+          "image_id": 26,
+          "asset_key": "etype-straight-six-engine",
+          "image": "cena_26.png",
+          "visual": {
+            "subject": "Jaguar E-Type straight-six engine",
+            "action": "running with visible mechanical vibration",
+            "setting": "period workshop with bonnet raised",
+            "framing": "close technical documentary shot, horizontal 16:9",
+            "details": "polished intake components without branding, no visible text, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_27",
+      "text": "That performance cost far less than many exotic rivals, making the E-Type an unusually attainable dream machine.",
+      "scenes": [
+        {
+          "id": "scene_27",
+          "image_id": 27,
+          "asset_key": "etype-mountain-road-speed",
+          "image": "cena_27.png",
+          "visual": {
+            "subject": "Jaguar E-Type racing along an open road",
+            "action": "passing more expensive exotic sports cars",
+            "setting": "sunlit European mountain highway",
+            "framing": "wide dynamic side tracking shot, horizontal 16:9",
+            "details": "sense of speed and accessibility, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_28",
+      "text": "It remained in production for fourteen years, with more than seventy thousand examples sold across several evolving versions.",
+      "scenes": [
+        {
+          "id": "scene_28",
+          "image_id": 28,
+          "asset_key": "etype-generations-airfield",
+          "image": "cena_28.png",
+          "visual": {
+            "subject": "multiple Jaguar E-Type generations",
+            "action": "arranged chronologically in a long row",
+            "setting": "classic-car gathering on an English airfield",
+            "framing": "wide elevated documentary view, horizontal 16:9",
+            "details": "coupe and roadster variations, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_29",
+      "text": "The E-Type proved Britain could combine engineering, speed, affordability, and beauty in one unforgettable grand touring car.",
+      "scenes": [
+        {
+          "id": "scene_29",
+          "image_id": 29,
+          "asset_key": "etype-modernist-beauty-shot",
+          "image": "cena_29.png",
+          "visual": {
+            "subject": "Jaguar E-Type parked before modernist architecture",
+            "action": "reflecting clean lines and elegant proportions",
+            "setting": "quiet early-1960s evening setting",
+            "framing": "low symmetrical beauty shot, horizontal 16:9",
+            "details": "soft golden light, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_30",
+      "text": "Yet another British machine became even more famous after cinema added hidden weapons, gadgets, and secret-agent glamour.",
+      "scenes": [
+        {
+          "id": "scene_30",
+          "image_id": 30,
+          "asset_key": "secret-agent-classic-coupe",
+          "image": "cena_30.png",
+          "visual": {
+            "subject": "shadowy secret-agent figure approaching a classic coupe",
+            "action": "opening the driver's door with cinematic confidence",
+            "setting": "rainy London street at night",
+            "framing": "wide noir-inspired documentary composition, horizontal 16:9",
+            "details": "subtle spy atmosphere, no weapons visible, no text, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_31",
+      "text": "Aston Martin's DB5 arrived in 1963 with elegant, four-liter power.",
+      "scenes": [
+        {
+          "id": "scene_31",
+          "image_id": 31,
+          "asset_key": "db5-english-manor-road",
+          "image": "cena_31.png",
+          "visual": {
+            "subject": "1963 Aston Martin DB5",
+            "action": "driving past stately British architecture",
+            "setting": "country road near an English manor",
+            "framing": "low front three-quarter tracking view, horizontal 16:9",
+            "details": "silver bodywork, period-correct shape, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_32",
+      "text": "Its body was styled by the Italian coachbuilder Touring, giving British performance a distinctly continental sense of elegance.",
+      "scenes": [
+        {
+          "id": "scene_32",
+          "image_id": 32,
+          "asset_key": "db5-coachbuilding-design-workshop",
+          "image": "cena_32.png",
+          "visual": {
+            "subject": "Aston Martin DB5 body shell and Italian design sketches",
+            "action": "being inspected by British craftsmen",
+            "setting": "1960s coachbuilding workshop",
+            "framing": "medium-wide documentary composition, horizontal 16:9",
+            "details": "elegant metalwork, unreadable sketches, no visible text, badges, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_33",
+      "text": "Three carburetors gave the DB5 a claimed 282 horsepower.",
+      "scenes": [
+        {
+          "id": "scene_33",
+          "image_id": 33,
+          "asset_key": "db5-triple-carburetor-engine",
+          "image": "cena_33.png",
+          "visual": {
+            "subject": "Aston Martin DB5 engine bay",
+            "action": "showing triple carburetors and straight-six layout",
+            "setting": "clean period service garage",
+            "framing": "close technical documentary view, horizontal 16:9",
+            "details": "detailed mechanical components without branding, no visible text, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_34",
+      "text": "Goldfinger put James Bond in a DB5 and changed its cultural status.",
+      "scenes": [
+        {
+          "id": "scene_34",
+          "image_id": 34,
+          "asset_key": "db5-spy-gadget-studio",
+          "image": "cena_34.png",
+          "visual": {
+            "subject": "silver Aston Martin DB5 with cinematic gadget panels",
+            "action": "posed under dramatic studio lighting",
+            "setting": "stylized 1964 spy-film set",
+            "framing": "wide hero shot, horizontal 16:9",
+            "details": "subtle fictional gadget details, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "camera_shutter",
+              "at": "middle"
+            }
+          },
+          "annotation": {
+            "lines": [
+              "BOND CHANGED",
+              "THE DB5"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_35",
+      "text": "Production DB5s already combined speed, refinement, instruments, and exclusivity.",
+      "scenes": [
+        {
+          "id": "scene_35",
+          "image_id": 35,
+          "asset_key": "db5-luxury-analog-interior",
+          "image": "cena_35.png",
+          "visual": {
+            "subject": "luxurious Aston Martin DB5 interior",
+            "action": "showing analog instruments, leather, and polished trim",
+            "setting": "quiet upscale garage",
+            "framing": "driver's-eye documentary composition, horizontal 16:9",
+            "details": "period materials, unreadable gauges, no visible text, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_36",
+      "text": "Only 1,021 DB5s were built, making survivors coveted collector cars.",
+      "scenes": [
+        {
+          "id": "scene_36",
+          "image_id": 36,
+          "asset_key": "rare-db5-private-collection",
+          "image": "cena_36.png",
+          "visual": {
+            "subject": "small group of rare Aston Martin DB5 cars",
+            "action": "parked in a guarded private collection",
+            "setting": "elegant stone courtyard",
+            "framing": "high three-quarter documentary shot, horizontal 16:9",
+            "details": "limited number of cars and collector atmosphere, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "cash_register",
+              "at": "end"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_37",
+      "text": "Beyond Bond, it captured confident, modern British style.",
+      "scenes": [
+        {
+          "id": "scene_37",
+          "image_id": 37,
+          "asset_key": "db5-sixties-london-cruise",
+          "image": "cena_37.png",
+          "visual": {
+            "subject": "Aston Martin DB5 cruising through 1960s London",
+            "action": "passing sharply dressed pedestrians",
+            "setting": "sunset on a refined urban boulevard",
+            "framing": "wide cinematic street view, horizontal 16:9",
+            "details": "confident period mood, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_38",
+      "text": "Britain's final icon made every journey quiet, effortless, and expensive.",
+      "scenes": [
+        {
+          "id": "scene_38",
+          "image_id": 38,
+          "asset_key": "silver-shadow-hotel-arrival",
+          "image": "cena_38.png",
+          "visual": {
+            "subject": "Rolls-Royce Silver Shadow emerging from darkness",
+            "action": "gliding toward a quiet hotel entrance",
+            "setting": "elegant London street at night",
+            "framing": "low wide cinematic reveal, horizontal 16:9",
+            "details": "soft reflections and restrained luxury, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_39",
+      "text": "The Silver Shadow arrived in 1965 with a modern monocoque body.",
+      "scenes": [
+        {
+          "id": "scene_39",
+          "image_id": 39,
+          "asset_key": "silver-shadow-monocoque-comparison",
+          "image": "cena_39.png",
+          "visual": {
+            "subject": "1965 Rolls-Royce Silver Shadow body structure",
+            "action": "shown beside an older separate chassis",
+            "setting": "engineering development workshop",
+            "framing": "wide technical comparison, horizontal 16:9",
+            "details": "clear monocoque versus frame contrast, no labels, text, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "click",
+              "at": "start"
+            }
+          },
+          "annotation": {
+            "lines": [
+              "A MODERN",
+              "ROLLS-ROYCE"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_40",
+      "text": "It was the first Rolls-Royce offered only as a complete motor car rather than a chassis for coachbuilders.",
+      "scenes": [
+        {
+          "id": "scene_40",
+          "image_id": 40,
+          "asset_key": "silver-shadow-coachbuilder-exit",
+          "image": "cena_40.png",
+          "visual": {
+            "subject": "completed Rolls-Royce Silver Shadow",
+            "action": "leaving a traditional coachbuilder workshop",
+            "setting": "industrial English street in 1965",
+            "framing": "medium-wide historical documentary view, horizontal 16:9",
+            "details": "craftsmen watching the finished car, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_41",
+      "text": "Smaller outside, the Silver Shadow offered more passenger and luggage space.",
+      "scenes": [
+        {
+          "id": "scene_41",
+          "image_id": 41,
+          "asset_key": "silver-shadow-spacious-rear-cabin",
+          "image": "cena_41.png",
+          "visual": {
+            "subject": "Rolls-Royce Silver Shadow rear cabin",
+            "action": "occupied by relaxed passengers with luggage nearby",
+            "setting": "luxury hotel departure setting",
+            "framing": "wide cutaway-style interior composition, horizontal 16:9",
+            "details": "generous space and refined materials, no visible text, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_42",
+      "text": "Disc brakes, self-leveling suspension, and electric seats made it advanced.",
+      "scenes": [
+        {
+          "id": "scene_42",
+          "image_id": 42,
+          "asset_key": "silver-shadow-hydraulic-suspension",
+          "image": "cena_42.png",
+          "visual": {
+            "subject": "Rolls-Royce Silver Shadow mechanical systems",
+            "action": "showing disc brakes and self-leveling rear suspension",
+            "setting": "clean technical workshop",
+            "framing": "detailed underside documentary view, horizontal 16:9",
+            "details": "visible hydraulic components without labels, no text, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_43",
+      "text": "The cabin isolated passengers from vibration and noise, creating the floating sensation that became central to its reputation.",
+      "scenes": [
+        {
+          "id": "scene_43",
+          "image_id": 43,
+          "asset_key": "silver-shadow-silent-cabin",
+          "image": "cena_43.png",
+          "visual": {
+            "subject": "Rolls-Royce Silver Shadow cabin",
+            "action": "moving smoothly while the outside road appears blurred",
+            "setting": "tree-lined English avenue",
+            "framing": "interior passenger-perspective shot, horizontal 16:9",
+            "details": "calm faces and vibration-free atmosphere, no visible text, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_44",
+      "text": "In 1977, Silver Shadow II gained revised steering and suspension.",
+      "scenes": [
+        {
+          "id": "scene_44",
+          "image_id": 44,
+          "asset_key": "silver-shadow-two-country-curve",
+          "image": "cena_44.png",
+          "visual": {
+            "subject": "Rolls-Royce Silver Shadow II",
+            "action": "turning confidently through a broad curve",
+            "setting": "late-1970s British country road",
+            "framing": "low front three-quarter action shot, horizontal 16:9",
+            "details": "updated bumpers and composed handling, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_45",
+      "text": "Production ended in 1980, but its basic engineering influenced Rolls-Royce models for many years afterward.",
+      "scenes": [
+        {
+          "id": "scene_45",
+          "image_id": 45,
+          "asset_key": "rolls-royce-model-evolution",
+          "image": "cena_45.png",
+          "visual": {
+            "subject": "Silver Shadow beside later Rolls-Royce models",
+            "action": "showing a clear family resemblance across decades",
+            "setting": "formal heritage display hall",
+            "framing": "wide side-by-side documentary composition, horizontal 16:9",
+            "details": "evolutionary shapes, no visible text, badges, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_46",
+      "text": "Roughly thirty-seven thousand Silver Shadows and related Corniches were built, making the design a major company success.",
+      "scenes": [
+        {
+          "id": "scene_46",
+          "image_id": 46,
+          "asset_key": "silver-shadow-corniche-procession",
+          "image": "cena_46.png",
+          "visual": {
+            "subject": "long procession of Silver Shadows and Corniches",
+            "action": "moving slowly through an elegant city district",
+            "setting": "prestigious boulevard in soft daylight",
+            "framing": "high wide documentary view, horizontal 16:9",
+            "details": "varied body styles and dignified motion, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_47",
+      "text": "Together, these five cars show Britain's range: economy, utility, beauty, glamour, comfort.",
+      "scenes": [
+        {
+          "id": "scene_47",
+          "image_id": 47,
+          "asset_key": "five-british-icons-airfield",
+          "image": "cena_47.png",
+          "visual": {
+            "subject": "Mini, Land Rover, Jaguar, Aston Martin, and Rolls-Royce",
+            "action": "lined up from smallest to largest",
+            "setting": "historic British airfield at sunrise",
+            "framing": "ultra-wide symmetrical lineup, horizontal 16:9",
+            "details": "five distinct silhouettes, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "FIVE BRITISH",
+              "ICONS"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_48",
+      "text": "They prove character often matters more than reliability or perfect ergonomics.",
+      "scenes": [
+        {
+          "id": "scene_48",
+          "image_id": 48,
+          "asset_key": "classic-car-patina-details",
+          "image": "cena_48.png",
+          "visual": {
+            "subject": "worn steering wheels and mechanical details from five classics",
+            "action": "showing patina and individual character",
+            "setting": "collector's workshop table",
+            "framing": "overhead macro documentary montage, horizontal 16:9",
+            "details": "scratches, leather, wood, metal, no visible text, logos, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_49",
+      "text": "Which would you choose: Mini, Land Rover, Jaguar, Aston, or Rolls?",
+      "scenes": [
+        {
+          "id": "scene_49",
+          "image_id": 49,
+          "asset_key": "british-icons-country-crossroads",
+          "image": "cena_49.png",
+          "visual": {
+            "subject": "five classic British cars at a crossroads",
+            "action": "facing different roads representing different personalities",
+            "setting": "misty countryside junction",
+            "framing": "wide elevated cinematic composition, horizontal 16:9",
+            "details": "clear visual choice between routes, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_50",
+      "text": "Subscribe for more classic motoring stories, and tell us which British car deserves a place in the next episode.",
+      "scenes": [
+        {
+          "id": "scene_50",
+          "image_id": 50,
+          "asset_key": "british-classics-sunset-finale",
+          "image": "cena_50.png",
+          "visual": {
+            "subject": "five classic British cars driving away together",
+            "action": "disappearing along a golden country road",
+            "setting": "English countryside at sunset",
+            "framing": "wide rear cinematic finale, horizontal 16:9",
+            "details": "warm nostalgic light, no visible text, badges, logos, license plates, watermarks, or interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "click",
+              "at": "start"
+            }
+          },
+          "annotation": {
+            "lines": [
+              "SUBSCRIBE",
+              "FOR MORE"
+            ],
+            "at": "start",
+            "emoji": "🔔"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -204,6 +204,9 @@ class ValidationRequest(BaseModel):
     image_bindings: dict[str, str] = Field(default_factory=dict)
     manual_image_bindings: dict[str, str] = Field(default_factory=dict)
     uploaded_images: list[str] = Field(default_factory=list)
+    # A prévia usa a voz real e pode ser solicitada pelo painel antes de criar
+    # um trabalho de renderização. Mantemos desligada para clientes legados.
+    measure_timing: bool = False
 
     @model_validator(mode="before")
     @classmethod

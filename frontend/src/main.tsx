@@ -30,6 +30,12 @@ type RenderJob = {
   log_url?: string;
   events_url?: string;
 };
+type TimingScene = {
+  id: string;
+  duration: number;
+  suggested_split?: { first_text: string; second_text: string };
+};
+type TimingReport = { scenes: TimingScene[] };
 
 const animationOptions: { value: BackgroundAnimation; label: string }[] = [
   { value: "movimento_sutil", label: "Movimento suave" },
@@ -40,7 +46,11 @@ const animationOptions: { value: BackgroundAnimation; label: string }[] = [
 const LEGACY_SESSION_IMAGES_KEY = "synthreel:session-images";
 const IMAGE_BINDING_STRATEGY_VERSION = "synthreel:semantic-image-bindings-v1";
 const PLACEHOLDER_IMAGE_PATTERN = /^cena_\d+(?:_[a-z])?\.(?:png|jpe?g|webp)$/i;
+const THUMBNAIL_PAGE_SIZE = 24;
 const RENDER_COMPLETE_SOUND_URL = "/assets/sounds/Mountain%20Audio%20-%20New%20Idea%20Notification.mp3";
+const RENDER_ERROR_SOUND_URL = "/assets/sounds/Wrong%20Answer.mp3";
+let renderAudioContext: AudioContext | null = null;
+let renderErrorBuffer: Promise<AudioBuffer> | null = null;
 
 function playRenderCompleteSound(): void {
   const sound = new Audio(RENDER_COMPLETE_SOUND_URL);
@@ -48,6 +58,53 @@ function playRenderCompleteSound(): void {
     // Alguns navegadores podem bloquear som se a aba perdeu a permissão de
     // reprodução automática. A conclusão do trabalho não pode falhar por isso.
   });
+}
+
+function getRenderAudioContext(): AudioContext {
+  if (!renderAudioContext) renderAudioContext = new AudioContext();
+  return renderAudioContext;
+}
+
+function loadRenderErrorSound(): Promise<AudioBuffer> {
+  if (!renderErrorBuffer) {
+    const context = getRenderAudioContext();
+    renderErrorBuffer = fetch(RENDER_ERROR_SOUND_URL)
+      .then(response => {
+        if (!response.ok) throw new Error("Não foi possível carregar o som de erro.");
+        return response.arrayBuffer();
+      })
+      .then(data => context.decodeAudioData(data));
+  }
+  return renderErrorBuffer;
+}
+
+function unlockRenderErrorSound(): void {
+  // O clique em "Gerar vídeo" é a única janela de gesto do usuário. Deixamos
+  // o AudioContext ativo aqui para ele poder tocar ao receber o erro pelo
+  // polling, mesmo vários minutos depois.
+  const context = getRenderAudioContext();
+  void context.resume().catch(() => undefined);
+  void loadRenderErrorSound().catch(() => undefined);
+}
+
+function playRenderErrorSound(): void {
+  // O efeito "Wrong Answer" diferencia de imediato uma falha do toque
+  // positivo usado ao concluir a renderização.
+  void (async () => {
+    try {
+      const context = getRenderAudioContext();
+      await context.resume();
+      const source = context.createBufferSource();
+      const gain = context.createGain();
+      source.buffer = await loadRenderErrorSound();
+      gain.gain.value = 0.72;
+      source.connect(gain).connect(context.destination);
+      source.start();
+    } catch {
+      // A notificação visual continua sendo a fonte de verdade se o navegador
+      // não disponibilizar áudio nesta sessão.
+    }
+  })();
 }
 
 async function api<T>(path: string, init?: RequestInit): Promise<T> {
@@ -93,6 +150,17 @@ function bindingPayload(script: Script, bindings: ImageBindings): Record<string,
   script.blocks.forEach((block, blockIndex) => block.scenes.forEach((scene, sceneIndex) => {
     const sourceImage = boundImageFor(bindings, blockIndex, sceneIndex, scene.image);
     if (sourceImage && sourceImage !== scene.image) result[scene.image] = sourceImage;
+  }));
+  return result;
+}
+
+function bindingsFromResolvedSources(script: Script, resolved: Record<string, string>): ImageBindings {
+  const result: ImageBindings = {};
+  script.blocks.forEach((block, blockIndex) => block.scenes.forEach((scene, sceneIndex) => {
+    const sourceImage = resolved[scene.image];
+    if (sourceImage && sourceImage !== scene.image) {
+      result[sceneBindingKey(blockIndex, sceneIndex)] = { expectedImage: scene.image, sourceImage };
+    }
   }));
   return result;
 }
@@ -160,6 +228,11 @@ function App() {
   // O vínculo aponta para o arquivo enviado, mas não altera scene.image no
   // JSON. O backend recebe esse mapa explicitamente ao validar/renderizar.
   const [imageBindings, setImageBindings] = useState<ImageBindings>({});
+  // A grade é paginada e somente o seletor em uso monta a lista completa.
+  // Assim, roteiros grandes não criam centenas de imagens e milhares de
+  // <option>s logo no primeiro render.
+  const [thumbnailPage, setThumbnailPage] = useState(0);
+  const [activeImagePickerKey, setActiveImagePickerKey] = useState<string | null>(null);
   const [background, setBackground] = useState("");
   const [music, setMusic] = useState("");
   const [animation, setAnimation] = useState<BackgroundAnimation>("movimento_sutil");
@@ -169,6 +242,7 @@ function App() {
   const [renderStage, setRenderStage] = useState("");
   const [outputUrl, setOutputUrl] = useState("");
   const [renderError, setRenderError] = useState("");
+  const [timingWarnings, setTimingWarnings] = useState<TimingScene[]>([]);
   const [renderLogUrl, setRenderLogUrl] = useState("");
   const jsonInput = useRef<HTMLInputElement>(null);
   const imagesInput = useRef<HTMLInputElement>(null);
@@ -248,6 +322,7 @@ function App() {
           setJobId("");
         }
         if (job.status === "failed") {
+          playRenderErrorSound();
           setRenderStage(job.stage ?? "Falha na renderização");
           const message = job.error ?? "Falha sem mensagem retornada pelo servidor.";
           setRenderError(job.error_detail && job.error_detail !== message ? job.error_detail : "");
@@ -286,6 +361,8 @@ function App() {
   const readJsonFile = async (file: File) => {
     const text = await file.text();
     setImageBindings({});
+    setActiveImagePickerKey(null);
+    setTimingWarnings([]);
     setSource(text);
     void parseScript(text);
   };
@@ -419,6 +496,8 @@ function App() {
   const clearUploadedImages = () => {
     setUploadedImages([]);
     setImageBindings({});
+    setThumbnailPage(0);
+    setActiveImagePickerKey(null);
     setStatus("Lista local e vínculos limpos. Nenhum arquivo foi apagado e o roteiro foi preservado.");
   };
 
@@ -429,18 +508,32 @@ function App() {
       return;
     }
     try {
-      const report = await api<{ valid: boolean; errors: string[]; missing_images: string[] }>("/api/validate", {
+      setStatus("Medindo a narração com a voz definida no JSON…");
+      const report = await api<{
+        valid: boolean; errors: string[]; missing_images: string[]; resolved_image_sources: Record<string, string>;
+        timing?: TimingReport; timing_error?: string;
+      }>("/api/validate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           script: activeScript,
           manual_image_bindings: bindingPayload(activeScript, imageBindings),
           uploaded_images: uploadedImages,
+          measure_timing: true,
         }),
       });
+      setImageBindings(bindingsFromResolvedSources(activeScript, report.resolved_image_sources));
+      const warnings = report.timing?.scenes.filter(scene => scene.duration > 9) ?? [];
+      setTimingWarnings(warnings);
+      const validationNotes = [
+        ...(warnings.length ? [`${warnings.length} cena(s) ultrapassam 9 s; veja as sugestões de corte abaixo.`] : []),
+        ...(report.missing_images.length ? [`Faltam: ${report.missing_images.join(", ")}`] : []),
+      ];
       setStatus(
         report.valid
-          ? (report.missing_images.length ? `Faltam: ${report.missing_images.join(", ")}` : "Roteiro válido. Todos os assets de cena estão disponíveis.")
+          ? (report.timing_error
+            ? report.timing_error
+            : validationNotes.join(" ") || "Roteiro válido. Assets e duração acústica aprovados.")
           : report.errors.join("\n"),
       );
     } catch (error) {
@@ -449,6 +542,7 @@ function App() {
   };
 
   const render = async () => {
+    unlockRenderErrorSound();
     const activeScript = parseScript(source, false);
     if (!activeScript) {
       setStatus("Cole ou importe um roteiro JSON antes de renderizar.");
@@ -483,6 +577,7 @@ function App() {
       setRenderProgress(0);
       setRenderStage("");
       const message = readableError(error);
+      playRenderErrorSound();
       setRenderError(message);
       setStatus(message);
     }
@@ -491,6 +586,10 @@ function App() {
   const backgroundUrl = background ? `/assets/backgrounds/${encodeURIComponent(background)}` : "";
   const requiredImages = sceneImages(script);
   const linkedImages = linkedSceneCount(script, imageBindings, uploadedImages, catalog.images);
+  const thumbnailPageCount = Math.max(1, Math.ceil(uploadedImages.length / THUMBNAIL_PAGE_SIZE));
+  const currentThumbnailPage = Math.min(thumbnailPage, thumbnailPageCount - 1);
+  const thumbnailStart = currentThumbnailPage * THUMBNAIL_PAGE_SIZE;
+  const visibleUploadedImages = uploadedImages.slice(thumbnailStart, thumbnailStart + THUMBNAIL_PAGE_SIZE);
   const imageProgress = requiredImages.length ? Math.round((linkedImages / requiredImages.length) * 100) : 0;
   const scriptProgress = script ? 100 : 0;
   const backgroundProgress = background ? 100 : 0;
@@ -529,8 +628,20 @@ function App() {
               // Uma edição manual pode mudar os IDs ou o significado das
               // cenas; os vínculos anteriores não devem vazar para ela.
               setImageBindings({});
+              setActiveImagePickerKey(null);
             }}
           />
+          {timingWarnings.length > 0 && (
+            <section className="timing-report" aria-label="Cenas que precisam de corte">
+              <b>Prévia acústica: {timingWarnings.length} cena(s) acima de 9 s</b>
+              {timingWarnings.map(scene => (
+                <div className="timing-warning" key={scene.id}>
+                  <span><b>{scene.id}</b> — {scene.duration.toFixed(2)} s</span>
+                  <small>Corte sugerido: “{scene.suggested_split?.first_text ?? "divida próximo à metade"}” / “{scene.suggested_split?.second_text ?? "crie a segunda cena"}”</small>
+                </div>
+              ))}
+            </section>
+          )}
           <label className="music-select">
             <span><b>Trilha do vídeo</b><small>{catalog.music.length ? "Escolha a música usada nesta renderização" : "Nenhuma música disponível"}</small></span>
             <select
@@ -565,14 +676,43 @@ function App() {
             <i><em style={{ width: `${imageProgress}%` }} /></i>
           </div>
           <div className="asset-grid" aria-label="Imagens enviadas nesta tela">
-            {uploadedImages.map(image => (
+            {visibleUploadedImages.map(image => (
               <figure key={image}>
-                <img src={`/assets/images/${encodeURIComponent(image)}`} title={image} alt={`Imagem enviada: ${image}`} />
+                <img
+                  src={`/assets/images/${encodeURIComponent(image)}`}
+                  title={image}
+                  alt={`Imagem enviada: ${image}`}
+                  loading="lazy"
+                  decoding="async"
+                />
                 <figcaption>{image}</figcaption>
               </figure>
             ))}
             {!uploadedImages.length && <p className="asset-grid-empty">As miniaturas aparecem somente depois de um envio nesta tela.</p>}
           </div>
+          {uploadedImages.length > THUMBNAIL_PAGE_SIZE && (
+            <div className="asset-grid-pagination" aria-label="Navegação das miniaturas">
+              <span>Mostrando {thumbnailStart + 1}–{Math.min(thumbnailStart + THUMBNAIL_PAGE_SIZE, uploadedImages.length)} de {uploadedImages.length}</span>
+              <div>
+                <button
+                  type="button"
+                  className="button quiet compact"
+                  disabled={currentThumbnailPage === 0}
+                  onClick={() => setThumbnailPage(page => Math.max(0, page - 1))}
+                >
+                  Anteriores
+                </button>
+                <button
+                  type="button"
+                  className="button quiet compact"
+                  disabled={currentThumbnailPage >= thumbnailPageCount - 1}
+                  onClick={() => setThumbnailPage(page => Math.min(thumbnailPageCount - 1, page + 1))}
+                >
+                  Próximas
+                </button>
+              </div>
+            </div>
+          )}
           {script && (
             <div className="scene-bindings" aria-label="Vínculo manual de imagens por cena">
               <div className="scene-bindings-header">
@@ -582,9 +722,16 @@ function App() {
               {uploadedImages.length > 0 && <p className="scene-bindings-note">O ID é a referência editorial da cena. O sistema compara o brief com os nomes descritivos que o Google Flow gerar; a ordem do envio não é usada.</p>}
               <div className="scene-binding-list">
                 {script.blocks.flatMap((block, blockIndex) => block.scenes.map((scene, sceneIndex) => {
+                  const pickerKey = sceneBindingKey(blockIndex, sceneIndex);
                   const boundImage = boundImageFor(imageBindings, blockIndex, sceneIndex, scene.image);
                   const sourceImage = boundImage ?? scene.image;
                   const isReady = imageIsReady(sourceImage, uploadedImages, catalog.images);
+                  // O <select> ativo é o único que recebe a lista inteira.
+                  // Os demais preservam só seu valor atual, evitando N cenas ×
+                  // N arquivos em nós DOM para roteiros maiores.
+                  const pickerImages = activeImagePickerKey === pickerKey
+                    ? uploadedImages.filter(image => image !== scene.image)
+                    : boundImage ? [boundImage] : [];
                   return (
                     <div className={`scene-binding${isReady ? " ready" : " pending"}`} key={`${block.id}-${scene.id}-${blockIndex}-${sceneIndex}`}>
                       <span className="scene-binding-label"><b>Cena {blockIndex + 1} · ID {scene.image_id}</b><code>{scene.asset_key ?? scene.image}</code></span>
@@ -592,10 +739,12 @@ function App() {
                         aria-label={`Escolher imagem para a cena ${blockIndex + 1}`}
                         value={boundImage ?? ""}
                         disabled={!uploadedImages.length || Boolean(jobId)}
+                        onPointerDown={() => setActiveImagePickerKey(pickerKey)}
+                        onFocus={() => setActiveImagePickerKey(pickerKey)}
                         onChange={event => bindUploadedImageToScene(blockIndex, sceneIndex, event.target.value)}
                       >
                         <option value="">Usar {scene.image} (nome do JSON)</option>
-                        {uploadedImages.filter(image => image !== scene.image).map(image => <option key={image} value={image}>{image}</option>)}
+                        {pickerImages.map(image => <option key={image} value={image}>{image}</option>)}
                       </select>
                       <span className="scene-binding-source">
                         {boundImage ? <>Arquivo enviado: <code>{boundImage}</code></> : <>Referência editorial: <code>ID {scene.image_id}</code></>}
