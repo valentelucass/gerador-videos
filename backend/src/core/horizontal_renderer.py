@@ -317,7 +317,17 @@ MAX_CTA_NARRATION_PAUSE = 0.35
 # A tela de anotação é um elemento editorial próprio: mantém a mesma fonte,
 # digitação amarela, blur de fundo e posição que já estavam aprovados.
 ANNOTATION_FONT = Path(r"C:/Windows/Fonts/impact.ttf")
-EMOJI_FONT = Path(r"C:/Windows/Fonts/seguiemj.ttf")
+# Emojis nunca são desenhados pela fonte do sistema: ela produz ícones sem a
+# linguagem visual do canal. Cada emoji usado na esteira horizontal precisa de
+# um sticker PNG curado neste diretório persistente.
+EMOJI_STICKER_DIR = Path(__file__).resolve().parents[3] / "workspace" / "assets" / "horizontal" / "overlays" / "emoji_stickers"
+EMOJI_STICKERS = {
+    "👍": EMOJI_STICKER_DIR / "like_3d.png",
+    "🔔": EMOJI_STICKER_DIR / "bell_3d.png",
+    "🏆": EMOJI_STICKER_DIR / "trophy_3d.png",
+}
+EMOJI_STICKER_HEIGHT = 250
+EMOJI_STICKER_X = "main_w/2+270"
 # A anotação editorial usa a mesma pausa antes da primeira letra no compositor
 # aprovado. Ao agendá-la por uma palavra falada, compensamos essa pausa para a
 # primeira letra aparecer no próprio cue acústico, não um quarto de segundo
@@ -947,9 +957,12 @@ _NATIVE_SOUND_EFFECTS = {
     "writing": SOUND_DIR / "Writing Sound Effect 1.mp3",
     "typing": SOUND_DIR / "keyboard-typing-5997.mp3",
 }
-_NATIVE_SOUND_SECONDS = {"typing": 1.15, "click": 0.18, "bottle_cork": 0.75, "new_idea": 0.75, "whoosh_fast": 0.55, "whoosh_cinematic": 0.75, "whoosh_soft": 0.55, "celebration": 3.9}
-_NATIVE_SOUND_VOLUMES = {"typing": 0.58, "click": 0.42, "bottle_cork": 0.48, "new_idea": 0.46, "whoosh_fast": 0.48, "whoosh_cinematic": 0.44, "whoosh_soft": 0.42, "celebration": 0.40}
+_NATIVE_SOUND_SECONDS = {"typing": 1.15, "click": 0.18, "bottle_cork": 0.75, "new_idea": 0.75, "whoosh_fast": 0.55, "whoosh_cinematic": 0.75, "whoosh_soft": 0.55, "celebration": 1.8}
+_NATIVE_SOUND_VOLUMES = {"typing": 0.72, "click": 0.42, "bottle_cork": 0.48, "new_idea": 0.46, "whoosh_fast": 0.48, "whoosh_cinematic": 0.44, "whoosh_soft": 0.42, "celebration": 0.40}
 _NATIVE_SOUND_LEAD = {"bottle_cork": 0.272, "new_idea": 0.024}
+_NATIVE_SOUND_FADE_OUT = {"celebration": 0.65}
+# O aplauso começa antes do fim da cena para terminar antes da próxima fala.
+_NATIVE_SOUND_END_LEAD = {"celebration": 1.8}
 
 
 def _native_music_path(music_name: str | None) -> Path:
@@ -985,7 +998,15 @@ def _native_looped_music_bed(music: Path, duration: float, directory: Path) -> P
     cycle = directory / "trilha_ciclo.m4a"
     _run_compositor([
         str(FFMPEG), "-y", "-i", str(music),
-        "-af", "aresample=48000,silenceremove=stop_periods=1:stop_duration=0.35:stop_threshold=-45dB,asetpts=PTS-STARTPTS",
+        # Remove as duas pontas silenciosas antes de repetir a faixa. Sem a
+        # remoção da abertura, uma música com introdução vazia ainda deixaria
+        # uma lacuna perceptível a cada volta, mesmo com crossfade.
+        "-af", (
+            "aresample=48000,"
+            "silenceremove=start_periods=1:start_duration=0.15:start_threshold=-45dB:"
+            "stop_periods=1:stop_duration=0.15:stop_threshold=-45dB,"
+            "asetpts=PTS-STARTPTS"
+        ),
         "-c:a", "aac", "-b:a", "192k", str(cycle),
     ])
     cycle_duration = _duration(cycle)
@@ -1027,8 +1048,15 @@ def _native_annotation_plan(script: Script, timing: list[dict[str, object]]) -> 
                 events.append((effect, float(timing[index + 1]["start"])))
         if scene.sounds.context is not None:
             at = scene.sounds.context.at
-            event_time = start if at == "start" else start + duration / 2 if at == "middle" else start + max(0.0, duration - 0.18)
-            events.append((scene.sounds.context.type, event_time))
+            effect = scene.sounds.context.type
+            if at == "start":
+                event_time = start
+            elif at == "middle":
+                event_time = start + duration / 2
+            else:
+                lead = _NATIVE_SOUND_END_LEAD.get(effect, 0.18)
+                event_time = start + max(0.0, duration - lead)
+            events.append((effect, event_time))
         if scene.annotation is None:
             continue
         scheduled_start = float(entry["annotation_start"]) if "annotation_start" in entry else None
@@ -1121,6 +1149,7 @@ def _native_typing_annotation_filters(
     annotation_start: float,
     annotation_end: float,
     emoji: str | None,
+    emoji_input_index: int | None,
 ) -> str:
     """Restaura o layout aprovado: blur do quadro e digitação amarela Impact."""
     current = source
@@ -1151,17 +1180,34 @@ def _native_typing_annotation_filters(
         current = output
         cursor += ANNOTATION_LINE_GAP
     if emoji:
+        if emoji_input_index is None:
+            raise ValueError(f"O emoji {emoji!r} não possui um sticker visual configurado.")
+        sticker = f"[annotation_{annotation_index}_sticker]"
         output = f"[annotation_{annotation_index}_emoji]"
-        emoji_y = "h/2-52-text_h/2" if len(lines) == 2 else "h/2-text_h/2"
         graph.append(
-            f"{current}drawtext=fontfile='{_native_filter_path(EMOJI_FONT)}':"
-            f"text='{_escape_drawtext(emoji)}':fontcolor=white:fontsize=82:"
-            "borderw=2:bordercolor=black@0.92:"
-            f"x='w/2+300':y='{emoji_y}':"
+            f"[{emoji_input_index}:v]format=rgba,scale=-1:{EMOJI_STICKER_HEIGHT}{sticker}"
+        )
+        graph.append(
+            f"{current}{sticker}overlay=x='{EMOJI_STICKER_X}':y='(main_h-overlay_h)/2':format=auto:"
             f"enable='{_native_time_window(cursor, annotation_end)}'{output}"
         )
         current = output
     return current
+
+
+def _native_required_stickers(annotations: list[tuple[list[str], float, float, str | None]]) -> dict[str, Path]:
+    """Valida o catálogo visual antes de o FFmpeg começar a renderizar."""
+    emojis = sorted({emoji for _, _, _, emoji in annotations if emoji})
+    unsupported = [emoji for emoji in emojis if emoji not in EMOJI_STICKERS]
+    if unsupported:
+        raise ValueError(
+            "Emoji sem sticker 3D aprovado: " + ", ".join(unsupported)
+            + ". Adicione um PNG em workspace/assets/horizontal/overlays/emoji_stickers antes de renderizar."
+        )
+    missing = [emoji for emoji in emojis if not EMOJI_STICKERS[emoji].is_file()]
+    if missing:
+        raise FileNotFoundError("Sticker de emoji ausente: " + ", ".join(missing))
+    return {emoji: EMOJI_STICKERS[emoji] for emoji in emojis}
 
 
 def _native_render_sfx_tracks(
@@ -1213,12 +1259,17 @@ def _native_render_sfx_tracks(
                 lead = _NATIVE_SOUND_LEAD.get(effect, 0.0)
                 duration = _NATIVE_SOUND_SECONDS.get(effect, 0.9)
                 volume = _NATIVE_SOUND_VOLUMES.get(effect, 0.46)
+                fade_seconds = min(_NATIVE_SOUND_FADE_OUT.get(effect, 0.0), duration)
+                fade = (
+                    f",afade=t=out:st={duration - fade_seconds:.3f}:d={fade_seconds:.3f}"
+                    if fade_seconds > 0 else ""
+                )
                 local_start = at - offset
                 label = f"[sfx_{bucket}_{batch_index}_{input_index}]"
                 inputs.extend(["-i", str(source)])
                 graph.append(
                     f"[{input_index}:a]aresample=48000,atrim=start={lead:.3f}:end={lead + duration:.3f},"
-                    f"volume={volume:.2f},adelay={round(local_start * 1000)}:all=1{label}"
+                    f"volume={volume:.2f}{fade},adelay={round(local_start * 1000)}:all=1{label}"
                 )
                 labels.append(label)
             graph.append(
@@ -1283,9 +1334,14 @@ def _native_finalize(
     audio_padding = visual_duration - narration_seconds
     graph: list[str] = []
     video = "[0:v]"
+    stickers = _native_required_stickers(annotations)
+    sticker_input_indices = {
+        emoji: 3 + len(sfx_tracks) + index
+        for index, emoji in enumerate(stickers)
+    }
     if annotations:
-        if not ANNOTATION_FONT.is_file() or not EMOJI_FONT.is_file():
-            raise FileNotFoundError("As fontes Impact ou Segoe UI Emoji para as anotações não estão disponíveis.")
+        if not ANNOTATION_FONT.is_file():
+            raise FileNotFoundError("A fonte Impact para as anotações não está disponível.")
         for index, (lines, start, end, emoji) in enumerate(annotations):
             base = f"[annotation_base_{index}]"
             blur = f"[annotation_blur_{index}]"
@@ -1294,7 +1350,10 @@ def _native_finalize(
             graph.append(f"{video}split=2{base}[annotation_source_{index}]")
             graph.append(f"[annotation_source_{index}]boxblur=22:6:enable='{enabled}'{blur}")
             graph.append(f"{base}{blur}overlay=0:0:enable='{enabled}'{blurred}")
-            video = _native_typing_annotation_filters(graph, blurred, index, lines, start, end, emoji)
+            video = _native_typing_annotation_filters(
+                graph, blurred, index, lines, start, end, emoji,
+                sticker_input_indices.get(emoji),
+            )
     graph.append(f"{video}trim=duration={visual_duration:.6f},format=yuv420p[video]")
 
     if sfx_tracks:
@@ -1319,6 +1378,8 @@ def _native_finalize(
     inputs = ["-safe", "0", "-f", "concat", "-i", str(visual_manifest), "-i", str(narration), "-i", str(music)]
     for track, _ in sfx_tracks:
         inputs.extend(["-i", str(track)])
+    for sticker in stickers.values():
+        inputs.extend(["-loop", "1", "-framerate", str(FPS), "-i", str(sticker)])
     _run_compositor([
         str(FFMPEG), "-y", *inputs,
         "-filter_complex_threads", "1", "-filter_threads", "1",
@@ -1358,6 +1419,9 @@ def _native_composite(
     if any(start + duration > narration_seconds + 1 / FPS for start, duration in zip(starts, speech)):
         raise ValueError("A duração acústica de uma cena ultrapassa a narração medida.")
     annotations, events = _native_annotation_plan(script, timing)
+    # Valida antes de iniciar os segmentos 1080p: um emoji sem asset não pode
+    # desperdiçar minutos de renderização para só falhar na finalização.
+    _native_required_stickers(annotations)
     annotation_end = max((end for _, _, end, _ in annotations), default=narration_seconds)
     sound_end = max(
         (at + _NATIVE_SOUND_SECONDS.get(effect, 0.9) for effect, at in events),

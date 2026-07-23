@@ -22,9 +22,45 @@ async function assertPortAvailable(port, service) {
   });
 }
 
+function listeningPids(port) {
+  if (process.platform === "win32") {
+    const result = spawnSync(
+      "powershell.exe",
+      [
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        `Get-NetTCPConnection -LocalPort ${port} -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess`,
+      ],
+      { encoding: "utf8" },
+    );
+    return (result.stdout || "")
+      .split(/\r?\n/)
+      .map(value => Number.parseInt(value.trim(), 10))
+      .filter(Number.isInteger);
+  }
+  const result = spawnSync("lsof", ["-ti", `:${port}`], { encoding: "utf8" });
+  return (result.stdout || "")
+    .split(/\r?\n/)
+    .map(value => Number.parseInt(value.trim(), 10))
+    .filter(Number.isInteger);
+}
+
+async function releasePort(port, service) {
+  for (const pid of listeningPids(port)) {
+    console.log(`${service} anterior encontrado na porta ${port} (PID ${pid}); encerrando.`);
+    if (process.platform === "win32") {
+      spawnSync("taskkill", ["/pid", String(pid), "/t", "/f"], { stdio: "ignore" });
+    } else {
+      process.kill(pid, "SIGTERM");
+    }
+  }
+  await assertPortAvailable(port, service);
+}
+
 try {
-  await assertPortAvailable(8000, "O backend");
-  await assertPortAvailable(5173, "O painel");
+  await releasePort(8000, "O backend");
+  await releasePort(5173, "O painel");
 } catch (error) {
   console.error(error.message);
   process.exit(1);

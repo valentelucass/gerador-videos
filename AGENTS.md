@@ -4,8 +4,8 @@ Este documento define as regras de negocio estritas do SynthReel. O projeto agor
 
 ## 1. Arquitetura Paralela Obrigatoria
 
-- **Esteira Vertical:** usa `src/scripts/preparar_lote.py` e `src/scripts/renderizar_lote.py`, com saida em `workspace/lotes_preparados/`. O alvo e video curto 9:16, ritmo rapido, legendas virais e curadoria de B-roll vertical.
-- **Esteira Horizontal:** usa `src/scripts/preparar_horizontal.py`, `src/scripts/renderizar_horizontal.py` e `src/scripts/setup_assets_horizontal.py`, com saida em `workspace/lotes_horizontais/`. O alvo e video YouTube 16:9 em 1920x1080, com templates fixos, narrativa longa e sound design persistente.
+- **Esteira Vertical:** o contrato permanece reservado, mas nao ha motor vertical executavel nesta versao do repositorio. Nenhum fluxo horizontal deve tentar suprir essa ausencia.
+- **Esteira Horizontal:** o motor ativo e `backend/src/core/horizontal_renderer.py`, acionado pela API em `backend/src/main.py`, com saida em `workspace/lotes_horizontais/`. O alvo e video YouTube 16:9 em 1920x1080, com narrativa longa e sound design persistente.
 - Os motores sao independentes. Modulos como `tts_clonador.py`, `pipeline.py` e regras de grid vertical nao devem ser adaptados silenciosamente para a horizontal.
 - A horizontal deve usar seus proprios modulos dedicados, como `tts_neural.py` e `layout_factory.py`, sem alterar o comportamento legado da vertical.
 
@@ -21,7 +21,7 @@ Este documento define as regras de negocio estritas do SynthReel. O projeto agor
 ## 3. Ingestao e Curadoria Vertical
 
 - A tag de busca `busca` vinda do JSON vertical deve ser literal e em ingles.
-- `preparar_lote.py` e o responsavel exclusivo pelo acionamento da API do Pexels na esteira vertical.
+- Enquanto a esteira vertical nao possuir motor proprio, ela nao deve acionar Pexels nem compartilhar a ingestao horizontal.
 - Regra de ingestao desbalanceada:
   - Cena 1 (gancho): tentar baixar de 3 a 4 videos portrait exclusivos.
   - Cenas 2 em diante: baixar de 1 a 2 videos.
@@ -48,10 +48,10 @@ Este documento define as regras de negocio estritas do SynthReel. O projeto agor
 
 ## 6. Ingestao Hibrida Horizontal
 
-- `preparar_horizontal.py` cria a estrutura `workspace/lotes_horizontais/{nicho}/{tema_normalizado}/` e salva um `metadata.json` isolado para cada tema.
+- A API horizontal cria um workspace isolado por job em `workspace/lotes_horizontais/` e preserva o manifesto da renderizacao.
 - Quando `fonte_midia` for `pexels`, o script deve chamar o Pexels com `orientation=landscape` e salvar a midia da cena na pasta do tema.
 - Quando `fonte_midia` for `ia`, o script nao pode gerar imagem sozinho. Ele deve criar um arquivo `cena_XX_PROMPT_IA.txt` ou `cena_XX_A_PROMPT_IA.txt` com o valor de `prompt_ou_busca`.
-- A criacao visual por IA e uma etapa humana fora do pipeline. Antes de `renderizar_horizontal.py`, o usuario deve colocar fisicamente o JPG/PNG/MP4 correspondente na pasta do tema.
+- A criacao visual por IA e uma etapa humana fora do pipeline. Antes do render pela API horizontal, o usuario deve colocar fisicamente o JPG/PNG/MP4 correspondente no workspace do job.
 - Templates com multiplas midias, como 3, 5, 7, 9 e 10, devem gerar slots separados (`A`, `B`, `C`) para downloads ou prompts, por exemplo `cena_05_A_pexels.mp4` e `cena_05_B_PROMPT_IA.txt`.
 - A trava HITL horizontal exige que os prompts TXT sejam substituidos ou acompanhados pelos assets visuais reais antes da renderizacao.
 

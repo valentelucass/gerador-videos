@@ -19,6 +19,8 @@ PEDIDO
 RESPONDA SOMENTE COM UM OBJETO JSON VÁLIDO.
 Não use Markdown, comentários, explicações, reticências estruturais, chaves
 de exemplo, campos extras ou qualquer texto antes/depois do JSON.
+Inicie a resposta estritamente com o caractere `{` e termine estritamente com
+o caractere `}`.
 
 IDIOMAS E CAMPOS DE RAIZ
 - `language` deve ser um destes locales: `pt-BR`, `pl-PL`, `hr-HR`, `en-US`,
@@ -65,7 +67,8 @@ ESTRUTURA E RITMO
   conexão.
 - Estruture a progressão em: gancho forte, CTA inicial natural, investigação
   ou desenvolvimento crescente, viradas/fatos centrais e encerramento com CTA
-  final. Use apenas uma CTA inicial e uma CTA final.
+  final. A cena 01 é somente o gancho; a CTA inicial deve vir na cena seguinte
+  ou logo após o gancho. Use apenas uma CTA inicial e uma CTA final.
 
 IDENTIFICADORES E IMAGENS
 - Use IDs únicos e simples: `block_01`, `block_02`, … e `scene_01`,
@@ -172,7 +175,7 @@ Use esta forma, preenchendo todos os blocos/cenas necessários para a duração:
   "blocks": [
     {
       "id": "block_01",
-      "text": "Narração oficial de 15 a 20 palavras que corresponde somente a esta cena.",
+      "text": "Narração curta de 8 a 12 palavras específica para esta cena.",
       "scenes": [
         {
           "id": "scene_01",
@@ -202,7 +205,8 @@ Use esta forma, preenchendo todos os blocos/cenas necessários para a duração:
 }
 
 ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
-1. O resultado é JSON parseável e não contém Markdown.
+1. O resultado é JSON parseável, não contém Markdown, começa com `{` e termina
+   com `}`.
 2. Todos os IDs são únicos; todo bloco possui exatamente uma cena.
 3. Cada cena tem `image_id` sequencial e `asset_key` em inglês, únicos; cada
    imagem gerada tem nome autodescritivo, com prefixo `ID - ` opcional.
