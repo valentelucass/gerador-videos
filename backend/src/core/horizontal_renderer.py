@@ -358,6 +358,10 @@ ANNOTATION_POST_TYPING_HOLD = 1.45
 # O texto termina antes do efeito visual: isso permite que o fundo volte ao
 # foco sem alongar a narração, a cena ou a duração final do vídeo.
 ANNOTATION_BLUR_RAMP_SECONDS = 0.35
+# Vinhetas editoriais aplicadas somente na imagem final; não deslocam voz,
+# efeitos, cortes de cena ou a duração total da entrega.
+OPENING_FADE_SECONDS = 1.10
+CLOSING_FADE_SECONDS = 1.20
 
 # As anotações de ranking são geradas como "5º CENTRALIA", enquanto a
 # narração costuma dizer "em quinto lugar". Estes vocábulos cobrem os idiomas
@@ -1457,7 +1461,16 @@ def _native_finalize(
                 graph, blurred, index, lines, start, text_end, emoji,
                 sticker_input_indices.get(emoji),
             )
-    graph.append(f"{video}trim=duration={visual_duration:.6f},format=yuv420p[video]")
+    opening_fade = min(OPENING_FADE_SECONDS, visual_duration)
+    closing_fade = min(CLOSING_FADE_SECONDS, visual_duration)
+    closing_start = max(0.0, visual_duration - closing_fade)
+    # A vinheta é aplicada após texto, stickers e blur para que o quadro inteiro
+    # abra e feche de modo coeso, sem escurecer apenas a mídia de base.
+    graph.append(
+        f"{video}fade=t=in:st=0:d={opening_fade:.3f},"
+        f"fade=t=out:st={closing_start:.3f}:d={closing_fade:.3f},"
+        f"trim=duration={visual_duration:.6f},format=yuv420p[video]"
+    )
 
     if sfx_tracks:
         labels: list[str] = []
