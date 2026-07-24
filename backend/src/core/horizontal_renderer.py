@@ -355,6 +355,9 @@ ANNOTATION_TYPING_DELAY = 0.25
 ANNOTATION_TYPING_STEP = 0.045
 ANNOTATION_LINE_GAP = 0.08
 ANNOTATION_POST_TYPING_HOLD = 1.45
+# O texto termina antes do efeito visual: isso permite que o fundo volte ao
+# foco sem alongar a narração, a cena ou a duração final do vídeo.
+ANNOTATION_BLUR_RAMP_SECONDS = 0.35
 
 # As anotações de ranking são geradas como "5º CENTRALIA", enquanto a
 # narração costuma dizer "em quinto lugar". Estes vocábulos cobrem os idiomas
@@ -1164,6 +1167,45 @@ def _native_annotation_window(
     return annotation_start, max(annotation_start, annotation_end)
 
 
+def _native_annotation_text_end(
+    annotation_start: float,
+    annotation_end: float,
+    lines: list[str],
+    emoji: str | None,
+) -> float:
+    """Reserva o fim da janela para a saída do blur, sem cortar a digitação.
+
+    A janela acústica da anotação continua idêntica. Apenas seu hold visual é
+    reduzido quando houver espaço, deixando a rampa de foco terminar antes do
+    próximo corte ou do fim do vídeo.
+    """
+    typing_step, _ = _native_annotation_timing(emoji)
+    typing_end = (
+        annotation_start
+        + ANNOTATION_TYPING_DELAY
+        + sum(len(line) for line in lines) * typing_step
+        + max(0, len(lines) - 1) * ANNOTATION_LINE_GAP
+    )
+    # Garante pelo menos um quadro com a anotação completa, inclusive em uma
+    # janela curta que já existia no roteiro.
+    earliest_safe_end = typing_end + 1 / FPS
+    scheduled_end = annotation_end - ANNOTATION_BLUR_RAMP_SECONDS
+    return min(annotation_end, max(earliest_safe_end, scheduled_end))
+
+
+def _native_blur_mix_expression(annotation_start: float, text_end: float, blur_end: float) -> str:
+    """Mistura quadro nítido e borrado com rampas temporais sem cortes secos."""
+    blur_in_end = min(annotation_start + ANNOTATION_BLUR_RAMP_SECONDS, text_end)
+    blur_in_seconds = max(0.001, blur_in_end - annotation_start)
+    blur_out_seconds = max(0.001, blur_end - text_end)
+    return (
+        f"if(lt(T\\,{annotation_start:.3f})\\,0\\,"
+        f"if(lt(T\\,{blur_in_end:.3f})\\,(T-{annotation_start:.3f})/{blur_in_seconds:.3f}\\,"
+        f"if(lt(T\\,{text_end:.3f})\\,1\\,"
+        f"if(lt(T\\,{blur_end:.3f})\\,({blur_end:.3f}-T)/{blur_out_seconds:.3f}\\,0))))"
+    )
+
+
 def _native_time_window(start: float, end: float) -> str:
     return f"gte(t,{start:.3f})*lt(t,{end:.3f})"
 
@@ -1178,7 +1220,7 @@ def _native_typing_annotation_filters(
     annotation_index: int,
     lines: list[str],
     annotation_start: float,
-    annotation_end: float,
+    text_end: float,
     emoji: str | None,
     emoji_input_index: int | None,
 ) -> str:
@@ -1206,7 +1248,7 @@ def _native_typing_annotation_filters(
             f"text='{_escape_drawtext(line)}':fontcolor=0xFFD429:fontsize=102:"
             "borderw=5:bordercolor=black@0.96:"
             f"x=(w-text_w)/2:y={y_center}-text_h/2:"
-            f"enable='{_native_time_window(cursor, annotation_end)}'{output}"
+            f"enable='{_native_time_window(cursor, text_end)}'{output}"
         )
         current = output
         cursor += ANNOTATION_LINE_GAP
@@ -1223,7 +1265,7 @@ def _native_typing_annotation_filters(
                 f"text='{_escape_drawtext(emoji)}':fontcolor=white:fontsize=76:"
                 "borderw=2:bordercolor=black@0.90:"
                 "x='(w+text_w)/2+32':y='h/2-text_h/2':"
-                f"enable='{_native_time_window(cursor, annotation_end)}'{output}"
+                f"enable='{_native_time_window(cursor, text_end)}'{output}"
             )
             return output
         sticker = f"[annotation_{annotation_index}_sticker]"
@@ -1233,7 +1275,7 @@ def _native_typing_annotation_filters(
         )
         graph.append(
             f"{current}{sticker}overlay=x='{EMOJI_STICKER_X}':y='(main_h-overlay_h)/2':format=auto:"
-            f"enable='{_native_time_window(cursor, annotation_end)}'{output}"
+            f"enable='{_native_time_window(cursor, text_end)}'{output}"
         )
         current = output
     return current
@@ -1402,14 +1444,17 @@ def _native_finalize(
             base = f"[annotation_base_{index}]"
             blur = f"[annotation_blur_{index}]"
             blurred = f"[annotation_layer_{index}]"
-            enabled = _native_time_window(start, end)
+            text_end = _native_annotation_text_end(start, end, lines, emoji)
+            blur_mix = _native_blur_mix_expression(start, text_end, end)
             graph.append(f"{video}split=2{base}[annotation_source_{index}]")
-            # Mantém o B-roll perceptível sob a anotação; o texto segue sendo
-            # o foco, sem transformar a cena em um fundo estático opaco.
-            graph.append(f"[annotation_source_{index}]boxblur=10:2:enable='{enabled}'{blur}")
-            graph.append(f"{base}{blur}overlay=0:0:enable='{enabled}'{blurred}")
+            # Mantém o B-roll perceptível sob a anotação, mas a transição para
+            # o blur e sua saída acontecem por rampa, sem aparecer/desaparecer.
+            graph.append(f"[annotation_source_{index}]boxblur=10:2{blur}")
+            graph.append(
+                f"{base}{blur}blend=all_expr='A*(1-({blur_mix}))+B*({blur_mix})'{blurred}"
+            )
             video = _native_typing_annotation_filters(
-                graph, blurred, index, lines, start, end, emoji,
+                graph, blurred, index, lines, start, text_end, emoji,
                 sticker_input_indices.get(emoji),
             )
     graph.append(f"{video}trim=duration={visual_duration:.6f},format=yuv420p[video]")
