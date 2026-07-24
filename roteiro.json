@@ -9,7 +9,7 @@
   "blocks": [
     {
       "id": "block_01",
-      "text": "Em 81 minutos, dois falsos policiais roubaram 13 obras. Como?",
+      "text": "Em 81 minutos, dois falsos policiais roubaram 13 obras — e uma falha abriu o museu inteiro.",
       "scenes": [
         {
           "id": "scene_01",
@@ -43,7 +43,7 @@
     },
     {
       "id": "block_02",
-      "text": "Se essa precisão te intriga, curta e se inscreva, porque o primeiro erro abriu todo o museu.",
+      "text": "Se essa falha te intriga, curta e se inscreva, porque o primeiro erro abriu todo o museu.",
       "scenes": [
         {
           "id": "scene_02",
@@ -232,7 +232,7 @@
     },
     {
       "id": "block_08",
-      "text": "Então exigiram o segundo guarda. Sorte ou conhecimento prévio da rotina?",
+      "text": "Então exigiram o segundo guarda, sinal de que conheciam bem a rotina.",
       "scenes": [
         {
           "id": "scene_08",
@@ -1529,7 +1529,7 @@
     },
     {
       "id": "block_50",
-      "text": "levantando a pergunta inevitável: especialistas seletivos ou oportunistas parcialmente orientados?",
+      "text": "sugerindo uma escolha entre especialistas seletivos e oportunistas parcialmente orientados.",
       "scenes": [
         {
           "id": "scene_50",
@@ -1746,7 +1746,7 @@
     },
     {
       "id": "block_57",
-      "text": "Se eram especialistas, por que danificaram telas? Se eram amadores, como dominaram segurança e rotas?",
+      "text": "A precisão do plano contrasta com telas danificadas e escolhas que parecem de amadores.",
       "scenes": [
         {
           "id": "scene_57",

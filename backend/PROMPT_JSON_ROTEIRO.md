@@ -79,10 +79,18 @@ ESTRUTURA E RITMO
   ritmo, mas somente se a prévia acústica permanecer abaixo de 9 segundos. Para
   vozes lentas, datas, vírgulas e enumerações alongam a fala: corte antes de
   ultrapassar o limite, mesmo que a cena tenha menos de 18 palavras.
-- Uma cena com pergunta tem custo acústico maior. Nunca coloque duas perguntas
-  completas no mesmo bloco: divida-as em cenas consecutivas, cada uma com uma
-  única hipótese ou pergunta. Em português, trate duas interrogações como sinal
-  de corte obrigatório, mesmo que a contagem de palavras pareça curta.
+- Perguntas são exceções editoriais, não uma fórmula de retenção. Nunca use
+  perguntas curtas e soltas depois de um dado, como "Como?", "Por quê?", "E
+  agora?" ou equivalentes; elas soam repetitivas e criam uma quebra artificial
+  de entonação no TTS. Transforme esse gancho em uma afirmação que já aponta o
+  próximo bloco: "Em 81 minutos, dois falsos policiais roubaram 13 obras — e
+  uma falha abriu o museu inteiro."
+- Fora a pergunta específica da CTA final, use no máximo uma pergunta retórica
+  em todo o roteiro e somente se ela abrir uma hipótese central que será
+  respondida depois. Não use pergunta em blocos consecutivos, não use duas
+  perguntas completas no mesmo bloco e nunca coloque uma CTA imediatamente
+  depois de uma pergunta. Prefira contraste, consequência ou promessa factual
+  para sustentar a curiosidade.
 - Dê a cada bloco uma informação, ação, imagem mental ou virada nova. Inclua
   pelo menos um detalhe concreto e verificável por cena — nome, data, número,
   documento, lugar, objeto, prazo ou consequência precisa — quando o tema
@@ -96,6 +104,13 @@ ESTRUTURA E RITMO
   Não encerre cada cena com uma conclusão completa para reiniciar outra ideia
   na cena seguinte; a pontuação pode atravessar a mudança visual se isso deixar
   a apresentação mais natural.
+- Faça a passagem sonora entre blocos ser tão natural quanto a passagem de
+  sentido. Cada texto é unido ao seguinte em uma única síntese de TTS: não
+  termine um bloco com interrogação, reticência ou fragmento enfático se o
+  próximo bloco for continuar a ideia. Use ponto final quando houver uma pausa
+  real; use vírgula, travessão ou conectivo apenas quando o início do bloco
+  seguinte completar a mesma frase de modo gramatical. Leia sempre a junção
+  literal `fim do bloco + início do próximo` antes de entregar o JSON.
 - Crie uma passagem editorial entre CADA par de blocos consecutivos. A cena
   seguinte deve responder, ampliar, contrastar ou levar adiante a anterior —
   nunca apenas trocar por outra curiosidade do mesmo tema. Sempre que couber,
@@ -504,7 +519,9 @@ ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
     há densidade editorial de uma a duas annotations narrativas por minuto,
     quando o conteúdo realmente oferecer esses pontos, sem sacrificar a
     maioria de imagens ou inserir B-roll desconectado.
-14. Nenhum bloco tem duas perguntas completas. O loop foi fechado antes da
-    última cena, e a CTA final tem somente pergunta específica + convite curto,
-    com no máximo 12 palavras em português.
+14. Não há perguntas curtas e isoladas, como "Como?" ou "Por quê?"; fora a
+    CTA final, existe no máximo uma pergunta retórica relevante e ela não é
+    seguida por CTA. O loop foi fechado antes da última cena, e a CTA final tem
+    somente pergunta específica + convite curto, com no máximo 12 palavras em
+    português.
 ```
