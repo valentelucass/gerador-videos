@@ -3,8 +3,14 @@ import { createRoot } from "react-dom/client";
 import "./style.css";
 
 type BackgroundAnimation = "none" | "movimento_sutil" | "movimento_lateral" | "pulsacao";
+type MediaTab = "assets" | "curadoria";
 
-type Scene = { id: string; image_id: number; asset_key?: string; image: string };
+type MediaType = "imagem" | "video_generico";
+type Scene = {
+  id: string; image_id: number; tipo_midia: MediaType; asset_key?: string; image: string;
+  visual?: { subject?: string; action?: string; setting?: string; framing?: string; details?: string };
+  annotation?: { lines: string[]; at: string; emoji?: string | null };
+};
 type ImageBinding = { expectedImage: string; sourceImage: string };
 type ImageBindings = Record<string, ImageBinding>;
 type Script = {
@@ -17,7 +23,9 @@ type Script = {
   blocks: { id: string; text: string; scenes: Scene[] }[];
 };
 
-type Catalog = { images: string[]; backgrounds: string[]; default_background?: string | null; music: string[]; sounds: string[] };
+type Catalog = { images: string[]; videos: string[]; backgrounds: string[]; default_background?: string | null; music: string[]; sounds: string[] };
+type PexelsCandidate = { id: number; preview_url: string; thumbnail?: string; width: number; height: number; duration?: number; creator?: string; pexels_url?: string };
+type PexelsItem = { scene_id: string; scene_image: string; query: string; asset_key?: string; text: string; candidates: PexelsCandidate[]; is_annotation?: boolean };
 type RenderJob = {
   status: string;
   output?: string;
@@ -125,8 +133,8 @@ function sceneCount(script: Script | null): number {
   return script?.blocks.reduce((total, block) => total + block.scenes.length, 0) ?? 0;
 }
 
-function sceneImages(script: Script | null): string[] {
-  return script?.blocks.flatMap(block => block.scenes.map(scene => scene.image)) ?? [];
+function sceneAssets(script: Script | null): Scene[] {
+  return script?.blocks.flatMap(block => block.scenes) ?? [];
 }
 
 function sceneBindingKey(blockIndex: number, sceneIndex: number): string {
@@ -165,7 +173,7 @@ function bindingsFromResolvedSources(script: Script, resolved: Record<string, st
   return result;
 }
 
-function unresolvedImages(
+function unresolvedAssets(
   script: Script,
   bindings: ImageBindings,
   uploadedImages: string[],
@@ -173,7 +181,7 @@ function unresolvedImages(
 ): string[] {
   return script.blocks.flatMap((block, blockIndex) => block.scenes.flatMap((scene, sceneIndex) => {
     const sourceImage = boundImageFor(bindings, blockIndex, sceneIndex, scene.image) ?? scene.image;
-    return imageIsReady(sourceImage, uploadedImages, catalogImages) ? [] : [scene.image];
+    return assetIsReady(scene, sourceImage, uploadedImages, catalogImages, []) ? [] : [scene.image];
   }));
 }
 
@@ -182,11 +190,12 @@ function linkedSceneCount(
   bindings: ImageBindings,
   uploadedImages: string[],
   catalogImages: string[],
+  catalogVideos: string[],
 ): number {
   if (!script) return 0;
   return script.blocks.reduce((total, block, blockIndex) => total + block.scenes.filter((scene, sceneIndex) => {
     const sourceImage = boundImageFor(bindings, blockIndex, sceneIndex, scene.image) ?? scene.image;
-    return imageIsReady(sourceImage, uploadedImages, catalogImages);
+    return assetIsReady(scene, sourceImage, uploadedImages, catalogImages, catalogVideos);
   }).length, 0);
 }
 
@@ -198,6 +207,12 @@ function imageIsReady(image: string, uploadedImages: string[], catalogImages: st
   // Nomes como cena_01.png são placeholders: somente um arquivo enviado nesta
   // tela pode confirmá-los. Isso evita reutilizar um asset antigo por engano.
   return uploadedImages.includes(image) || (!isPlaceholderImage(image) && catalogImages.includes(image));
+}
+
+function assetIsReady(scene: Scene, asset: string, uploadedImages: string[], catalogImages: string[], catalogVideos: string[]): boolean {
+  return scene.tipo_midia === "video_generico"
+    ? catalogVideos.includes(asset)
+    : imageIsReady(asset, uploadedImages, catalogImages);
 }
 
 function readableError(error: unknown): string {
@@ -221,7 +236,7 @@ function readableError(error: unknown): string {
 function App() {
   const [source, setSource] = useState("");
   const [script, setScript] = useState<Script | null>(null);
-  const [catalog, setCatalog] = useState<Catalog>({ images: [], backgrounds: [], music: [], sounds: [] });
+  const [catalog, setCatalog] = useState<Catalog>({ images: [], videos: [], backgrounds: [], music: [], sounds: [] });
   // O painel nunca apresenta o acervo técnico já existente no projeto.
   // Somente arquivos enviados pelo operador nesta sessão aparecem aqui.
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
@@ -244,10 +259,56 @@ function App() {
   const [renderError, setRenderError] = useState("");
   const [timingWarnings, setTimingWarnings] = useState<TimingScene[]>([]);
   const [renderLogUrl, setRenderLogUrl] = useState("");
+  const [pexelsItems, setPexelsItems] = useState<PexelsItem[]>([]);
+  const [pexelsQueries, setPexelsQueries] = useState<Record<string, string>>({});
+  const [translations, setTranslations] = useState<Record<string, string>>({});
+  const [pexelsBusy, setPexelsBusy] = useState(false);
+  const [mediaTab, setMediaTab] = useState<MediaTab>("assets");
+  const [musicPreviewPlaying, setMusicPreviewPlaying] = useState(false);
+  const [musicPreviewVolume, setMusicPreviewVolume] = useState(0.14);
+  const [promptCopied, setPromptCopied] = useState(false);
   const jsonInput = useRef<HTMLInputElement>(null);
   const imagesInput = useRef<HTMLInputElement>(null);
   const backgroundInput = useRef<HTMLInputElement>(null);
   const notifiedCompletedJob = useRef<string | null>(null);
+  const musicPreview = useRef<HTMLAudioElement | null>(null);
+  const promptCopyTimer = useRef<number | null>(null);
+
+  const stopMusicPreview = () => {
+    const preview = musicPreview.current;
+    if (!preview) return;
+    preview.pause();
+    preview.currentTime = 0;
+    setMusicPreviewPlaying(false);
+  };
+
+  const startMusicPreview = () => {
+    if (!music) return;
+    const url = `/assets/music/${encodeURIComponent(music)}`;
+    let preview = musicPreview.current;
+    if (!preview || preview.src !== new URL(url, window.location.href).href) {
+      stopMusicPreview();
+      preview = new Audio(url);
+      preview.volume = musicPreviewVolume;
+      preview.onended = () => setMusicPreviewPlaying(false);
+      musicPreview.current = preview;
+    }
+    preview.currentTime = 0;
+    preview.volume = musicPreviewVolume;
+    void preview.play()
+      .then(() => setMusicPreviewPlaying(true))
+      .catch(() => setMusicPreviewPlaying(false));
+  };
+
+  const toggleMusicPreview = () => {
+    if (musicPreviewPlaying) stopMusicPreview();
+    else startMusicPreview();
+  };
+
+  useEffect(() => () => {
+    stopMusicPreview();
+    musicPreview.current = null;
+  }, []);
 
   const refreshCatalog = async () => {
     try {
@@ -356,7 +417,36 @@ function App() {
     }
   };
 
-  const applyJson = () => { void parseScript(source); };
+  const copyScriptPrompt = async () => {
+    try {
+      const prompt = await api<string>("/api/script-prompt");
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(prompt);
+      } else {
+        const temporary = document.createElement("textarea");
+        temporary.value = prompt;
+        temporary.style.position = "fixed";
+        temporary.style.opacity = "0";
+        document.body.appendChild(temporary);
+        temporary.select();
+        document.execCommand("copy");
+        temporary.remove();
+      }
+      if (promptCopyTimer.current !== null) window.clearTimeout(promptCopyTimer.current);
+      setPromptCopied(true);
+      promptCopyTimer.current = window.setTimeout(() => {
+        setPromptCopied(false);
+        promptCopyTimer.current = null;
+      }, 1800);
+      setStatus("Prompt canônico copiado. Cole-o no ChatGPT e preencha o tema do vídeo.");
+    } catch (error) {
+      setStatus(`Não foi possível copiar o prompt: ${readableError(error)}`);
+    }
+  };
+
+  useEffect(() => () => {
+    if (promptCopyTimer.current !== null) window.clearTimeout(promptCopyTimer.current);
+  }, []);
 
   const readJsonFile = async (file: File) => {
     const text = await file.text();
@@ -501,6 +591,94 @@ function App() {
     setStatus("Lista local e vínculos limpos. Nenhum arquivo foi apagado e o roteiro foi preservado.");
   };
 
+  const pexelsQueryPayload = (activeScript: Script): Record<string, string> => {
+    const result: Record<string, string> = {};
+    activeScript.blocks.forEach(block => block.scenes.forEach(scene => {
+      const query = pexelsQueries[scene.id]?.trim();
+      if (scene.tipo_midia === "video_generico" && query) result[scene.id] = query;
+    }));
+    return result;
+  };
+
+  const searchPexels = async (sceneId?: string) => {
+    const activeScript = parseScript(source, false);
+    if (!activeScript) {
+      setStatus("Cole ou importe um roteiro JSON antes de buscar B-roll.");
+      return;
+    }
+    try {
+      setPexelsBusy(true);
+      setStatus("Buscando alternativas horizontais no Pexels…");
+      const result = await api<{ items: PexelsItem[] }>("/api/pexels/candidates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ script: activeScript, queries: pexelsQueryPayload(activeScript) }),
+      });
+      setPexelsItems(current => sceneId
+        ? [...current.filter(item => item.scene_id !== sceneId), ...result.items.filter(item => item.scene_id === sceneId)]
+        : result.items);
+      setMediaTab("curadoria");
+      setStatus(result.items.length ? "Escolha um B-roll por cena. Nenhum vídeo é baixado antes da sua aprovação." : "O roteiro não possui cenas de vídeo genérico.");
+    } catch (error) {
+      setStatus(readableError(error));
+    } finally {
+      setPexelsBusy(false);
+    }
+  };
+
+  const downloadPexelsVideo = async (item: PexelsItem, candidate: PexelsCandidate) => {
+    const activeScript = parseScript(source, false);
+    if (!activeScript) return;
+    try {
+      setPexelsBusy(true);
+      setStatus(`Baixando B-roll aprovado para ${item.scene_id}…`);
+      const result = await api<{ filename: string }>("/api/pexels/download", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          script: activeScript,
+          queries: { ...pexelsQueryPayload(activeScript), [item.scene_id]: pexelsQueries[item.scene_id]?.trim() || item.query },
+          scene_id: item.scene_id,
+          video_id: candidate.id,
+        }),
+      });
+      await refreshCatalog();
+      setStatus(`B-roll ${result.filename} aprovado e salvo. Ele já será usado pela cena ${item.scene_id}.`);
+    } catch (error) {
+      setStatus(readableError(error));
+    } finally {
+      setPexelsBusy(false);
+    }
+  };
+
+  const translateScene = async (item: PexelsItem) => {
+    const activeScript = parseScript(source, false);
+    if (!activeScript) return;
+    if (activeScript.language.toLowerCase().startsWith("pt")) {
+      setTranslations(current => ({ ...current, [item.scene_id]: item.text }));
+      return;
+    }
+    try {
+      const result = await api<{ portuguese: string }>("/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: item.text, source_language: activeScript.language }),
+      });
+      setTranslations(current => ({ ...current, [item.scene_id]: result.portuguese }));
+    } catch (error) {
+      setStatus(readableError(error));
+    }
+  };
+
+  const openVideosFolder = async () => {
+    try {
+      await api<{ folder: string }>("/api/pexels/open-folder", { method: "POST" });
+      setStatus("A pasta local dos B-rolls foi aberta no Explorador de Arquivos.");
+    } catch (error) {
+      setStatus(readableError(error));
+    }
+  };
+
   const validate = async () => {
     const activeScript = parseScript(source, false);
     if (!activeScript) {
@@ -584,13 +762,13 @@ function App() {
   };
 
   const backgroundUrl = background ? `/assets/backgrounds/${encodeURIComponent(background)}` : "";
-  const requiredImages = sceneImages(script);
-  const linkedImages = linkedSceneCount(script, imageBindings, uploadedImages, catalog.images);
+  const requiredAssets = sceneAssets(script);
+  const linkedImages = linkedSceneCount(script, imageBindings, uploadedImages, catalog.images, catalog.videos);
   const thumbnailPageCount = Math.max(1, Math.ceil(uploadedImages.length / THUMBNAIL_PAGE_SIZE));
   const currentThumbnailPage = Math.min(thumbnailPage, thumbnailPageCount - 1);
   const thumbnailStart = currentThumbnailPage * THUMBNAIL_PAGE_SIZE;
   const visibleUploadedImages = uploadedImages.slice(thumbnailStart, thumbnailStart + THUMBNAIL_PAGE_SIZE);
-  const imageProgress = requiredImages.length ? Math.round((linkedImages / requiredImages.length) * 100) : 0;
+  const imageProgress = requiredAssets.length ? Math.round((linkedImages / requiredAssets.length) * 100) : 0;
   const scriptProgress = script ? 100 : 0;
   const backgroundProgress = background ? 100 : 0;
 
@@ -601,6 +779,7 @@ function App() {
         <div className="appbar-actions">
           <span className="scene-indicator">{script ? `${sceneCount(script)} cenas` : "sem roteiro"}</span>
           <button className="button quiet" onClick={validate}>Validar</button>
+          <button className="button quiet" disabled={!script || pexelsBusy} onClick={() => void searchPexels()}>{pexelsBusy ? "Buscando…" : "Buscar B-roll"}</button>
           <button className="button primary" disabled={Boolean(jobId)} onClick={render}>{jobId ? "Renderizando…" : "Gerar vídeo"}</button>
         </div>
       </header>
@@ -609,7 +788,7 @@ function App() {
         <article className="panel json-panel">
           <div className="panel-header">
             <div><span className="panel-index">01</span><h1>Roteiro JSON</h1></div>
-            <button className="button quiet compact" onClick={() => jsonInput.current?.click()}>Importar JSON</button>
+            <div className="json-header-actions"><button className={`button quiet compact prompt-copy-button${promptCopied ? " copied" : ""}`} onClick={() => void copyScriptPrompt()}>{promptCopied ? "✓ Copiado" : "Copiar prompt"}</button><button className="button quiet compact" onClick={() => jsonInput.current?.click()}>Importar JSON</button></div>
             <input ref={jsonInput} type="file" accept="application/json,.json" hidden onChange={importJson} />
           </div>
           <p className="panel-hint">Cole o JSON ou importe um arquivo.</p>
@@ -631,35 +810,43 @@ function App() {
               setActiveImagePickerKey(null);
             }}
           />
-          {timingWarnings.length > 0 && (
-            <section className="timing-report" aria-label="Cenas que precisam de corte">
-              <b>Prévia acústica: {timingWarnings.length} cena(s) acima de 9 s</b>
+          <section className={`script-feedback${timingWarnings.length ? " has-warnings" : ""}`} aria-label="Validação e avisos do roteiro">
+            {timingWarnings.length > 0 ? <>
+              <b>Prévia acústica · {timingWarnings.length} cena(s) precisam de corte</b>
               {timingWarnings.map(scene => (
                 <div className="timing-warning" key={scene.id}>
                   <span><b>{scene.id}</b> — {scene.duration.toFixed(2)} s</span>
-                  <small>Corte sugerido: “{scene.suggested_split?.first_text ?? "divida próximo à metade"}” / “{scene.suggested_split?.second_text ?? "crie a segunda cena"}”</small>
+                  <small>Corte: “{scene.suggested_split?.first_text ?? "divida próximo à metade"}” / “{scene.suggested_split?.second_text ?? "crie a segunda cena"}”</small>
                 </div>
               ))}
-            </section>
-          )}
-          <label className="music-select">
+            </> : <span>Validação, duração acústica e sugestões de corte aparecem aqui.</span>}
+          </section>
+          <div className="music-select" onMouseEnter={startMusicPreview} onMouseLeave={stopMusicPreview}>
             <span><b>Trilha do vídeo</b><small>{catalog.music.length ? "Escolha a música usada nesta renderização" : "Nenhuma música disponível"}</small></span>
+            <button type="button" className={`music-preview-toggle${musicPreviewPlaying ? " playing" : ""}`} aria-label={musicPreviewPlaying ? "Pausar prévia da trilha" : "Ouvir prévia da trilha"} title={musicPreviewPlaying ? "Pausar prévia" : "Ouvir prévia"} disabled={!music} onClick={toggleMusicPreview}>{musicPreviewPlaying ? "❚❚" : "▶"}</button>
+            <label className="music-preview-volume" title="Volume da prévia">
+              <span>🔈</span>
+              <input type="range" min="0" max="0.35" step="0.01" value={musicPreviewVolume} aria-label="Volume da prévia da trilha" onChange={event => {
+                const volume = Number(event.target.value);
+                setMusicPreviewVolume(volume);
+                if (musicPreview.current) musicPreview.current.volume = volume;
+              }} />
+            </label>
             <select
               aria-label="Trilha do vídeo"
               value={music}
               disabled={!catalog.music.length || Boolean(jobId)}
-              onChange={event => setMusic(event.target.value)}
+              onChange={event => { stopMusicPreview(); setMusic(event.target.value); }}
             >
               {!catalog.music.length && <option value="">Sem músicas disponíveis</option>}
               {catalog.music.map(item => <option key={item} value={item}>{item}</option>)}
             </select>
-          </label>
-          <button className="button json-apply" onClick={applyJson}>Ler roteiro</button>
+          </div>
         </article>
 
         <article className="panel scenes-panel">
           <div className="panel-header">
-            <div><span className="panel-index">02</span><h1>Imagens das cenas</h1></div>
+            <div><span className="panel-index">02</span><h1>Mídias das cenas</h1></div>
             <div className="scene-panel-actions">
               <span className="panel-count">{uploadedImages.length} enviada(s) nesta tela</span>
               {uploadedImages.length > 0 && (
@@ -667,12 +854,18 @@ function App() {
               )}
             </div>
           </div>
+          <div className="media-tabs" aria-label="Áreas de mídia">
+            <button className={mediaTab === "assets" ? "active" : ""} onClick={() => setMediaTab("assets")}>Imagens e vínculos</button>
+            <button className={mediaTab === "curadoria" ? "active" : ""} onClick={() => setMediaTab("curadoria")}>Curadoria B-roll{pexelsItems.length ? ` · ${pexelsItems.length}` : ""}</button>
+          </div>
+          {!script && <div className="media-await"><b>Carregue o roteiro para preparar as mídias.</b><span>As cenas, os vínculos e a curadoria aparecem aqui depois da leitura do JSON.</span></div>}
+          {script && mediaTab === "assets" && <>
           <div className="asset-drop" onDragOver={event => event.preventDefault()} onDrop={dropImages} onClick={() => imagesInput.current?.click()} role="button" tabIndex={0}>
-            <b>Solte as imagens aqui</b><span>ou clique para importar</span>
+            <b>Solte as imagens IA aqui</b><span>ou clique para importar</span>
           </div>
           <input ref={imagesInput} type="file" hidden multiple accept="image/png,image/jpeg,image/webp" onChange={onImagesInput} />
           <div className="flow-progress image-progress" aria-label="Progresso das imagens">
-            <div><span>Imagens encontradas</span><b>{script ? `${linkedImages}/${requiredImages.length}` : "aguardando roteiro"}</b></div>
+            <div><span>Assets prontos</span><b>{script ? `${linkedImages}/${requiredAssets.length}` : "aguardando roteiro"}</b></div>
             <i><em style={{ width: `${imageProgress}%` }} /></i>
           </div>
           <div className="asset-grid" aria-label="Imagens enviadas nesta tela">
@@ -716,54 +909,70 @@ function App() {
           {script && (
             <div className="scene-bindings" aria-label="Vínculo manual de imagens por cena">
               <div className="scene-bindings-header">
-                <span>Escolha manual por cena</span>
+                <span>Revisão de mídia por cena</span>
+                <button className="button quiet compact" onClick={() => void openVideosFolder()}>Abrir pasta dos vídeos</button>
               </div>
               {!uploadedImages.length && <p className="scene-bindings-empty">Envie imagens para liberar as opções de vínculo. Nenhuma imagem antiga é exibida aqui.</p>}
               {uploadedImages.length > 0 && <p className="scene-bindings-note">O ID é a referência editorial da cena. O sistema compara o brief com os nomes descritivos que o Google Flow gerar; a ordem do envio não é usada.</p>}
               <div className="scene-binding-list">
                 {script.blocks.flatMap((block, blockIndex) => block.scenes.map((scene, sceneIndex) => {
+                  if (scene.tipo_midia === "video_generico") {
+                    const downloaded = catalog.videos.includes(scene.image);
+                    return <div className={`scene-binding ${downloaded ? "ready" : "pending"}`} key={`${block.id}-${scene.id}`}>
+                      <span className="scene-binding-label"><b>Cena {blockIndex + 1} · vídeo</b><code>{scene.asset_key ?? scene.image}</code></span>
+                      <span className="scene-binding-source">{downloaded ? <>B-roll salvo: <code>{scene.image}</code></> : <>Disponível na aba Curadoria: <code>{scene.image}</code></>}</span>
+                    </div>;
+                  }
                   const pickerKey = sceneBindingKey(blockIndex, sceneIndex);
                   const boundImage = boundImageFor(imageBindings, blockIndex, sceneIndex, scene.image);
                   const sourceImage = boundImage ?? scene.image;
                   const isReady = imageIsReady(sourceImage, uploadedImages, catalog.images);
-                  // O <select> ativo é o único que recebe a lista inteira.
-                  // Os demais preservam só seu valor atual, evitando N cenas ×
-                  // N arquivos em nós DOM para roteiros maiores.
-                  const pickerImages = activeImagePickerKey === pickerKey
-                    ? uploadedImages.filter(image => image !== scene.image)
-                    : boundImage ? [boundImage] : [];
+                  const pickerImages = activeImagePickerKey === pickerKey ? uploadedImages.filter(image => image !== scene.image) : boundImage ? [boundImage] : [];
                   return (
                     <div className={`scene-binding${isReady ? " ready" : " pending"}`} key={`${block.id}-${scene.id}-${blockIndex}-${sceneIndex}`}>
                       <span className="scene-binding-label"><b>Cena {blockIndex + 1} · ID {scene.image_id}</b><code>{scene.asset_key ?? scene.image}</code></span>
-                      <select
-                        aria-label={`Escolher imagem para a cena ${blockIndex + 1}`}
-                        value={boundImage ?? ""}
-                        disabled={!uploadedImages.length || Boolean(jobId)}
-                        onPointerDown={() => setActiveImagePickerKey(pickerKey)}
-                        onFocus={() => setActiveImagePickerKey(pickerKey)}
-                        onChange={event => bindUploadedImageToScene(blockIndex, sceneIndex, event.target.value)}
-                      >
-                        <option value="">Usar {scene.image} (nome do JSON)</option>
-                        {pickerImages.map(image => <option key={image} value={image}>{image}</option>)}
+                      <select aria-label={`Escolher imagem para a cena ${blockIndex + 1}`} value={boundImage ?? ""} disabled={!uploadedImages.length || Boolean(jobId)} onPointerDown={() => setActiveImagePickerKey(pickerKey)} onFocus={() => setActiveImagePickerKey(pickerKey)} onChange={event => bindUploadedImageToScene(blockIndex, sceneIndex, event.target.value)}>
+                        <option value="">Usar {scene.image} (nome do JSON)</option>{pickerImages.map(image => <option key={image} value={image}>{image}</option>)}
                       </select>
-                      <span className="scene-binding-source">
-                        {boundImage ? <>Arquivo enviado: <code>{boundImage}</code></> : <>Referência editorial: <code>ID {scene.image_id}</code></>}
-                      </span>
-                      {boundImage && (
-                        <button
-                          type="button"
-                          className="button quiet compact scene-binding-rename"
-                          disabled={Boolean(jobId)}
-                          onClick={event => { event.preventDefault(); renameJsonImageFromBinding(blockIndex, sceneIndex); }}
-                        >
-                          Trocar nome no JSON
-                        </button>
-                      )}
+                      <span className="scene-binding-source">{boundImage ? <>Arquivo enviado: <code>{boundImage}</code></> : <>Referência editorial: <code>ID {scene.image_id}</code></>}</span>
+                      {boundImage && <button type="button" className="button quiet compact scene-binding-rename" disabled={Boolean(jobId)} onClick={event => { event.preventDefault(); renameJsonImageFromBinding(blockIndex, sceneIndex); }}>Trocar nome no JSON</button>}
                     </div>
                   );
                 }))}
               </div>
             </div>
+          )}
+          </>}
+          {script && mediaTab === "curadoria" && (
+            <section className="pexels-review standalone" aria-label="Curadoria de B-roll do Pexels">
+              <div className="curation-heading"><div><span className="panel-index">B-ROLL</span><b>Escolhas editoriais</b><small>O gancho e as inserções visíveis passam pela sua aprovação.</small></div><button className="button quiet compact" onClick={() => void openVideosFolder()}>Abrir pasta dos vídeos</button></div>
+              {pexelsItems.length > 0 ? <>
+                  <p className="scene-bindings-note">Prévia e aprovação humana de B-roll horizontal. Vídeos fornecidos por <a href="https://www.pexels.com" target="_blank" rel="noreferrer">Pexels</a>.</p>
+                  {pexelsItems.map(item => {
+                    const scene = script?.blocks.flatMap(block => block.scenes).find(candidate => candidate.id === item.scene_id);
+                    const saved = Boolean(scene && catalog.videos.includes(scene.image));
+                    return (
+                      <article className="pexels-item" key={item.scene_id}>
+                        <div className="pexels-copy"><b>{item.scene_id} · {saved ? "aprovado" : "aguardando aprovação"}</b><span>Original: {item.text}</span>
+                          {translations[item.scene_id] ? <span>Português: {translations[item.scene_id]}</span> : <button className="text-button" onClick={() => void translateScene(item)}>Traduzir para português</button>}
+                        </div>
+                        {item.is_annotation && <p className="annotation-broll">FUNÇÃO: este vídeo fica fullscreen atrás da anotação, com blur leve. Ele não é uma cena independente; escolha a atmosfera que você quer que permaneça visível por trás do texto.</p>}
+                        <div className="pexels-search"><input value={pexelsQueries[item.scene_id] ?? item.query} aria-label={`Busca Pexels para ${item.scene_id}`} onChange={event => setPexelsQueries(current => ({ ...current, [item.scene_id]: event.target.value }))} /><button className="button quiet compact" disabled={pexelsBusy} onClick={() => void searchPexels(item.scene_id)}>Buscar descrição</button></div>
+                        <div className="pexels-candidates">
+                          {item.candidates.map(candidate => (
+                            <figure key={candidate.id}>
+                              <video src={candidate.preview_url} poster={candidate.thumbnail} controls muted preload="metadata" />
+                              <figcaption>{candidate.width}×{candidate.height} · {candidate.duration ?? "?"}s{candidate.creator ? ` · ${candidate.creator}` : ""}</figcaption>
+                              <button className="button compact" disabled={pexelsBusy} onClick={() => void downloadPexelsVideo(item, candidate)}>{item.is_annotation ? "Usar como fundo" : "Usar este vídeo"}</button>
+                            </figure>
+                          ))}
+                          {!item.candidates.length && <p className="asset-grid-empty">Nenhum B-roll horizontal foi encontrado. Altere a descrição em inglês e busque de novo.</p>}
+                        </div>
+                      </article>
+                    );
+                  })}
+              </> : <div className="curation-empty"><b>Nenhuma busca realizada</b><span>Depois de validar o roteiro, use “Buscar B-roll” no cabeçalho. A curadoria aparece aqui, sem disputar espaço com as imagens.</span></div>}
+            </section>
           )}
         </article>
 

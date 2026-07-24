@@ -1,0 +1,1819 @@
+{
+  "_instrucoes_flow": "Google Flow, leia apenas as cenas com tipo_midia: imagem. IGNORE COMPLETAMENTE as cenas com tipo_midia: video_generico, não gere imagens para elas.",
+  "title": "O Roubo de 81 Minutos Que Apagou 13 Obras-Primas",
+  "language": "pt-BR",
+  "narrator_gender": "male",
+  "voice": "pt-BR-AntonioNeural",
+  "background": "black",
+  "background_animation": "movimento_sutil",
+  "blocks": [
+    {
+      "id": "block_01",
+      "text": "Em 81 minutos, dois falsos policiais roubaram 13 obras. Como?",
+      "scenes": [
+        {
+          "id": "scene_01",
+          "image_id": 1,
+          "tipo_midia": "video_generico",
+          "asset_key": "museum-security-night",
+          "image": "cena_01.mp4",
+          "visual": {
+            "subject": "corredor escuro de um museu genérico",
+            "action": "sendo percorrido por duas silhuetas uniformizadas",
+            "setting": "museu fechado durante a madrugada",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": {
+              "type": "click",
+              "at": "start"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_02",
+      "text": "Se essa precisão te intriga, curta e se inscreva, porque o primeiro erro abriu todo o museu.",
+      "scenes": [
+        {
+          "id": "scene_02",
+          "image_id": 2,
+          "tipo_midia": "video_generico",
+          "asset_key": "museum-exterior-night-rain",
+          "image": "cena_02.mp4",
+          "visual": {
+            "subject": "fachada de museu genérico sob chuva leve",
+            "action": "permanecendo silenciosa enquanto luzes internas continuam acesas",
+            "setting": "rua urbana durante a madrugada",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "click",
+              "at": "start"
+            }
+          },
+          "annotation": {
+            "lines": [
+              "DEIXE O LIKE",
+              "E SE INSCREVA"
+            ],
+            "at": "start",
+            "emoji": "👍"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_03",
+      "text": "A resposta começa em Boston, na madrugada de 18 de março,",
+      "scenes": [
+        {
+          "id": "scene_03",
+          "image_id": 3,
+          "tipo_midia": "imagem",
+          "asset_key": "boston-st-patricks-night-1990",
+          "image": "cena_03.png",
+          "visual": {
+            "subject": "rua de Boston após celebrações de São Patrício",
+            "action": "esvaziando enquanto a madrugada avança",
+            "setting": "Boston em 18 de março de 1990",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_04",
+      "text": "quando dois homens uniformizados tocaram o interfone do Museu Gardner",
+      "scenes": [
+        {
+          "id": "scene_04",
+          "image_id": 4,
+          "tipo_midia": "imagem",
+          "asset_key": "fake-police-museum-intercom",
+          "image": "cena_04.png",
+          "visual": {
+            "subject": "dois homens usando uniformes policiais diante de um interfone",
+            "action": "tocando a campainha da entrada de funcionários",
+            "setting": "fachada do Museu Gardner durante a madrugada",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_05",
+      "text": "e afirmaram investigar uma perturbação ocorrida dentro do prédio.",
+      "scenes": [
+        {
+          "id": "scene_05",
+          "image_id": 5,
+          "tipo_midia": "imagem",
+          "asset_key": "museum-disturbance-claim-door",
+          "image": "cena_05.png",
+          "visual": {
+            "subject": "um guarda observando dois supostos policiais pela porta",
+            "action": "escutando a alegação de uma perturbação interna",
+            "setting": "entrada de funcionários do museu",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_06",
+      "text": "O guarda noturno contrariou o protocolo e abriu a entrada de funcionários,",
+      "scenes": [
+        {
+          "id": "scene_06",
+          "image_id": 6,
+          "tipo_midia": "imagem",
+          "asset_key": "night-guard-opening-employee-door",
+          "image": "cena_06.png",
+          "visual": {
+            "subject": "guarda noturno destrancando uma porta restrita",
+            "action": "permitindo a entrada dos dois homens uniformizados",
+            "setting": "corredor de serviço do Museu Gardner",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_07",
+      "text": "permitindo que os desconhecidos alcançassem diretamente o posto de segurança.",
+      "scenes": [
+        {
+          "id": "scene_07",
+          "image_id": 7,
+          "tipo_midia": "imagem",
+          "asset_key": "security-desk-uniformed-intruders",
+          "image": "cena_07.png",
+          "visual": {
+            "subject": "dois falsos policiais aproximando-se do posto de segurança",
+            "action": "ocupando rapidamente o espaço diante do guarda",
+            "setting": "saguão interno próximo à entrada de funcionários",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_08",
+      "text": "Então exigiram o segundo guarda. Sorte ou conhecimento prévio da rotina?",
+      "scenes": [
+        {
+          "id": "scene_08",
+          "image_id": 8,
+          "tipo_midia": "video_generico",
+          "asset_key": "security-control-room-guards",
+          "image": "cena_08.mp4",
+          "visual": {
+            "subject": "sala genérica de segurança com monitores e dois vigilantes",
+            "action": "mostrando uma rotina noturna interrompida por uma convocação",
+            "setting": "posto de vigilância sem referência a local específico",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "QUEM CONHECIA",
+              "A ROTINA?"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_09",
+      "text": "Menos de um minuto depois, anunciaram o roubo aos dois funcionários,",
+      "scenes": [
+        {
+          "id": "scene_09",
+          "image_id": 9,
+          "tipo_midia": "imagem",
+          "asset_key": "second-guard-arrives-desk",
+          "image": "cena_09.png",
+          "visual": {
+            "subject": "segundo guarda chegando ao posto de segurança",
+            "action": "aproximando-se dos homens uniformizados e do colega",
+            "setting": "área de controle interno do museu",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_10",
+      "text": "prenderam seus pulsos com algemas e cobriram seus rostos com fita.",
+      "scenes": [
+        {
+          "id": "scene_10",
+          "image_id": 10,
+          "tipo_midia": "imagem",
+          "asset_key": "guards-handcuffed-duct-tape",
+          "image": "cena_10.png",
+          "visual": {
+            "subject": "dois guardas sendo imobilizados por invasores",
+            "action": "recebendo algemas e fita sobre os olhos",
+            "setting": "posto de segurança durante o início do roubo",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_11",
+      "text": "Em seguida, separaram ambos em áreas remotas do porão,",
+      "scenes": [
+        {
+          "id": "scene_11",
+          "image_id": 11,
+          "tipo_midia": "imagem",
+          "asset_key": "guards-separated-basement",
+          "image": "cena_11.png",
+          "visual": {
+            "subject": "dois guardas presos em áreas separadas",
+            "action": "permanecendo imobilizados no porão do edifício",
+            "setting": "porão remoto do Museu Gardner",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_12",
+      "text": "mesmo sem exibir armas durante toda a invasão conhecida.",
+      "scenes": [
+        {
+          "id": "scene_12",
+          "image_id": 12,
+          "tipo_midia": "imagem",
+          "asset_key": "unarmed-intruders-museum",
+          "image": "cena_12.png",
+          "visual": {
+            "subject": "dois invasores uniformizados sem armas visíveis",
+            "action": "controlando os guardas apenas pela surpresa e autoridade aparente",
+            "setting": "interior escuro do museu",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_13",
+      "text": "Nenhum botão de emergência foi acionado, e a polícia permaneceu distante.",
+      "scenes": [
+        {
+          "id": "scene_13",
+          "image_id": 13,
+          "tipo_midia": "imagem",
+          "asset_key": "silent-alarm-button-unused",
+          "image": "cena_13.png",
+          "visual": {
+            "subject": "botão de emergência intacto sob o balcão",
+            "action": "permanecendo sem uso durante a invasão",
+            "setting": "posto de segurança abandonado",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_14",
+      "text": "Assim, os ladrões ganharam 81 minutos livres. Tempo demais para improvisação.",
+      "scenes": [
+        {
+          "id": "scene_14",
+          "image_id": 14,
+          "tipo_midia": "video_generico",
+          "asset_key": "security-camera-clock-timelapse",
+          "image": "cena_14.mp4",
+          "visual": {
+            "subject": "relógio e monitores de vigilância genéricos",
+            "action": "marcando a passagem prolongada do tempo sem interrupção",
+            "setting": "sala de segurança vazia durante a madrugada",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "81 MINUTOS",
+              "SEM INTERRUPÇÃO"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_15",
+      "text": "Os sensores de movimento registraram uma rota concentrada pelo segundo andar,",
+      "scenes": [
+        {
+          "id": "scene_15",
+          "image_id": 15,
+          "tipo_midia": "imagem",
+          "asset_key": "motion-detector-museum-route",
+          "image": "cena_15.png",
+          "visual": {
+            "subject": "planta visual do museu sugerida por corredores iluminados",
+            "action": "indicando uma sequência de movimentos pelo segundo andar",
+            "setting": "interior do Museu Gardner visto de forma documental",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_16",
+      "text": "começando na Sala Holandesa, onde estavam os alvos mais famosos.",
+      "scenes": [
+        {
+          "id": "scene_16",
+          "image_id": 16,
+          "tipo_midia": "imagem",
+          "asset_key": "dutch-room-before-theft",
+          "image": "cena_16.png",
+          "visual": {
+            "subject": "Sala Holandesa repleta de pinturas e molduras douradas",
+            "action": "permanecendo intacta pouco antes do roubo",
+            "setting": "segundo andar do Museu Gardner",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_17",
+      "text": "Ali, cortaram da moldura A Tempestade no Mar da Galileia,",
+      "scenes": [
+        {
+          "id": "scene_17",
+          "image_id": 17,
+          "tipo_midia": "imagem",
+          "asset_key": "rembrandt-storm-frame-cut",
+          "image": "cena_17.png",
+          "visual": {
+            "subject": "pintura A Tempestade no Mar da Galileia em sua moldura",
+            "action": "sendo cortada cuidadosamente pelas bordas da tela",
+            "setting": "Sala Holandesa durante o roubo",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_18",
+      "text": "o único cenário marítimo conhecido pintado por Rembrandt,",
+      "scenes": [
+        {
+          "id": "scene_18",
+          "image_id": 18,
+          "tipo_midia": "imagem",
+          "asset_key": "rembrandt-storm-seascape-detail",
+          "image": "cena_18.png",
+          "visual": {
+            "subject": "navio enfrentando ondas violentas na pintura de Rembrandt",
+            "action": "destacando a composição marítima única do artista",
+            "setting": "close documental da obra antes do desaparecimento",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_19",
+      "text": "e também arrancaram A Lady and Gentleman in Black.",
+      "scenes": [
+        {
+          "id": "scene_19",
+          "image_id": 19,
+          "tipo_midia": "imagem",
+          "asset_key": "lady-gentleman-black-cut-frame",
+          "image": "cena_19.png",
+          "visual": {
+            "subject": "pintura A Lady and Gentleman in Black",
+            "action": "sendo retirada da moldura por mãos enluvadas",
+            "setting": "Sala Holandesa sob iluminação baixa",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_20",
+      "text": "Depois removeram O Concerto, uma das aproximadamente 36 pinturas conhecidas de Vermeer.",
+      "scenes": [
+        {
+          "id": "scene_20",
+          "image_id": 20,
+          "tipo_midia": "video_generico",
+          "asset_key": "museum-masterpiece-gallery-visitors",
+          "image": "cena_20.mp4",
+          "visual": {
+            "subject": "visitantes genéricos observando uma pintura antiga em museu",
+            "action": "demonstrando a raridade e atenção dedicada a grandes mestres",
+            "setting": "galeria de arte clássica sem obra específica",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "APENAS 36",
+              "PINTURAS DE VERMEER"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_21",
+      "text": "A sequência continuou com paisagem de Flinck e gravura de Rembrandt,",
+      "scenes": [
+        {
+          "id": "scene_21",
+          "image_id": 21,
+          "tipo_midia": "imagem",
+          "asset_key": "flinck-landscape-rembrandt-etching",
+          "image": "cena_21.png",
+          "visual": {
+            "subject": "paisagem de Flinck ao lado de pequena gravura de Rembrandt",
+            "action": "sendo selecionadas entre objetos maiores da sala",
+            "setting": "Sala Holandesa durante a invasão",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_22",
+      "text": "antes de incluírem um antigo vaso ritual chinês de bronze.",
+      "scenes": [
+        {
+          "id": "scene_22",
+          "image_id": 22,
+          "tipo_midia": "imagem",
+          "asset_key": "ancient-chinese-bronze-gu",
+          "image": "cena_22.png",
+          "visual": {
+            "subject": "vaso ritual chinês de bronze em formato alongado",
+            "action": "sendo retirado de uma mesa expositiva",
+            "setting": "Sala Holandesa do Museu Gardner",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_23",
+      "text": "Da Sala Holandesa, avançaram até a Galeria Curta,",
+      "scenes": [
+        {
+          "id": "scene_23",
+          "image_id": 23,
+          "tipo_midia": "imagem",
+          "asset_key": "thieves-enter-short-gallery",
+          "image": "cena_23.png",
+          "visual": {
+            "subject": "dois invasores entrando na Galeria Curta",
+            "action": "mudando a busca das pinturas para objetos menores",
+            "setting": "segundo andar do museu",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_24",
+      "text": "onde recolheram cinco pequenos trabalhos em papel de Edgar Degas.",
+      "scenes": [
+        {
+          "id": "scene_24",
+          "image_id": 24,
+          "tipo_midia": "imagem",
+          "asset_key": "five-degas-works-paper",
+          "image": "cena_24.png",
+          "visual": {
+            "subject": "cinco pequenos trabalhos de Edgar Degas sobre papel",
+            "action": "sendo reunidos e retirados de suas posições",
+            "setting": "Galeria Curta durante o roubo",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_25",
+      "text": "Tentaram remover uma bandeira napoleônica, mas levaram seu remate de águia.",
+      "scenes": [
+        {
+          "id": "scene_25",
+          "image_id": 25,
+          "tipo_midia": "imagem",
+          "asset_key": "napoleonic-eagle-finial-removal",
+          "image": "cena_25.png",
+          "visual": {
+            "subject": "remate metálico de águia preso a uma haste napoleônica",
+            "action": "sendo forçado até se separar da estrutura",
+            "setting": "Galeria Curta do Museu Gardner",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_26",
+      "text": "Aqui surge a primeira grande contradição: obras-primas famosas dividiam espaço com objetos pequenos e incomuns.",
+      "scenes": [
+        {
+          "id": "scene_26",
+          "image_id": 26,
+          "tipo_midia": "video_generico",
+          "asset_key": "museum-artifacts-display-case",
+          "image": "cena_26.mp4",
+          "visual": {
+            "subject": "pinturas, papéis e pequenos bronzes em exposição genérica",
+            "action": "aparecendo juntos como escolhas de valores e tamanhos contraditórios",
+            "setting": "galeria de museu sem peças específicas",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "ESCOLHAS",
+              "INCOERENTES"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_27",
+      "text": "A seleção não parece encomenda simples, mas a rota tampouco parece aleatória.",
+      "scenes": [
+        {
+          "id": "scene_27",
+          "image_id": 27,
+          "tipo_midia": "imagem",
+          "asset_key": "stolen-art-mixed-selection",
+          "image": "cena_27.png",
+          "visual": {
+            "subject": "conjunto visual de pintura, gravura, bronze e objeto decorativo",
+            "action": "reunido como uma seleção aparentemente incoerente",
+            "setting": "sala escura usada para análise investigativa",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_28",
+      "text": "E essa rota ainda desceu ao primeiro andar para buscar Manet,",
+      "scenes": [
+        {
+          "id": "scene_28",
+          "image_id": 28,
+          "tipo_midia": "imagem",
+          "asset_key": "thieves-descending-museum-stairs",
+          "image": "cena_28.png",
+          "visual": {
+            "subject": "duas figuras carregando obras descendo uma escadaria",
+            "action": "mudando do segundo para o primeiro andar",
+            "setting": "escadaria interna do Museu Gardner",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_29",
+      "text": "porque Chez Tortoni foi a única obra roubada naquele piso.",
+      "scenes": [
+        {
+          "id": "scene_29",
+          "image_id": 29,
+          "tipo_midia": "imagem",
+          "asset_key": "manet-chez-tortoni-blue-room",
+          "image": "cena_29.png",
+          "visual": {
+            "subject": "Chez Tortoni de Manet em uma parede da Sala Azul",
+            "action": "sendo retirado como único alvo daquele piso",
+            "setting": "primeiro andar do Museu Gardner",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_30",
+      "text": "Apesar do tamanho pequeno, sua moldura apareceu longe da galeria,",
+      "scenes": [
+        {
+          "id": "scene_30",
+          "image_id": 30,
+          "tipo_midia": "imagem",
+          "asset_key": "small-manet-empty-frame",
+          "image": "cena_30.png",
+          "visual": {
+            "subject": "pequena moldura dourada vazia",
+            "action": "permanecendo distante da pintura removida",
+            "setting": "corredor interno após o roubo",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_31",
+      "text": "dentro do escritório ocupado pelo diretor de segurança daquela época.",
+      "scenes": [
+        {
+          "id": "scene_31",
+          "image_id": 31,
+          "tipo_midia": "imagem",
+          "asset_key": "manet-frame-security-office",
+          "image": "cena_31.png",
+          "visual": {
+            "subject": "moldura de Chez Tortoni abandonada sobre uma mesa",
+            "action": "aparecendo dentro do escritório do diretor de segurança",
+            "setting": "escritório interno do Museu Gardner",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_32",
+      "text": "Enquanto isso, os invasores também retiraram a fita de vigilância daquela madrugada,",
+      "scenes": [
+        {
+          "id": "scene_32",
+          "image_id": 32,
+          "tipo_midia": "video_generico",
+          "asset_key": "security-tape-removal-night",
+          "image": "cena_32.mp4",
+          "visual": {
+            "subject": "mãos enluvadas retirando uma fita de vigilância genérica",
+            "action": "removendo o registro produzido durante uma madrugada",
+            "setting": "sala de monitoramento sem referência a caso específico",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_33",
+      "text": "mas deixaram intacta a gravação produzida na noite anterior.",
+      "scenes": [
+        {
+          "id": "scene_33",
+          "image_id": 33,
+          "tipo_midia": "imagem",
+          "asset_key": "previous-night-surveillance-tape",
+          "image": "cena_33.png",
+          "visual": {
+            "subject": "segunda fita de vigilância permanecendo arquivada",
+            "action": "conservando imagens registradas na noite anterior",
+            "setting": "armário técnico do sistema de segurança",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "paper_flip",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_34",
+      "text": "Depois, imagens revelaram um visitante não autorizado usando a mesma entrada.",
+      "scenes": [
+        {
+          "id": "scene_34",
+          "image_id": 34,
+          "tipo_midia": "video_generico",
+          "asset_key": "visitor-rear-entrance-surveillance",
+          "image": "cena_34.mp4",
+          "visual": {
+            "subject": "câmera de segurança genérica mostrando visitante numa entrada traseira",
+            "action": "registrando uma entrada não autorizada antes de um incidente",
+            "setting": "acesso de serviço de edifício cultural",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "VISITANTE",
+              "NA VÉSPERA"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_35",
+      "text": "Isso sugere preparação anterior, mas não prova participação de qualquer funcionário.",
+      "scenes": [
+        {
+          "id": "scene_35",
+          "image_id": 35,
+          "tipo_midia": "imagem",
+          "asset_key": "investigator-reviewing-visitor-footage",
+          "image": "cena_35.png",
+          "visual": {
+            "subject": "investigadores analisando imagens granuladas de vigilância",
+            "action": "comparando a entrada anterior com a rota do roubo",
+            "setting": "sala de investigação anos depois",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_36",
+      "text": "Já perto da fuga, os ladrões fizeram duas viagens até o carro,",
+      "scenes": [
+        {
+          "id": "scene_36",
+          "image_id": 36,
+          "tipo_midia": "imagem",
+          "asset_key": "thieves-carry-art-to-car",
+          "image": "cena_36.png",
+          "visual": {
+            "subject": "dois homens transportando volumes até um carro",
+            "action": "realizando a primeira de duas viagens para retirar as obras",
+            "setting": "rua lateral próxima ao museu",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_37",
+      "text": "carregando telas cortadas, papéis, bronzes e molduras parcialmente desmontadas.",
+      "scenes": [
+        {
+          "id": "scene_37",
+          "image_id": 37,
+          "tipo_midia": "imagem",
+          "asset_key": "stolen-art-car-loading",
+          "image": "cena_37.png",
+          "visual": {
+            "subject": "telas enroladas, papéis protegidos e bronzes sendo carregados",
+            "action": "ocupando o porta-malas de um veículo escuro",
+            "setting": "lado externo do museu na madrugada",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_38",
+      "text": "Às 2h45, partiram. Os guardas permaneceram presos por mais de cinco horas.",
+      "scenes": [
+        {
+          "id": "scene_38",
+          "image_id": 38,
+          "tipo_midia": "video_generico",
+          "asset_key": "empty-museum-corridor-dawn",
+          "image": "cena_38.mp4",
+          "visual": {
+            "subject": "corredor genérico de museu atravessado pela luz do amanhecer",
+            "action": "permanecendo vazio enquanto horas passam",
+            "setting": "edifício cultural silencioso após uma invasão",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "PRESOS",
+              "ATÉ 8H15"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_39",
+      "text": "A polícia só entrou às 8h15, encontrando o museu silencioso e mutilado.",
+      "scenes": [
+        {
+          "id": "scene_39",
+          "image_id": 39,
+          "tipo_midia": "imagem",
+          "asset_key": "police-enter-museum-morning",
+          "image": "cena_39.png",
+          "visual": {
+            "subject": "policiais entrando no museu pela manhã",
+            "action": "iniciando a busca pelos guardas e pelas obras",
+            "setting": "entrada do Museu Gardner às 8h15",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "camera_shutter",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_40",
+      "text": "No chão ficaram molduras douradas, restos materiais e espaços vazios.",
+      "scenes": [
+        {
+          "id": "scene_40",
+          "image_id": 40,
+          "tipo_midia": "imagem",
+          "asset_key": "gilded-frames-gallery-floor",
+          "image": "cena_40.png",
+          "visual": {
+            "subject": "molduras douradas vazias espalhadas pelo chão",
+            "action": "marcando os pontos onde telas foram cortadas",
+            "setting": "Sala Holandesa após o roubo",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_41",
+      "text": "Cinco dessas molduras foram reparadas e recolocadas nas paredes em 1994,",
+      "scenes": [
+        {
+          "id": "scene_41",
+          "image_id": 41,
+          "tipo_midia": "imagem",
+          "asset_key": "empty-frames-restored-1994",
+          "image": "cena_41.png",
+          "visual": {
+            "subject": "cinco molduras reparadas penduradas vazias",
+            "action": "retornando às posições originais nas paredes",
+            "setting": "galerias do Museu Gardner em 1994",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_42",
+      "text": "transformando a ausência das pinturas em parte permanente da experiência.",
+      "scenes": [
+        {
+          "id": "scene_42",
+          "image_id": 42,
+          "tipo_midia": "imagem",
+          "asset_key": "visitors-facing-empty-frames",
+          "image": "cena_42.png",
+          "visual": {
+            "subject": "visitantes observando molduras vazias em silêncio",
+            "action": "encontrando a ausência como parte da visita",
+            "setting": "Sala Holandesa do Museu Gardner",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_43",
+      "text": "O valor estimado supera 500 milhões de dólares, recorde patrimonial americano,",
+      "scenes": [
+        {
+          "id": "scene_43",
+          "image_id": 43,
+          "tipo_midia": "imagem",
+          "asset_key": "stolen-art-value-evidence-table",
+          "image": "cena_43.png",
+          "visual": {
+            "subject": "reproduções das 13 obras reunidas sobre uma mesa",
+            "action": "representando um conjunto avaliado acima de 500 milhões de dólares",
+            "setting": "ambiente documental de investigação",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "cash_register",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_44",
+      "text": "mas o prejuízo real não cabe numa avaliação financeira.",
+      "scenes": [
+        {
+          "id": "scene_44",
+          "image_id": 44,
+          "tipo_midia": "video_generico",
+          "asset_key": "counting-money-hands-art-auction",
+          "image": "cena_44.mp4",
+          "visual": {
+            "subject": "mãos contando dinheiro ao lado de catálogo de arte genérico",
+            "action": "contrastando valor financeiro com perda cultural",
+            "setting": "mesa de avaliação sem obras específicas",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_45",
+      "text": "Isabella Gardner organizou o museu inteiro como uma composição única,",
+      "scenes": [
+        {
+          "id": "scene_45",
+          "image_id": 45,
+          "tipo_midia": "imagem",
+          "asset_key": "isabella-gardner-museum-arrangement",
+          "image": "cena_45.png",
+          "visual": {
+            "subject": "Isabella Stewart Gardner observando a disposição de uma galeria",
+            "action": "organizando obras como partes de uma composição única",
+            "setting": "museu no início do século vinte",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_46",
+      "text": "por isso preencher os vazios com substitutos apagaria sua intenção original.",
+      "scenes": [
+        {
+          "id": "scene_46",
+          "image_id": 46,
+          "tipo_midia": "imagem",
+          "asset_key": "empty-frame-no-replacement",
+          "image": "cena_46.png",
+          "visual": {
+            "subject": "moldura vazia cercada por peças ainda presentes",
+            "action": "permanecendo sem substituição deliberada",
+            "setting": "galeria histórica do Museu Gardner",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_47",
+      "text": "O Concerto representava um dos raríssimos Vermeer ainda existentes,",
+      "scenes": [
+        {
+          "id": "scene_47",
+          "image_id": 47,
+          "tipo_midia": "imagem",
+          "asset_key": "vermeer-concert-closeup",
+          "image": "cena_47.png",
+          "visual": {
+            "subject": "O Concerto de Vermeer em composição íntima",
+            "action": "mostrando músicos reunidos num ambiente doméstico",
+            "setting": "visual documental da obra antes do roubo",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_48",
+      "text": "enquanto a tempestade roubada era a única paisagem marítima conhecida de Rembrandt.",
+      "scenes": [
+        {
+          "id": "scene_48",
+          "image_id": 48,
+          "tipo_midia": "imagem",
+          "asset_key": "rembrandt-storm-only-seascape",
+          "image": "cena_48.png",
+          "visual": {
+            "subject": "A Tempestade no Mar da Galileia em destaque",
+            "action": "mostrando o único cenário marítimo conhecido de Rembrandt",
+            "setting": "visual documental da obra desaparecida",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_49",
+      "text": "Mesmo assim, outras obras valiosas ficaram intocadas nas mesmas salas,",
+      "scenes": [
+        {
+          "id": "scene_49",
+          "image_id": 49,
+          "tipo_midia": "imagem",
+          "asset_key": "valuable-art-left-untouched",
+          "image": "cena_49.png",
+          "visual": {
+            "subject": "outras pinturas valiosas ainda penduradas nas paredes",
+            "action": "permanecendo intactas ao lado de espaços roubados",
+            "setting": "galeria após a investigação inicial",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_50",
+      "text": "levantando a pergunta inevitável: especialistas seletivos ou oportunistas parcialmente orientados?",
+      "scenes": [
+        {
+          "id": "scene_50",
+          "image_id": 50,
+          "tipo_midia": "video_generico",
+          "asset_key": "art-thief-gloves-gallery",
+          "image": "cena_50.mp4",
+          "visual": {
+            "subject": "mãos enluvadas escolhendo entre obras genéricas numa galeria",
+            "action": "sugerindo dúvida entre conhecimento especializado e oportunidade",
+            "setting": "museu genérico sob iluminação noturna",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "ESPECIALISTAS",
+              "OU AMADORES?"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_51",
+      "text": "O FBI seguiu pistas ao redor do mundo durante décadas,",
+      "scenes": [
+        {
+          "id": "scene_51",
+          "image_id": 51,
+          "tipo_midia": "imagem",
+          "asset_key": "fbi-global-art-investigation",
+          "image": "cena_51.png",
+          "visual": {
+            "subject": "investigadores diante de mapas, fotografias e fichas de obras",
+            "action": "seguindo pistas internacionais ao longo de décadas",
+            "setting": "sala de investigação do FBI",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_52",
+      "text": "e hoje acredita que as 13 peças podem ter sido separadas.",
+      "scenes": [
+        {
+          "id": "scene_52",
+          "image_id": 52,
+          "tipo_midia": "imagem",
+          "asset_key": "stolen-art-separated-crates",
+          "image": "cena_52.png",
+          "visual": {
+            "subject": "caixas separadas contendo reproduções de diferentes obras",
+            "action": "sugerindo dispersão por locais distintos",
+            "setting": "depósito clandestino não identificado",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_53",
+      "text": "Nenhuma delas foi recuperada, apesar de buscas, denúncias e negociações frustradas.",
+      "scenes": [
+        {
+          "id": "scene_53",
+          "image_id": 53,
+          "tipo_midia": "imagem",
+          "asset_key": "empty-search-results-art-files",
+          "image": "cena_53.png",
+          "visual": {
+            "subject": "arquivos, fotografias e caixas de evidência sem resultado final",
+            "action": "representando décadas de buscas sem recuperação",
+            "setting": "arquivo investigativo contemporâneo",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_54",
+      "text": "O museu mantém recompensa de 10 milhões de dólares pelo conjunto completo,",
+      "scenes": [
+        {
+          "id": "scene_54",
+          "image_id": 54,
+          "tipo_midia": "imagem",
+          "asset_key": "ten-million-reward-poster-display",
+          "image": "cena_54.png",
+          "visual": {
+            "subject": "painel público com imagens das obras e espaço para recompensa",
+            "action": "chamando atenção para a busca ainda ativa",
+            "setting": "área externa próxima ao museu",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_55",
+      "text": "além de 100 mil dólares por informações sobre o remate napoleônico.",
+      "scenes": [
+        {
+          "id": "scene_55",
+          "image_id": 55,
+          "tipo_midia": "imagem",
+          "asset_key": "napoleonic-eagle-finial-reward",
+          "image": "cena_55.png",
+          "visual": {
+            "subject": "remate de águia napoleônico isolado sobre fundo neutro",
+            "action": "destacando o objeto procurado separadamente",
+            "setting": "composição documental de identificação",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_56",
+      "text": "Para mim, o caso sobrevive nesta tensão: execução precisa, escolhas artísticas caóticas.",
+      "scenes": [
+        {
+          "id": "scene_56",
+          "image_id": 56,
+          "tipo_midia": "imagem",
+          "asset_key": "precision-chaos-investigation-board",
+          "image": "cena_56.png",
+          "visual": {
+            "subject": "rota precisa do roubo contrastada com seleção artística irregular",
+            "action": "formando uma contradição visual sobre um quadro investigativo",
+            "setting": "sala escura de análise do caso",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "wrong_answer",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_57",
+      "text": "Se eram especialistas, por que danificaram telas? Se eram amadores, como dominaram segurança e rotas?",
+      "scenes": [
+        {
+          "id": "scene_57",
+          "image_id": 57,
+          "tipo_midia": "imagem",
+          "asset_key": "cut-canvases-security-route-contrast",
+          "image": "cena_57.png",
+          "visual": {
+            "subject": "tela cortada, planta do museu e fita de vigilância",
+            "action": "reunindo os sinais de amadorismo e conhecimento operacional",
+            "setting": "mesa de evidências do caso",
+            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
+            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_58",
+      "text": "Identidades e 13 obras seguem desaparecidas. Qual pista resolve o caso? Inscreva-se para o próximo mistério.",
+      "scenes": [
+        {
+          "id": "scene_58",
+          "image_id": 58,
+          "tipo_midia": "video_generico",
+          "asset_key": "empty-museum-gallery-frames",
+          "image": "cena_58.mp4",
+          "visual": {
+            "subject": "galeria genérica com molduras vazias e luz baixa",
+            "action": "permanecendo sem resposta enquanto a câmera recua lentamente",
+            "setting": "museu silencioso ligado a um crime não solucionado",
+            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
+            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "click",
+              "at": "start"
+            }
+          },
+          "annotation": {
+            "lines": [
+              "SE INSCREVA",
+              "PARA MAIS"
+            ],
+            "at": "start",
+            "emoji": "🔔"
+          }
+        }
+      ]
+    }
+  ]
+}

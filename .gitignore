@@ -1,7 +1,9 @@
 backend/.venv/
 frontend/node_modules/
 frontend/dist/
+.env
 assets/images/
+assets/videos/
 workspace/
 __pycache__/
 *.pyc

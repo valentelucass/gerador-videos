@@ -5,10 +5,12 @@ import unicodedata
 from collections.abc import Mapping
 from pathlib import Path
 
-from .config import BACKGROUND_DIR, DEFAULT_BACKGROUND_NAME, IMAGE_DIR, MUSIC_DIR, SOUND_DIR
+from .config import BACKGROUND_DIR, DEFAULT_BACKGROUND_NAME, IMAGE_DIR, MUSIC_DIR, SOUND_DIR, VIDEO_DIR
 from .models import Script
 
-MEDIA_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
+IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
+VIDEO_EXTENSIONS = {".mp4"}
+MEDIA_EXTENSIONS = IMAGE_EXTENSIONS | VIDEO_EXTENSIONS
 AUDIO_EXTENSIONS = {".mp3", ".wav", ".m4a", ".aac", ".ogg"}
 # Aceita tanto o nome sugerido "1 - cena" quanto a variação que o Flow
 # costuma baixar, como "1_-_cena_01.png_202607...".
@@ -221,12 +223,19 @@ def semantic_image_bindings(
 ) -> dict[str, str]:
     """Completa vínculos pelo ID opcional ou pelo conteúdo, nunca pela ordem."""
     completed = dict(image_bindings or {})
-    scenes = [(block, scene) for block in script.blocks for scene in block.scenes]
+    # O pareamento semântico é exclusivo das imagens geradas/enviadas. B-roll
+    # do Pexels usa o nome .mp4 declarado pela própria cena e nunca compete
+    # com uma fotografia por ordem de upload ou semelhança de termos.
+    scenes = [
+        (block, scene)
+        for block in script.blocks for scene in block.scenes
+        if scene.tipo_midia == "imagem"
+    ]
     used_sources = set(completed.values())
 
     candidates = sorted({
         name for name in uploaded_images
-        if name not in used_sources and (IMAGE_DIR / name).is_file() and Path(name).suffix.lower() in MEDIA_EXTENSIONS
+        if name not in used_sources and (IMAGE_DIR / name).is_file() and Path(name).suffix.lower() in IMAGE_EXTENSIONS
     })
 
     # Quando o operador/Flow preserva o prefixo, ele é uma associação direta.
@@ -324,16 +333,17 @@ def list_media(directory: Path, extensions: set[str]) -> list[str]:
 def default_background_name() -> str | None:
     """Retorna o fundo aprovado, com fallback para o primeiro fundo disponível."""
     approved = BACKGROUND_DIR / DEFAULT_BACKGROUND_NAME
-    if approved.is_file() and approved.suffix.lower() in MEDIA_EXTENSIONS:
+    if approved.is_file() and approved.suffix.lower() in IMAGE_EXTENSIONS:
         return approved.name
-    available = list_media(BACKGROUND_DIR, MEDIA_EXTENSIONS)
+    available = list_media(BACKGROUND_DIR, IMAGE_EXTENSIONS)
     return available[0] if available else None
 
 
 def catalog() -> dict[str, object]:
     return {
-        "images": list_media(IMAGE_DIR, MEDIA_EXTENSIONS),
-        "backgrounds": list_media(BACKGROUND_DIR, MEDIA_EXTENSIONS),
+        "images": list_media(IMAGE_DIR, IMAGE_EXTENSIONS),
+        "videos": list_media(VIDEO_DIR, VIDEO_EXTENSIONS),
+        "backgrounds": list_media(BACKGROUND_DIR, IMAGE_EXTENSIONS),
         "default_background": default_background_name(),
         "music": list_media(MUSIC_DIR, AUDIO_EXTENSIONS),
         "sounds": list_media(SOUND_DIR, AUDIO_EXTENSIONS),
@@ -361,6 +371,11 @@ def google_flow_prompt(script: Script, block_id: str, scene_id: str) -> str:
 def expected_scene_images(script: Script) -> list[str]:
     """Lista os nomes editoriais das imagens na ordem declarada pelo JSON."""
     return [scene.image for block in script.blocks for scene in block.scenes]
+
+
+def scene_asset_path(scene: object, source_name: str) -> Path:
+    """Resolve o acervo horizontal correto para cada tipo de mídia."""
+    return (VIDEO_DIR if scene.tipo_midia == "video_generico" else IMAGE_DIR) / source_name
 
 
 def resolve_scene_image_sources(
@@ -393,8 +408,9 @@ def resolve_scene_image_sources(
             raise ValueError(
                 f"O vínculo de {expected_name} precisa apontar somente para o nome de um arquivo."
             )
-        if Path(source_name).suffix.lower() not in MEDIA_EXTENSIONS:
-            accepted = ", ".join(sorted(MEDIA_EXTENSIONS))
+        accepted_extensions = VIDEO_EXTENSIONS if scene.tipo_midia == "video_generico" else IMAGE_EXTENSIONS
+        if Path(source_name).suffix.lower() not in accepted_extensions:
+            accepted = ", ".join(sorted(accepted_extensions))
             raise ValueError(
                 f"O vínculo de {expected_name} aponta para {source_name}, mas a cena aceita somente {accepted}."
             )
@@ -402,12 +418,12 @@ def resolve_scene_image_sources(
     return resolved
 
 
-def missing_scene_images(resolved_sources: Mapping[str, str]) -> list[str]:
+def missing_scene_images(script: Script, resolved_sources: Mapping[str, str]) -> list[str]:
     """Retorna os nomes editoriais cuja fonte física ainda não foi enviada."""
     return sorted(
-        expected_name
-        for expected_name, source_name in resolved_sources.items()
-        if not (IMAGE_DIR / source_name).is_file()
+        scene.image
+        for block in script.blocks for scene in block.scenes
+        if not scene_asset_path(scene, resolved_sources[scene.image]).is_file()
     )
 
 
@@ -452,7 +468,13 @@ def validate_script(
             for expected_name in expected_scene_images(script)
         }
 
-    missing_images = missing_scene_images(resolved_sources)
+    missing_images = missing_scene_images(script, resolved_sources)
+    scenes = [scene for block in script.blocks for scene in block.scenes]
+    if scenes and scenes[0].tipo_midia != "video_generico":
+        errors.append("A scene_01 precisa usar tipo_midia='video_generico' para o gancho.")
+    for scene in scenes:
+        if scene.annotation is not None and scene.tipo_midia != "video_generico":
+            errors.append(f"A cena {scene.id} possui annotation e precisa usar tipo_midia='video_generico'.")
     return {
         "valid": not errors,
         "errors": errors,

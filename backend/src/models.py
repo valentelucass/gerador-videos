@@ -65,6 +65,7 @@ class Scene(BaseModel):
     # É a referência editorial obrigatória da cena. O arquivo físico pode
     # preservar o nome autodescritivo que o Google Flow gerar.
     image_id: int = Field(ge=1)
+    tipo_midia: Literal["imagem", "video_generico"]
     # Chave curta em inglês, criada junto com o roteiro. Ela aproxima o JSON
     # do nome descritivo que o Google Flow escolhe ao baixar a imagem.
     asset_key: str | None = Field(default=None, pattern=r"^[a-z0-9]+(?:-[a-z0-9]+){1,7}$")
@@ -80,6 +81,20 @@ class Scene(BaseModel):
         if "/" in value or "\\" in value or value in {".", ".."}:
             raise ValueError("image deve ser somente o nome do arquivo.")
         return value
+
+    @model_validator(mode="after")
+    def validate_media_extension(self) -> "Scene":
+        suffix = Path(self.image).suffix.lower()
+        expected = ".png" if self.tipo_midia == "imagem" else ".mp4"
+        if suffix != expected:
+            raise ValueError(
+                f"A cena {self.id} usa tipo_midia='{self.tipo_midia}' e precisa de arquivo {expected}."
+            )
+        if self.tipo_midia == "video_generico" and self.transition.in_ != "zoom_in":
+            raise ValueError(
+                f"A cena {self.id} usa B-roll e precisa de transition.in='zoom_in' (fullscreen)."
+            )
+        return self
 
 
 class Block(BaseModel):
@@ -231,3 +246,26 @@ class ValidationRequest(BaseModel):
     @classmethod
     def only_filename_uploaded_images(cls, value: list[str]) -> list[str]:
         return RenderRequest.only_filename_uploaded_images(value)
+
+
+class PexelsCandidatesRequest(BaseModel):
+    script: Script
+    queries: dict[str, str] = Field(default_factory=dict)
+
+    @field_validator("queries")
+    @classmethod
+    def safe_queries(cls, value: dict[str, str]) -> dict[str, str]:
+        for scene_id, query in value.items():
+            if not scene_id or len(query.strip()) < 3 or len(query) > 120:
+                raise ValueError("Cada busca do Pexels deve ter entre 3 e 120 caracteres.")
+        return {scene_id: query.strip() for scene_id, query in value.items()}
+
+
+class PexelsDownloadRequest(PexelsCandidatesRequest):
+    scene_id: str
+    video_id: int = Field(gt=0)
+
+
+class TranslationRequest(BaseModel):
+    text: str = Field(min_length=1, max_length=800)
+    source_language: str = Field(min_length=2, max_length=10)

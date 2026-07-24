@@ -4,7 +4,10 @@ import json
 import logging
 import math
 import os
+import subprocess
+import sys
 import shutil
+import time
 import traceback
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -19,10 +22,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
-from .config import BACKGROUND_DIR, FINAL_OUTPUT_DIR, IMAGE_DIR, MUSIC_DIR, SOUND_DIR, VOICE_PREVIEW_DIR, WORKSPACE
+from .config import BACKGROUND_DIR, FINAL_OUTPUT_DIR, IMAGE_DIR, MUSIC_DIR, ROOT, SOUND_DIR, VIDEO_DIR, VOICE_PREVIEW_DIR, WORKSPACE
 from .core.horizontal_renderer import narration_duration, preview_scene_timing, render
 from .core.tts_neural import TTSNeuralEngine, VOICE_CATALOG
-from .models import RenderRequest, Script, ValidationRequest
+from .models import PexelsCandidatesRequest, PexelsDownloadRequest, RenderRequest, Script, TranslationRequest, ValidationRequest
+from .pexels import PexelsError, download_selected_video, search_videos, translate_to_portuguese
 from .services import (
     AUDIO_EXTENSIONS,
     catalog,
@@ -35,7 +39,9 @@ from .services import (
 app = FastAPI(title="Slideshow YouTube API")
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 app.mount("/assets/images", StaticFiles(directory=IMAGE_DIR), name="images")
+app.mount("/assets/videos", StaticFiles(directory=VIDEO_DIR), name="videos")
 app.mount("/assets/backgrounds", StaticFiles(directory=BACKGROUND_DIR), name="backgrounds")
+app.mount("/assets/music", StaticFiles(directory=MUSIC_DIR), name="music")
 app.mount("/assets/sounds", StaticFiles(directory=SOUND_DIR), name="sounds")
 app.mount("/assets/voice-previews", StaticFiles(directory=VOICE_PREVIEW_DIR), name="voice-previews")
 app.mount("/outputs", StaticFiles(directory=FINAL_OUTPUT_DIR), name="outputs")
@@ -47,6 +53,8 @@ LOGGER = logging.getLogger("synthreel.api")
 _RENDER_MIN_FREE_DISK_ENV = "SYNTHREEL_HORIZONTAL_MIN_FREE_DISK_GIB"
 _DEFAULT_RENDER_MIN_FREE_DISK_GIB = 8.0
 _GIB = 1024 ** 3
+_MANIFEST_REPLACE_ATTEMPTS = 8
+_MANIFEST_REPLACE_INITIAL_DELAY_SECONDS = 0.08
 
 
 @dataclass(frozen=True)
@@ -102,6 +110,15 @@ def get_catalog() -> dict[str, object]:
     return catalog()
 
 
+@app.get("/api/script-prompt", response_class=PlainTextResponse)
+def get_script_prompt() -> str:
+    """Entrega o contrato canônico para o operador copiar sem abrir arquivos."""
+    prompt_path = ROOT / "backend" / "PROMPT_JSON_ROTEIRO.md"
+    if not prompt_path.is_file():
+        raise HTTPException(status_code=404, detail="O prompt canônico não foi encontrado no projeto.")
+    return prompt_path.read_text(encoding="utf-8")
+
+
 @app.post("/api/validate")
 def validate(request: ValidationRequest) -> dict[str, object]:
     bindings = _complete_automatic_image_bindings(
@@ -129,8 +146,73 @@ def prompts(script: Script) -> list[dict[str, str | int]]:
             "suggested_filename": f"{scene.image_id} - ",
             "prompt": google_flow_prompt(script, block.id, scene.id),
         }
-        for block in script.blocks for scene in block.scenes
+        for block in script.blocks for scene in block.scenes if scene.tipo_midia == "imagem"
     ]
+
+
+@app.post("/api/pexels/candidates")
+def pexels_candidates(request: PexelsCandidatesRequest) -> dict[str, object]:
+    """Busca alternativas horizontais; nada é baixado antes da aprovação humana."""
+    scenes = [scene for block in request.script.blocks for scene in block.scenes if scene.tipo_midia == "video_generico"]
+    try:
+        items = []
+        for block in request.script.blocks:
+            for scene in block.scenes:
+                if scene.tipo_midia != "video_generico":
+                    continue
+                query = request.queries.get(scene.id, (scene.asset_key or "").replace("-", " "))
+                candidates = search_videos(query)
+                items.append({
+                    "scene_id": scene.id,
+                    "scene_image": scene.image,
+                    "query": query,
+                    "asset_key": scene.asset_key,
+                    "text": block.text,
+                    "candidates": candidates,
+                    "is_annotation": scene.annotation is not None,
+                })
+        return {"items": items, "count": len(scenes), "folder_url": "/api/pexels/open-folder"}
+    except PexelsError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.post("/api/pexels/download")
+def pexels_download(request: PexelsDownloadRequest) -> dict[str, object]:
+    for block in request.script.blocks:
+        for scene in block.scenes:
+            if scene.id != request.scene_id:
+                continue
+            if scene.tipo_midia != "video_generico":
+                raise HTTPException(status_code=422, detail="Somente cenas video_generico podem receber B-roll do Pexels.")
+            query = request.queries.get(scene.id, (scene.asset_key or "").replace("-", " "))
+            try:
+                return download_selected_video(query, request.video_id, scene.image)
+            except PexelsError as exc:
+                raise HTTPException(status_code=502, detail=str(exc)) from exc
+    raise HTTPException(status_code=404, detail="Cena de B-roll não encontrada no roteiro enviado.")
+
+
+@app.post("/api/translate")
+def translate(request: TranslationRequest) -> dict[str, str]:
+    try:
+        return {"original": request.text, "portuguese": translate_to_portuguese(request.text, request.source_language)}
+    except PexelsError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+
+@app.post("/api/pexels/open-folder")
+def open_pexels_folder() -> dict[str, str]:
+    """Abre somente a pasta fixa e local de B-roll aprovado pelo operador."""
+    try:
+        if os.name == "nt":
+            os.startfile(str(VIDEO_DIR))  # type: ignore[attr-defined]
+        elif sys.platform == "darwin":
+            subprocess.Popen(["open", str(VIDEO_DIR)])
+        else:
+            subprocess.Popen(["xdg-open", str(VIDEO_DIR)])
+    except OSError as exc:
+        raise HTTPException(status_code=500, detail="Não foi possível abrir a pasta local de vídeos.") from exc
+    return {"folder": str(VIDEO_DIR)}
 
 
 @app.post("/api/images")
@@ -163,10 +245,37 @@ async def upload_backgrounds(files: list[UploadFile] = File(...)) -> dict[str, l
 
 
 def _write_manifest(path: Path, manifest: dict[str, object]) -> None:
-    """Atualiza o job de forma atômica para o polling nunca ler JSON parcial."""
-    temporary = path.with_name(f".{path.name}.tmp")
-    temporary.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
-    temporary.replace(path)
+    """Atualiza o job atomicamente, tolerando locks breves do OneDrive/Windows.
+
+    O manifesto é consultado pelo painel durante a renderização. A substituição
+    continua atômica para jamais servir JSON parcial, mas sincronizadores e
+    antivírus podem manter o arquivo aberto por alguns milissegundos no Windows.
+    """
+    payload = json.dumps(manifest, ensure_ascii=False, indent=2)
+    temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
+    try:
+        for attempt in range(_MANIFEST_REPLACE_ATTEMPTS):
+            try:
+                temporary.write_text(payload, encoding="utf-8")
+                os.replace(temporary, path)
+                if attempt:
+                    LOGGER.info(
+                        "Manifesto do job %s publicado após %s tentativa(s) por bloqueio transitório.",
+                        path.parent.name,
+                        attempt + 1,
+                    )
+                return
+            except PermissionError as exc:
+                # WinError 5 (acesso negado) e 32 (arquivo em uso) são locks
+                # transitórios comuns em pastas sincronizadas pelo OneDrive.
+                winerror = getattr(exc, "winerror", None)
+                if winerror not in {5, 32} or attempt == _MANIFEST_REPLACE_ATTEMPTS - 1:
+                    raise
+                time.sleep(_MANIFEST_REPLACE_INITIAL_DELAY_SECONDS * (attempt + 1))
+    finally:
+        # Após ``os.replace`` o caminho temporário deixa de existir. Se todas
+        # as tentativas falharem, não deixamos lixo no workspace do job.
+        temporary.unlink(missing_ok=True)
 
 
 def _read_manifest(path: Path) -> dict[str, object]:

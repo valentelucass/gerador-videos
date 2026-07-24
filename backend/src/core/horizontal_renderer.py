@@ -6,6 +6,7 @@ import hashlib
 import json
 import logging
 import math
+import os
 import random
 import re
 import shutil
@@ -19,7 +20,7 @@ from tempfile import mkdtemp
 
 from ..config import FINAL_OUTPUT_DIR, FFMPEG, FFPROBE, IMAGE_DIR, MUSIC_DIR, SOUND_DIR
 from ..models import Script
-from ..services import missing_scene_images, resolve_scene_image_sources
+from ..services import missing_scene_images, resolve_scene_image_sources, scene_asset_path
 from .tts_neural import TTSNeuralEngine, WordBoundary
 
 FPS = 24
@@ -62,6 +63,19 @@ VOICE_MASTERING_FILTER = (
     "volume=1.41"
 )
 FINAL_AUDIO_LIMIT = 0.89
+# Presença audível de trilha durante a fala; o sidechain abaixo ainda reduz
+# automaticamente a música quando a narração entra.
+MUSIC_BED_VOLUME = 0.23
+# A RX 7600 disponível nesta estação possui AMF validado pelo FFmpeg. O encoder
+# tira a codificação H.264 da CPU, enquanto os filtros continuam no CPU. Quatro
+# threads de filtro deixam espaço para o sistema e evitam grafos 1080p
+# excessivamente paralelos em renderizações longas.
+VIDEO_FILTER_THREADS = max(2, min(4, os.cpu_count() or 4))
+VIDEO_ENCODER_ARGS = (
+    "-c:v", "h264_amf", "-usage", "transcoding", "-quality", "speed",
+    "-rc", "cqp", "-qp_i", "20", "-qp_p", "22", "-qp_b", "24",
+    "-pix_fmt", "yuv420p",
+)
 FOCUS_POINTS = (
     (0.22, 0.28, 72),
     (0.54, 0.45, 54),
@@ -313,13 +327,18 @@ CTA_LINE_GAP = 0.08
 # A CTA precisa ser lida, mas não pode interromper o ritmo da narração.
 # O hold anterior de 4,2s fazia o planejador inserir silêncios artificiais.
 CTA_POST_TYPING_HOLD = 1.0
-MAX_CTA_NARRATION_PAUSE = 0.35
+# O convite já tem uma cena e anotação próprias; uma pausa longa depois dele
+# soa como narração cortada. Mantemos apenas uma respiração editorial curta.
+MAX_CTA_NARRATION_PAUSE = 0.20
 # A tela de anotação é um elemento editorial próprio: mantém a mesma fonte,
 # digitação amarela, blur de fundo e posição que já estavam aprovados.
 ANNOTATION_FONT = Path(r"C:/Windows/Fonts/impact.ttf")
-# Emojis nunca são desenhados pela fonte do sistema: ela produz ícones sem a
-# linguagem visual do canal. Cada emoji usado na esteira horizontal precisa de
-# um sticker PNG curado neste diretório persistente.
+# Quando o roteiro usa um emoji que ainda não possui arte 3D curada, o
+# renderizador preserva o conteúdo usando o emoji nativo do Windows em vez de
+# cancelar um job longo. Os stickers aprovados abaixo continuam prioritários.
+SYSTEM_EMOJI_FONT = Path(r"C:/Windows/Fonts/seguiemj.ttf")
+# Stickers 3D preservam a linguagem visual do canal; a fonte do sistema é
+# somente um fallback seguro para emojis ainda não curados neste diretório.
 EMOJI_STICKER_DIR = Path(__file__).resolve().parents[3] / "workspace" / "assets" / "horizontal" / "overlays" / "emoji_stickers"
 EMOJI_STICKERS = {
     "👍": EMOJI_STICKER_DIR / "like_3d.png",
@@ -605,14 +624,16 @@ def _materialize_scene_assets(
     sobrescrever nada em ``assets/images``.
     """
     resolved_sources = resolve_scene_image_sources(script, image_bindings)
-    missing = missing_scene_images(resolved_sources)
+    missing = missing_scene_images(script, resolved_sources)
     if missing:
         raise FileNotFoundError("Imagens de cena ausentes: " + ", ".join(missing))
 
     asset_dir = Path(mkdtemp(prefix=".assets_cenas_", dir=job_dir))
     try:
-        for expected_name, source_name in resolved_sources.items():
-            shutil.copy2(IMAGE_DIR / source_name, asset_dir / expected_name)
+        for block in script.blocks:
+            for scene in block.scenes:
+                source_name = resolved_sources[scene.image]
+                shutil.copy2(scene_asset_path(scene, source_name), asset_dir / scene.image)
     except Exception:
         shutil.rmtree(asset_dir, ignore_errors=True)
         raise
@@ -657,6 +678,14 @@ def _native_card_filter() -> str:
         f"scale={CARD_W}:{CARD_H}:force_original_aspect_ratio=increase,crop={CARD_W}:{CARD_H},"
         f"fps={FPS},setsar=1,fade=t=in:st=0:d=0.16,"
         "drawbox=x=3:y=3:w=iw-6:h=ih-6:color=white@0.18:t=3[out]"
+    )
+
+
+def _native_video_fullscreen_filter() -> str:
+    """B-roll conserva o movimento original; Ken Burns é exclusivo de imagens."""
+    return (
+        f"scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=increase,crop={WIDTH}:{HEIGHT},"
+        f"fps={FPS},settb=1/{FPS},setpts=PTS-STARTPTS"
     )
 
 
@@ -779,15 +808,18 @@ def _native_render_scene_clips(
         output = scene_dir / f"cena_{index + 1:03d}.mp4"
         source = source_dir / scene.image
         if modes[index] == "fullscreen":
-            filter_graph = f"[0:v]{_fullscreen_filter(fullscreen_index, frames / FPS)}[out]"
-            fullscreen_index += 1
+            filter = _native_video_fullscreen_filter() if scene.tipo_midia == "video_generico" else _fullscreen_filter(fullscreen_index, frames / FPS)
+            filter_graph = f"[0:v]{filter}[out]"
+            if scene.tipo_midia != "video_generico":
+                fullscreen_index += 1
         else:
             filter_graph = _native_card_filter()
+        input_args = ["-stream_loop", "-1", "-i", str(source)] if scene.tipo_midia == "video_generico" else ["-loop", "1", "-framerate", str(FPS), "-i", str(source)]
         _run_compositor([
-            str(FFMPEG), "-y", "-loop", "1", "-framerate", str(FPS), "-i", str(source),
-            "-filter_complex_threads", "1", "-filter_threads", "1",
+            str(FFMPEG), "-y", *input_args,
+            "-filter_complex_threads", str(VIDEO_FILTER_THREADS), "-filter_threads", str(VIDEO_FILTER_THREADS),
             "-filter_complex", filter_graph, "-map", "[out]", "-an", "-frames:v", str(frames),
-            "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22", "-pix_fmt", "yuv420p",
+            *VIDEO_ENCODER_ARGS,
             "-r", str(FPS), str(output),
         ])
         clips.append(output)
@@ -822,7 +854,7 @@ def _native_canvas_scene(
         graph = f"[0:v]settb=1/{FPS},setpts=PTS-STARTPTS{padding},trim=duration={duration:.6f},format=yuv420p[out]"
         command = [
             str(FFMPEG), "-y", "-i", str(source),
-            "-filter_complex_threads", "1", "-filter_threads", "1", "-filter_complex", graph,
+            "-filter_complex_threads", str(VIDEO_FILTER_THREADS), "-filter_threads", str(VIDEO_FILTER_THREADS), "-filter_complex", graph,
         ]
     else:
         centered = "(main_w-overlay_w)/2"
@@ -861,8 +893,7 @@ def _native_canvas_scene(
             "-filter_complex_threads", "1", "-filter_threads", "1", "-filter_complex", graph,
         ]
     _run_compositor([
-        *command, "-map", "[out]", "-an",
-        "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22", "-pix_fmt", "yuv420p",
+        *command, "-map", "[out]", "-an", *VIDEO_ENCODER_ARGS,
         "-r", str(FPS), str(output),
     ])
     return output
@@ -913,10 +944,10 @@ def _native_render_segment(
     )
     _run_compositor([
         str(FFMPEG), "-y", *inputs,
-        "-filter_complex_threads", "1", "-filter_threads", "1",
+        "-filter_complex_threads", str(VIDEO_FILTER_THREADS), "-filter_threads", str(VIDEO_FILTER_THREADS),
         "-filter_buffered_frames", str(MAX_FILTER_BUFFERED_FRAMES),
         "-filter_complex", ";".join(filters), "-map", "[out]", "-an",
-        "-c:v", "libx264", "-preset", "veryfast", "-crf", "21", "-pix_fmt", "yuv420p",
+        *VIDEO_ENCODER_ARGS,
         "-r", str(FPS), "-movflags", "+faststart", str(output),
     ])
     return output
@@ -1181,7 +1212,20 @@ def _native_typing_annotation_filters(
         cursor += ANNOTATION_LINE_GAP
     if emoji:
         if emoji_input_index is None:
-            raise ValueError(f"O emoji {emoji!r} não possui um sticker visual configurado.")
+            if not SYSTEM_EMOJI_FONT.is_file():
+                raise FileNotFoundError(
+                    "A fonte de emoji do Windows não está disponível para o fallback de annotations."
+                )
+            output = f"[annotation_{annotation_index}_emoji_system]"
+            emoji_font = SYSTEM_EMOJI_FONT.as_posix().replace(":", r"\:")
+            graph.append(
+                f"{current}drawtext=fontfile='{emoji_font}':"
+                f"text='{_escape_drawtext(emoji)}':fontcolor=white:fontsize=76:"
+                "borderw=2:bordercolor=black@0.90:"
+                "x='(w+text_w)/2+32':y='h/2-text_h/2':"
+                f"enable='{_native_time_window(cursor, annotation_end)}'{output}"
+            )
+            return output
         sticker = f"[annotation_{annotation_index}_sticker]"
         output = f"[annotation_{annotation_index}_emoji]"
         graph.append(
@@ -1196,18 +1240,18 @@ def _native_typing_annotation_filters(
 
 
 def _native_required_stickers(annotations: list[tuple[list[str], float, float, str | None]]) -> dict[str, Path]:
-    """Valida o catálogo visual antes de o FFmpeg começar a renderizar."""
+    """Retorna os stickers 3D disponíveis; os demais usam emoji do sistema."""
     emojis = sorted({emoji for _, _, _, emoji in annotations if emoji})
-    unsupported = [emoji for emoji in emojis if emoji not in EMOJI_STICKERS]
-    if unsupported:
-        raise ValueError(
-            "Emoji sem sticker 3D aprovado: " + ", ".join(unsupported)
-            + ". Adicione um PNG em workspace/assets/horizontal/overlays/emoji_stickers antes de renderizar."
-        )
-    missing = [emoji for emoji in emojis if not EMOJI_STICKERS[emoji].is_file()]
-    if missing:
-        raise FileNotFoundError("Sticker de emoji ausente: " + ", ".join(missing))
-    return {emoji: EMOJI_STICKERS[emoji] for emoji in emojis}
+    if any(emoji not in EMOJI_STICKERS or not EMOJI_STICKERS[emoji].is_file() for emoji in emojis):
+        if not SYSTEM_EMOJI_FONT.is_file():
+            raise FileNotFoundError(
+                "Há emoji sem sticker 3D e a fonte de emoji do Windows não está disponível."
+            )
+    return {
+        emoji: EMOJI_STICKERS[emoji]
+        for emoji in emojis
+        if emoji in EMOJI_STICKERS and EMOJI_STICKERS[emoji].is_file()
+    }
 
 
 def _native_render_sfx_tracks(
@@ -1272,16 +1316,25 @@ def _native_render_sfx_tracks(
                     f"volume={volume:.2f}{fade},adelay={round(local_start * 1000)}:all=1{label}"
                 )
                 labels.append(label)
+            # ``apad`` sem limite pode manter o filtro vivo indefinidamente
+            # após um ``adelay``. Uma fonte de silêncio finita preserva o
+            # tamanho editorial do bloco e encerra o FFmpeg no tempo correto.
+            silence = f"[sfx_{bucket}_{batch_index}_silence]"
             graph.append(
-                "".join(labels)
-                + f"amix=inputs={len(labels)}:duration=longest:normalize=0,apad,atrim=duration={chunk_duration:.6f},"
+                f"anullsrc=r=48000:cl=stereo,atrim=duration={chunk_duration:.6f},asetpts=PTS-STARTPTS{silence}"
+            )
+            graph.append(
+                "".join([*labels, silence])
+                + f"amix=inputs={len(labels) + 1}:duration=longest:normalize=0,atrim=duration={chunk_duration:.6f},"
                 "aformat=sample_fmts=s16:sample_rates=48000:channel_layouts=stereo[audio]"
             )
             _run_compositor([
                 str(FFMPEG), "-y", *inputs,
                 "-filter_complex_threads", "1", "-filter_threads", "1",
                 "-filter_complex", ";".join(graph), "-map", "[audio]",
-                "-c:a", "flac", "-compression_level", "5", str(output),
+                # Trava adicional no muxer: nenhum SFX pode exceder o chunk,
+                # ainda que uma mudança futura no grafo introduza uma cauda.
+                "-t", f"{chunk_duration:.6f}", "-c:a", "flac", "-compression_level", "5", str(output),
             ])
             batch_paths.append(output)
 
@@ -1312,6 +1365,9 @@ def _native_render_sfx_tracks(
     timeline = directory / "sfx_timeline.flac"
     _run_compositor([
         str(FFMPEG), "-y", "-safe", "0", "-f", "concat", "-i", str(manifest),
+        # FLAC em stream-copy pelo concat demuxer pode manter apenas o primeiro
+        # bloco em alguns builds do FFmpeg. Esta recodificação é pequena, mas
+        # preserva a linha do tempo completa dos efeitos.
         "-c:a", "flac", "-compression_level", "5", str(timeline),
     ])
     return [(timeline, 0.0)]
@@ -1348,7 +1404,9 @@ def _native_finalize(
             blurred = f"[annotation_layer_{index}]"
             enabled = _native_time_window(start, end)
             graph.append(f"{video}split=2{base}[annotation_source_{index}]")
-            graph.append(f"[annotation_source_{index}]boxblur=22:6:enable='{enabled}'{blur}")
+            # Mantém o B-roll perceptível sob a anotação; o texto segue sendo
+            # o foco, sem transformar a cena em um fundo estático opaco.
+            graph.append(f"[annotation_source_{index}]boxblur=10:2:enable='{enabled}'{blur}")
             graph.append(f"{base}{blur}overlay=0:0:enable='{enabled}'{blurred}")
             video = _native_typing_annotation_filters(
                 graph, blurred, index, lines, start, end, emoji,
@@ -1370,7 +1428,7 @@ def _native_finalize(
         graph.append("anullsrc=r=48000:cl=stereo,atrim=0:0[sfx]")
     graph.extend([
         f"[1:a]aresample=48000,{VOICE_MASTERING_FILTER},apad=pad_dur={audio_padding:.6f},asplit=2[voice][voice_key]",
-        "[2:a]aresample=48000,volume=0.15[music]",
+        f"[2:a]aresample=48000,volume={MUSIC_BED_VOLUME:.2f}[music]",
         "[music][voice_key]sidechaincompress=threshold=0.035:ratio=8:attack=20:release=250[ducked]",
         f"[voice][ducked][sfx]amix=inputs=3:duration=first:normalize=0[mix];[mix]alimiter=limit={FINAL_AUDIO_LIMIT:.2f}[audio]",
     ])
@@ -1382,10 +1440,10 @@ def _native_finalize(
         inputs.extend(["-loop", "1", "-framerate", str(FPS), "-i", str(sticker)])
     _run_compositor([
         str(FFMPEG), "-y", *inputs,
-        "-filter_complex_threads", "1", "-filter_threads", "1",
+        "-filter_complex_threads", str(VIDEO_FILTER_THREADS), "-filter_threads", str(VIDEO_FILTER_THREADS),
         "-filter_buffered_frames", str(MAX_FILTER_BUFFERED_FRAMES),
         "-filter_complex_script", str(filter_script), "-map", "[video]", "-map", "[audio]",
-        "-c:v", "libx264", "-preset", "veryfast", "-crf", "21", "-pix_fmt", "yuv420p",
+        *VIDEO_ENCODER_ARGS,
         "-r", str(FPS), "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest", str(output),
     ])
 
