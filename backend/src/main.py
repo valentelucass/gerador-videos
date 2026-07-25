@@ -271,6 +271,21 @@ async def upload_backgrounds(files: list[UploadFile] = File(...)) -> dict[str, l
     return {"saved": saved}
 
 
+@app.post("/api/music")
+async def upload_music(files: list[UploadFile] = File(...)) -> dict[str, list[str]]:
+    """Importa trilhas locais usadas exclusivamente pelo motor horizontal."""
+    saved = []
+    for file in files:
+        name = Path(file.filename or "").name
+        if not name or Path(name).suffix.lower() not in AUDIO_EXTENSIONS:
+            raise HTTPException(status_code=400, detail=f"Trilha inválida: {file.filename}")
+        target = MUSIC_DIR / name
+        with target.open("wb") as output:
+            shutil.copyfileobj(file.file, output)
+        saved.append(name)
+    return {"saved": saved}
+
+
 def _write_manifest(path: Path, manifest: dict[str, object]) -> None:
     """Atualiza o job atomicamente, tolerando locks breves do OneDrive/Windows.
 

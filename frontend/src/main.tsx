@@ -26,6 +26,23 @@ type Script = {
 type Catalog = { images: string[]; videos: string[]; backgrounds: string[]; default_background?: string | null; music: string[]; sounds: string[] };
 type PexelsCandidate = { id: number; preview_url: string; thumbnail?: string; width: number; height: number; duration?: number; creator?: string; pexels_url?: string };
 type PexelsItem = { scene_id: string; scene_image: string; query: string; asset_key?: string; text: string; visual_reference?: string; candidates: PexelsCandidate[]; is_annotation?: boolean; search_error?: string };
+type LocalProject = {
+  id: string;
+  name: string;
+  updated_at: string;
+  source: string;
+  uploaded_images: string[];
+  image_bindings: ImageBindings;
+  background: string;
+  music: string;
+  animation: BackgroundAnimation;
+  pexels_items: PexelsItem[];
+  pexels_queries: Record<string, string>;
+  translations: Record<string, string>;
+  visual_translations: Record<string, string>;
+  selected_pexels: Record<string, PexelsCandidate>;
+  pexels_expected_count: number;
+};
 type RenderJob = {
   status: string;
   output?: string;
@@ -53,6 +70,8 @@ const animationOptions: { value: BackgroundAnimation; label: string }[] = [
 ];
 const LEGACY_SESSION_IMAGES_KEY = "synthreel:session-images";
 const IMAGE_BINDING_STRATEGY_VERSION = "synthreel:semantic-image-bindings-v1";
+const LOCAL_PROJECTS_STORAGE_KEY = "synthreel:horizontal-projects:v1";
+const LOCAL_ACTIVE_PROJECT_STORAGE_KEY = "synthreel:horizontal-active-project:v1";
 const PLACEHOLDER_IMAGE_PATTERN = /^cena_\d+(?:_[a-z])?\.(?:png|jpe?g|webp)$/i;
 const THUMBNAIL_PAGE_SIZE = 24;
 const PEXELS_SCENES_PAGE_SIZE = 4;
@@ -81,6 +100,32 @@ function fileSlug(value: string): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
   return normalized || "roteiro";
+}
+
+function newProjectId(): string {
+  return typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `project-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function newLocalProject(name = "Projeto sem título"): LocalProject {
+  return {
+    id: newProjectId(), name, updated_at: new Date().toISOString(), source: "", uploaded_images: [], image_bindings: {},
+    background: "", music: "", animation: "movimento_sutil", pexels_items: [], pexels_queries: {},
+    translations: {}, visual_translations: {}, selected_pexels: {}, pexels_expected_count: 0,
+  };
+}
+
+function projectTitle(value: string | undefined): string {
+  const title = value?.trim().replace(/\s+/g, " ");
+  return title ? title.slice(0, 60) : "Projeto sem título";
+}
+
+function mediaLabel(filename: string): string {
+  const base = filename.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
+  if (/interview/i.test(base)) return "Entrevista documental";
+  if (/wireframe.*grid.*black/i.test(base)) return "Grade wireframe em fundo preto";
+  return base ? base.replace(/\b\w/g, letter => letter.toUpperCase()) : filename;
 }
 
 function googleFlowText(script: Script, batchSize: number): { text: string; imageCount: number; batchCount: number } {
@@ -326,6 +371,10 @@ function readableError(error: unknown): string {
 }
 
 function App() {
+  const [projects, setProjects] = useState<LocalProject[]>([]);
+  const [projectId, setProjectId] = useState("");
+  const [projectName, setProjectName] = useState("Projeto sem título");
+  const [projectDialogOpen, setProjectDialogOpen] = useState(false);
   const [source, setSource] = useState("");
   const [script, setScript] = useState<Script | null>(null);
   const [catalog, setCatalog] = useState<Catalog>({ images: [], videos: [], backgrounds: [], music: [], sounds: [] });
@@ -372,9 +421,11 @@ function App() {
   const jsonInput = useRef<HTMLInputElement>(null);
   const imagesInput = useRef<HTMLInputElement>(null);
   const backgroundInput = useRef<HTMLInputElement>(null);
+  const musicInput = useRef<HTMLInputElement>(null);
   const notifiedCompletedJob = useRef<string | null>(null);
   const musicPreview = useRef<HTMLAudioElement | null>(null);
   const promptCopyTimer = useRef<number | null>(null);
+  const projectsHydrated = useRef(false);
 
   const stopMusicPreview = () => {
     const preview = musicPreview.current;
@@ -440,19 +491,112 @@ function App() {
     try { window.sessionStorage.removeItem(LEGACY_SESSION_IMAGES_KEY); } catch { /* storage indisponível */ }
   }, []);
 
-  // Elimina o estado criado pela versão que vinculava arquivos pela posição.
-  // Sem isso, o Fast Refresh poderia reenviar o mapa antigo como se ele fosse
-  // uma escolha manual do operador.
+  // Elimina somente o marcador da versão antiga. Vínculos atuais pertencem ao
+  // projeto local e precisam sobreviver ao reinício do painel.
   useEffect(() => {
     try {
       if (window.sessionStorage.getItem(IMAGE_BINDING_STRATEGY_VERSION) !== "active") {
         window.sessionStorage.setItem(IMAGE_BINDING_STRATEGY_VERSION, "active");
-        setImageBindings({});
       }
+    } catch { /* storage indisponível */ }
+  }, []);
+
+  const restoreProject = (project: LocalProject) => {
+    setProjectId(project.id);
+    setProjectName(project.name);
+    setSource(project.source);
+    setUploadedImages(project.uploaded_images ?? []);
+    setImageBindings(project.image_bindings ?? {});
+    setBackground(project.background ?? "");
+    setMusic(project.music ?? "");
+    setAnimation(project.animation ?? "movimento_sutil");
+    setPexelsItems(project.pexels_items ?? []);
+    setPexelsQueries(project.pexels_queries ?? {});
+    setTranslations(project.translations ?? {});
+    setVisualTranslations(project.visual_translations ?? {});
+    setSelectedPexels(project.selected_pexels ?? {});
+    setPexelsExpectedCount(project.pexels_expected_count ?? 0);
+    setExpandedPexelsScene(null);
+    setPexelsPage(0);
+    setTimingWarnings([]);
+    setFlowExportReady(Boolean(project.source));
+    setJobId("");
+    setOutputUrl("");
+    setRenderError("");
+    if (project.source.trim()) {
+      try {
+        const restoredScript = JSON.parse(project.source) as Script;
+        setScript(restoredScript);
+        setStatus(`Projeto “${project.name}” restaurado com ${sceneCount(restoredScript)} cenas.`);
+      } catch {
+        setScript(null);
+        setStatus(`Projeto “${project.name}” restaurado, mas o JSON salvo precisa ser corrigido.`);
+      }
+    } else {
+      setScript(null);
+      setStatus(`Projeto “${project.name}” pronto para receber o roteiro.`);
+    }
+  };
+
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(window.localStorage.getItem(LOCAL_PROJECTS_STORAGE_KEY) ?? "[]") as LocalProject[];
+      const valid = Array.isArray(stored) ? stored.filter(item => item && typeof item.id === "string") : [];
+      const activeId = window.localStorage.getItem(LOCAL_ACTIVE_PROJECT_STORAGE_KEY);
+      const initial = valid.find(item => item.id === activeId) ?? valid[0] ?? newLocalProject();
+      const nextProjects = valid.some(item => item.id === initial.id) ? valid : [initial];
+      setProjects(nextProjects);
+      restoreProject(initial);
     } catch {
-      setImageBindings({});
+      const initial = newLocalProject();
+      setProjects([initial]);
+      restoreProject(initial);
+    } finally {
+      projectsHydrated.current = true;
     }
   }, []);
+
+  useEffect(() => {
+    if (!projectsHydrated.current || !projectId) return;
+    const snapshot: LocalProject = {
+      id: projectId, name: projectName.trim() || "Projeto sem título", updated_at: new Date().toISOString(), source, uploaded_images: uploadedImages,
+      image_bindings: imageBindings, background, music, animation, pexels_items: pexelsItems,
+      pexels_queries: pexelsQueries, translations, visual_translations: visualTranslations,
+      selected_pexels: selectedPexels, pexels_expected_count: pexelsExpectedCount,
+    };
+    setProjects(current => {
+      const next = [snapshot, ...current.filter(item => item.id !== snapshot.id)];
+      try {
+        window.localStorage.setItem(LOCAL_PROJECTS_STORAGE_KEY, JSON.stringify(next));
+        window.localStorage.setItem(LOCAL_ACTIVE_PROJECT_STORAGE_KEY, snapshot.id);
+      } catch { /* quota/storage indisponível: o trabalho na tela continua intacto */ }
+      return next;
+    });
+  }, [projectId, projectName, source, uploadedImages, imageBindings, background, music, animation, pexelsItems, pexelsQueries, translations, visualTranslations, selectedPexels, pexelsExpectedCount]);
+
+  const createProject = () => {
+    const next = newLocalProject(`Projeto ${projects.length + 1}`);
+    setProjects(current => [next, ...current]);
+    restoreProject(next);
+    setProjectDialogOpen(false);
+  };
+
+  const chooseProject = (id: string) => {
+    const next = projects.find(item => item.id === id);
+    if (next) restoreProject(next);
+    setProjectDialogOpen(false);
+  };
+
+  const deleteProject = (id: string) => {
+    const target = projects.find(project => project.id === id);
+    if (!target || !window.confirm(`Excluir o projeto “${target.name}”? Os arquivos enviados não serão apagados.`)) return;
+    const remaining = projects.filter(project => project.id !== id);
+    const fallback = remaining[0] ?? newLocalProject();
+    const nextProjects = remaining.length ? remaining : [fallback];
+    setProjects(nextProjects);
+    try { window.localStorage.setItem(LOCAL_PROJECTS_STORAGE_KEY, JSON.stringify(nextProjects)); } catch { /* storage indisponível */ }
+    restoreProject(fallback);
+  };
 
   // Se o painel abriu antes da API, reconecta sozinho assim que o backend
   // voltar. Não obriga recarregar a aplicação para exibir os arquivos.
@@ -511,6 +655,7 @@ function App() {
       const next = JSON.parse(value) as Script;
       setScript(next);
       setAnimation(next.background_animation ?? "movimento_sutil");
+      if (next.title?.trim()) setProjectName(projectTitle(next.title));
       if (announce) setStatus(`${sceneCount(next)} cenas carregadas. Voz e narrativa vêm do JSON.`);
       return next;
     } catch {
@@ -572,7 +717,7 @@ function App() {
     if (file) void readJsonFile(file);
   };
 
-  const uploadMedia = async (endpoint: "/api/images" | "/api/backgrounds", files: FileList | File[]): Promise<string[]> => {
+  const uploadMedia = async (endpoint: "/api/images" | "/api/backgrounds" | "/api/music", files: FileList | File[]): Promise<string[]> => {
     if (!files.length) return [];
     const form = new FormData();
     Array.from(files).forEach(file => form.append("files", file, file.name));
@@ -608,6 +753,19 @@ function App() {
     }
   };
 
+  const uploadMusic = async (files: FileList | File[]) => {
+    try {
+      setStatus("Importando trilha sonora…");
+      const saved = await uploadMedia("/api/music", files);
+      if (saved.length) {
+        setMusic(saved.at(-1) ?? "");
+        setStatus("Trilha importada e selecionada para este projeto.");
+      }
+    } catch (error) {
+      setStatus(readableError(error));
+    }
+  };
+
   const onImagesInput = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) void uploadImages(event.target.files);
     event.target.value = "";
@@ -615,6 +773,11 @@ function App() {
 
   const onBackgroundInput = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) void uploadBackground(event.target.files);
+    event.target.value = "";
+  };
+
+  const onMusicInput = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) void uploadMusic(event.target.files);
     event.target.value = "";
   };
 
@@ -953,6 +1116,7 @@ function App() {
       <header className="appbar">
         <div className="brand"><span className="brand-mark">SR</span><span>SynthReel</span><small>horizontal</small></div>
         <div className="appbar-actions">
+          <button className="project-trigger" onClick={() => setProjectDialogOpen(true)} title="Abrir projetos salvos"><span>Projetos</span><b>{projectName}</b><i>⌄</i></button>
           <span className="scene-indicator">{script ? `${sceneCount(script)} cenas` : "sem roteiro"}</span>
           <button className="button quiet" onClick={validate}>Validar</button>
           <button className="button quiet" disabled={!script || pexelsBusy} onClick={() => void searchPexels()}>{pexelsBusy ? "Buscando…" : "Buscar B-roll"}</button>
@@ -1019,6 +1183,8 @@ function App() {
                 if (musicPreview.current) musicPreview.current.volume = volume;
               }} />
             </label>
+            <button type="button" className="music-import" onClick={() => musicInput.current?.click()} title="Importar uma trilha MP3, WAV ou M4A">＋</button>
+            <input ref={musicInput} type="file" hidden accept="audio/mpeg,audio/wav,audio/x-wav,audio/mp4,.mp3,.wav,.m4a" onChange={onMusicInput} />
             <select
               aria-label="Trilha do vídeo"
               value={music}
@@ -1026,7 +1192,7 @@ function App() {
               onChange={event => { stopMusicPreview(); setMusic(event.target.value); }}
             >
               {!catalog.music.length && <option value="">Sem músicas disponíveis</option>}
-              {catalog.music.map(item => <option key={item} value={item}>{item}</option>)}
+              {catalog.music.map(item => <option key={item} value={item}>{mediaLabel(item)}</option>)}
             </select>
           </div>
         </article>
@@ -1194,7 +1360,7 @@ function App() {
             <button className="button quiet compact" onClick={() => backgroundInput.current?.click()}>Importar fundo</button>
             <select aria-label="Imagem de fundo" value={background} onChange={event => setBackground(event.target.value)}>
               <option value="">Escolha um fundo</option>
-              {catalog.backgrounds.map(item => <option key={item} value={item}>{item}</option>)}
+              {catalog.backgrounds.map(item => <option key={item} value={item}>{mediaLabel(item)}</option>)}
             </select>
           </div>
           <label className="motion-select">Movimento
@@ -1208,6 +1374,20 @@ function App() {
           </div>
         </article>
       </section>
+
+      {projectDialogOpen && <div className="project-dialog-backdrop" role="presentation" onMouseDown={() => setProjectDialogOpen(false)}>
+        <section className="project-dialog" role="dialog" aria-modal="true" aria-label="Projetos" onMouseDown={event => event.stopPropagation()}>
+          <header><div><span>Projetos</span><h2>Onde você parou</h2></div><button className="dialog-close" onClick={() => setProjectDialogOpen(false)} aria-label="Fechar projetos">×</button></header>
+          <p>O projeto atual é salvo automaticamente neste navegador.</p>
+          <div className="project-list">
+            {projects.map(project => <article className={project.id === projectId ? "active" : ""} key={project.id}>
+              <button className="project-open" onClick={() => chooseProject(project.id)}><b>{project.name}</b><small>{project.source ? `${project.source.length.toLocaleString("pt-BR")} caracteres salvos` : "Ainda sem roteiro"}</small></button>
+              <button className="project-delete" onClick={() => deleteProject(project.id)} title={`Excluir ${project.name}`} aria-label={`Excluir ${project.name}`}>⌫</button>
+            </article>)}
+          </div>
+          <button className="button primary project-new" onClick={createProject}>＋ Criar novo projeto</button>
+        </section>
+      </div>}
 
       <footer className={`statusbar${jobId || renderProgress ? " has-render-progress" : ""}`}>
         <div className="status-detail">

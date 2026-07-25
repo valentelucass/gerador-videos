@@ -13,26 +13,51 @@ import shutil
 import subprocess
 import unicodedata
 from collections.abc import Callable, Mapping
+from contextvars import ContextVar
 from dataclasses import dataclass
 from logging import Logger
 from pathlib import Path
 from tempfile import mkdtemp
 
-from ..config import FINAL_OUTPUT_DIR, FFMPEG, FFPROBE, IMAGE_DIR, MUSIC_DIR, SOUND_DIR
+from ..config import FINAL_OUTPUT_DIR, FFMPEG, FFPROBE, IMAGE_DIR, MUSIC_DIR, RENDER_CACHE_DIR, SOUND_DIR
 from ..models import Script
 from ..services import missing_scene_images, resolve_scene_image_sources, scene_asset_path
 from .tts_neural import TTSNeuralEngine, WordBoundary
 
-FPS = 24
+# A cadência de 30 fps é importante para o zoom do cartão: a 24 fps a borda
+# percorria quatro ou mais pixels por amostra e aparentava vibrar, mesmo sem
+# frames descartados. Os time-codes continuam quantizados uma única vez.
+FPS = 30
 WIDTH, HEIGHT = 1920, 1080
 CARD_W, CARD_H = 1500, 844
+CARD_RADIUS = 48
+# O cartão cresce inteiro antes de sair de cena. A transição parte exatamente
+# deste tamanho para não haver o "pulo" de escala no primeiro quadro. A
+# composição aplica essa escala por transformação subpixel, não por degraus de
+# largura/altura inteiras.
+CARD_FOCUS_ZOOM = 1.120
+# O cartão primeiro repousa, então aproxima em uma única rampa contínua e
+# permanece focado antes da próxima passagem. Nunca há dois zooms concorrendo.
+CARD_FOCUS_DELAY_SECONDS = 0.72
+CARD_FOCUS_SECONDS = 1.72
+CARD_FOCUS_HOLD_SECONDS = 0.62
+CARD_FOCUS_PROBABILITY = 0.56
+CARD_BLUR_AT_REST = 0.00
+CARD_BLUR_AT_FOCUS = 0.84
 FULLSCREEN_RATIO = 0.40
 MAX_FULLSCREEN_RUN = 2
 MAX_CARD_RUN = 3
-# O preview usa exatamente dez quadros de transição. Em 24 fps, 0,40 s seriam
-# 9,6 quadros e causariam uma cadência irregular no zoom/xfade.
-TRANSITION_FRAMES = 10
+# Mantemos as durações editoriais anteriores em uma grade de 30 fps inteira.
+TRANSITION_FRAMES = 12
 TRANSITION_SECONDS = TRANSITION_FRAMES / FPS
+# Cartões não usam xfade: o anterior é sugado e o próximo ocupa o espaço
+# liberado. A janela um pouco maior dá tempo para ambos se moverem sem que as
+# caixas se encontrem, mantendo o mesmo ritmo aprovado no preview.
+CARD_TRANSITION_FRAMES = 22
+CARD_TRANSITION_SECONDS = CARD_TRANSITION_FRAMES / FPS
+# No fim da troca cartão→cartão, a caixa atual é absorvida pelo lado de saída.
+# A escala final menor deixa a passagem mais decidida sem encurtar a janela.
+CARD_EXIT_ZOOM = 0.580
 # A cadência-alvo é curta, mas pequenas variações da voz neural são normais.
 # Até 10,5 s a mesma arte permanece em tela; acima disso o bloco ainda precisa
 # ser dividido para preservar a retenção e o ritmo documental.
@@ -43,8 +68,11 @@ MAX_SCENE_ACOUSTIC_SECONDS = 9.0
 MAX_HORIZONTAL_NARRATION_SECONDS = 20 * 60
 # O backend limita cada execução pesada a uma janela curta. A duração total do
 # vídeo não é limitada por essas constantes; apenas o tamanho de cada grafo.
-MAX_SCENES_PER_SEGMENT = 12
-MAX_SEGMENT_SECONDS = 90.0
+# As telas já carregam as entradas/saídas dos cartões. A composição final do
+# trecho só concatena MP4s finitos, portanto seis cenas mantêm baixa a
+# sobrecarga de processos sem reintroduzir a cadeia cumulativa de xfade.
+MAX_SCENES_PER_SEGMENT = 6
+MAX_SEGMENT_SECONDS = 45.0
 MAX_FILTER_BUFFERED_FRAMES = 128
 # SFX também são montados por janelas: nunca existe um ``asplit`` global com
 # centenas de sons aguardando offsets de muitos minutos.
@@ -88,11 +116,12 @@ FOCUS_POINTS = (
 )
 
 ProgressCallback = Callable[[int, str], None]
+_COMPOSITOR_LOGGER: ContextVar[Logger | None] = ContextVar("horizontal_compositor_logger", default=None)
 
 
 @dataclass(frozen=True)
 class RenderSegment:
-    """Faixa visual com uma cena de guarda para a transição de fronteira."""
+    """Faixa visual contígua para concatenação de telas finalizadas."""
 
     start_index: int
     end_index: int
@@ -107,6 +136,22 @@ class RenderSegment:
     @property
     def output_duration(self) -> float:
         return self.output_frames / FPS
+
+
+@dataclass(frozen=True)
+class RenderPart:
+    """Fonte finita e, opcionalmente, a janela de quadros a aproveitar.
+
+    Os corpos das cenas já existem como MP4s normalizados. Recodificá-los em
+    outro MP4 apenas para aplicar ``trim`` e depois recodificá-los outra vez no
+    concat desperdiçava uma passagem 1080p completa. A janela permanece no
+    grafo do concat, que já precisa recodificar para normalizar o PTS entre
+    trechos AMF.
+    """
+
+    source: Path
+    start_frame: int = 0
+    end_frame: int | None = None
 
 
 class AcousticAlignmentError(ValueError):
@@ -232,9 +277,55 @@ def _layout_modes(scenes: list[object]) -> list[str]:
     return ["fullscreen" if scene.transition.in_ == "zoom_in" else "card" for scene in scenes]
 
 
-def _transition_directions(scenes: list[object]) -> list[str]:
-    """Mantém a direção declarada no roteiro, sem sorteio no renderizador."""
-    return [scene.transition.out for scene in scenes]
+def _transition_directions(scenes: list[object], *, seed_context: str = "") -> list[str]:
+    """Sorteia de forma estável as saídas entre cartões consecutivos.
+
+    A direção precisa variar de vídeo para vídeo, mas não pode mudar se um job
+    for refeito. Por isso o sorteio usa IDs das cenas como semente. Transições
+    envolvendo fullscreen continuam obedecendo ao contrato explícito do JSON.
+    """
+    modes = _layout_modes(scenes)
+    seed_material = seed_context or "|".join(scene.id for scene in scenes)
+    generator = random.Random(_seed(seed_material))
+    directions: list[str] = []
+    for index, scene in enumerate(scenes):
+        card_to_card = (
+            index < len(scenes) - 1
+            and modes[index] == "card"
+            and modes[index + 1] == "card"
+        )
+        directions.append(
+            generator.choice(("to_left", "to_right"))
+            if card_to_card
+            else scene.transition.out
+        )
+    return directions
+
+
+def _card_focus_plan(
+    scenes: list[object], modes: list[str], *, seed_context: str = "",
+) -> list[bool]:
+    """Sorteia blocos editoriais de zoom, sem alternância mecânica 1 a 1."""
+    material = seed_context or "|".join(scene.id for scene in scenes)
+    generator = random.Random(_seed("card-focus|" + material))
+    result = [False] * len(scenes)
+    card_indices = [index for index, mode in enumerate(modes) if mode == "card"]
+    focused = generator.random() < CARD_FOCUS_PROBABILITY
+    position = 0
+    while position < len(card_indices):
+        # Dois e três cartões são os padrões mais comuns; um e quatro entram
+        # ocasionalmente para evitar uma cadência reconhecível.
+        run_length = generator.choices((1, 2, 3, 4), weights=(0.16, 0.38, 0.31, 0.15))[0]
+        for index in card_indices[position:position + run_length]:
+            result[index] = focused
+        position += run_length
+        focused = not focused
+    return result
+
+
+def _transition_frames(left_mode: str, right_mode: str) -> int:
+    """Retorna a sobreposição em frames da fronteira visual."""
+    return CARD_TRANSITION_FRAMES if left_mode == right_mode == "card" else TRANSITION_FRAMES
 
 
 def _background_filter(animation: str) -> str:
@@ -324,9 +415,10 @@ CTA_CUE_WORDS = frozenset({
 CTA_TYPING_DELAY = 0.25
 CTA_TYPING_STEP = 0.035
 CTA_LINE_GAP = 0.08
-# A CTA precisa ser lida, mas não pode interromper o ritmo da narração.
-# O hold anterior de 4,2s fazia o planejador inserir silêncios artificiais.
-CTA_POST_TYPING_HOLD = 1.0
+# A CTA precisa continuar legível depois da última letra. Um segundo deixava
+# apenas ~0,65s de texto completo porque os 0,35s finais pertencem à rampa de
+# saída do blur. 1,8s ainda cabe no intervalo acústico normal sem pausas.
+CTA_POST_TYPING_HOLD = 1.80
 # O convite já tem uma cena e anotação próprias; uma pausa longa depois dele
 # soa como narração cortada. Mantemos apenas uma respiração editorial curta.
 MAX_CTA_NARRATION_PAUSE = 0.20
@@ -448,7 +540,8 @@ def _cta_pause_plan(script: Script, boundaries: list[WordBoundary]) -> list[tupl
         cue_index = _cta_cue_word_index(block)
         # Roteiros antigos sem termo reconhecível mantêm o início do bloco;
         # para CTAs normais, a digitação começa junto do convite falado.
-        annotation_start = block_word_timings[index][cue_index].start if cue_index is not None else block_word_timings[index][0].start
+        cue_start = block_word_timings[index][cue_index].start if cue_index is not None else block_word_timings[index][0].start
+        annotation_start = max(block_word_timings[index][0].start, cue_start - ANNOTATION_TYPING_DELAY)
         next_start = block_word_timings[index + 1][0].start
         pause_seconds = min(
             MAX_CTA_NARRATION_PAUSE,
@@ -552,7 +645,9 @@ def _scene_timing_payload(
         if _is_subscription_cta(block):
             cue_index = _cta_cue_word_index(block)
             if cue_index is not None:
-                annotation_start = block_word_timings[index][cue_index].start
+                # O blur pode preparar a CTA um quarto de segundo antes, mas
+                # a primeira letra aparece exatamente no cue acústico.
+                annotation_start = max(start, block_word_timings[index][cue_index].start - ANNOTATION_TYPING_DELAY)
         else:
             rank_cue_index = _rank_annotation_cue_word_index(block)
             if rank_cue_index is not None:
@@ -667,6 +762,15 @@ def _run_compositor(command: list[str]) -> None:
     )
     if result.returncode:
         detail = (result.stderr or "erro desconhecido do FFmpeg").strip()
+        # Em especial para ENOMEM, o stderr do FFmpeg não informa quais
+        # inputs estavam em loop nem o filter_complex efetivo. Registrar a
+        # linha completa somente na falha preserva o render.log como fonte de
+        # diagnóstico sem despejar milhares de caracteres em jobs saudáveis.
+        (_COMPOSITOR_LOGGER.get() or logging.getLogger(__name__)).error(
+            "FFmpeg falhou (exit=%s). Comando efetivo:\n%s",
+            result.returncode,
+            subprocess.list2cmdline([command[0], "-hide_banner", "-loglevel", "error", *command[1:]]),
+        )
         if "buffered frames" in detail.lower():
             detail = (
                 "O compositor atingiu o limite seguro de frames em memória. "
@@ -678,14 +782,165 @@ def _run_compositor(command: list[str]) -> None:
         )
 
 
-def _native_card_filter() -> str:
-    """Prepara o cartão estável; o movimento pertence somente ao fullscreen."""
-    return (
-        "[0:v]"
-        f"scale={CARD_W}:{CARD_H}:force_original_aspect_ratio=increase,crop={CARD_W}:{CARD_H},"
-        f"fps={FPS},setsar=1,fade=t=in:st=0:d=0.16,"
-        "drawbox=x=3:y=3:w=iw-6:h=ih-6:color=white@0.18:t=3[out]"
+def _native_card_filter_chain(*, animate_image: bool = False) -> str:
+    """Prepara o cartão; B-roll mantém seu movimento e fotos ficam estáveis."""
+    motion = (
+        # O zoom editorial já é aplicado ao cartão completo por ``perspective``
+        # subpixel. A antiga rampa interna de 0,3% fazia o crop central andar
+        # em pixels inteiros e a foto tremia dentro de uma caixa fluida.
+        # Mantemos o zoompan central exigido para imagens físicas, porém em
+        # escala neutra: não há um segundo movimento concorrente.
+        "zoompan=z='1':"
+        "x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d=1:"
+        f"s={CARD_W}x{CARD_H}:fps={FPS},"
+        if animate_image
+        else ""
     )
+    return (
+        f"scale={CARD_W}:{CARD_H}:force_original_aspect_ratio=increase,crop={CARD_W}:{CARD_H},"
+        # A entrada agora acontece pelo deslocamento físico do cartão. O fade
+        # inicial escurecia seus primeiros quadros e parecia um piscar quando
+        # o próximo cartão já vinha ocupando o lado livre.
+        f"fps={FPS},{motion}setsar=1,"
+        "drawbox=x=1:y=1:w=iw-2:h=ih-2:color=0x40444C@0.92:t=1"
+    )
+
+
+def _native_card_filter(*, animate_image: bool = False) -> str:
+    """Compatibilidade do filtro de cartão isolado usado em diagnósticos."""
+    return f"[0:v]{_native_card_filter_chain(animate_image=animate_image)}[out]"
+
+
+def _native_card_round_mask_expression() -> str:
+    """Expressão alfa para os quatro cantos arredondados do cartão."""
+    right = CARD_W - CARD_RADIUS - 1
+    bottom = CARD_H - CARD_RADIUS - 1
+    radius_squared = CARD_RADIUS * CARD_RADIUS
+    return (
+        f"if(lt(X\\,{CARD_RADIUS})*lt(Y\\,{CARD_RADIUS})\\,"
+        f"if(lte((X-{CARD_RADIUS})*(X-{CARD_RADIUS})+(Y-{CARD_RADIUS})*(Y-{CARD_RADIUS})\\,{radius_squared})\\,255\\,0)\\,"
+        f"if(gt(X\\,{right})*lt(Y\\,{CARD_RADIUS})\\,"
+        f"if(lte((X-{right})*(X-{right})+(Y-{CARD_RADIUS})*(Y-{CARD_RADIUS})\\,{radius_squared})\\,255\\,0)\\,"
+        f"if(lt(X\\,{CARD_RADIUS})*gt(Y\\,{bottom})\\,"
+        f"if(lte((X-{CARD_RADIUS})*(X-{CARD_RADIUS})+(Y-{bottom})*(Y-{bottom})\\,{radius_squared})\\,255\\,0)\\,"
+        f"if(gt(X\\,{right})*gt(Y\\,{bottom})\\,"
+        f"if(lte((X-{right})*(X-{right})+(Y-{bottom})*(Y-{bottom})\\,{radius_squared})\\,255\\,0)\\,255))))"
+    )
+
+
+def _native_card_mask_asset(job_dir: Path) -> Path:
+    """Gera uma máscara cinza reutilizável para arredondar cartões sem recodificá-los."""
+    job_dir.mkdir(parents=True, exist_ok=True)
+    output = job_dir / f"mascara_cartao_arredondada_{CARD_W}x{CARD_H}.png"
+    if output.is_file():
+        return output
+    _run_compositor([
+        str(FFMPEG), "-y", "-f", "lavfi", "-i", f"color=c=white:s={CARD_W}x{CARD_H}:r=1",
+        "-vf", f"format=gray,geq=lum='{_native_card_round_mask_expression()}'",
+        "-frames:v", "1", str(output),
+    ])
+    if not output.is_file() or output.stat().st_size == 0:
+        raise RuntimeError("Não foi possível preparar a máscara arredondada dos cartões.")
+    return output
+
+
+def _native_card_shadow_asset(job_dir: Path) -> Path:
+    """Materializa uma única vez a sombra arredondada dos cartões.
+
+    O cartão sempre ocupa a mesma caixa opaca de 1500x844. Desfocar a própria
+    mídia a cada quadro era, portanto, trabalho repetido: o resultado é
+    invariavelmente a mesma sombra preta com bordas suaves. Um PNG com alpha
+    preserva exatamente esse aspecto e elimina o ``boxblur`` de todos os
+    segmentos.
+    """
+    job_dir.mkdir(parents=True, exist_ok=True)
+    output = job_dir / "sombra_cartao_1500x844.png"
+    if output.is_file():
+        return output
+    _run_compositor([
+        str(FFMPEG), "-y", "-f", "lavfi", "-i", f"color=c=black:s={CARD_W}x{CARD_H}:r=1",
+        "-vf", (
+            "format=rgba,"
+            f"geq=r='0':g='0':b='0':a='{_native_card_round_mask_expression()}',"
+            "colorchannelmixer=aa=0.42,boxblur=18:2"
+        ),
+        "-frames:v", "1", str(output),
+    ])
+    if not output.is_file() or output.stat().st_size == 0:
+        raise RuntimeError("Não foi possível preparar a sombra estática dos cartões.")
+    return output
+
+
+def _native_card_background_blur_asset(background: Path, job_dir: Path) -> Path:
+    """Pré-borra o fundo uma vez para os cartões não borram 1080p por frame."""
+    job_dir.mkdir(parents=True, exist_ok=True)
+    output = job_dir / "fundo_cartoes_borrado.png"
+    if output.is_file():
+        return output
+    _run_compositor([
+        str(FFMPEG), "-y", "-i", str(background),
+        "-vf", (
+            f"scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=increase,crop={WIDTH}:{HEIGHT},"
+            "boxblur=18:3"
+        ),
+        "-frames:v", "1", str(output),
+    ])
+    if not output.is_file() or output.stat().st_size == 0:
+        raise RuntimeError("Não foi possível preparar o fundo borrado dos cartões.")
+    return output
+
+
+def _native_card_focus_window(visible_seconds: float, entry_seconds: float) -> tuple[float, float] | None:
+    """Retorna a janela repouso → zoom → repouso, ou ``None`` se for curta."""
+    start = entry_seconds + CARD_FOCUS_DELAY_SECONDS
+    end = start + CARD_FOCUS_SECONDS
+    if end + CARD_FOCUS_HOLD_SECONDS > visible_seconds:
+        return None
+    return start, end
+
+
+def _native_card_focus_progress(focus_start: float, focus_end: float, clock: str) -> str:
+    """Progresso com easing cossenoidal para o zoom externo do cartão.
+
+    A curva tem velocidade zero nos dois extremos: o cartão pode repousar e
+    depois sair sem o tranco que uma rampa linear causava no primeiro quadro.
+    """
+    focus_seconds = focus_end - focus_start
+    if focus_seconds <= 0:
+        raise ValueError("Janela de zoom do cartão inválida.")
+
+    phase = f"({clock}-{focus_start:.6f})/{focus_seconds:.6f}"
+    return (
+        f"if(lt({clock}\\,{focus_start:.6f})\\,0\\,"
+        f"if(lt({clock}\\,{focus_end:.6f})\\,"
+        f"0.5-0.5*cos(PI*({phase}))\\,1))"
+    )
+
+
+def _native_card_focus_expression(
+    focus_start: float, focus_end: float, *, clock: str = "t",
+) -> str:
+    """Expressão de escala suave, com início e fim em quadros exatos."""
+    zoom = f"1+{CARD_FOCUS_ZOOM - 1:.6f}*({_native_card_focus_progress(focus_start, focus_end, clock)})"
+    return zoom
+
+
+def _native_effective_card_focuses(
+    planned: list[bool], modes: list[str], scene_durations: list[float],
+) -> list[bool]:
+    """Não agenda zoom quando a cena não comporta as três fases visuais."""
+    effective = list(planned)
+    for index, focused in enumerate(effective):
+        if not focused or modes[index] != "card":
+            continue
+        entry_seconds = (
+            TRANSITION_SECONDS if index and modes[index - 1] == "fullscreen"
+            else CARD_TRANSITION_SECONDS if index and modes[index - 1] == "card"
+            else 0.0
+        )
+        if _native_card_focus_window(scene_durations[index], entry_seconds) is None:
+            effective[index] = False
+    return effective
 
 
 def _native_video_fullscreen_filter() -> str:
@@ -697,6 +952,10 @@ def _native_video_fullscreen_filter() -> str:
 
 
 def _native_background_filter(animation: str, frame_offset: int) -> str:
+    # ``perspective`` expõe ``on`` e aceita coordenadas subpixel. O crop
+    # arredonda X/Y para pixels inteiros; como esta animação desloca menos de
+    # um pixel por quadro, ele criava degraus visíveis (parecia 5 fps). O
+    # offset deixa o movimento contínuo entre cartões consecutivos.
     frame = f"(on+{max(0, frame_offset)})"
     if animation == "none":
         return "scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080"
@@ -708,7 +967,7 @@ def _native_background_filter(animation: str, frame_offset: int) -> str:
             f"x1='1984+14*sin(0.20*{frame}/{FPS})':y1='36+8*cos(0.17*{frame}/{FPS})':"
             f"x2='64+14*sin(0.20*{frame}/{FPS})':y2='1116+8*cos(0.17*{frame}/{FPS})':"
             f"x3='1984+14*sin(0.20*{frame}/{FPS})':y3='1116+8*cos(0.17*{frame}/{FPS})':"
-            "interpolation=cubic:eval=frame,crop=1920:1080"
+            "interpolation=linear:eval=frame,crop=1920:1080"
         )
     if animation == "movimento_lateral":
         return (
@@ -718,7 +977,7 @@ def _native_background_filter(animation: str, frame_offset: int) -> str:
             f"x1='1984+28*sin(0.13*{frame}/{FPS})':y1='36':"
             f"x2='64+28*sin(0.13*{frame}/{FPS})':y2='1116':"
             f"x3='1984+28*sin(0.13*{frame}/{FPS})':y3='1116':"
-            "interpolation=cubic:eval=frame,crop=1920:1080"
+            "interpolation=linear:eval=frame,crop=1920:1080"
         )
     if animation == "pulsacao":
         return (
@@ -728,7 +987,7 @@ def _native_background_filter(animation: str, frame_offset: int) -> str:
             f"x1='1984-11*sin(0.45*{frame}/{FPS})':y1='36+6*sin(0.45*{frame}/{FPS})':"
             f"x2='64+11*sin(0.45*{frame}/{FPS})':y2='1116-6*sin(0.45*{frame}/{FPS})':"
             f"x3='1984-11*sin(0.45*{frame}/{FPS})':y3='1116-6*sin(0.45*{frame}/{FPS})':"
-            "interpolation=cubic:eval=frame,crop=1920:1080"
+            "interpolation=linear:eval=frame,crop=1920:1080"
         )
     raise ValueError(f"Animação de fundo inválida: {animation}.")
 
@@ -787,16 +1046,14 @@ def _build_render_segments(scene_start_frames: list[int], visual_total_frames: i
                 break
             end = candidate
         handoff = end + 1 if end + 1 < len(scene_start_frames) else None
-        trim_start_frames = 0 if start == 0 else TRANSITION_FRAMES
         end_frame = (
-            scene_start_frames[handoff] - scene_start_frames[start] + TRANSITION_FRAMES
+            scene_start_frames[handoff] - scene_start_frames[start]
             if handoff is not None
             else visual_total_frames - scene_start_frames[start]
         )
-        output_frames = end_frame - trim_start_frames
-        if output_frames <= 0:
+        if end_frame <= 0:
             raise RuntimeError("A segmentação visual gerou um fragmento inválido.")
-        result.append(RenderSegment(start, end, handoff, trim_start_frames, output_frames))
+        result.append(RenderSegment(start, end, None, 0, end_frame))
         start = handoff if handoff is not None else len(scene_start_frames)
     return result
 
@@ -807,6 +1064,10 @@ def _native_render_scene_clips(
     source_dir: Path,
     modes: list[str],
     clip_frames: list[int],
+    *,
+    progress_callback: ProgressCallback | None = None,
+    progress_start: int = 30,
+    progress_end: int = 42,
 ) -> list[Path]:
     scene_dir.mkdir(parents=True, exist_ok=True)
     clips: list[Path] = []
@@ -814,14 +1075,40 @@ def _native_render_scene_clips(
     for index, (scene, frames) in enumerate(zip(scenes, clip_frames, strict=True)):
         output = scene_dir / f"cena_{index + 1:03d}.mp4"
         source = source_dir / scene.image
+        target_seconds = frames / FPS
+        is_video = scene.tipo_midia == "video_generico"
+        # B-roll finito não pode usar -stream_loop: se a fonte termina um
+        # pouco antes da janela acústica, o primeiro plano reaparecia e dava
+        # a sensação de drop/reinício. Uma redução de velocidade limitada a
+        # 20% preserva o movimento natural; tpad só cobre arredondamentos ou
+        # assets excepcionalmente curtos, sem voltar ao início da mídia.
+        video_time_scale = 1.0
+        if is_video:
+            source_seconds = _duration(source)
+            if source_seconds <= 0:
+                raise RuntimeError(f"B-roll inválido ou sem duração: {source.name}")
+            video_time_scale = min(1.20, max(1.0, target_seconds / source_seconds))
+        finite_tail = (
+            f",tpad=stop_mode=clone:stop_duration={target_seconds:.6f},"
+            f"trim=duration={target_seconds:.6f},setpts=PTS-STARTPTS"
+            if is_video else ""
+        )
+        source_prefix = f"[0:v]setpts=PTS*{video_time_scale:.8f}," if is_video else "[0:v]"
         if modes[index] == "fullscreen":
-            filter = _native_video_fullscreen_filter() if scene.tipo_midia == "video_generico" else _fullscreen_filter(fullscreen_index, frames / FPS)
-            filter_graph = f"[0:v]{filter}[out]"
+            filter = _native_video_fullscreen_filter() if is_video else _fullscreen_filter(fullscreen_index, target_seconds)
+            filter_graph = f"{source_prefix}{filter}{finite_tail}[out]"
             if scene.tipo_midia != "video_generico":
                 fullscreen_index += 1
         else:
-            filter_graph = _native_card_filter()
-        input_args = ["-stream_loop", "-1", "-i", str(source)] if scene.tipo_midia == "video_generico" else ["-loop", "1", "-framerate", str(FPS), "-i", str(source)]
+            # Fotos de cartão também precisam do Ken Burns previsto pelo
+            # contrato horizontal. Fazê-lo aqui mantém cada encoder com um
+            # único input finito, em vez de multiplicar frames no grafo do
+            # segmento.
+            filter_graph = (
+                f"{source_prefix}{_native_card_filter_chain(animate_image=not is_video)}"
+                f"{finite_tail}[out]"
+            )
+        input_args = ["-i", str(source)] if is_video else ["-loop", "1", "-framerate", str(FPS), "-i", str(source)]
         _run_compositor([
             str(FFMPEG), "-y", *input_args,
             "-filter_complex_threads", str(VIDEO_FILTER_THREADS), "-filter_threads", str(VIDEO_FILTER_THREADS),
@@ -830,77 +1117,555 @@ def _native_render_scene_clips(
             "-r", str(FPS), str(output),
         ])
         clips.append(output)
+        _report(
+            progress_callback,
+            progress_start + round((progress_end - progress_start) * (index + 1) / max(1, len(scenes))),
+            f"Normalizando cena {index + 1}/{len(scenes)}",
+        )
     return clips
 
 
-def _native_canvas_scene(
-    index: int,
+def _native_render_scene_canvases(
     scenes: list[object],
     clips: list[Path],
     canvas_dir: Path,
     background: Path,
+    card_background_blur: Path,
+    card_shadow: Path,
+    card_mask: Path,
     modes: list[str],
+    card_focuses: list[bool],
     exits: list[str],
     scene_starts: list[float],
-    transition_starts: list[float],
+    scene_durations: list[float],
     clip_durations: list[float],
     animation: str,
     tail_seconds: float,
-) -> Path:
-    source = clips[index]
-    scene_tail = tail_seconds if index == len(clips) - 1 else 0.0
-    if modes[index] == "fullscreen" and not scene_tail:
-        return source
+    *,
+    progress_callback: ProgressCallback | None = None,
+    progress_start: int = 42,
+    progress_end: int = 54,
+) -> list[Path]:
+    """Prepara cartões em passes curtos antes da concatenação.
+
+    Um trecho com seis cenas de cartão abria quatro fundos e quatro sombras
+    em loop dentro do mesmo grafo de transições. Mesmo aparados por ``trim``,
+    eles multiplicavam os buffers 1080p do framesync. Este passe mantém o
+    desenho editorial de cada cartão, mas entrega ao segmento somente MP4s
+    finitos de tela cheia. A sombra já é um PNG com alpha, portanto não há
+    ``boxblur`` por frame nem o antigo canvas para cenas fullscreen.
+    """
     canvas_dir.mkdir(parents=True, exist_ok=True)
-    output = canvas_dir / f"cena_{index + 1:03d}.mp4"
-    if output.is_file():
-        return output
-    duration = clip_durations[index] + scene_tail
-    padding = f",tpad=stop_mode=clone:stop_duration={scene_tail:.6f}" if scene_tail else ""
-    if modes[index] == "fullscreen":
-        graph = f"[0:v]settb=1/{FPS},setpts=PTS-STARTPTS{padding},trim=duration={duration:.6f},format=yuv420p[out]"
-        command = [
-            str(FFMPEG), "-y", "-i", str(source),
-            "-filter_complex_threads", str(VIDEO_FILTER_THREADS), "-filter_threads", str(VIDEO_FILTER_THREADS), "-filter_complex", graph,
-        ]
-    else:
-        centered = "(main_w-overlay_w)/2"
-        entry = centered
-        if index and modes[index - 1] == "fullscreen":
-            entry = (
-                f"main_w-(main_w-{centered})*t/{TRANSITION_SECONDS:.6f}"
-                if exits[index - 1] == "to_left"
-                else f"-overlay_w+({centered}+overlay_w)*t/{TRANSITION_SECONDS:.6f}"
+    prepared: list[Path] = []
+    card_total = modes.count("card")
+    rendered_cards = 0
+    for scene_index, source in enumerate(clips):
+        scene_tail = tail_seconds if scene_index == len(scenes) - 1 else 0.0
+        # Cada pré-clipe não final inclui a janela que se sobrepõe à
+        # próxima cena. Eles são indispensáveis para reconstruir o xfade de
+        # cartão/fullscreen fora do grafo cumulativo do segmento.
+        duration = clip_durations[scene_index]
+        padding = f",tpad=stop_mode=clone:stop_duration={scene_tail:.6f}" if scene_tail else ""
+        if modes[scene_index] == "fullscreen" and not scene_tail:
+            prepared.append(source)
+            continue
+
+        output = canvas_dir / f"cena_{scene_index + 1:03d}.mp4"
+        if modes[scene_index] == "fullscreen":
+            graph = (
+                f"[0:v]settb=1/{FPS},setpts=PTS-STARTPTS{padding},"
+                f"trim=duration={duration:.6f},format=yuv420p[out]"
             )
-        exit_start = transition_starts[index] if index < len(clips) - 1 else clip_durations[index]
-        exiting = centered
-        if index < len(clips) - 1 and modes[index + 1] == "fullscreen":
-            if exits[index] == "to_left":
-                exiting = f"{centered}-({centered}+overlay_w)*(t-{exit_start:.6f})/{TRANSITION_SECONDS:.6f}"
-            elif exits[index] == "to_right":
-                exiting = f"{centered}+(main_w-{centered})*(t-{exit_start:.6f})/{TRANSITION_SECONDS:.6f}"
-        card_x = f"if(lt(t,{TRANSITION_SECONDS:.6f}),{entry},if(lt(t,{exit_start:.6f}),{centered},{exiting}))"
-        background_graph = (
-            f"[1:v]{_native_background_filter(animation, round(scene_starts[index] * FPS))},"
-            # O fundo escolhido é um asset editorial: preservamos suas cores
-            # e contraste. Somente o movimento solicitado pelo painel altera
-            # a imagem; o tratamento antigo escurecia fundos claros.
-            f"fps={FPS},settb=1/{FPS},setsar=1,trim=duration={duration:.6f},setpts=PTS-STARTPTS[bg]"
-        )
-        graph = ";".join([
-            background_graph,
-            f"[0:v]settb=1/{FPS},setpts=PTS-STARTPTS{padding},split=2[card][shadow_source]",
-            "[shadow_source]format=rgba,colorchannelmixer=rr=0:gg=0:bb=0:aa=0.42,boxblur=18:2[shadow]",
-            f"[bg][shadow]overlay=x='({card_x})+18':y='(main_h-overlay_h)/2+22':format=auto[shadow_layer]",
-            f"[shadow_layer][card]overlay=x='{card_x}':y='(main_h-overlay_h)/2':format=auto,trim=duration={duration:.6f},format=yuv420p[out]",
+            command = [str(FFMPEG), "-y", "-i", str(source)]
+        else:
+            centered = "(main_w-overlay_w)/2"
+            entry = centered
+            entry_seconds = 0.0
+            if scene_index and modes[scene_index - 1] == "fullscreen":
+                entry_seconds = TRANSITION_SECONDS
+                entry = (
+                    f"main_w-(main_w-{centered})*t/{TRANSITION_SECONDS:.6f}"
+                    if exits[scene_index - 1] == "to_left"
+                    else f"-overlay_w+({centered}+overlay_w)*t/{TRANSITION_SECONDS:.6f}"
+                )
+            elif scene_index and modes[scene_index - 1] == "card":
+                # O cartão entrante termina a coreografia dedicado no tamanho
+                # padrão; só então começa o zoom de permanência.
+                entry_seconds = CARD_TRANSITION_SECONDS
+            exit_start = duration
+            exiting = centered
+            if scene_index < len(scenes) - 1 and modes[scene_index + 1] == "fullscreen":
+                # Os últimos dez quadros pertencem à janela de xfade com o
+                # fullscreen seguinte. O cartão começa a sair exatamente ali,
+                # como fazia o compositor original.
+                exit_start = max(TRANSITION_SECONDS, duration - TRANSITION_SECONDS)
+                if exits[scene_index] == "to_left":
+                    exiting = f"{centered}-({centered}+overlay_w)*(t-{exit_start:.6f})/{TRANSITION_SECONDS:.6f}"
+                elif exits[scene_index] == "to_right":
+                    exiting = f"{centered}+(main_w-{centered})*(t-{exit_start:.6f})/{TRANSITION_SECONDS:.6f}"
+            card_x = f"if(lt(t,{TRANSITION_SECONDS:.6f}),{entry},if(lt(t,{exit_start:.6f}),{centered},{exiting}))"
+            card_zoom = "1"
+            background_graph = "[bg_sharp]null[bg]"
+            focus_window = _native_card_focus_window(scene_durations[scene_index], entry_seconds)
+            if card_focuses[scene_index] and focus_window is not None:
+                focus_start, focus_end = focus_window
+                # ``perspective`` disponibiliza ``on`` (número do quadro),
+                # não ``t``. A conversão explícita mantém a mesma rampa em
+                # segundos que o restante do compositor usa.
+                card_zoom = _native_card_focus_expression(
+                    focus_start, focus_end, clock=f"(on/{FPS})",
+                )
+                background_graph = (
+                    f"[2:v]{_native_background_filter(animation, round(scene_starts[scene_index] * FPS))},"
+                    f"fps={FPS},settb=1/{FPS},setsar=1,trim=duration={duration:.6f},setpts=PTS-STARTPTS,"
+                    f"format=rgba,fade=t=in:st={focus_start:.6f}:d={focus_end - focus_start:.6f}:alpha=1,"
+                    f"colorchannelmixer=aa={CARD_BLUR_AT_FOCUS:.3f}[bg_blur];"
+                    "[bg_sharp][bg_blur]overlay=0:0:format=auto[bg]"
+                )
+            # O ``scale`` dinâmico precisava arredondar a largura de 1500 px
+            # em cada quadro e recentrar a caixa já arredondada. Mesmo a 30
+            # fps, isso fazia as bordas marcharem 1--2 pixels por vez. Ao
+            # montar o cartão em um canvas RGBA fixo e ampliar seu viewport
+            # por ``perspective``, a transformação preserva coordenadas
+            # subpixel e faz a interpolação cúbica como o fullscreen.
+            card_view_w = f"({WIDTH}/({card_zoom}))"
+            card_view_h = f"({HEIGHT}/({card_zoom}))"
+            card_view_x = f"({WIDTH}-({card_view_w}))/2"
+            card_view_y = f"({HEIGHT}-({card_view_h}))/2"
+            graph = ";".join([
+                f"[1:v]{_native_background_filter(animation, round(scene_starts[scene_index] * FPS))},"
+                f"fps={FPS},settb=1/{FPS},setsar=1,trim=duration={duration:.6f},setpts=PTS-STARTPTS[bg_sharp]",
+                background_graph,
+                f"[0:v]settb=1/{FPS},setpts=PTS-STARTPTS{padding},trim=duration={duration:.6f}[card_rgb]",
+                f"[4:v]format=gray,settb=1/{FPS},setpts=PTS-STARTPTS,trim=duration={duration:.6f}[card_mask]",
+                "[card_rgb][card_mask]alphamerge[card]",
+                f"[3:v]settb=1/{FPS},setpts=PTS-STARTPTS,trim=duration={duration:.6f}[shadow_source]",
+                f"color=c=black@0.0:s={WIDTH}x{HEIGHT}:r={FPS},format=rgba,"
+                f"trim=duration={duration:.6f},setpts=PTS-STARTPTS[card_canvas]",
+                f"[card_canvas][shadow_source]overlay=x='({card_x})+18':y='(main_h-overlay_h)/2+22':"
+                "format=auto[card_shadow_layer]",
+                f"[card_shadow_layer][card]overlay=x='{card_x}':y='(main_h-overlay_h)/2':format=auto,"
+                "format=rgba[card_layer]",
+                f"[card_layer]perspective=x0='{card_view_x}':y0='{card_view_y}':"
+                f"x1='({card_view_x})+({card_view_w})':y1='{card_view_y}':"
+                f"x2='{card_view_x}':y2='({card_view_y})+({card_view_h})':"
+                f"x3='({card_view_x})+({card_view_w})':y3='({card_view_y})+({card_view_h})':"
+                "sense=source:interpolation=cubic:eval=frame[card_zoomed]",
+                "[bg][card_zoomed]overlay=0:0:format=auto,"
+                f"trim=duration={duration:.6f},format=yuv420p[out]",
+            ])
+            command = [
+                str(FFMPEG), "-y", "-i", str(source),
+                "-loop", "1", "-framerate", str(FPS), "-i", str(background),
+                "-loop", "1", "-framerate", str(FPS), "-i", str(card_background_blur),
+                "-loop", "1", "-framerate", str(FPS), "-i", str(card_shadow),
+                "-loop", "1", "-framerate", str(FPS), "-i", str(card_mask),
+            ]
+        _run_compositor([
+            *command,
+            "-filter_complex_threads", str(VIDEO_FILTER_THREADS), "-filter_threads", str(VIDEO_FILTER_THREADS),
+            "-filter_complex", graph, "-map", "[out]", "-an", *VIDEO_ENCODER_ARGS,
+            "-r", str(FPS), str(output),
         ])
-        command = [
-            str(FFMPEG), "-y", "-i", str(source), "-loop", "1", "-framerate", str(FPS),
-            "-t", f"{duration:.6f}", "-i", str(background),
-            "-filter_complex_threads", "1", "-filter_threads", "1", "-filter_complex", graph,
-        ]
+        prepared.append(output)
+        if modes[scene_index] == "card":
+            rendered_cards += 1
+            _report(
+                progress_callback,
+                progress_start + round((progress_end - progress_start) * rendered_cards / max(1, card_total)),
+                f"Compondo cartão {rendered_cards}/{card_total}",
+            )
+    return prepared
+
+
+def _native_render_card_to_card_transition(
+    left_card: Path,
+    right_card: Path,
+    background: Path,
+    card_background_blur: Path,
+    card_shadow: Path,
+    card_mask: Path,
+    left_start_frame: int,
+    animation: str,
+    transition_start_frame: int,
+    direction: str,
+    left_focused: bool,
+    output: Path,
+) -> Path:
+    """Compõe a passagem de cartões sem xfade nem sobreposição física.
+
+    A saída usa os últimos 18 frames preparados do cartão atual e os primeiros
+    18 do próximo. O atual reduz e é sugado para um lado; dois frames depois o
+    próximo já entra pelo lado oposto no tamanho normal, preenchendo o espaço
+    que ficou livre. Como o fundo nasce uma única vez no processo, ele apenas
+    borra/desborra junto do zoom em vez de piscar entre dois canvases.
+    """
+    output.parent.mkdir(parents=True, exist_ok=True)
+    exit_sign = -1 if direction != "to_right" else 1
+    entry_sign = -exit_sign
+    exit_frames = 17
+    entry_start_frames = 3
+    exit_seconds = exit_frames / FPS
+    entry_start_seconds = entry_start_frames / FPS
+    entry_seconds = CARD_TRANSITION_SECONDS - entry_start_seconds
+    left_zoom = CARD_FOCUS_ZOOM if left_focused else 1.0
+    left_blur = CARD_BLUR_AT_FOCUS if left_focused else CARD_BLUR_AT_REST
+    def old_zoom(clock: str) -> str:
+        return (
+            f"if(lt({clock}\\,{exit_frames})\\,{left_zoom:.3f}-{left_zoom - CARD_EXIT_ZOOM:.3f}*"
+            f"(0.5-0.5*cos(PI*{clock}/{exit_frames}))\\,{CARD_EXIT_ZOOM:.3f})"
+        )
+
+    # A sucção é curta e sai por completo da tela. Aqui usamos ``scale``
+    # normal em vez de transformar um canvas RGBA inteiro com ``perspective``:
+    # alguns drivers/versões do FFmpeg interpolam a borda transparente desse
+    # canvas como uma faixa horizontal, produzindo um flash visual agressivo.
+    # O zoom lento de permanência do cartão continua no caminho subpixel da
+    # cena; esta escala final só trata a saída rápida para fora da tela.
+    old_zoom_overlay = old_zoom("n")
+    old_x = (
+        f"if(lt(n\\,{exit_frames})\\,{exit_sign * 1600}*"
+        f"(0.5-0.5*cos(PI*n/{exit_frames}))\\,{exit_sign * 3000})"
+    )
+    new_x = (
+        f"if(lt(t\\,{entry_start_seconds:.6f})\\,{entry_sign * 3000}\\,"
+        f"if(lt(t\\,{CARD_TRANSITION_SECONDS:.6f})\\,{entry_sign * 1700}*"
+        f"(1-sin(PI*(t-{entry_start_seconds:.6f})/{2 * entry_seconds:.6f}))\\,0))"
+    )
+    blur_mix = (
+        f"if(lt(T\\,{exit_seconds:.6f})\\,{left_blur:.3f}-"
+        f"{left_blur - CARD_BLUR_AT_REST:.3f}*"
+        f"(0.5-0.5*cos(PI*T/{exit_seconds:.6f}))\\,{CARD_BLUR_AT_REST:.3f})"
+    )
+    left_end_frame = left_start_frame + CARD_TRANSITION_FRAMES
+    graph = ";".join([
+        f"[2:v]{_native_background_filter(animation, transition_start_frame)},"
+        f"fps={FPS},settb=1/{FPS},setsar=1,trim=duration={CARD_TRANSITION_SECONDS:.6f},"
+        "setpts=PTS-STARTPTS[card_transition_sharp]",
+        f"[3:v]{_native_background_filter(animation, transition_start_frame)},"
+        f"fps={FPS},settb=1/{FPS},setsar=1,trim=duration={CARD_TRANSITION_SECONDS:.6f},"
+        "setpts=PTS-STARTPTS[card_transition_blur]",
+        f"[card_transition_sharp][card_transition_blur]blend=all_expr='A*(1-({blur_mix}))+B*({blur_mix})'[card_transition_bg]",
+        f"[0:v]trim=start_frame={left_start_frame}:end_frame={left_end_frame},setpts=PTS-STARTPTS,"
+        "format=rgb24[card_transition_old_rgb]",
+        f"[1:v]trim=start_frame=0:end_frame={CARD_TRANSITION_FRAMES},setpts=PTS-STARTPTS,"
+        "format=rgb24[card_transition_new_rgb]",
+        f"[4:v]setpts=PTS-STARTPTS,trim=duration={CARD_TRANSITION_SECONDS:.6f},"
+        "split=2[card_transition_old_shadow_source][card_transition_new_shadow]",
+        f"[5:v]format=gray,setpts=PTS-STARTPTS,trim=duration={CARD_TRANSITION_SECONDS:.6f},"
+        "split=2[card_transition_old_mask_source][card_transition_new_mask]",
+        "[card_transition_old_rgb][card_transition_old_mask_source]alphamerge[card_transition_old_alpha]",
+        "[card_transition_new_rgb][card_transition_new_mask]alphamerge[card_transition_new_alpha]",
+        f"[card_transition_old_shadow_source]scale=w='trunc({CARD_W}*({old_zoom_overlay}))':"
+        f"h='trunc(({CARD_H}/{CARD_W})*{CARD_W}*({old_zoom_overlay}))':"
+        "eval=frame:flags=bicubic[card_transition_old_shadow]",
+        f"[card_transition_old_alpha]scale=w='trunc({CARD_W}*({old_zoom_overlay}))':"
+        f"h='trunc(({CARD_H}/{CARD_W})*{CARD_W}*({old_zoom_overlay}))':"
+        "eval=frame:flags=bicubic[card_transition_old]",
+        f"[card_transition_new_alpha]scale={CARD_W}:{CARD_H}:flags=bicubic[card_transition_new]",
+        f"[card_transition_bg][card_transition_old_shadow]overlay=x='(W-w)/2+({old_x})+18':"
+        "y='(H-h)/2+22':format=auto[card_transition_old_shadow_layer]",
+        f"[card_transition_old_shadow_layer][card_transition_old]overlay=x='(W-w)/2+({old_x})':"
+        "y='(H-h)/2':format=auto[card_transition_old_composite]",
+        f"[card_transition_old_composite][card_transition_new_shadow]overlay=x='(W-w)/2+({new_x})+18':"
+        "y='(H-h)/2+22':format=auto[card_transition_new_shadow_layer]",
+        f"[card_transition_new_shadow_layer][card_transition_new]overlay=x='(W-w)/2+({new_x})':"
+        "y='(H-h)/2':format=auto,trim=duration="
+        f"{CARD_TRANSITION_SECONDS:.6f},format=yuv420p[out]",
+    ])
     _run_compositor([
-        *command, "-map", "[out]", "-an", *VIDEO_ENCODER_ARGS,
+        str(FFMPEG), "-y", "-i", str(left_card), "-i", str(right_card),
+        "-loop", "1", "-framerate", str(FPS), "-i", str(background),
+        "-loop", "1", "-framerate", str(FPS), "-i", str(card_background_blur),
+        "-loop", "1", "-framerate", str(FPS), "-i", str(card_shadow),
+        "-loop", "1", "-framerate", str(FPS), "-i", str(card_mask),
+        "-filter_complex_threads", str(VIDEO_FILTER_THREADS), "-filter_threads", str(VIDEO_FILTER_THREADS),
+        "-filter_complex", graph, "-map", "[out]", "-an", "-frames:v", str(CARD_TRANSITION_FRAMES),
+        *VIDEO_ENCODER_ARGS, "-r", str(FPS), str(output),
+    ])
+    return output
+
+
+def _native_render_segment_transition(
+    left: Path,
+    right: Path,
+    left_start_frame: int,
+    left_mode: str,
+    right_mode: str,
+    direction: str,
+    output: Path,
+) -> Path:
+    """Renderiza somente os dez quadros de transição entre dois modos.
+
+    O xfade recebe duas janelas já recortadas e ambas começam no PTS zero. Isso
+    preserva o movimento editorial de cartão/fullscreen sem o framesync ter de
+    guardar segundos de B-roll até o ponto da transição.
+    """
+    output.parent.mkdir(parents=True, exist_ok=True)
+    # As trocas cartão→cartão usam o compositor dedicado acima; aqui restam
+    # somente as fronteiras que envolvem fullscreen, em janelas finitas.
+    transition = (
+        "smoothleft" if direction == "to_left"
+        else "smoothright" if direction == "to_right"
+        else "fade"
+    )
+    left_end_frame = left_start_frame + TRANSITION_FRAMES
+    _run_compositor([
+        str(FFMPEG), "-y", "-i", str(left), "-i", str(right),
+        "-filter_complex_threads", str(VIDEO_FILTER_THREADS), "-filter_threads", str(VIDEO_FILTER_THREADS),
+        "-filter_complex",
+        f"[0:v]trim=start_frame={left_start_frame}:end_frame={left_end_frame},"
+        f"setpts=PTS-STARTPTS,setsar=1[left];"
+        f"[1:v]trim=start_frame=0:end_frame={TRANSITION_FRAMES},"
+        "setpts=PTS-STARTPTS,setsar=1[right];"
+        f"[left][right]xfade=transition={transition}:duration={TRANSITION_SECONDS:.6f}:offset=0,"
+        "format=yuv420p[out]",
+        "-map", "[out]", "-an", *VIDEO_ENCODER_ARGS, "-r", str(FPS), str(output),
+    ])
+    return output
+
+
+def _native_render_segment_components(
+    segment: RenderSegment,
+    number: int,
+    segment_dir: Path,
+    scene_paths: list[Path],
+    base_paths: list[Path],
+    background: Path,
+    card_background_blur: Path,
+    card_shadow: Path,
+    card_mask: Path,
+    scene_starts: list[float],
+    scene_durations: list[float],
+    modes: list[str],
+    card_focuses: list[bool],
+    exits: list[str],
+    animation: str,
+) -> list[RenderPart]:
+    """Prepara cortes lógicos e transições curtas para limites entre cenas.
+
+    As telas de cada lado da fronteira continuam sendo produzidas uma vez. Os
+    corpos são apenas janelas lógicas de seus MP4s; o único encoder do trecho
+    aplica esses ``trim`` já na concatenação. Só a pequena janela compartilhada
+    vira um arquivo de transição separado. Assim não há uma cadeia de xfade,
+    nem um input atrasado ocupando ``filter_buffered_frames`` até a saída do
+    primeiro segmento.
+    """
+    indices = list(range(segment.start_index, segment.end_index + 1))
+    # Cada fronteira recebe seu próprio compositor curto. Cartão→cartão usa o
+    # movimento físico dedicado; as demais usam xfade, sem encadear filtros.
+    has_inbound_transition = segment.start_index > 0
+    animated_after = set(indices[:-1])
+    pieces_dir = segment_dir / f"partes_{number:03d}"
+    pieces: list[RenderPart] = []
+    for position, scene_index in enumerate(indices):
+        visible_frames = round(scene_durations[scene_index] * FPS)
+        # Dentro do segmento, a fronteira é emitida logo após o corpo da cena
+        # anterior. Só o primeiro item precisa materializar a transição vinda
+        # do segmento precedente. Em ambos os casos, os primeiros quadros da
+        # da cena atual já foram consumidos pelo xfade e não podem reaparecer
+        # no corpo dela — isso causava a sensação de a cena voltar para trás.
+        emit_inbound_transition = position == 0 and has_inbound_transition
+        has_preceding_transition = position > 0 or has_inbound_transition
+        if emit_inbound_transition:
+            previous = scene_index - 1
+            previous_visible_frames = round(scene_durations[previous] * FPS)
+            transition = pieces_dir / f"{len(pieces) + 1:02d}_transicao_{previous + 1:03d}.mp4"
+            if modes[previous] == modes[scene_index] == "card":
+                pieces.append(RenderPart(_native_render_card_to_card_transition(
+                    base_paths[previous], base_paths[scene_index], background, card_background_blur, card_shadow, card_mask,
+                    previous_visible_frames, animation,
+                    round(scene_starts[scene_index] * FPS), exits[previous], card_focuses[previous], transition,
+                )))
+            else:
+                pieces.append(RenderPart(_native_render_segment_transition(
+                    scene_paths[previous], scene_paths[scene_index], previous_visible_frames,
+                    modes[previous], modes[scene_index],
+                    exits[previous], transition,
+                )))
+        start_frame = (
+            _transition_frames(modes[scene_index - 1], modes[scene_index])
+            if has_preceding_transition
+            else 0
+        )
+        if visible_frames <= start_frame:
+            raise RuntimeError("Cena curta demais para preservar a transição horizontal.")
+        pieces.append(RenderPart(scene_paths[scene_index], start_frame, visible_frames))
+
+        if scene_index in animated_after:
+            transition = pieces_dir / f"{len(pieces) + 1:02d}_transicao_{scene_index + 1:03d}.mp4"
+            next_index = scene_index + 1
+            if modes[scene_index] == modes[next_index] == "card":
+                pieces.append(RenderPart(_native_render_card_to_card_transition(
+                    base_paths[scene_index], base_paths[next_index], background, card_background_blur, card_shadow, card_mask,
+                    visible_frames, animation,
+                    round(scene_starts[next_index] * FPS), exits[scene_index], card_focuses[scene_index], transition,
+                )))
+            else:
+                pieces.append(RenderPart(_native_render_segment_transition(
+                    scene_paths[scene_index], scene_paths[next_index], visible_frames,
+                    modes[scene_index], modes[next_index],
+                    exits[scene_index], transition,
+                )))
+    return pieces
+
+
+def _native_concat_video_parts(parts: list[Path | RenderPart], output: Path) -> Path:
+    """Une trechos H.264 finitos e normaliza o PTS entre eles.
+
+    O concat demuxer com ``-c:v copy`` parecia barato, mas arquivos AMF curtos
+    podem carregar DTS/PTS de B-frames que não começam no mesmo ponto. Ao
+    recortar a CTA depois dessa cópia, o FFmpeg descartava quadros e encurtava
+    o sufixo. Este é um único concat de entradas finitas: ele recodifica para
+    tornar a linha do tempo contínua, sem ``split``, overlays atrasados ou
+    qualquer input em loop. ``RenderPart`` evita materializar um MP4
+    intermediário só para aparar o corpo de uma cena; ``Path`` continua aceito
+    nos pequenos estágios de anotação.
+    """
+    if not parts:
+        raise RuntimeError("Não há partes visuais para concatenar.")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    inputs: list[str] = []
+    filters: list[str] = []
+    labels: list[str] = []
+    for index, raw_part in enumerate(parts):
+        part = raw_part if isinstance(raw_part, RenderPart) else RenderPart(raw_part)
+        if part.start_frame < 0 or (part.end_frame is not None and part.end_frame <= part.start_frame):
+            raise RuntimeError("Janela de vídeo inválida durante a concatenação horizontal.")
+        inputs.extend(["-i", str(part.source)])
+        label = f"[concat_part_{index}]"
+        trim = (
+            f"trim=start_frame={part.start_frame}:end_frame={part.end_frame},"
+            if part.end_frame is not None
+            else f"trim=start_frame={part.start_frame},"
+            if part.start_frame
+            else ""
+        )
+        filters.append(
+            f"[{index}:v]{trim}settb=1/{FPS},setsar=1,setpts=PTS-STARTPTS,format=yuv420p{label}"
+        )
+        labels.append(label)
+    filters.append("".join(labels) + f"concat=n={len(parts)}:v=1:a=0[concat_out]")
+    _run_compositor([
+        str(FFMPEG), "-y", *inputs,
+        "-filter_complex_threads", str(VIDEO_FILTER_THREADS), "-filter_threads", str(VIDEO_FILTER_THREADS),
+        "-filter_complex", ";".join(filters), "-map", "[concat_out]", "-an",
+        *VIDEO_ENCODER_ARGS, "-r", str(FPS), str(output),
+    ])
+    return output
+
+
+def _native_render_annotation_effect(
+    source: Path,
+    start_frame: int,
+    end_frame: int,
+    annotation_index: int,
+    lines: list[str],
+    emoji: str | None,
+    output: Path,
+) -> Path:
+    """Renderiza apenas a janela finita de uma CTA com blur e digitação.
+
+    Não há PTS deslocado nem ramo de sufixo neste processo: o ``boxblur`` e os
+    ``drawtext`` por letra recebem só os poucos segundos da própria CTA.
+    """
+    if end_frame <= start_frame:
+        raise RuntimeError("Janela de anotação vazia durante a composição horizontal.")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    duration = (end_frame - start_frame) / FPS
+    stickers = _native_required_stickers([(lines, 0.0, duration, emoji)])
+    sticker = stickers.get(emoji) if emoji else None
+    inputs = [str(FFMPEG), "-y", "-i", str(source)]
+    sticker_input_index: int | None = None
+    if sticker is not None:
+        sticker_input_index = 1
+        inputs.extend(["-loop", "1", "-framerate", str(FPS), "-i", str(sticker)])
+
+    graph: list[str] = []
+    sharp = f"[annotation_{annotation_index}_sharp]"
+    blur_source = f"[annotation_{annotation_index}_blur_source]"
+    blur = f"[annotation_{annotation_index}_blur]"
+    blended = f"[annotation_{annotation_index}_blended]"
+    graph.append(
+        f"[0:v]trim=start_frame={start_frame}:end_frame={end_frame},"
+        f"setpts=PTS-STARTPTS,setsar=1,split=2{sharp}{blur_source}"
+    )
+    graph.append(f"{blur_source}boxblur=10:2{blur}")
+    text_end = _native_annotation_text_end(0.0, duration, lines, emoji)
+    blur_mix = _native_blur_mix_expression(0.0, text_end, duration)
+    graph.append(f"{sharp}{blur}blend=all_expr='A*(1-({blur_mix}))+B*({blur_mix})'{blended}")
+    styled = _native_typing_annotation_filters(
+        graph, blended, annotation_index, lines, 0.0, text_end, emoji, sticker_input_index,
+    )
+    graph.append(
+        f"{styled}trim=duration={duration:.6f},setpts=PTS-STARTPTS,"
+        "setsar=1,format=yuv420p[out]"
+    )
+    _run_compositor([
+        *inputs,
+        "-filter_complex_threads", str(VIDEO_FILTER_THREADS), "-filter_threads", str(VIDEO_FILTER_THREADS),
+        "-filter_buffered_frames", str(MAX_FILTER_BUFFERED_FRAMES),
+        "-filter_complex", ";".join(graph), "-map", "[out]", "-an",
+        *VIDEO_ENCODER_ARGS, "-r", str(FPS), str(output),
+    ])
+    return output
+
+
+def _native_apply_segment_annotation(
+    source: Path,
+    total_frames: int,
+    annotation_index: int,
+    lines: list[str],
+    start: float,
+    end: float,
+    emoji: str | None,
+    directory: Path,
+) -> Path:
+    """Aplica uma CTA com ramos finitos e concatenação de PTS normalizado.
+
+    O efeito é materializado isoladamente; prefixo e sufixo permanecem como
+    janelas independentes da fonte no concat final. Isso impede que o FFmpeg
+    reutilize a última imagem de um ``split`` como sufixo — a origem do antigo
+    congelamento após o blur — sem recodificar esses dois ramos antes do tempo.
+    """
+    start_frame = max(0, min(total_frames, _nearest_frame(start)))
+    end_frame = max(start_frame + 1, min(total_frames, _nearest_frame(end)))
+    if start_frame >= total_frames or end_frame <= start_frame:
+        return source
+    # Os ramos antes/depois da anotação não precisam virar MP4s próprios: o
+    # concat já vai recodificar a linha do tempo completa. Abrir a fonte como
+    # dois ``RenderPart`` preserva a separação que evita o congelamento após o
+    # blur, mas elimina duas codificações AMF por anotação.
+    parts: list[Path | RenderPart] = []
+    if start_frame:
+        parts.append(RenderPart(source, 0, start_frame))
+    effect = directory / f"annotation_{annotation_index:02d}_effect.mp4"
+    parts.append(_native_render_annotation_effect(
+        source, start_frame, end_frame, annotation_index, lines, emoji, effect,
+    ))
+    if end_frame < total_frames:
+        parts.append(RenderPart(source, end_frame, total_frames))
+    return _native_concat_video_parts(parts, directory / f"annotation_{annotation_index:02d}_timeline.mp4")
+
+
+def _native_render_segment_fades(
+    source: Path,
+    duration: float,
+    opening_fade: float,
+    closing_fade: float,
+    output: Path,
+) -> Path:
+    """Aplica as vinhetas de borda numa única passagem finita."""
+    filters: list[str] = []
+    if opening_fade > 0:
+        filters.append(f"fade=t=in:st=0:d={opening_fade:.3f}")
+    if closing_fade > 0:
+        filters.append(f"fade=t=out:st={max(0.0, duration - closing_fade):.3f}:d={closing_fade:.3f}")
+    filters.extend([f"trim=duration={duration:.6f}", "setsar=1", "format=yuv420p"])
+    _run_compositor([
+        str(FFMPEG), "-y", "-i", str(source),
+        "-filter_complex_threads", str(VIDEO_FILTER_THREADS), "-filter_threads", str(VIDEO_FILTER_THREADS),
+        "-vf", ",".join(filters), "-map", "0:v", "-an", *VIDEO_ENCODER_ARGS,
         "-r", str(FPS), str(output),
     ])
     return output
@@ -911,53 +1676,73 @@ def _native_render_segment(
     number: int,
     segment_dir: Path,
     scene_paths: list[Path],
+    base_paths: list[Path],
+    background: Path,
+    card_background_blur: Path,
+    card_shadow: Path,
+    card_mask: Path,
     scene_starts: list[float],
+    scene_durations: list[float],
     modes: list[str],
+    card_focuses: list[bool],
     exits: list[str],
+    animation: str,
+    annotations: list[tuple[list[str], float, float, str | None]],
+    *,
+    opening_fade: float = 0.0,
+    closing_fade: float = 0.0,
 ) -> Path:
-    """Aplica xfade a no máximo doze cenas e uma cena de guarda."""
+    """Concatena telas/xfades finitos e aplica efeitos locais.
+
+    Anotações são compostas no fragmento que as contém. Isso evita aplicar
+    cada blur e cada letra sobre toda a duração do vídeo na etapa final.
+    """
     render_end = segment.handoff_index if segment.handoff_index is not None else segment.end_index
     indices = list(range(segment.start_index, render_end + 1))
     if len(indices) > MAX_SCENES_PER_SEGMENT + 1:
         raise RuntimeError("Fragmento visual excedeu o limite de cenas.")
     segment_dir.mkdir(parents=True, exist_ok=True)
     output = segment_dir / f"segmento_{number:03d}.mp4"
-    inputs: list[str] = []
-    filters: list[str] = []
-    labels: dict[int, str] = {}
     first_start = scene_starts[segment.start_index]
-    for input_index, scene_index in enumerate(indices):
-        inputs.extend(["-i", str(scene_paths[scene_index])])
-        label = f"[scene_{scene_index}]"
-        relative_start = scene_starts[scene_index] - first_start
-        filters.append(f"[{input_index}:v]settb=1/{FPS},setpts=PTS-STARTPTS+{relative_start:.6f}/TB{label}")
-        labels[scene_index] = label
-
-    video = labels[segment.start_index]
-    for scene_index in indices[1:]:
-        output_label = f"[transition_{scene_index}]"
-        offset = scene_starts[scene_index] - first_start
-        if exits[scene_index - 1] == "to_left":
-            filters.append(f"{video}{labels[scene_index]}xfade=transition=smoothleft:duration={TRANSITION_SECONDS:.6f}:offset={offset:.6f}{output_label}")
-        elif exits[scene_index - 1] == "to_right":
-            filters.append(f"{video}{labels[scene_index]}xfade=transition=smoothright:duration={TRANSITION_SECONDS:.6f}:offset={offset:.6f}{output_label}")
-        else:
-            filters.append(f"{video}{labels[scene_index]}xfade=transition=fade:duration={TRANSITION_SECONDS:.6f}:offset={offset:.6f}{output_label}")
-        video = output_label
-    end_frame = segment.trim_start_frames + segment.output_frames
-    filters.append(
-        f"{video}trim=start_frame={segment.trim_start_frames}:end_frame={end_frame},"
-        "setpts=PTS-STARTPTS,format=yuv420p[out]"
+    # Cada fronteira vira um arquivo finito. Cartões usam sua coreografia
+    # própria; fullscreen continua usando xfade curto. O grafo principal nunca
+    # recebe fundo, sombra, loops ou cadeia cumulativa de framesync.
+    component_paths = _native_render_segment_components(
+        segment, number, segment_dir, scene_paths, base_paths, background, card_background_blur, card_shadow, card_mask,
+        scene_starts, scene_durations, modes, card_focuses, exits, animation,
     )
-    _run_compositor([
-        str(FFMPEG), "-y", *inputs,
-        "-filter_complex_threads", str(VIDEO_FILTER_THREADS), "-filter_threads", str(VIDEO_FILTER_THREADS),
-        "-filter_buffered_frames", str(MAX_FILTER_BUFFERED_FRAMES),
-        "-filter_complex", ";".join(filters), "-map", "[out]", "-an",
-        *VIDEO_ENCODER_ARGS,
-        "-r", str(FPS), "-movflags", "+faststart", str(output),
-    ])
-    return output
+    # Sem CTA nem vinheta, o primeiro concat já é o arquivo definitivo. Isso
+    # evita uma passagem AMF extra nos muitos segmentos puramente visuais.
+    base = (
+        output
+        if not annotations and opening_fade <= 0 and closing_fade <= 0
+        else segment_dir / f"segmento_{number:03d}_base.mp4"
+    )
+    current = _native_concat_video_parts(component_paths, base)
+    total_frames = segment.output_frames
+    if annotations:
+        if not ANNOTATION_FONT.is_file():
+            raise FileNotFoundError("A fonte Impact para as anotações não está disponível.")
+        annotation_dir = segment_dir / f"anotacoes_{number:03d}"
+        for annotation_index, (lines, start, end, emoji) in enumerate(sorted(annotations, key=lambda item: item[1])):
+            local_start = start - first_start
+            local_end = end - first_start
+            current = _native_apply_segment_annotation(
+                current, total_frames, annotation_index, lines, local_start, local_end, emoji, annotation_dir,
+            )
+
+    # As vinhetas pertencem aos fragmentos de borda. Assim a montagem final
+    # pode copiar o vídeo e dedicar seu único filtro à mixagem de áudio.
+    if opening_fade > 0 or closing_fade > 0:
+        return _native_render_segment_fades(
+            current, total_frames / FPS, opening_fade, closing_fade, output,
+        )
+    if current != output:
+        # A linha do tempo já foi normalizada pelo concat de estágio. Copiar
+        # aqui não altera PTS e evita recodificar o segmento inteiro de novo.
+        shutil.copy2(current, output)
+        return output
+    return current
 
 
 def _native_segment_manifest(paths: list[Path], job_dir: Path) -> Path:
@@ -1198,7 +1983,7 @@ def _native_annotation_text_end(
 
 
 def _native_blur_mix_expression(annotation_start: float, text_end: float, blur_end: float) -> str:
-    """Mistura quadro nítido e borrado com rampas temporais sem cortes secos."""
+    """Mistura nitidez e blur com entrada/saída graduais, sem corte seco."""
     blur_in_end = min(annotation_start + ANNOTATION_BLUR_RAMP_SECONDS, text_end)
     blur_in_seconds = max(0.001, blur_in_end - annotation_start)
     blur_out_seconds = max(0.001, blur_end - text_end)
@@ -1228,7 +2013,12 @@ def _native_typing_annotation_filters(
     emoji: str | None,
     emoji_input_index: int | None,
 ) -> str:
-    """Restaura o layout aprovado: blur do quadro e digitação amarela Impact."""
+    """Desenha a CTA aprovada, revelando cada letra no seu quadro editorial.
+
+    Esta função recebe apenas a janela curta da anotação; assim cada
+    ``drawtext`` por caractere trabalha por poucos segundos, e não por todo o
+    segmento de até 45 segundos.
+    """
     current = source
     cursor = annotation_start + ANNOTATION_TYPING_DELAY
     typing_step, _ = _native_annotation_timing(emoji)
@@ -1283,6 +2073,68 @@ def _native_typing_annotation_filters(
         )
         current = output
     return current
+
+
+def _native_windowed_annotation_filters(
+    graph: list[str],
+    video: str,
+    annotation_index: int,
+    lines: list[str],
+    start: float,
+    end: float,
+    emoji: str | None,
+    emoji_input_index: int | None,
+    *,
+    label_prefix: str,
+) -> str:
+    """Aplica a anotação em uma janela finita e recompõe a linha do tempo.
+
+    O antigo retorno da janela por ``overlay`` deslocava seu PTS e fazia o
+    framesync acumular todos os quadros anteriores à CTA. A solução temporária
+    eliminou o efeito de digitação e as rampas de blur. Aqui preparamos
+    prefixo, efeito e sufixo como ramos finitos e os concatenamos: a cadeia de
+    letras e o ``blend`` só recebem os quadros da própria anotação, sem uma
+    entrada atrasada aguardando no ``overlay``.
+    """
+    duration = end - start
+    if duration <= 1 / FPS:
+        return video
+
+    window_duration = end - start
+    local_text_end = _native_annotation_text_end(0.0, window_duration, lines, emoji)
+    source_prefix = f"[{label_prefix}_annotation_{annotation_index}_prefix_source]"
+    source_window = f"[{label_prefix}_annotation_{annotation_index}_window_source]"
+    source_suffix = f"[{label_prefix}_annotation_{annotation_index}_suffix_source]"
+    graph.append(f"{video}split=3{source_prefix}{source_window}{source_suffix}")
+
+    parts: list[str] = []
+    if start > 1 / FPS:
+        prefix = f"[{label_prefix}_annotation_{annotation_index}_prefix]"
+        graph.append(f"{source_prefix}trim=end={start:.6f},setpts=PTS-STARTPTS{prefix}")
+        parts.append(prefix)
+
+    sharp = f"[{label_prefix}_annotation_{annotation_index}_sharp]"
+    blur_source = f"[{label_prefix}_annotation_{annotation_index}_blur_source]"
+    blur = f"[{label_prefix}_annotation_{annotation_index}_blur]"
+    blended = f"[{label_prefix}_annotation_{annotation_index}_blended]"
+    graph.append(
+        f"{source_window}trim=start={start:.6f}:end={end:.6f},setpts=PTS-STARTPTS,"
+        f"split=2{sharp}{blur_source}"
+    )
+    graph.append(f"{blur_source}boxblur=10:2{blur}")
+    blur_mix = _native_blur_mix_expression(0.0, local_text_end, window_duration)
+    graph.append(f"{sharp}{blur}blend=all_expr='A*(1-({blur_mix}))+B*({blur_mix})'{blended}")
+    effect = _native_typing_annotation_filters(
+        graph, blended, annotation_index, lines, 0.0, local_text_end, emoji, emoji_input_index,
+    )
+    parts.append(effect)
+
+    suffix = f"[{label_prefix}_annotation_{annotation_index}_suffix]"
+    graph.append(f"{source_suffix}trim=start={end:.6f},setpts=PTS-STARTPTS{suffix}")
+    parts.append(suffix)
+    output = f"[{label_prefix}_annotation_{annotation_index}_timeline]"
+    graph.append("".join(parts) + f"concat=n={len(parts)}:v=1:a=0{output}")
+    return output
 
 
 def _native_required_stickers(annotations: list[tuple[list[str], float, float, str | None]]) -> dict[str, Path]:
@@ -1445,32 +2297,21 @@ def _native_finalize(
         if not ANNOTATION_FONT.is_file():
             raise FileNotFoundError("A fonte Impact para as anotações não está disponível.")
         for index, (lines, start, end, emoji) in enumerate(annotations):
-            base = f"[annotation_base_{index}]"
-            blur = f"[annotation_blur_{index}]"
-            blurred = f"[annotation_layer_{index}]"
-            text_end = _native_annotation_text_end(start, end, lines, emoji)
-            blur_mix = _native_blur_mix_expression(start, text_end, end)
-            graph.append(f"{video}split=2{base}[annotation_source_{index}]")
-            # Mantém o B-roll perceptível sob a anotação, mas a transição para
-            # o blur e sua saída acontecem por rampa, sem aparecer/desaparecer.
-            graph.append(f"[annotation_source_{index}]boxblur=10:2{blur}")
-            graph.append(
-                f"{base}{blur}blend=all_expr='A*(1-({blur_mix}))+B*({blur_mix})'{blurred}"
+            video = _native_windowed_annotation_filters(
+                graph, video, index, lines, start, end, emoji,
+                sticker_input_indices.get(emoji), label_prefix="final",
             )
-            video = _native_typing_annotation_filters(
-                graph, blurred, index, lines, start, text_end, emoji,
-                sticker_input_indices.get(emoji),
-            )
-    opening_fade = min(OPENING_FADE_SECONDS, visual_duration)
-    closing_fade = min(CLOSING_FADE_SECONDS, visual_duration)
-    closing_start = max(0.0, visual_duration - closing_fade)
-    # A vinheta é aplicada após texto, stickers e blur para que o quadro inteiro
-    # abra e feche de modo coeso, sem escurecer apenas a mídia de base.
-    graph.append(
-        f"{video}fade=t=in:st=0:d={opening_fade:.3f},"
-        f"fade=t=out:st={closing_start:.3f}:d={closing_fade:.3f},"
-        f"trim=duration={visual_duration:.6f},format=yuv420p[video]"
-    )
+    if annotations:
+        opening_fade = min(OPENING_FADE_SECONDS, visual_duration)
+        closing_fade = min(CLOSING_FADE_SECONDS, visual_duration)
+        closing_start = max(0.0, visual_duration - closing_fade)
+        # Só há vinheta aqui quando uma anotação cruzou a fronteira de dois
+        # segmentos. No caminho normal ela já foi incorporada nos extremos.
+        graph.append(
+            f"{video}fade=t=in:st=0:d={opening_fade:.3f},"
+            f"fade=t=out:st={closing_start:.3f}:d={closing_fade:.3f},"
+            f"trim=duration={visual_duration:.6f},format=yuv420p[video]"
+        )
 
     if sfx_tracks:
         labels: list[str] = []
@@ -1496,13 +2337,17 @@ def _native_finalize(
         inputs.extend(["-i", str(track)])
     for sticker in stickers.values():
         inputs.extend(["-loop", "1", "-framerate", str(FPS), "-i", str(sticker)])
+    video_args = (
+        ["-map", "[video]", *VIDEO_ENCODER_ARGS, "-r", str(FPS)]
+        if annotations
+        else ["-map", "0:v", "-c:v", "copy"]
+    )
     _run_compositor([
         str(FFMPEG), "-y", *inputs,
         "-filter_complex_threads", str(VIDEO_FILTER_THREADS), "-filter_threads", str(VIDEO_FILTER_THREADS),
         "-filter_buffered_frames", str(MAX_FILTER_BUFFERED_FRAMES),
-        "-filter_complex_script", str(filter_script), "-map", "[video]", "-map", "[audio]",
-        *VIDEO_ENCODER_ARGS,
-        "-r", str(FPS), "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest", str(output),
+        "-filter_complex_script", str(filter_script), *video_args, "-map", "[audio]",
+        "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest", str(output),
     ])
 
 
@@ -1513,7 +2358,8 @@ def _native_composite(
     scene_assets: Path,
     narration: Path,
     timing_payload: dict[str, object],
-    music_name: str | None,
+    music: Path,
+    progress_callback: ProgressCallback | None = None,
 ) -> Path:
     """Fluxo normal horizontal: compositor segmentado inteiramente no backend."""
     scenes = [scene for block in script.blocks for scene in block.scenes]
@@ -1555,10 +2401,13 @@ def _native_composite(
     if narration_frames <= visual_start_frames[-1]:
         raise ValueError("A última cena não cabe na grade visual da narração.")
     visual_tail_frames = visual_total_frames - narration_frames
+    modes = _layout_modes(scenes)
+    card_focuses = _card_focus_plan(scenes, modes, seed_context=script.title)
     clip_frames = [
         max(
-            _frames_for_duration(speech[index] + TRANSITION_SECONDS),
-            visual_start_frames[index + 1] - visual_start_frames[index] + TRANSITION_FRAMES,
+            _frames_for_duration(speech[index]) + _transition_frames(modes[index], modes[index + 1]),
+            visual_start_frames[index + 1] - visual_start_frames[index]
+            + _transition_frames(modes[index], modes[index + 1]),
         )
         if index < len(scenes) - 1
         else narration_frames - visual_start_frames[index]
@@ -1568,43 +2417,82 @@ def _native_composite(
         raise ValueError("Uma cena ficou curta demais para a composição horizontal.")
     clip_durations = [frames / FPS for frames in clip_frames]
     visual_starts = [frame / FPS for frame in visual_start_frames]
-    transition_starts = [
+    scene_durations = [
         (visual_start_frames[index + 1] - visual_start_frames[index]) / FPS
         if index < len(scenes) - 1
-        else 0.0
+        else (visual_total_frames - visual_start_frames[index]) / FPS
         for index in range(len(scenes))
     ]
+    card_focuses = _native_effective_card_focuses(card_focuses, modes, scene_durations)
     visual_tail_seconds = visual_tail_frames / FPS
     visual_duration = visual_total_frames / FPS
-    modes = _layout_modes(scenes)
-    exits = _transition_directions(scenes)
-    clips = _native_render_scene_clips(scenes, job_dir / "cenas_base", scene_assets, modes, clip_frames)
-    scene_paths = list(clips)
-    canvas_paths: dict[int, Path] = {}
-    segment_paths: list[Path] = []
-    for number, segment in enumerate(_build_render_segments(visual_start_frames, visual_total_frames), start=1):
-        render_end = segment.handoff_index if segment.handoff_index is not None else segment.end_index
-        for index in range(segment.start_index, render_end + 1):
-            canvas_paths[index] = _native_canvas_scene(
-                index, scenes, clips, job_dir / "cenas_prontas", background, modes, exits,
-                visual_starts, transition_starts, clip_durations, script.background_animation, visual_tail_seconds,
-            )
-            scene_paths[index] = canvas_paths[index]
-        segment_paths.append(_native_render_segment(segment, number, job_dir / "segmentos", scene_paths, visual_starts, modes, exits))
-        keep_from = segment.handoff_index if segment.handoff_index is not None else len(clips)
-        for index in range(keep_from):
-            for path in {clips[index], canvas_paths.get(index)}:
-                if path is not None and path.is_file():
-                    path.unlink()
+    exits = _transition_directions(scenes, seed_context=script.title)
+    # A normalização é deliberadamente sequencial. Cada pré-clipe tem duração
+    # finita e impede que ``-loop 1`` e ``-stream_loop -1`` alimentem a cadeia
+    # cumulativa de xfade. Somente cartões recebem um segundo passe curto com
+    # fundo e sombra PNG; fullscreen segue direto para os segmentos.
+    _report(progress_callback, 30, "Normalizando cenas visuais")
+    base_paths = _native_render_scene_clips(
+        scenes, job_dir / "cenas_base", scene_assets, modes, clip_frames,
+        progress_callback=progress_callback, progress_start=30, progress_end=42,
+    )
+    card_shadow = _native_card_shadow_asset(job_dir)
+    card_mask = _native_card_mask_asset(job_dir)
+    card_background_blur = _native_card_background_blur_asset(background, job_dir)
+    _report(progress_callback, 42, "Compondo cartões visuais")
+    scene_paths = _native_render_scene_canvases(
+        scenes, base_paths, job_dir / "cenas_prontas", background, card_background_blur, card_shadow, card_mask,
+        modes, card_focuses, exits, visual_starts, scene_durations, clip_durations,
+        script.background_animation, visual_tail_seconds,
+        progress_callback=progress_callback, progress_start=42, progress_end=54,
+    )
+    render_segments = _build_render_segments(visual_start_frames, visual_total_frames)
+    segment_annotations: dict[int, list[tuple[list[str], float, float, str | None]]] = {
+        index: [] for index in range(len(render_segments))
+    }
+    deferred_annotations: list[tuple[list[str], float, float, str | None]] = []
+    # Uma anotação tem poucos segundos. Quando ela cabe em um fragmento, seu
+    # blur é calculado somente naquela janela de até 90 s, não nos 10+ minutos
+    # completos. Casos raros que atravessam uma fronteira permanecem no passe
+    # final para não truncar letras nem stickers.
+    for annotation in annotations:
+        lines, annotation_start, annotation_end, emoji = annotation
+        assigned = False
+        for segment_index, segment in enumerate(render_segments):
+            segment_start = visual_starts[segment.start_index] + segment.trim_start
+            segment_end = segment_start + segment.output_duration
+            if annotation_start >= segment_start - 1 / FPS and annotation_end <= segment_end + 1 / FPS:
+                segment_annotations[segment_index].append((lines, annotation_start, annotation_end, emoji))
+                assigned = True
+                break
+        if not assigned:
+            deferred_annotations.append(annotation)
 
+    segment_paths: list[Path] = []
+    for number, segment in enumerate(render_segments, start=1):
+        _report(
+            progress_callback,
+            54 + round(26 * (number - 1) / max(1, len(render_segments))),
+            f"Compondo trecho visual {number}/{len(render_segments)}",
+        )
+        segment_paths.append(_native_render_segment(
+            segment, number, job_dir / "segmentos", scene_paths, base_paths, background, card_background_blur, card_shadow, card_mask,
+            visual_starts, scene_durations, modes, card_focuses, exits, script.background_animation,
+            segment_annotations[number - 1],
+            opening_fade=OPENING_FADE_SECONDS if number == 1 else 0.0,
+            closing_fade=CLOSING_FADE_SECONDS if number == len(render_segments) else 0.0,
+        ))
+
+    _report(progress_callback, 80, "Preparando trilha, efeitos e fechamento")
     visual_manifest = _native_segment_manifest(segment_paths, job_dir)
     final = job_dir / f"{_slug(script.title)}.mp4"
     sfx_directory = job_dir / "sfx"
     music_directory = job_dir / "trilha"
     sfx_tracks = _native_render_sfx_tracks(events, visual_duration, sfx_directory)
-    music_bed = _native_looped_music_bed(_native_music_path(music_name), visual_duration, music_directory)
+    music_bed = _native_looped_music_bed(music, visual_duration, music_directory)
+    _report(progress_callback, 88, "Misturando áudio e finalizando o vídeo")
     _native_finalize(
-        visual_manifest, narration, music_bed, annotations, sfx_tracks,
+        visual_manifest, narration, music_bed, deferred_annotations, sfx_tracks,
         narration_seconds, visual_duration, final, job_dir / "filtros_renderizacao.ffscript",
     )
     if abs(_duration(final) - visual_duration) > 2 / FPS:
@@ -1614,7 +2502,7 @@ def _native_composite(
             continue
         if path.is_file():
             path.unlink()
-    for directory in (job_dir / "segmentos", job_dir / "cenas_base", job_dir / "cenas_prontas", sfx_directory, music_directory):
+    for directory in (job_dir / "cenas_base", job_dir / "cenas_prontas", job_dir / "segmentos", sfx_directory, music_directory):
         if directory.is_dir():
             shutil.rmtree(directory)
     return final
@@ -1651,6 +2539,12 @@ def _scene_x(index: int, scene: object, modes: list[str], directions: list[str],
 def _fullscreen_filter(index: int, seconds: float) -> str:
     focus_x, focus_y, zoom = FOCUS_POINTS[index % len(FOCUS_POINTS)]
     progress = f"(on/{max(1, _frames_for_duration(seconds) - 1)})"
+    # A troca por zoompan reduziu CPU, mas alterou a cadência: com d=1 o
+    # estado do zoom depende do comportamento do input em loop e, na prática,
+    # várias fotos quase não se aproximavam. Este filtro restaura o Ken Burns
+    # editorial original (aproximação e foco progressivos). Ele roda somente
+    # no pré-clipe individual da cena, nunca no grafo acumulativo do segmento,
+    # portanto não volta a reter centenas de frames em memória.
     viewport_w = f"(2000*2304/(2304+{zoom}*{progress}))"
     viewport_h = f"(({viewport_w})*0.5625)"
     viewport_x = f"(2400-({viewport_w}))*(0.50+({focus_x:.2f}-0.50)*{progress})"
@@ -1886,11 +2780,28 @@ def render(
 
     scenes = [scene for block in script.blocks for scene in block.scenes]
     job_dir.mkdir(parents=True, exist_ok=True)
+    render_dir = RENDER_CACHE_DIR / job_dir.name
+    # O UUID do job torna esse alvo exclusivo; nunca removemos uma pasta ampla
+    # nem qualquer arquivo do workspace que o operador consulta no painel.
+    render_dir.mkdir(parents=True, exist_ok=False)
     log.info("Iniciando renderização horizontal: %s cenas, voz %s.", len(scenes), script.voice)
-    scene_asset_dir, resolved_sources = _materialize_scene_assets(script, image_bindings, job_dir)
+    log.info("Temporários pesados em cache local: %s", render_dir)
+    scene_asset_dir = render_dir / "cenas"
+    resolved_sources: dict[str, str] = {}
+    logger_token = _COMPOSITOR_LOGGER.set(log)
     try:
-        log.info("Assets de cena materializados: %s arquivo(s).", len(resolved_sources))
-        narration = job_dir / "narracao.mp3"
+        # Fundo e trilha também entram no cache. Assim nenhum processo FFmpeg
+        # da composição consulta arquivos mutáveis do OneDrive durante o job.
+        persistent_assets = render_dir / "assets_persistentes"
+        persistent_assets.mkdir(parents=True, exist_ok=True)
+        cached_background = persistent_assets / background.name
+        shutil.copy2(background, cached_background)
+        source_music = _native_music_path(music_name)
+        cached_music = persistent_assets / source_music.name
+        shutil.copy2(source_music, cached_music)
+        scene_asset_dir, resolved_sources = _materialize_scene_assets(script, image_bindings, render_dir)
+        log.info("Assets locais materializados: %s cenas, fundo e trilha.", len(resolved_sources))
+        narration = render_dir / "narracao.mp3"
         narration_text = " ".join(block.text.strip() for block in script.blocks)
         _report(progress_callback, 12, "Sintetizando narração e time-codes acústicos")
         raw_boundaries = TTSNeuralEngine().synthesize_with_word_boundaries_sync(
@@ -1901,11 +2812,11 @@ def render(
         timeline_narration = narration
         boundaries = raw_boundaries
         if pauses:
-            timeline_narration = job_dir / "narracao_com_pausas.wav"
+            timeline_narration = render_dir / "narracao_com_pausas.wav"
             _insert_narration_pauses(narration, timeline_narration, pauses)
             boundaries = _shift_boundaries_for_pauses(raw_boundaries, pauses)
         narration_seconds = _duration(timeline_narration)
-        timing_file = job_dir / "timings_cenas.json"
+        timing_file = render_dir / "timings_cenas.json"
         timing_payload = _write_scene_timing(timing_file, script, boundaries, narration_seconds)
         log.info("Time-codes de %s cena(s) validados; narração: %.3fs.", timing_payload["scene_count"], narration_seconds)
         _report(progress_callback, 24, "Fala alinhada às cenas; preparando composição visual")
@@ -1913,12 +2824,13 @@ def render(
         _report(progress_callback, 30, "Renderizando cenas, trilha e transições em fragmentos")
         composed = _native_composite(
             script,
-            background,
-            job_dir,
+            cached_background,
+            render_dir,
             scene_asset_dir,
             timeline_narration,
             timing_payload,
-            music_name,
+            cached_music,
+            progress_callback,
         )
 
         if timing_file.is_file():
@@ -1951,3 +2863,5 @@ def render(
         # O vídeo final e o manifesto preservam a decisão de vínculo. As
         # cópias de trabalho não ficam misturadas aos assets nem ao resultado.
         shutil.rmtree(scene_asset_dir, ignore_errors=True)
+        shutil.rmtree(render_dir, ignore_errors=True)
+        _COMPOSITOR_LOGGER.reset(logger_token)

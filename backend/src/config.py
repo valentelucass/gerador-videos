@@ -28,6 +28,10 @@ DEFAULT_BACKGROUND_NAME = "Wireframe_grid_on_black_background_202607190011.jpeg"
 MUSIC_DIR = ROOT / "music"
 SOUND_DIR = ROOT / "sound"
 WORKSPACE = ROOT / "workspace" / "lotes_horizontais"
+# Os intermediários de FFmpeg são grandes e muito mutáveis. Mantê-los fora do
+# OneDrive evita sincronização/locks durante a renderização; só o resultado e
+# o manifesto final retornam ao workspace do projeto.
+RENDER_CACHE_DIR = Path(os.getenv("SYNTHREEL_RENDER_CACHE", Path(os.getenv("LOCALAPPDATA", str(ROOT))) / "SynthReel" / "render-cache"))
 # Entrega somente os MP4s prontos em uma pasta estável e legível. Os diretórios
 # UUID continuam sendo o registro técnico de cada trabalho, sem misturar os
 # artefatos do compositor com os vídeos publicados.
@@ -37,5 +41,5 @@ VOICE_PREVIEW_DIR = ROOT / "workspace" / "assets" / "horizontal" / "voice_previe
 FFMPEG = os.getenv("FFMPEG_BIN", "ffmpeg")
 FFPROBE = os.getenv("FFPROBE_BIN", "ffprobe")
 
-for directory in (IMAGE_DIR, VIDEO_DIR, BACKGROUND_DIR, WORKSPACE, FINAL_OUTPUT_DIR, VOICE_PREVIEW_DIR):
+for directory in (IMAGE_DIR, VIDEO_DIR, BACKGROUND_DIR, MUSIC_DIR, WORKSPACE, FINAL_OUTPUT_DIR, VOICE_PREVIEW_DIR, RENDER_CACHE_DIR):
     directory.mkdir(parents=True, exist_ok=True)
