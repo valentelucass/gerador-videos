@@ -1,38 +1,36 @@
 {
   "_instrucoes_flow": "Google Flow, leia apenas as cenas com tipo_midia: imagem. IGNORE COMPLETAMENTE as cenas com tipo_midia: video_generico, não gere imagens para elas.",
-  "title": "O Roubo de 81 Minutos Que Apagou 13 Obras-Primas",
-  "language": "pt-BR",
+  "title": "El algoritmo que convirtió apartamentos vacíos en alquileres más caros",
+  "language": "es-ES",
   "narrator_gender": "male",
-  "voice": "pt-BR-AntonioNeural",
+  "voice": "es-ES-AlvaroNeural",
   "background": "black",
   "background_animation": "movimento_sutil",
   "blocks": [
     {
       "id": "block_01",
-      "text": "Em 81 minutos, dois falsos policiais roubaram 13 obras — e uma falha abriu o museu inteiro.",
+      "text": "Tu alquiler sube mientras grandes corporaciones mantienen apartamentos vacíos.",
       "scenes": [
         {
           "id": "scene_01",
           "image_id": 1,
           "tipo_midia": "video_generico",
-          "asset_key": "museum-security-night",
+          "asset_key": "apartment-building-dark-windows",
           "image": "cena_01.mp4",
           "visual": {
-            "subject": "corredor escuro de um museu genérico",
-            "action": "sendo percorrido por duas silhuetas uniformizadas",
-            "setting": "museu fechado durante a madrugada",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "un edificio residencial moderno con decenas de ventanas",
+            "action": "mostrando varias unidades oscuras mientras otras permanecen habitadas",
+            "setting": "zona urbana estadounidense al anochecer",
+            "framing": "plano general horizontal 16:9 con contraste entre ventanas encendidas y apagadas",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
             "in": "zoom_in",
             "out": "to_right",
-            "speed": "normal"
+            "speed": "slow"
           },
           "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
+            "transition": [],
             "context": {
               "type": "click",
               "at": "start"
@@ -43,24 +41,24 @@
     },
     {
       "id": "block_02",
-      "text": "Se essa falha te intriga, curta e se inscreva, porque o primeiro erro abriu todo o museu.",
+      "text": "Si esto te indigna, dale me gusta y suscríbete: los documentos muestran cómo se sostienen esos precios.",
       "scenes": [
         {
           "id": "scene_02",
           "image_id": 2,
           "tipo_midia": "video_generico",
-          "asset_key": "museum-exterior-night-rain",
+          "asset_key": "city-apartments-night-traffic",
           "image": "cena_02.mp4",
           "visual": {
-            "subject": "fachada de museu genérico sob chuva leve",
-            "action": "permanecendo silenciosa enquanto luzes internas continuam acesas",
-            "setting": "rua urbana durante a madrugada",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "bloques de apartamentos vistos desde una avenida",
+            "action": "permaneciendo iluminados mientras el tráfico urbano avanza",
+            "setting": "gran ciudad norteamericana de noche",
+            "framing": "B-roll horizontal 16:9 de movimiento urbano y edificios residenciales",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_left",
+            "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
@@ -72,8 +70,8 @@
           },
           "annotation": {
             "lines": [
-              "DEIXE O LIKE",
-              "E SE INSCREVA"
+              "DALE ME GUSTA",
+              "Y SUSCRÍBETE"
             ],
             "at": "start",
             "emoji": "👍"
@@ -83,24 +81,24 @@
     },
     {
       "id": "block_03",
-      "text": "A resposta começa em Boston, na madrugada de 18 de março,",
+      "text": "En Miami se llama renta; en Madrid, alquiler.",
       "scenes": [
         {
           "id": "scene_03",
           "image_id": 3,
           "tipo_midia": "imagem",
-          "asset_key": "boston-st-patricks-night-1990",
+          "asset_key": "miami-madrid-rental-contrast",
           "image": "cena_03.png",
           "visual": {
-            "subject": "rua de Boston após celebrações de São Patrício",
-            "action": "esvaziando enquanto a madrugada avança",
-            "setting": "Boston em 18 de março de 1990",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "una composición dividida entre un edificio de Miami y otro de Madrid",
+            "action": "contrastando dos ciudades con residentes entrando a sus viviendas",
+            "setting": "entornos urbanos soleado y europeo contemporáneo",
+            "framing": "plano panorámico horizontal 16:9 con separación visual limpia",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "from_left",
-            "out": "none",
+            "in": "from_right",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
@@ -112,30 +110,28 @@
     },
     {
       "id": "block_04",
-      "text": "quando dois homens uniformizados tocaram o interfone do Museu Gardner",
+      "text": "Pero el golpe mensual se siente exactamente igual en ambos lugares.",
       "scenes": [
         {
           "id": "scene_04",
           "image_id": 4,
           "tipo_midia": "imagem",
-          "asset_key": "fake-police-museum-intercom",
+          "asset_key": "family-paying-rent-kitchen",
           "image": "cena_04.png",
           "visual": {
-            "subject": "dois homens usando uniformes policiais diante de um interfone",
-            "action": "tocando a campainha da entrada de funcionários",
-            "setting": "fachada do Museu Gardner durante a madrugada",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "una pareja latina revisando gastos domésticos",
+            "action": "comparando recibos y una transferencia de vivienda en una mesa",
+            "setting": "cocina modesta de un apartamento urbano",
+            "framing": "B-roll horizontal 16:9 con manos, documentos sin texto legible y gestos preocupados",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "none",
-            "out": "to_left",
+            "in": "from_left",
+            "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
+            "transition": [],
             "context": null
           }
         }
@@ -143,25 +139,25 @@
     },
     {
       "id": "block_05",
-      "text": "e afirmaram investigar uma perturbação ocorrida dentro do prédio.",
+      "text": "Durante años, la explicación habitual fue simple: faltan viviendas.",
       "scenes": [
         {
           "id": "scene_05",
           "image_id": 5,
           "tipo_midia": "imagem",
-          "asset_key": "museum-disturbance-claim-door",
+          "asset_key": "housing-shortage-construction-cranes",
           "image": "cena_05.png",
           "visual": {
-            "subject": "um guarda observando dois supostos policiais pela porta",
-            "action": "escutando a alegação de uma perturbação interna",
-            "setting": "entrada de funcionários do museu",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "grúas sobre edificios residenciales incompletos",
+            "action": "trabajando lentamente entre estructuras todavía vacías",
+            "setting": "periferia de una gran ciudad",
+            "framing": "plano general documental horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "zoom_in",
+            "in": "from_left",
             "out": "to_right",
-            "speed": "slow"
+            "speed": "normal"
           },
           "sounds": {
             "transition": [],
@@ -172,24 +168,24 @@
     },
     {
       "id": "block_06",
-      "text": "O guarda noturno contrariou o protocolo e abriu a entrada de funcionários,",
+      "text": "Y sí, construir poco puede empujar los precios hacia arriba.",
       "scenes": [
         {
           "id": "scene_06",
           "image_id": 6,
           "tipo_midia": "imagem",
-          "asset_key": "night-guard-opening-employee-door",
+          "asset_key": "new-apartments-rising-city",
           "image": "cena_06.png",
           "visual": {
-            "subject": "guarda noturno destrancando uma porta restrita",
-            "action": "permitindo a entrada dos dois homens uniformizados",
-            "setting": "corredor de serviço do Museu Gardner",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "varios edificios de vivienda en construcción",
+            "action": "creciendo entre andamios y trabajadores",
+            "setting": "distrito urbano en expansión",
+            "framing": "plano amplio cinematográfico horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "from_right",
-            "out": "to_right",
+            "in": "zoom_in",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
@@ -201,30 +197,28 @@
     },
     {
       "id": "block_07",
-      "text": "permitindo que os desconhecidos alcançassem diretamente o posto de segurança.",
+      "text": "Pero algunos propietarios descubrieron otra forma de fabricar escasez.",
       "scenes": [
         {
           "id": "scene_07",
           "image_id": 7,
           "tipo_midia": "imagem",
-          "asset_key": "security-desk-uniformed-intruders",
+          "asset_key": "empty-apartment-keys-counter",
           "image": "cena_07.png",
           "visual": {
-            "subject": "dois falsos policiais aproximando-se do posto de segurança",
-            "action": "ocupando rapidamente o espaço diante do guarda",
-            "setting": "saguão interno próximo à entrada de funcionários",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "llaves de un apartamento junto a una encimera vacía",
+            "action": "permaneciendo sin recoger mientras entra luz por la ventana",
+            "setting": "vivienda nueva desocupada",
+            "framing": "B-roll horizontal 16:9 con movimiento lento de cámara",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "from_left",
-            "out": "none",
-            "speed": "fast"
+            "in": "none",
+            "out": "to_right",
+            "speed": "normal"
           },
           "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
+            "transition": [],
             "context": null
           }
         }
@@ -232,58 +226,20 @@
     },
     {
       "id": "block_08",
-      "text": "Então exigiram o segundo guarda, sinal de que conheciam bem a rotina.",
+      "text": "No necesitaban cerrar edificios ni colocar cadenas en las puertas.",
       "scenes": [
         {
           "id": "scene_08",
           "image_id": 8,
-          "tipo_midia": "video_generico",
-          "asset_key": "security-control-room-guards",
-          "image": "cena_08.mp4",
-          "visual": {
-            "subject": "sala genérica de segurança com monitores e dois vigilantes",
-            "action": "mostrando uma rotina noturna interrompida por uma convocação",
-            "setting": "posto de vigilância sem referência a local específico",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          },
-          "annotation": {
-            "lines": [
-              "QUEM CONHECIA",
-              "A ROTINA?"
-            ],
-            "at": "middle"
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_09",
-      "text": "Menos de um minuto depois, anunciaram o roubo aos dois funcionários,",
-      "scenes": [
-        {
-          "id": "scene_09",
-          "image_id": 9,
           "tipo_midia": "imagem",
-          "asset_key": "second-guard-arrives-desk",
-          "image": "cena_09.png",
+          "asset_key": "locked-apartment-corridor",
+          "image": "cena_08.png",
           "visual": {
-            "subject": "segundo guarda chegando ao posto de segurança",
-            "action": "aproximando-se dos homens uniformizados e do colega",
-            "setting": "área de controle interno do museu",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "un pasillo residencial con múltiples puertas cerradas",
+            "action": "mostrando silencio y ausencia de residentes",
+            "setting": "edificio moderno casi vacío",
+            "framing": "plano en perspectiva horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
             "in": "from_left",
@@ -298,26 +254,64 @@
       ]
     },
     {
+      "id": "block_09",
+      "text": "Solo debían evitar competir cuando una vivienda quedaba disponible.",
+      "scenes": [
+        {
+          "id": "scene_09",
+          "image_id": 9,
+          "tipo_midia": "video_generico",
+          "asset_key": "apartment-buildings-availability-street",
+          "image": "cena_09.mp4",
+          "visual": {
+            "subject": "varios edificios residenciales con unidades disponibles",
+            "action": "permaneciendo abiertos mientras sus oficinas evitan competir con descuentos",
+            "setting": "avenida urbana residencial genérica",
+            "framing": "B-roll horizontal 16:9 de fachadas, entradas y movimiento peatonal",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "DEJAR DE COMPETIR",
+              "CAMBIA EL MERCADO"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
       "id": "block_10",
-      "text": "prenderam seus pulsos com algemas e cobriram seus rostos com fita.",
+      "text": "Ahí aparece YieldStar, el software de precios creado por RealPage.",
       "scenes": [
         {
           "id": "scene_10",
           "image_id": 10,
           "tipo_midia": "imagem",
-          "asset_key": "guards-handcuffed-duct-tape",
+          "asset_key": "yieldstar-software-data-room",
           "image": "cena_10.png",
           "visual": {
-            "subject": "dois guardas sendo imobilizados por invasores",
-            "action": "recebendo algemas e fita sobre os olhos",
-            "setting": "posto de segurança durante o início do roubo",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "servidores y pantallas abstractas de análisis inmobiliario",
+            "action": "procesando flujos de datos de edificios sin interfaces legibles",
+            "setting": "centro tecnológico corporativo genérico",
+            "framing": "B-roll horizontal 16:9 con movimiento digital sobrio",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "slow"
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
           },
           "sounds": {
             "transition": [],
@@ -328,25 +322,25 @@
     },
     {
       "id": "block_11",
-      "text": "Em seguida, separaram ambos em áreas remotas do porão,",
+      "text": "Su promesa comercial era ayudar a cada edificio a ganar más.",
       "scenes": [
         {
           "id": "scene_11",
           "image_id": 11,
           "tipo_midia": "imagem",
-          "asset_key": "guards-separated-basement",
+          "asset_key": "property-manager-profit-dashboard",
           "image": "cena_11.png",
           "visual": {
-            "subject": "dois guardas presos em áreas separadas",
-            "action": "permanecendo imobilizados no porão do edifício",
-            "setting": "porão remoto do Museu Gardner",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "un administrador observando gráficos abstractos de ingresos",
+            "action": "comparando varios edificios en una pantalla sin texto",
+            "setting": "oficina corporativa de gestión inmobiliaria",
+            "framing": "plano medio documental horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "none",
+            "in": "from_right",
             "out": "to_right",
-            "speed": "normal"
+            "speed": "fast"
           },
           "sounds": {
             "transition": [],
@@ -357,24 +351,92 @@
     },
     {
       "id": "block_12",
-      "text": "mesmo sem exibir armas durante toda a invasão conhecida.",
+      "text": "Para lograrlo, necesitaba datos, muchísimos datos de alquileres reales.",
       "scenes": [
         {
           "id": "scene_12",
           "image_id": 12,
           "tipo_midia": "imagem",
-          "asset_key": "unarmed-intruders-museum",
+          "asset_key": "rental-data-streams-servers",
           "image": "cena_12.png",
           "visual": {
-            "subject": "dois invasores uniformizados sem armas visíveis",
-            "action": "controlando os guardas apenas pela surpresa e autoridade aparente",
-            "setting": "interior escuro do museu",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "filas de servidores y luces de actividad",
+            "action": "recibiendo datos desde múltiples propiedades",
+            "setting": "centro de datos moderno",
+            "framing": "plano de seguimiento horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "from_right",
-            "out": "to_left",
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": {
+              "type": "writing",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_13",
+      "text": "Administradores rivales enviaban precios, ocupación, renovaciones y disponibilidad interna.",
+      "scenes": [
+        {
+          "id": "scene_13",
+          "image_id": 13,
+          "tipo_midia": "imagem",
+          "asset_key": "landlord-data-submission",
+          "image": "cena_13.png",
+          "visual": {
+            "subject": "varios administradores en oficinas separadas",
+            "action": "enviando registros de precios y ocupación desde ordenadores",
+            "setting": "composición documental de oficinas inmobiliarias",
+            "framing": "plano múltiple horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": {
+              "type": "writing",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_14",
+      "text": "RealPage combinaba esa información dentro de un enorme almacén digital.",
+      "scenes": [
+        {
+          "id": "scene_14",
+          "image_id": 14,
+          "tipo_midia": "imagem",
+          "asset_key": "central-property-data-warehouse",
+          "image": "cena_14.png",
+          "visual": {
+            "subject": "un gran núcleo digital conectado a edificios residenciales",
+            "action": "agrupando información procedente de diferentes propiedades",
+            "setting": "visualización documental sobria de red de datos",
+            "framing": "plano general horizontal 16:9 sin texto ni iconos de marca",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
@@ -385,94 +447,25 @@
       ]
     },
     {
-      "id": "block_13",
-      "text": "Nenhum botão de emergência foi acionado, e a polícia permaneceu distante.",
-      "scenes": [
-        {
-          "id": "scene_13",
-          "image_id": 13,
-          "tipo_midia": "imagem",
-          "asset_key": "silent-alarm-button-unused",
-          "image": "cena_13.png",
-          "visual": {
-            "subject": "botão de emergência intacto sob o balcão",
-            "action": "permanecendo sem uso durante a invasão",
-            "setting": "posto de segurança abandonado",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_14",
-      "text": "Assim, os ladrões ganharam 81 minutos livres. Tempo demais para improvisação.",
-      "scenes": [
-        {
-          "id": "scene_14",
-          "image_id": 14,
-          "tipo_midia": "video_generico",
-          "asset_key": "security-camera-clock-timelapse",
-          "image": "cena_14.mp4",
-          "visual": {
-            "subject": "relógio e monitores de vigilância genéricos",
-            "action": "marcando a passagem prolongada do tempo sem interrupção",
-            "setting": "sala de segurança vazia durante a madrugada",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          },
-          "annotation": {
-            "lines": [
-              "81 MINUTOS",
-              "SEM INTERRUPÇÃO"
-            ],
-            "at": "middle"
-          }
-        }
-      ]
-    },
-    {
       "id": "block_15",
-      "text": "Os sensores de movimento registraram uma rota concentrada pelo segundo andar,",
+      "text": "Después, el sistema recomendaba diariamente cuánto cobrar por cada apartamento.",
       "scenes": [
         {
           "id": "scene_15",
           "image_id": 15,
           "tipo_midia": "imagem",
-          "asset_key": "motion-detector-museum-route",
+          "asset_key": "daily-rent-recommendation-screen",
           "image": "cena_15.png",
           "visual": {
-            "subject": "planta visual do museu sugerida por corredores iluminados",
-            "action": "indicando uma sequência de movimentos pelo segundo andar",
-            "setting": "interior do Museu Gardner visto de forma documental",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "una pantalla abstracta junto a la imagen de un apartamento",
+            "action": "mostrando una cifra ascendente sin texto legible",
+            "setting": "oficina de administración residencial",
+            "framing": "primer plano horizontal 16:9 sobre monitor y llaves",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "none",
-            "out": "to_right",
+            "in": "from_right",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
@@ -484,28 +477,30 @@
     },
     {
       "id": "block_16",
-      "text": "começando na Sala Holandesa, onde estavam os alvos mais famosos.",
+      "text": "El detalle decisivo estaba oculto dentro de esa aparente eficiencia.",
       "scenes": [
         {
           "id": "scene_16",
           "image_id": 16,
           "tipo_midia": "imagem",
-          "asset_key": "dutch-room-before-theft",
+          "asset_key": "hidden-efficiency-mechanism",
           "image": "cena_16.png",
           "visual": {
-            "subject": "Sala Holandesa repleta de pinturas e molduras douradas",
-            "action": "permanecendo intacta pouco antes do roubo",
-            "setting": "segundo andar do Museu Gardner",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "engranajes digitales detrás de una calculadora de precios",
+            "action": "revelando conexiones ocultas entre múltiples edificios",
+            "setting": "espacio conceptual documental oscuro",
+            "framing": "B-roll horizontal 16:9 con movimiento mecánico sutil",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "zoom_in",
+            "in": "from_left",
             "out": "to_right",
             "speed": "slow"
           },
           "sounds": {
-            "transition": [],
+            "transition": [
+              "whoosh_cinematic"
+            ],
             "context": null
           }
         }
@@ -513,24 +508,24 @@
     },
     {
       "id": "block_17",
-      "text": "Ali, cortaram da moldura A Tempestade no Mar da Galileia,",
+      "text": "La recomendación no usaba solamente la situación del propio edificio.",
       "scenes": [
         {
           "id": "scene_17",
           "image_id": 17,
           "tipo_midia": "imagem",
-          "asset_key": "rembrandt-storm-frame-cut",
+          "asset_key": "single-building-data-analysis",
           "image": "cena_17.png",
           "visual": {
-            "subject": "pintura A Tempestade no Mar da Galileia em sua moldura",
-            "action": "sendo cortada cuidadosamente pelas bordas da tela",
-            "setting": "Sala Holandesa durante o roubo",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "un edificio residencial aislado rodeado de indicadores abstractos",
+            "action": "siendo analizado por un sistema de precios",
+            "setting": "paisaje urbano neutro",
+            "framing": "plano general cinematográfico horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "from_left",
-            "out": "none",
+            "in": "zoom_in",
+            "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
@@ -542,24 +537,24 @@
     },
     {
       "id": "block_18",
-      "text": "o único cenário marítimo conhecido pintado por Rembrandt,",
+      "text": "También incorporaba información sensible aportada por competidores cercanos.",
       "scenes": [
         {
           "id": "scene_18",
           "image_id": 18,
           "tipo_midia": "imagem",
-          "asset_key": "rembrandt-storm-seascape-detail",
+          "asset_key": "competitor-sensitive-data-network",
           "image": "cena_18.png",
           "visual": {
-            "subject": "navio enfrentando ondas violentas na pintura de Rembrandt",
-            "action": "destacando a composição marítima única do artista",
-            "setting": "close documental da obra antes do desaparecimento",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "varias torres conectadas por líneas luminosas discretas",
+            "action": "compartiendo datos hacia un mismo centro digital",
+            "setting": "mapa urbano nocturno conceptual",
+            "framing": "plano aéreo horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "from_left",
-            "out": "to_left",
+            "in": "from_right",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
@@ -571,30 +566,28 @@
     },
     {
       "id": "block_19",
-      "text": "e também arrancaram A Lady and Gentleman in Black.",
+      "text": "Es como entregar las listas privadas de precios al mismo asesor.",
       "scenes": [
         {
           "id": "scene_19",
           "image_id": 19,
-          "tipo_midia": "imagem",
-          "asset_key": "lady-gentleman-black-cut-frame",
-          "image": "cena_19.png",
+          "tipo_midia": "video_generico",
+          "asset_key": "shared-consultant-price-books",
+          "image": "cena_19.mp4",
           "visual": {
-            "subject": "pintura A Lady and Gentleman in Black",
-            "action": "sendo retirada da moldura por mãos enluvadas",
-            "setting": "Sala Holandesa sob iluminação baixa",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "carpetas de precios de varias empresas sobre una mesa",
+            "action": "siendo entregadas a una sola persona con traje",
+            "setting": "sala de reuniones corporativa sin marcas",
+            "framing": "B-roll horizontal 16:9 centrado en manos y documentos",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "none",
+            "in": "zoom_in",
             "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
+            "transition": [],
             "context": null
           }
         }
@@ -602,62 +595,53 @@
     },
     {
       "id": "block_20",
-      "text": "Depois removeram O Concerto, uma das aproximadamente 36 pinturas conhecidas de Vermeer.",
+      "text": "Y permitir que ese asesor marque la estrategia de todos.",
       "scenes": [
         {
           "id": "scene_20",
           "image_id": 20,
-          "tipo_midia": "video_generico",
-          "asset_key": "museum-masterpiece-gallery-visitors",
-          "image": "cena_20.mp4",
+          "tipo_midia": "imagem",
+          "asset_key": "consultant-directing-landlords",
+          "image": "cena_20.png",
           "visual": {
-            "subject": "visitantes genéricos observando uma pintura antiga em museu",
-            "action": "demonstrando a raridade e atenção dedicada a grandes mestres",
-            "setting": "galeria de arte clássica sem obra específica",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "un asesor frente a representantes de distintos edificios",
+            "action": "señalando una única curva ascendente para todos",
+            "setting": "sala de juntas moderna",
+            "framing": "plano medio horizontal 16:9 sin texto visible",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "slow"
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
           },
           "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
+            "transition": [],
             "context": null
-          },
-          "annotation": {
-            "lines": [
-              "APENAS 36",
-              "PINTURAS DE VERMEER"
-            ],
-            "at": "middle"
           }
         }
       ]
     },
     {
       "id": "block_21",
-      "text": "A sequência continuou com paisagem de Flinck e gravura de Rembrandt,",
+      "text": "Los propietarios podían rechazar la cifra sugerida por el sistema.",
       "scenes": [
         {
           "id": "scene_21",
           "image_id": 21,
           "tipo_midia": "imagem",
-          "asset_key": "flinck-landscape-rembrandt-etching",
+          "asset_key": "manager-reject-button-choice",
           "image": "cena_21.png",
           "visual": {
-            "subject": "paisagem de Flinck ao lado de pequena gravura de Rembrandt",
-            "action": "sendo selecionadas entre objetos maiores da sala",
-            "setting": "Sala Holandesa durante a invasão",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "un administrador con dos opciones abstractas en pantalla",
+            "action": "dudando antes de confirmar una recomendación",
+            "setting": "oficina residencial contemporánea",
+            "framing": "primer plano horizontal 16:9 de mano y monitor",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "from_right",
-            "out": "to_right",
+            "in": "none",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
@@ -669,82 +653,94 @@
     },
     {
       "id": "block_22",
-      "text": "antes de incluírem um antigo vaso ritual chinês de bronze.",
+      "text": "Sin embargo, antiguos empleados dijeron que aceptaban cerca del noventa por ciento.",
       "scenes": [
         {
           "id": "scene_22",
           "image_id": 22,
           "tipo_midia": "imagem",
-          "asset_key": "ancient-chinese-bronze-gu",
+          "asset_key": "high-acceptance-rate-files",
           "image": "cena_22.png",
           "visual": {
-            "subject": "vaso ritual chinês de bronze em formato alongado",
-            "action": "sendo retirado de uma mesa expositiva",
-            "setting": "Sala Holandesa do Museu Gardner",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "una pila de formularios aprobados y pocos rechazados",
+            "action": "mostrando una proporción abrumadora de aceptaciones",
+            "setting": "mesa de control administrativo",
+            "framing": "plano cenital horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_left",
-            "speed": "slow"
+            "out": "to_right",
+            "speed": "fast"
           },
           "sounds": {
             "transition": [],
-            "context": null
+            "context": {
+              "type": "click",
+              "at": "middle"
+            }
           }
         }
       ]
     },
     {
       "id": "block_23",
-      "text": "Da Sala Holandesa, avançaram até a Galeria Curta,",
+      "text": "Cuando casi todos obedecen, la recomendación empieza a parecer coordinación.",
       "scenes": [
         {
           "id": "scene_23",
           "image_id": 23,
-          "tipo_midia": "imagem",
-          "asset_key": "thieves-enter-short-gallery",
-          "image": "cena_23.png",
+          "tipo_midia": "video_generico",
+          "asset_key": "algorithm-acceptance-pressure",
+          "image": "cena_23.mp4",
           "visual": {
-            "subject": "dois invasores entrando na Galeria Curta",
-            "action": "mudando a busca das pinturas para objetos menores",
-            "setting": "segundo andar do museu",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "filas de decisiones digitales marcadas como aprobadas",
+            "action": "avanzando casi automáticamente en una interfaz abstracta",
+            "setting": "centro de operaciones corporativo genérico",
+            "framing": "B-roll horizontal 16:9 con ritmo mecánico",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "from_left",
-            "out": "none",
+            "in": "zoom_in",
+            "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
-            "transition": [],
+            "transition": [
+              "whoosh_cinematic"
+            ],
             "context": null
+          },
+          "annotation": {
+            "lines": [
+              "CASI 90%",
+              "ACEPTADO"
+            ],
+            "at": "middle"
           }
         }
       ]
     },
     {
       "id": "block_24",
-      "text": "onde recolheram cinco pequenos trabalhos em papel de Edgar Degas.",
+      "text": "Y la competencia deja de funcionar como imaginamos desde fuera.",
       "scenes": [
         {
           "id": "scene_24",
           "image_id": 24,
           "tipo_midia": "imagem",
-          "asset_key": "five-degas-works-paper",
+          "asset_key": "competition-fading-apartments",
           "image": "cena_24.png",
           "visual": {
-            "subject": "cinco pequenos trabalhos de Edgar Degas sobre papel",
-            "action": "sendo reunidos e retirados de suas posições",
-            "setting": "Galeria Curta durante o roubo",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "varios edificios inicialmente separados",
+            "action": "alineando gradualmente sus luces y señales de precio",
+            "setting": "horizonte urbano al anochecer",
+            "framing": "plano general horizontal 16:9 con composición sincronizada",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "none",
-            "out": "to_left",
+            "in": "from_left",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
@@ -756,25 +752,54 @@
     },
     {
       "id": "block_25",
-      "text": "Tentaram remover uma bandeira napoleônica, mas levaram seu remate de águia.",
+      "text": "Normalmente, un apartamento vacío obliga al propietario a bajar precios.",
       "scenes": [
         {
           "id": "scene_25",
           "image_id": 25,
           "tipo_midia": "imagem",
-          "asset_key": "napoleonic-eagle-finial-removal",
+          "asset_key": "vacant-unit-price-drop",
           "image": "cena_25.png",
           "visual": {
-            "subject": "remate metálico de águia preso a uma haste napoleônica",
-            "action": "sendo forçado até se separar da estrutura",
-            "setting": "Galeria Curta do Museu Gardner",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "un apartamento vacío con cartel discreto de disponibilidad",
+            "action": "esperando visitantes mientras el precio visual desciende simbólicamente",
+            "setting": "interior residencial luminoso",
+            "framing": "plano amplio horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "zoom_in",
+            "in": "from_left",
             "out": "to_right",
-            "speed": "fast"
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_26",
+      "text": "Pero YieldStar podía recomendar exactamente la decisión contraria.",
+      "scenes": [
+        {
+          "id": "scene_26",
+          "image_id": 26,
+          "tipo_midia": "imagem",
+          "asset_key": "algorithm-reverses-price-logic",
+          "image": "cena_26.png",
+          "visual": {
+            "subject": "una flecha de precio subiendo frente a una vivienda vacía",
+            "action": "contradiciendo la lógica habitual de descuento",
+            "setting": "composición documental minimalista",
+            "framing": "plano horizontal 16:9 centrado en apartamento y gráfico sin texto",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
           },
           "sounds": {
             "transition": [
@@ -786,92 +811,57 @@
       ]
     },
     {
-      "id": "block_26",
-      "text": "Aqui surge a primeira grande contradição: obras-primas famosas dividiam espaço com objetos pequenos e incomuns.",
-      "scenes": [
-        {
-          "id": "scene_26",
-          "image_id": 26,
-          "tipo_midia": "video_generico",
-          "asset_key": "museum-artifacts-display-case",
-          "image": "cena_26.mp4",
-          "visual": {
-            "subject": "pinturas, papéis e pequenos bronzes em exposição genérica",
-            "action": "aparecendo juntos como escolhas de valores e tamanhos contraditórios",
-            "setting": "galeria de museu sem peças específicas",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          },
-          "annotation": {
-            "lines": [
-              "ESCOLHAS",
-              "INCOERENTES"
-            ],
-            "at": "middle"
-          }
-        }
-      ]
-    },
-    {
       "id": "block_27",
-      "text": "A seleção não parece encomenda simples, mas a rota tampouco parece aleatória.",
+      "text": "Subir la renta y aceptar que algunas unidades siguieran desocupadas.",
       "scenes": [
         {
           "id": "scene_27",
           "image_id": 27,
           "tipo_midia": "imagem",
-          "asset_key": "stolen-art-mixed-selection",
+          "asset_key": "vacant-units-higher-rent",
           "image": "cena_27.png",
           "visual": {
-            "subject": "conjunto visual de pintura, gravura, bronze e objeto decorativo",
-            "action": "reunido como uma seleção aparentemente incoerente",
-            "setting": "sala escura usada para análise investigativa",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "varias puertas cerradas en un edificio moderno",
+            "action": "permaneciendo vacías mientras un indicador de precio sube",
+            "setting": "corredor residencial premium",
+            "framing": "plano en profundidad horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "from_right",
-            "out": "none",
+            "in": "zoom_in",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
             "transition": [],
-            "context": null
+            "context": {
+              "type": "cash_register",
+              "at": "middle"
+            }
           }
         }
       ]
     },
     {
       "id": "block_28",
-      "text": "E essa rota ainda desceu ao primeiro andar para buscar Manet,",
+      "text": "Menos ocupación podía producir más ingresos para toda la cartera inmobiliaria.",
       "scenes": [
         {
           "id": "scene_28",
           "image_id": 28,
           "tipo_midia": "imagem",
-          "asset_key": "thieves-descending-museum-stairs",
+          "asset_key": "portfolio-revenue-map",
           "image": "cena_28.png",
           "visual": {
-            "subject": "duas figuras carregando obras descendo uma escadaria",
-            "action": "mudando do segundo para o primeiro andar",
-            "setting": "escadaria interna do Museu Gardner",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "un mapa de múltiples edificios dentro de un portafolio",
+            "action": "redistribuyendo ingresos aunque algunas unidades sigan vacías",
+            "setting": "mesa de estrategia inmobiliaria",
+            "framing": "plano cenital horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "from_right",
-            "out": "to_left",
+            "in": "none",
+            "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
@@ -883,25 +873,25 @@
     },
     {
       "id": "block_29",
-      "text": "porque Chez Tortoni foi a única obra roubada naquele piso.",
+      "text": "Una llamada financiera resumió la lógica con una frialdad sorprendente.",
       "scenes": [
         {
           "id": "scene_29",
           "image_id": 29,
           "tipo_midia": "imagem",
-          "asset_key": "manet-chez-tortoni-blue-room",
+          "asset_key": "cold-financial-conference-call",
           "image": "cena_29.png",
           "visual": {
-            "subject": "Chez Tortoni de Manet em uma parede da Sala Azul",
-            "action": "sendo retirado como único alvo daquele piso",
-            "setting": "primeiro andar do Museu Gardner",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "ejecutivos escuchando una llamada de resultados",
+            "action": "observando gráficos mientras una torre aparece semivacía",
+            "setting": "sala corporativa sobria",
+            "framing": "plano medio horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
             "in": "zoom_in",
             "out": "to_right",
-            "speed": "slow"
+            "speed": "normal"
           },
           "sounds": {
             "transition": [],
@@ -912,430 +902,23 @@
     },
     {
       "id": "block_30",
-      "text": "Apesar do tamanho pequeno, sua moldura apareceu longe da galeria,",
+      "text": "Operar al noventa y cinco por ciento podía superar ocuparlo todo.",
       "scenes": [
         {
           "id": "scene_30",
           "image_id": 30,
           "tipo_midia": "imagem",
-          "asset_key": "small-manet-empty-frame",
+          "asset_key": "ninety-five-percent-occupancy",
           "image": "cena_30.png",
           "visual": {
-            "subject": "pequena moldura dourada vazia",
-            "action": "permanecendo distante da pintura removida",
-            "setting": "corredor interno após o roubo",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_31",
-      "text": "dentro do escritório ocupado pelo diretor de segurança daquela época.",
-      "scenes": [
-        {
-          "id": "scene_31",
-          "image_id": 31,
-          "tipo_midia": "imagem",
-          "asset_key": "manet-frame-security-office",
-          "image": "cena_31.png",
-          "visual": {
-            "subject": "moldura de Chez Tortoni abandonada sobre uma mesa",
-            "action": "aparecendo dentro do escritório do diretor de segurança",
-            "setting": "escritório interno do Museu Gardner",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_32",
-      "text": "Enquanto isso, os invasores também retiraram a fita de vigilância daquela madrugada,",
-      "scenes": [
-        {
-          "id": "scene_32",
-          "image_id": 32,
-          "tipo_midia": "video_generico",
-          "asset_key": "security-tape-removal-night",
-          "image": "cena_32.mp4",
-          "visual": {
-            "subject": "mãos enluvadas retirando uma fita de vigilância genérica",
-            "action": "removendo o registro produzido durante uma madrugada",
-            "setting": "sala de monitoramento sem referência a caso específico",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_33",
-      "text": "mas deixaram intacta a gravação produzida na noite anterior.",
-      "scenes": [
-        {
-          "id": "scene_33",
-          "image_id": 33,
-          "tipo_midia": "imagem",
-          "asset_key": "previous-night-surveillance-tape",
-          "image": "cena_33.png",
-          "visual": {
-            "subject": "segunda fita de vigilância permanecendo arquivada",
-            "action": "conservando imagens registradas na noite anterior",
-            "setting": "armário técnico do sistema de segurança",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "un edificio con pocas ventanas oscuras entre muchas iluminadas",
+            "action": "manteniendo deliberadamente algunas unidades sin ocupar",
+            "setting": "zona residencial nocturna",
+            "framing": "plano frontal horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
             "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": {
-              "type": "paper_flip",
-              "at": "middle"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_34",
-      "text": "Depois, imagens revelaram um visitante não autorizado usando a mesma entrada.",
-      "scenes": [
-        {
-          "id": "scene_34",
-          "image_id": 34,
-          "tipo_midia": "video_generico",
-          "asset_key": "visitor-rear-entrance-surveillance",
-          "image": "cena_34.mp4",
-          "visual": {
-            "subject": "câmera de segurança genérica mostrando visitante numa entrada traseira",
-            "action": "registrando uma entrada não autorizada antes de um incidente",
-            "setting": "acesso de serviço de edifício cultural",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          },
-          "annotation": {
-            "lines": [
-              "VISITANTE",
-              "NA VÉSPERA"
-            ],
-            "at": "middle"
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_35",
-      "text": "Isso sugere preparação anterior, mas não prova participação de qualquer funcionário.",
-      "scenes": [
-        {
-          "id": "scene_35",
-          "image_id": 35,
-          "tipo_midia": "imagem",
-          "asset_key": "investigator-reviewing-visitor-footage",
-          "image": "cena_35.png",
-          "visual": {
-            "subject": "investigadores analisando imagens granuladas de vigilância",
-            "action": "comparando a entrada anterior com a rota do roubo",
-            "setting": "sala de investigação anos depois",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_36",
-      "text": "Já perto da fuga, os ladrões fizeram duas viagens até o carro,",
-      "scenes": [
-        {
-          "id": "scene_36",
-          "image_id": 36,
-          "tipo_midia": "imagem",
-          "asset_key": "thieves-carry-art-to-car",
-          "image": "cena_36.png",
-          "visual": {
-            "subject": "dois homens transportando volumes até um carro",
-            "action": "realizando a primeira de duas viagens para retirar as obras",
-            "setting": "rua lateral próxima ao museu",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_37",
-      "text": "carregando telas cortadas, papéis, bronzes e molduras parcialmente desmontadas.",
-      "scenes": [
-        {
-          "id": "scene_37",
-          "image_id": 37,
-          "tipo_midia": "imagem",
-          "asset_key": "stolen-art-car-loading",
-          "image": "cena_37.png",
-          "visual": {
-            "subject": "telas enroladas, papéis protegidos e bronzes sendo carregados",
-            "action": "ocupando o porta-malas de um veículo escuro",
-            "setting": "lado externo do museu na madrugada",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "none",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_38",
-      "text": "Às 2h45, partiram. Os guardas permaneceram presos por mais de cinco horas.",
-      "scenes": [
-        {
-          "id": "scene_38",
-          "image_id": 38,
-          "tipo_midia": "video_generico",
-          "asset_key": "empty-museum-corridor-dawn",
-          "image": "cena_38.mp4",
-          "visual": {
-            "subject": "corredor genérico de museu atravessado pela luz do amanhecer",
-            "action": "permanecendo vazio enquanto horas passam",
-            "setting": "edifício cultural silencioso após uma invasão",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          },
-          "annotation": {
-            "lines": [
-              "PRESOS",
-              "ATÉ 8H15"
-            ],
-            "at": "middle"
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_39",
-      "text": "A polícia só entrou às 8h15, encontrando o museu silencioso e mutilado.",
-      "scenes": [
-        {
-          "id": "scene_39",
-          "image_id": 39,
-          "tipo_midia": "imagem",
-          "asset_key": "police-enter-museum-morning",
-          "image": "cena_39.png",
-          "visual": {
-            "subject": "policiais entrando no museu pela manhã",
-            "action": "iniciando a busca pelos guardas e pelas obras",
-            "setting": "entrada do Museu Gardner às 8h15",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": {
-              "type": "camera_shutter",
-              "at": "middle"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_40",
-      "text": "No chão ficaram molduras douradas, restos materiais e espaços vazios.",
-      "scenes": [
-        {
-          "id": "scene_40",
-          "image_id": 40,
-          "tipo_midia": "imagem",
-          "asset_key": "gilded-frames-gallery-floor",
-          "image": "cena_40.png",
-          "visual": {
-            "subject": "molduras douradas vazias espalhadas pelo chão",
-            "action": "marcando os pontos onde telas foram cortadas",
-            "setting": "Sala Holandesa após o roubo",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_41",
-      "text": "Cinco dessas molduras foram reparadas e recolocadas nas paredes em 1994,",
-      "scenes": [
-        {
-          "id": "scene_41",
-          "image_id": 41,
-          "tipo_midia": "imagem",
-          "asset_key": "empty-frames-restored-1994",
-          "image": "cena_41.png",
-          "visual": {
-            "subject": "cinco molduras reparadas penduradas vazias",
-            "action": "retornando às posições originais nas paredes",
-            "setting": "galerias do Museu Gardner em 1994",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_42",
-      "text": "transformando a ausência das pinturas em parte permanente da experiência.",
-      "scenes": [
-        {
-          "id": "scene_42",
-          "image_id": 42,
-          "tipo_midia": "imagem",
-          "asset_key": "visitors-facing-empty-frames",
-          "image": "cena_42.png",
-          "visual": {
-            "subject": "visitantes observando molduras vazias em silêncio",
-            "action": "encontrando a ausência como parte da visita",
-            "setting": "Sala Holandesa do Museu Gardner",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_43",
-      "text": "O valor estimado supera 500 milhões de dólares, recorde patrimonial americano,",
-      "scenes": [
-        {
-          "id": "scene_43",
-          "image_id": 43,
-          "tipo_midia": "imagem",
-          "asset_key": "stolen-art-value-evidence-table",
-          "image": "cena_43.png",
-          "visual": {
-            "subject": "reproduções das 13 obras reunidas sobre uma mesa",
-            "action": "representando um conjunto avaliado acima de 500 milhões de dólares",
-            "setting": "ambiente documental de investigação",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "from_left",
             "out": "none",
             "speed": "normal"
           },
@@ -1350,55 +933,24 @@
       ]
     },
     {
-      "id": "block_44",
-      "text": "mas o prejuízo real não cabe numa avaliação financeira.",
+      "id": "block_31",
+      "text": "El apartamento vacío dejaba de ser una pérdida inmediata.",
       "scenes": [
         {
-          "id": "scene_44",
-          "image_id": 44,
-          "tipo_midia": "video_generico",
-          "asset_key": "counting-money-hands-art-auction",
-          "image": "cena_44.mp4",
-          "visual": {
-            "subject": "mãos contando dinheiro ao lado de catálogo de arte genérico",
-            "action": "contrastando valor financeiro com perda cultural",
-            "setting": "mesa de avaliação sem obras específicas",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_45",
-      "text": "Isabella Gardner organizou o museu inteiro como uma composição única,",
-      "scenes": [
-        {
-          "id": "scene_45",
-          "image_id": 45,
+          "id": "scene_31",
+          "image_id": 31,
           "tipo_midia": "imagem",
-          "asset_key": "isabella-gardner-museum-arrangement",
-          "image": "cena_45.png",
+          "asset_key": "empty-apartment-as-asset",
+          "image": "cena_31.png",
           "visual": {
-            "subject": "Isabella Stewart Gardner observando a disposição de uma galeria",
-            "action": "organizando obras como partes de uma composição única",
-            "setting": "museu no início do século vinte",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "un apartamento impecable completamente vacío",
+            "action": "siendo conservado sin mobiliario ni nuevos residentes",
+            "setting": "torre residencial de alta gama",
+            "framing": "plano interior amplio horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "none",
+            "in": "from_right",
             "out": "to_right",
             "speed": "normal"
           },
@@ -1410,21 +962,453 @@
       ]
     },
     {
+      "id": "block_32",
+      "text": "Se convertía en una herramienta para proteger precios más altos.",
+      "scenes": [
+        {
+          "id": "scene_32",
+          "image_id": 32,
+          "tipo_midia": "video_generico",
+          "asset_key": "vacancy-protects-high-prices",
+          "image": "cena_32.mp4",
+          "visual": {
+            "subject": "edificios residenciales y un gráfico ascendente abstracto",
+            "action": "manteniendo precios altos pese a varias ventanas oscuras",
+            "setting": "ciudad al atardecer",
+            "framing": "B-roll horizontal 16:9 con movimiento aéreo lento",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "VACÍO",
+              "PERO MÁS CARO"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_33",
+      "text": "Esta es la diferencia entre escasez física y escasez administrada.",
+      "scenes": [
+        {
+          "id": "scene_33",
+          "image_id": 33,
+          "tipo_midia": "imagem",
+          "asset_key": "physical-versus-managed-scarcity",
+          "image": "cena_33.png",
+          "visual": {
+            "subject": "dos apartamentos vacíos en una composición comparativa",
+            "action": "mostrando uno sin oferta física y otro retenido comercialmente",
+            "setting": "escenario documental dividido",
+            "framing": "plano horizontal 16:9 claramente contrastado",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_34",
+      "text": "Una nace porque realmente faltan viviendas disponibles en una ciudad.",
+      "scenes": [
+        {
+          "id": "scene_34",
+          "image_id": 34,
+          "tipo_midia": "imagem",
+          "asset_key": "real-housing-shortage-city",
+          "image": "cena_34.png",
+          "visual": {
+            "subject": "una fila larga de personas visitando pocas viviendas",
+            "action": "esperando frente a un edificio con oferta limitada",
+            "setting": "barrio urbano densamente poblado",
+            "framing": "plano general horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_35",
+      "text": "La otra aparece cuando existe vivienda, pero no compite plenamente.",
+      "scenes": [
+        {
+          "id": "scene_35",
+          "image_id": 35,
+          "tipo_midia": "video_generico",
+          "asset_key": "available-home-not-competing",
+          "image": "cena_35.mp4",
+          "visual": {
+            "subject": "un apartamento terminado detrás de una puerta cerrada",
+            "action": "permaneciendo fuera de circulación mientras hay demanda afuera",
+            "setting": "edificio residencial contemporáneo",
+            "framing": "B-roll horizontal 16:9 con cámara acercándose lentamente",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_36",
+      "text": "Ambas pueden ocurrir al mismo tiempo y reforzarse mutuamente.",
+      "scenes": [
+        {
+          "id": "scene_36",
+          "image_id": 36,
+          "tipo_midia": "imagem",
+          "asset_key": "two-scarcities-reinforce",
+          "image": "cena_36.png",
+          "visual": {
+            "subject": "grúas escasas y apartamentos cerrados en la misma ciudad",
+            "action": "combinando falta de construcción con unidades retenidas",
+            "setting": "panorama urbano amplio",
+            "framing": "plano aéreo horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_37",
+      "text": "Por eso culpar solamente a la construcción cuenta media historia.",
+      "scenes": [
+        {
+          "id": "scene_37",
+          "image_id": 37,
+          "tipo_midia": "imagem",
+          "asset_key": "half-story-construction-explanation",
+          "image": "cena_37.png",
+          "visual": {
+            "subject": "un rompecabezas de vivienda con una pieza de construcción",
+            "action": "mostrando que falta otra pieza relacionada con precios",
+            "setting": "mesa documental iluminada",
+            "framing": "plano cenital horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_38",
+      "text": "ProPublica encontró un ejemplo especialmente concentrado en Seattle.",
+      "scenes": [
+        {
+          "id": "scene_38",
+          "image_id": 38,
+          "tipo_midia": "imagem",
+          "asset_key": "seattle-apartment-investigation",
+          "image": "cena_38.png",
+          "visual": {
+            "subject": "torres residenciales de Seattle bajo cielo gris",
+            "action": "apareciendo agrupadas alrededor de un mismo vecindario",
+            "setting": "centro urbano del noroeste estadounidense",
+            "framing": "plano general cinematográfico horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_39",
+      "text": "Diez grandes administradores controlaban setenta por ciento de cierto mercado local.",
+      "scenes": [
+        {
+          "id": "scene_39",
+          "image_id": 39,
+          "tipo_midia": "video_generico",
+          "asset_key": "city-apartments-aerial-concentration",
+          "image": "cena_39.mp4",
+          "visual": {
+            "subject": "grandes conjuntos de apartamentos vistos desde el aire",
+            "action": "ocupando la mayor parte de un mismo sector urbano",
+            "setting": "zona residencial densa genérica",
+            "framing": "B-roll aéreo horizontal 16:9 que muestre concentración de edificios",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "POCOS GESTORES",
+              "MUCHAS VIVIENDAS"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_40",
+      "text": "Todos utilizaban software de precios vendido por la misma compañía.",
+      "scenes": [
+        {
+          "id": "scene_40",
+          "image_id": 40,
+          "tipo_midia": "imagem",
+          "asset_key": "same-pricing-software-buildings",
+          "image": "cena_40.png",
+          "visual": {
+            "subject": "varios edificios conectados al mismo núcleo digital",
+            "action": "recibiendo señales similares de precios",
+            "setting": "paisaje urbano tecnológico genérico",
+            "framing": "B-roll horizontal 16:9 con líneas de conexión discretas",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_41",
+      "text": "En un edificio usuario, los alquileres crecieron cuarenta y dos por ciento.",
+      "scenes": [
+        {
+          "id": "scene_41",
+          "image_id": 41,
+          "tipo_midia": "imagem",
+          "asset_key": "rent-growth-building-chart",
+          "image": "cena_41.png",
+          "visual": {
+            "subject": "un edificio residencial frente a una curva ascendente",
+            "action": "mostrando un crecimiento pronunciado del alquiler",
+            "setting": "zona céntrica de Seattle estilizada",
+            "framing": "plano horizontal 16:9 con gráfico abstracto sin texto",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "cash_register",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_42",
+      "text": "El promedio comparable del centro había aumentado treinta y tres por ciento.",
+      "scenes": [
+        {
+          "id": "scene_42",
+          "image_id": 42,
+          "tipo_midia": "imagem",
+          "asset_key": "downtown-comparison-buildings",
+          "image": "cena_42.png",
+          "visual": {
+            "subject": "dos edificios comparables lado a lado",
+            "action": "mostrando trayectorias diferentes de aumento de precios",
+            "setting": "centro urbano lluvioso",
+            "framing": "plano general horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_43",
+      "text": "Esa comparación aislada no demuestra por sí sola una conspiración.",
+      "scenes": [
+        {
+          "id": "scene_43",
+          "image_id": 43,
+          "tipo_midia": "imagem",
+          "asset_key": "correlation-not-proof-scale",
+          "image": "cena_43.png",
+          "visual": {
+            "subject": "una balanza con gráficos y documentos a ambos lados",
+            "action": "manteniéndose equilibrada para representar cautela probatoria",
+            "setting": "mesa de investigación periodística",
+            "framing": "plano cercano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_44",
+      "text": "Pero encaja con documentos, testimonios y patrones mucho más amplios.",
+      "scenes": [
+        {
+          "id": "scene_44",
+          "image_id": 44,
+          "tipo_midia": "imagem",
+          "asset_key": "documents-testimony-patterns",
+          "image": "cena_44.png",
+          "visual": {
+            "subject": "fotografías de edificios, declaraciones y hojas de datos",
+            "action": "formando un patrón conectado sobre una pared",
+            "setting": "sala de investigación periodística",
+            "framing": "B-roll horizontal 16:9 con recorrido de cámara",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": {
+              "type": "camera_shutter",
+              "at": "start"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_45",
+      "text": "El sistema también desaconsejaba negociar descuentos directamente con los inquilinos.",
+      "scenes": [
+        {
+          "id": "scene_45",
+          "image_id": 45,
+          "tipo_midia": "imagem",
+          "asset_key": "no-rent-negotiation-desk",
+          "image": "cena_45.png",
+          "visual": {
+            "subject": "una inquilina hablando con un agente inflexible",
+            "action": "recibiendo una negativa mientras señala el contrato",
+            "setting": "oficina de arrendamiento moderna",
+            "framing": "plano medio horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
       "id": "block_46",
-      "text": "por isso preencher os vazios com substitutos apagaria sua intenção original.",
+      "text": "Un desarrollador afirmó que los agentes mostraban demasiada empatía humana.",
       "scenes": [
         {
           "id": "scene_46",
           "image_id": 46,
           "tipo_midia": "imagem",
-          "asset_key": "empty-frame-no-replacement",
+          "asset_key": "developer-too-much-empathy",
           "image": "cena_46.png",
           "visual": {
-            "subject": "moldura vazia cercada por peças ainda presentes",
-            "action": "permanecendo sem substituição deliberada",
-            "setting": "galeria histórica do Museu Gardner",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "un desarrollador de software frente a agentes inmobiliarios",
+            "action": "separando simbólicamente personas y decisiones de precio",
+            "setting": "oficina tecnológica sobria",
+            "framing": "plano medio horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
             "in": "from_right",
@@ -1440,25 +1424,25 @@
     },
     {
       "id": "block_47",
-      "text": "O Concerto representava um dos raríssimos Vermeer ainda existentes,",
+      "text": "Esa frase importa porque revela qué problema pretendían eliminar.",
       "scenes": [
         {
           "id": "scene_47",
           "image_id": 47,
           "tipo_midia": "imagem",
-          "asset_key": "vermeer-concert-closeup",
+          "asset_key": "human-resistance-price-increase",
           "image": "cena_47.png",
           "visual": {
-            "subject": "O Concerto de Vermeer em composição íntima",
-            "action": "mostrando músicos reunidos num ambiente doméstico",
-            "setting": "visual documental da obra antes do roubo",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "una agente observando a una familia frente a una pantalla",
+            "action": "dudando antes de aplicar un aumento elevado",
+            "setting": "oficina de alquiler residencial",
+            "framing": "primer plano emocional horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "none",
-            "speed": "slow"
+            "out": "to_right",
+            "speed": "normal"
           },
           "sounds": {
             "transition": [],
@@ -1469,84 +1453,24 @@
     },
     {
       "id": "block_48",
-      "text": "enquanto a tempestade roubada era a única paisagem marítima conhecida de Rembrandt.",
+      "text": "No era un error técnico; era la resistencia humana a subir precios.",
       "scenes": [
         {
           "id": "scene_48",
           "image_id": 48,
-          "tipo_midia": "imagem",
-          "asset_key": "rembrandt-storm-only-seascape",
-          "image": "cena_48.png",
-          "visual": {
-            "subject": "A Tempestade no Mar da Galileia em destaque",
-            "action": "mostrando o único cenário marítimo conhecido de Rembrandt",
-            "setting": "visual documental da obra desaparecida",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_49",
-      "text": "Mesmo assim, outras obras valiosas ficaram intocadas nas mesmas salas,",
-      "scenes": [
-        {
-          "id": "scene_49",
-          "image_id": 49,
-          "tipo_midia": "imagem",
-          "asset_key": "valuable-art-left-untouched",
-          "image": "cena_49.png",
-          "visual": {
-            "subject": "outras pinturas valiosas ainda penduradas nas paredes",
-            "action": "permanecendo intactas ao lado de espaços roubados",
-            "setting": "galeria após a investigação inicial",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_50",
-      "text": "sugerindo uma escolha entre especialistas seletivos e oportunistas parcialmente orientados.",
-      "scenes": [
-        {
-          "id": "scene_50",
-          "image_id": 50,
           "tipo_midia": "video_generico",
-          "asset_key": "art-thief-gloves-gallery",
-          "image": "cena_50.mp4",
+          "asset_key": "empathy-removed-from-pricing",
+          "image": "cena_48.mp4",
           "visual": {
-            "subject": "mãos enluvadas escolhendo entre obras genéricas numa galeria",
-            "action": "sugerindo dúvida entre conhecimento especializado e oportunidade",
-            "setting": "museu genérico sob iluminação noturna",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "una pantalla automática sustituyendo una conversación humana",
+            "action": "confirmando un aumento sin interacción personal",
+            "setting": "mostrador de arrendamiento vacío",
+            "framing": "B-roll horizontal 16:9 con transición de persona a monitor",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_left",
+            "out": "none",
             "speed": "slow"
           },
           "sounds": {
@@ -1557,8 +1481,8 @@
           },
           "annotation": {
             "lines": [
-              "ESPECIALISTAS",
-              "OU AMADORES?"
+              "MENOS EMPATÍA",
+              "MÁS PRECIO"
             ],
             "at": "middle"
           }
@@ -1566,25 +1490,86 @@
       ]
     },
     {
-      "id": "block_51",
-      "text": "O FBI seguiu pistas ao redor do mundo durante décadas,",
+      "id": "block_49",
+      "text": "Tras implementar YieldStar, una empresa registró mucha más rotación de inquilinos.",
       "scenes": [
         {
-          "id": "scene_51",
-          "image_id": 51,
+          "id": "scene_49",
+          "image_id": 49,
           "tipo_midia": "imagem",
-          "asset_key": "fbi-global-art-investigation",
-          "image": "cena_51.png",
+          "asset_key": "tenant-turnover-moving-boxes",
+          "image": "cena_49.png",
           "visual": {
-            "subject": "investigadores diante de mapas, fotografias e fichas de obras",
-            "action": "seguindo pistas internacionais ao longo de décadas",
-            "setting": "sala de investigação do FBI",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "residentes cargando cajas desde un apartamento",
+            "action": "abandonando la vivienda después de una subida",
+            "setting": "entrada de edificio residencial",
+            "framing": "plano general horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "crumpled_paper",
+              "at": "end"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_50",
+      "text": "Su ocupación sufrió, pero los ingresos todavía aumentaron considerablemente.",
+      "scenes": [
+        {
+          "id": "scene_50",
+          "image_id": 50,
+          "tipo_midia": "imagem",
+          "asset_key": "revenue-up-occupancy-down",
+          "image": "cena_50.png",
+          "visual": {
+            "subject": "un edificio con mudanzas y gráfico de ingresos ascendente",
+            "action": "mostrando menos residentes pero mayores ganancias",
+            "setting": "composición documental urbana",
+            "framing": "plano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
             "in": "from_right",
             "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_51",
+      "text": "Para la cartera empresarial, perder inquilinos podía seguir siendo rentable.",
+      "scenes": [
+        {
+          "id": "scene_51",
+          "image_id": 51,
+          "tipo_midia": "video_generico",
+          "asset_key": "portfolio-profitable-tenant-loss",
+          "image": "cena_51.mp4",
+          "visual": {
+            "subject": "varias llaves devueltas junto a un informe financiero",
+            "action": "mostrando pérdidas humanas y beneficio corporativo",
+            "setting": "mesa administrativa inmobiliaria",
+            "framing": "B-roll horizontal 16:9",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
@@ -1596,20 +1581,741 @@
     },
     {
       "id": "block_52",
-      "text": "e hoje acredita que as 13 peças podem ter sido separadas.",
+      "text": "Para una familia, significaba mudanza, distancia y gastos inesperados.",
       "scenes": [
         {
           "id": "scene_52",
           "image_id": 52,
           "tipo_midia": "imagem",
-          "asset_key": "stolen-art-separated-crates",
+          "asset_key": "family-forced-relocation",
           "image": "cena_52.png",
           "visual": {
-            "subject": "caixas separadas contendo reproduções de diferentes obras",
-            "action": "sugerindo dispersão por locais distintos",
-            "setting": "depósito clandestino não identificado",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "una familia latina cerrando cajas de mudanza",
+            "action": "preparándose para dejar su barrio",
+            "setting": "sala de apartamento parcialmente vacía",
+            "framing": "plano medio horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_53",
+      "text": "En 2017, RealPage compró LRO, su competidor más importante.",
+      "scenes": [
+        {
+          "id": "scene_53",
+          "image_id": 53,
+          "tipo_midia": "imagem",
+          "asset_key": "realpage-acquires-lro",
+          "image": "cena_53.png",
+          "visual": {
+            "subject": "dos plataformas tecnológicas representadas como redes separadas",
+            "action": "fusionándose en una sola infraestructura de datos",
+            "setting": "escenario corporativo conceptual",
+            "framing": "plano general horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": {
+              "type": "paper_flip",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_54",
+      "text": "La operación duplicó aproximadamente las unidades alcanzadas por esos sistemas.",
+      "scenes": [
+        {
+          "id": "scene_54",
+          "image_id": 54,
+          "tipo_midia": "imagem",
+          "asset_key": "pricing-units-double-map",
+          "image": "cena_54.png",
+          "visual": {
+            "subject": "un mapa estadounidense cubierto por más edificios conectados",
+            "action": "duplicando visualmente el alcance del sistema",
+            "setting": "visualización documental nacional",
+            "framing": "plano cenital horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_55",
+      "text": "Después, la empresa rebautizó la plataforma como gestión de ingresos con inteligencia artificial.",
+      "scenes": [
+        {
+          "id": "scene_55",
+          "image_id": 55,
+          "tipo_midia": "imagem",
+          "asset_key": "ai-revenue-management-rebrand",
+          "image": "cena_55.png",
+          "visual": {
+            "subject": "un sistema de análisis inmobiliario con elementos de inteligencia artificial",
+            "action": "reorganizándose bajo una nueva identidad sin logotipos",
+            "setting": "laboratorio digital corporativo",
+            "framing": "plano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_56",
+      "text": "Su influencia creció junto con los grandes propietarios institucionales.",
+      "scenes": [
+        {
+          "id": "scene_56",
+          "image_id": 56,
+          "tipo_midia": "imagem",
+          "asset_key": "institutional-landlords-city-growth",
+          "image": "cena_56.png",
+          "visual": {
+            "subject": "grandes torres residenciales propiedad de corporaciones",
+            "action": "expandiéndose sobre varios barrios urbanos",
+            "setting": "metrópolis estadounidense contemporánea",
+            "framing": "plano aéreo horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_57",
+      "text": "En algunos barrios, varios edificios parecían competir entre sí.",
+      "scenes": [
+        {
+          "id": "scene_57",
+          "image_id": 57,
+          "tipo_midia": "video_generico",
+          "asset_key": "buildings-apparently-competing",
+          "image": "cena_57.mp4",
+          "visual": {
+            "subject": "tres edificios con oficinas de alquiler separadas",
+            "action": "mostrando ofertas distintas desde la calle",
+            "setting": "avenida residencial moderna",
+            "framing": "plano general horizontal 16:9",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_58",
+      "text": "Pero detrás podían consultar recomendaciones nacidas del mismo conjunto de datos.",
+      "scenes": [
+        {
+          "id": "scene_58",
+          "image_id": 58,
+          "tipo_midia": "imagem",
+          "asset_key": "shared-data-behind-buildings",
+          "image": "cena_58.png",
+          "visual": {
+            "subject": "los mismos edificios vistos desde una red digital posterior",
+            "action": "recibiendo recomendaciones desde un centro común",
+            "setting": "paisaje urbano nocturno conceptual",
+            "framing": "B-roll horizontal 16:9 con conexiones discretas",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_59",
+      "text": "Ahí surge la idea de un cartel tecnológico sin reunión secreta.",
+      "scenes": [
+        {
+          "id": "scene_59",
+          "image_id": 59,
+          "tipo_midia": "video_generico",
+          "asset_key": "digital-cartel-no-secret-room",
+          "image": "cena_59.mp4",
+          "visual": {
+            "subject": "una sala de reuniones vacía junto a servidores activos",
+            "action": "mostrando coordinación sin personas reunidas",
+            "setting": "espacio corporativo oscuro",
+            "framing": "plano panorámico horizontal 16:9",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "CARTEL DIGITAL",
+              "SIN LLAMADAS"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_60",
+      "text": "El centro coordinador recibe información y devuelve una dirección común.",
+      "scenes": [
+        {
+          "id": "scene_60",
+          "image_id": 60,
+          "tipo_midia": "imagem",
+          "asset_key": "hub-spoke-property-network",
+          "image": "cena_60.png",
+          "visual": {
+            "subject": "un núcleo digital central rodeado por edificios",
+            "action": "recibiendo datos y devolviendo señales comunes",
+            "setting": "visualización clara de red tipo centro y radios",
+            "framing": "plano cenital horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_61",
+      "text": "Los competidores no necesitan llamarse para producir un resultado parecido.",
+      "scenes": [
+        {
+          "id": "scene_61",
+          "image_id": 61,
+          "tipo_midia": "imagem",
+          "asset_key": "competitors-no-phone-calls",
+          "image": "cena_61.png",
+          "visual": {
+            "subject": "teléfonos inmóviles sobre escritorios separados",
+            "action": "mientras los ordenadores sincronizan decisiones automáticamente",
+            "setting": "oficinas inmobiliarias distintas",
+            "framing": "plano múltiple horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_62",
+      "text": "El algoritmo funciona como intermediario, memoria y disciplina del grupo.",
+      "scenes": [
+        {
+          "id": "scene_62",
+          "image_id": 62,
+          "tipo_midia": "imagem",
+          "asset_key": "algorithm-intermediary-discipline",
+          "image": "cena_62.png",
+          "visual": {
+            "subject": "un sistema central enviando la misma señal a varias pantallas",
+            "action": "manteniendo decisiones alineadas entre operadores",
+            "setting": "centro de operaciones genérico",
+            "framing": "B-roll horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_63",
+      "text": "En agosto de 2024, el Departamento de Justicia demandó a RealPage.",
+      "scenes": [
+        {
+          "id": "scene_63",
+          "image_id": 63,
+          "tipo_midia": "video_generico",
+          "asset_key": "federal-courthouse-legal-files",
+          "image": "cena_63.mp4",
+          "visual": {
+            "subject": "un tribunal federal y carpetas judiciales",
+            "action": "marcando el inicio de una acción legal importante",
+            "setting": "entorno gubernamental estadounidense genérico",
+            "framing": "B-roll horizontal 16:9 de arquitectura judicial y documentos sin texto legible",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": {
+              "type": "paper_flip",
+              "at": "middle"
+            }
+          },
+          "annotation": {
+            "lines": [
+              "AGOSTO DE 2024",
+              "DEMANDA FEDERAL"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_64",
+      "text": "La acusó de reducir competencia y monopolizar el software comercial de precios.",
+      "scenes": [
+        {
+          "id": "scene_64",
+          "image_id": 64,
+          "tipo_midia": "imagem",
+          "asset_key": "realpage-antitrust-complaint",
+          "image": "cena_64.png",
+          "visual": {
+            "subject": "un expediente judicial grueso junto a edificios residenciales",
+            "action": "abriéndose sobre acusaciones de competencia y monopolio",
+            "setting": "mesa legal sobria",
+            "framing": "plano cenital horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "paper_flip",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_65",
+      "text": "El caso invocó las secciones uno y dos de la Ley Sherman.",
+      "scenes": [
+        {
+          "id": "scene_65",
+          "image_id": 65,
+          "tipo_midia": "imagem",
+          "asset_key": "sherman-act-law-books",
+          "image": "cena_65.png",
+          "visual": {
+            "subject": "dos volúmenes jurídicos antiguos junto a documentos modernos",
+            "action": "conectando una ley histórica con software contemporáneo",
+            "setting": "biblioteca jurídica estadounidense",
+            "framing": "plano cercano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": {
+              "type": "paper_flip",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_66",
+      "text": "El gobierno afirmó que millones de inquilinos habían perdido competencia real.",
+      "scenes": [
+        {
+          "id": "scene_66",
+          "image_id": 66,
+          "tipo_midia": "imagem",
+          "asset_key": "millions-renters-competition-loss",
+          "image": "cena_66.png",
+          "visual": {
+            "subject": "una multitud diversa frente a edificios de apartamentos",
+            "action": "esperando opciones de vivienda limitadas",
+            "setting": "gran ciudad estadounidense",
+            "framing": "plano general horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_67",
+      "text": "En enero de 2025, la demanda añadió seis grandes propietarios.",
+      "scenes": [
+        {
+          "id": "scene_67",
+          "image_id": 67,
+          "tipo_midia": "imagem",
+          "asset_key": "six-landlords-added-case",
+          "image": "cena_67.png",
+          "visual": {
+            "subject": "seis torres corporativas representadas en un expediente común",
+            "action": "siendo incorporadas a una demanda ampliada",
+            "setting": "composición legal documental",
+            "framing": "plano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "paper_flip",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_68",
+      "text": "Entre ellos estaban Greystar, LivCor, Camden, Cortland y Willow Bridge.",
+      "scenes": [
+        {
+          "id": "scene_68",
+          "image_id": 68,
+          "tipo_midia": "imagem",
+          "asset_key": "major-landlords-property-portfolios",
+          "image": "cena_68.png",
+          "visual": {
+            "subject": "varios conjuntos residenciales de gran escala",
+            "action": "representando portafolios administrados por grandes compañías",
+            "setting": "diferentes ciudades estadounidenses",
+            "framing": "plano aéreo horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_69",
+      "text": "Los documentos describieron intercambio de información y parámetros de precios.",
+      "scenes": [
+        {
+          "id": "scene_69",
+          "image_id": 69,
+          "tipo_midia": "imagem",
+          "asset_key": "shared-pricing-parameters-documents",
+          "image": "cena_69.png",
+          "visual": {
+            "subject": "tablas, correos y parámetros abstractos sobre una mesa",
+            "action": "mostrando intercambio de información sensible",
+            "setting": "sala de revisión jurídica",
+            "framing": "plano cenital horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "writing",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_70",
+      "text": "También citaron funciones automáticas y asesores que vigilaban el cumplimiento.",
+      "scenes": [
+        {
+          "id": "scene_70",
+          "image_id": 70,
+          "tipo_midia": "imagem",
+          "asset_key": "auto-accept-compliance-advisors",
+          "image": "cena_70.png",
+          "visual": {
+            "subject": "operadores observando decisiones confirmadas automáticamente",
+            "action": "supervisando que las recomendaciones sean seguidas",
+            "setting": "centro de gestión inmobiliaria",
+            "framing": "plano medio horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_71",
+      "text": "No era solamente una calculadora ofreciendo una cifra neutral.",
+      "scenes": [
+        {
+          "id": "scene_71",
+          "image_id": 71,
+          "tipo_midia": "imagem",
+          "asset_key": "not-neutral-calculator",
+          "image": "cena_71.png",
+          "visual": {
+            "subject": "una calculadora digital conectada a varios edificios",
+            "action": "dejando de parecer una herramienta independiente",
+            "setting": "espacio conceptual tecnológico",
+            "framing": "plano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_72",
+      "text": "Era un sistema diseñado para limitar bajadas y alinear decisiones.",
+      "scenes": [
+        {
+          "id": "scene_72",
+          "image_id": 72,
+          "tipo_midia": "video_generico",
+          "asset_key": "limit-price-decreases-system",
+          "image": "cena_72.mp4",
+          "visual": {
+            "subject": "flechas descendentes bloqueadas por reglas digitales",
+            "action": "impidiendo reducciones entre varios edificios",
+            "setting": "visualización abstracta de mercado residencial",
+            "framing": "B-roll horizontal 16:9",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "NO ERA SOLO",
+              "UNA CALCULADORA"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_73",
+      "text": "RealPage negó haber organizado un cartel o manipulado ilegalmente el mercado.",
+      "scenes": [
+        {
+          "id": "scene_73",
+          "image_id": 73,
+          "tipo_midia": "imagem",
+          "asset_key": "realpage-defense-podium",
+          "image": "cena_73.png",
+          "visual": {
+            "subject": "portavoces corporativos frente a periodistas",
+            "action": "negando coordinación ilegal sin mostrar marcas",
+            "setting": "sala de prensa empresarial",
+            "framing": "plano medio horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "click",
+              "at": "start"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_74",
+      "text": "La empresa sostuvo que sus datos eran agregados y utilizados legalmente.",
+      "scenes": [
+        {
+          "id": "scene_74",
+          "image_id": 74,
+          "tipo_midia": "imagem",
+          "asset_key": "aggregated-data-legal-claim",
+          "image": "cena_74.png",
+          "visual": {
+            "subject": "datos de múltiples edificios convertidos en bloques anónimos",
+            "action": "siendo presentados como información agregada",
+            "setting": "laboratorio de análisis corporativo",
+            "framing": "plano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_75",
+      "text": "También afirmó que el software podía reducir precios cuando caía la demanda.",
+      "scenes": [
+        {
+          "id": "scene_75",
+          "image_id": 75,
+          "tipo_midia": "imagem",
+          "asset_key": "software-can-lower-rents",
+          "image": "cena_75.png",
+          "visual": {
+            "subject": "un indicador de precio descendiendo junto a apartamentos disponibles",
+            "action": "mostrando una posible reducción por menor demanda",
+            "setting": "oficina de gestión residencial",
+            "framing": "plano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
             "in": "from_right",
@@ -1624,54 +2330,25 @@
       ]
     },
     {
-      "id": "block_53",
-      "text": "Nenhuma delas foi recuperada, apesar de buscas, denúncias e negociações frustradas.",
+      "id": "block_76",
+      "text": "Y señaló un problema real: Estados Unidos necesita construir más viviendas.",
       "scenes": [
         {
-          "id": "scene_53",
-          "image_id": 53,
+          "id": "scene_76",
+          "image_id": 76,
           "tipo_midia": "imagem",
-          "asset_key": "empty-search-results-art-files",
-          "image": "cena_53.png",
+          "asset_key": "housing-construction-defense",
+          "image": "cena_76.png",
           "visual": {
-            "subject": "arquivos, fotografias e caixas de evidência sem resultado final",
-            "action": "representando décadas de buscas sem recuperação",
-            "setting": "arquivo investigativo contemporâneo",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "grúas, permisos y edificios incompletos",
+            "action": "representando la falta estructural de nueva vivienda",
+            "setting": "periferia metropolitana estadounidense",
+            "framing": "plano general horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_54",
-      "text": "O museu mantém recompensa de 10 milhões de dólares pelo conjunto completo,",
-      "scenes": [
-        {
-          "id": "scene_54",
-          "image_id": 54,
-          "tipo_midia": "imagem",
-          "asset_key": "ten-million-reward-poster-display",
-          "image": "cena_54.png",
-          "visual": {
-            "subject": "painel público com imagens das obras e espaço para recompensa",
-            "action": "chamando atenção para a busca ainda ativa",
-            "setting": "área externa próxima ao museu",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_left",
+            "in": "from_left",
+            "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
@@ -1682,24 +2359,498 @@
       ]
     },
     {
-      "id": "block_55",
-      "text": "além de 100 mil dólares por informações sobre o remate napoleônico.",
+      "id": "block_77",
+      "text": "Esa defensa importa, porque no todo aumento proviene de algoritmos.",
       "scenes": [
         {
-          "id": "scene_55",
-          "image_id": 55,
+          "id": "scene_77",
+          "image_id": 77,
           "tipo_midia": "imagem",
-          "asset_key": "napoleonic-eagle-finial-reward",
-          "image": "cena_55.png",
+          "asset_key": "multiple-rent-drivers",
+          "image": "cena_77.png",
           "visual": {
-            "subject": "remate de águia napoleônico isolado sobre fundo neutro",
-            "action": "destacando o objeto procurado separadamente",
-            "setting": "composição documental de identificação",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "tipos de interés, empleo, población y viviendas",
+            "action": "convergiendo visualmente sobre un precio de alquiler",
+            "setting": "mesa de análisis económico documental",
+            "framing": "plano cenital horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_78",
+      "text": "Intereses, población, empleo y permisos también cambian los alquileres.",
+      "scenes": [
+        {
+          "id": "scene_78",
+          "image_id": 78,
+          "tipo_midia": "imagem",
+          "asset_key": "interest-population-permits",
+          "image": "cena_78.png",
+          "visual": {
+            "subject": "una ciudad rodeada por símbolos físicos de empleo y construcción",
+            "action": "cambiando a medida que crece la demanda",
+            "setting": "panorama urbano diurno",
+            "framing": "plano amplio horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_79",
+      "text": "Pero ninguna escasez física justifica compartir secretos comerciales entre rivales.",
+      "scenes": [
+        {
+          "id": "scene_79",
+          "image_id": 79,
+          "tipo_midia": "imagem",
+          "asset_key": "competitor-secrets-boundary",
+          "image": "cena_79.png",
+          "visual": {
+            "subject": "dos empresas entregando carpetas confidenciales al mismo sistema",
+            "action": "cruzando una línea roja visual",
+            "setting": "sala corporativa neutra",
+            "framing": "plano medio horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_80",
+      "text": "Ese es el límite que convirtió una herramienta en caso antimonopolio.",
+      "scenes": [
+        {
+          "id": "scene_80",
+          "image_id": 80,
+          "tipo_midia": "video_generico",
+          "asset_key": "antitrust-tool-crosses-line",
+          "image": "cena_80.mp4",
+          "visual": {
+            "subject": "una herramienta digital atravesando una frontera jurídica marcada",
+            "action": "transformándose de asistencia en coordinación",
+            "setting": "composición conceptual legal-tecnológica",
+            "framing": "B-roll horizontal 16:9",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "DATOS SECRETOS",
+              "CRUZAN EL LÍMITE"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_81",
+      "text": "En noviembre de 2025, el gobierno anunció un acuerdo propuesto.",
+      "scenes": [
+        {
+          "id": "scene_81",
+          "image_id": 81,
+          "tipo_midia": "imagem",
+          "asset_key": "proposed-settlement-november-2025",
+          "image": "cena_81.png",
+          "visual": {
+            "subject": "un acuerdo judicial fechado en 2025 sobre una mesa",
+            "action": "siendo revisado por abogados federales",
+            "setting": "despacho jurídico institucional",
+            "framing": "plano cercano horizontal 16:9 sin texto legible",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
             "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "paper_flip",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_82",
+      "text": "RealPage aceptaría dejar de usar datos sensibles actuales de competidores.",
+      "scenes": [
+        {
+          "id": "scene_82",
+          "image_id": 82,
+          "tipo_midia": "imagem",
+          "asset_key": "stop-current-competitor-data",
+          "image": "cena_82.png",
+          "visual": {
+            "subject": "flujos de datos recientes entre edificios",
+            "action": "siendo cortados antes de llegar al algoritmo",
+            "setting": "visualización documental de red inmobiliaria",
+            "framing": "plano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_83",
+      "text": "El entrenamiento quedaría limitado a información histórica envejecida doce meses.",
+      "scenes": [
+        {
+          "id": "scene_83",
+          "image_id": 83,
+          "tipo_midia": "imagem",
+          "asset_key": "twelve-month-old-data-archive",
+          "image": "cena_83.png",
+          "visual": {
+            "subject": "archivos digitales envejecidos en una línea temporal",
+            "action": "quedando disponibles solamente después de doce meses",
+            "setting": "archivo de datos corporativo",
+            "framing": "plano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "writing",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_84",
+      "text": "También tendría que rediseñar funciones que frenaban reducciones de precios.",
+      "scenes": [
+        {
+          "id": "scene_84",
+          "image_id": 84,
+          "tipo_midia": "imagem",
+          "asset_key": "redesign-price-decrease-features",
+          "image": "cena_84.png",
+          "visual": {
+            "subject": "ingenieros modificando reglas de un sistema de precios",
+            "action": "eliminando bloqueos sobre flechas descendentes",
+            "setting": "oficina tecnológica moderna",
+            "framing": "plano medio horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_85",
+      "text": "Un supervisor judicial controlaría el cumplimiento si el acuerdo fuera aprobado.",
+      "scenes": [
+        {
+          "id": "scene_85",
+          "image_id": 85,
+          "tipo_midia": "imagem",
+          "asset_key": "court-appointed-monitor-review",
+          "image": "cena_85.png",
+          "visual": {
+            "subject": "una supervisora independiente revisando sistemas y documentos",
+            "action": "comprobando el cumplimiento de restricciones judiciales",
+            "setting": "oficina de auditoría tecnológica",
+            "framing": "plano medio horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_86",
+      "text": "RealPage no admitiría responsabilidad ni pagaría daños dentro de ese acuerdo.",
+      "scenes": [
+        {
+          "id": "scene_86",
+          "image_id": 86,
+          "tipo_midia": "imagem",
+          "asset_key": "settlement-no-admission-damages",
+          "image": "cena_86.png",
+          "visual": {
+            "subject": "un acuerdo firmado junto a una balanza jurídica",
+            "action": "mostrando resolución sin confesión ni pago compensatorio",
+            "setting": "mesa legal sobria",
+            "framing": "plano cenital horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "paper_flip",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_87",
+      "text": "En marzo de 2026, Greystar recibió una sentencia final acordada.",
+      "scenes": [
+        {
+          "id": "scene_87",
+          "image_id": 87,
+          "tipo_midia": "imagem",
+          "asset_key": "greystar-final-judgment-2026",
+          "image": "cena_87.png",
+          "visual": {
+            "subject": "un mazo judicial junto a un expediente cerrado",
+            "action": "representando una sentencia final acordada en 2026",
+            "setting": "sala judicial estadounidense",
+            "framing": "plano cercano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "paper_flip",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_88",
+      "text": "Y en julio, Willow Bridge alcanzó otro acuerdo todavía propuesto.",
+      "scenes": [
+        {
+          "id": "scene_88",
+          "image_id": 88,
+          "tipo_midia": "imagem",
+          "asset_key": "willow-bridge-proposed-decree",
+          "image": "cena_88.png",
+          "visual": {
+            "subject": "un nuevo expediente legal junto a un complejo residencial",
+            "action": "siendo presentado para aprobación judicial",
+            "setting": "despacho federal contemporáneo",
+            "framing": "plano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "paper_flip",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_89",
+      "text": "Así que esto ya no es simplemente una investigación abierta.",
+      "scenes": [
+        {
+          "id": "scene_89",
+          "image_id": 89,
+          "tipo_midia": "video_generico",
+          "asset_key": "enforcement-beyond-investigation",
+          "image": "cena_89.mp4",
+          "visual": {
+            "subject": "varios expedientes avanzando por una mesa jurídica",
+            "action": "mostrando etapas posteriores a una simple investigación",
+            "setting": "oficina del gobierno estadounidense",
+            "framing": "B-roll horizontal 16:9 con movimiento de documentos",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "YA NO ES SOLO",
+              "INVESTIGACIÓN"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_90",
+      "text": "Es una ofensiva legal con restricciones concretas todavía en desarrollo.",
+      "scenes": [
+        {
+          "id": "scene_90",
+          "image_id": 90,
+          "tipo_midia": "imagem",
+          "asset_key": "legal-restrictions-still-developing",
+          "image": "cena_90.png",
+          "visual": {
+            "subject": "una línea temporal judicial desde demanda hasta acuerdos",
+            "action": "avanzando hacia restricciones y supervisión",
+            "setting": "composición documental legal",
+            "framing": "plano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_91",
+      "text": "Ahora conviene separar el hecho documentado de una generalización tentadora.",
+      "scenes": [
+        {
+          "id": "scene_91",
+          "image_id": 91,
+          "tipo_midia": "imagem",
+          "asset_key": "documented-fact-versus-generalization",
+          "image": "cena_91.png",
+          "visual": {
+            "subject": "dos carpetas separadas, evidencia y suposición",
+            "action": "manteniéndose claramente diferenciadas",
+            "setting": "mesa de investigación",
+            "framing": "plano cenital horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_92",
+      "text": "El expediente RealPage pertenece principalmente al mercado estadounidense multifamiliar.",
+      "scenes": [
+        {
+          "id": "scene_92",
+          "image_id": 92,
+          "tipo_midia": "imagem",
+          "asset_key": "us-multifamily-market-scope",
+          "image": "cena_92.png",
+          "visual": {
+            "subject": "grandes complejos de apartamentos estadounidenses",
+            "action": "delimitando el alcance principal del caso",
+            "setting": "suburbio metropolitano de Estados Unidos",
+            "framing": "plano aéreo horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
             "out": "to_right",
             "speed": "normal"
           },
@@ -1713,26 +2864,122 @@
       ]
     },
     {
-      "id": "block_56",
-      "text": "Para mim, o caso sobrevive nesta tensão: execução precisa, escolhas artísticas caóticas.",
+      "id": "block_93",
+      "text": "No existe aquí prueba equivalente de que YieldStar domine España.",
       "scenes": [
         {
-          "id": "scene_56",
-          "image_id": 56,
+          "id": "scene_93",
+          "image_id": 93,
           "tipo_midia": "imagem",
-          "asset_key": "precision-chaos-investigation-board",
-          "image": "cena_56.png",
+          "asset_key": "spain-no-equivalent-proof",
+          "image": "cena_93.png",
           "visual": {
-            "subject": "rota precisa do roubo contrastada com seleção artística irregular",
-            "action": "formando uma contradição visual sobre um quadro investigativo",
-            "setting": "sala escura de análise do caso",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "edificios residenciales españoles junto a un expediente vacío",
+            "action": "mostrando ausencia de prueba equivalente en las fuentes",
+            "setting": "barrio urbano de Madrid o Barcelona",
+            "framing": "B-roll horizontal 16:9 sobrio",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_94",
+      "text": "Ni de que opere igual en toda América Latina.",
+      "scenes": [
+        {
+          "id": "scene_94",
+          "image_id": 94,
+          "tipo_midia": "video_generico",
+          "asset_key": "european-apartment-street-day",
+          "image": "cena_94.mp4",
+          "visual": {
+            "subject": "edificios residenciales europeos y personas buscando vivienda",
+            "action": "mostrando un mercado distinto sin representar un caso específico",
+            "setting": "calle urbana europea contemporánea",
+            "framing": "B-roll horizontal 16:9 de fachadas y actividad cotidiana",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
             "in": "zoom_in",
             "out": "to_right",
             "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "NO HAY PRUEBA",
+              "EQUIVALENTE EN ESPAÑA"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_95",
+      "text": "Pero el mecanismo sí ofrece una advertencia para cualquier mercado.",
+      "scenes": [
+        {
+          "id": "scene_95",
+          "image_id": 95,
+          "tipo_midia": "imagem",
+          "asset_key": "global-market-warning",
+          "image": "cena_95.png",
+          "visual": {
+            "subject": "un algoritmo central frente a edificios de diferentes países",
+            "action": "planteando un riesgo replicable sin afirmar equivalencia",
+            "setting": "composición documental internacional",
+            "framing": "plano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_96",
+      "text": "Cuanta más vivienda concentren pocos actores, mayor será su influencia.",
+      "scenes": [
+        {
+          "id": "scene_96",
+          "image_id": 96,
+          "tipo_midia": "imagem",
+          "asset_key": "landlord-concentration-city-map",
+          "image": "cena_96.png",
+          "visual": {
+            "subject": "pocos grupos corporativos controlando muchos edificios",
+            "action": "ampliando su influencia sobre un mapa urbano",
+            "setting": "visualización aérea de ciudad",
+            "framing": "plano cenital horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "normal"
           },
           "sounds": {
             "transition": [],
@@ -1745,30 +2992,233 @@
       ]
     },
     {
-      "id": "block_57",
-      "text": "A precisão do plano contrasta com telas danificadas e escolhas que parecem de amadores.",
+      "id": "block_97",
+      "text": "Y cuanto más compartan datos, menos independiente será cada precio.",
       "scenes": [
         {
-          "id": "scene_57",
-          "image_id": 57,
+          "id": "scene_97",
+          "image_id": 97,
           "tipo_midia": "imagem",
-          "asset_key": "cut-canvases-security-route-contrast",
-          "image": "cena_57.png",
+          "asset_key": "data-sharing-reduces-independence",
+          "image": "cena_97.png",
           "visual": {
-            "subject": "tela cortada, planta do museu e fita de vigilância",
-            "action": "reunindo os sinais de amadorismo e conhecimento operacional",
-            "setting": "mesa de evidências do caso",
-            "framing": "plano cinematográfico horizontal 16:9 adequado a cartão central",
-            "details": "composição documental realista, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "varias curvas de precios independientes",
+            "action": "convergiendo después de compartir información",
+            "setting": "laboratorio de análisis de mercado",
+            "framing": "plano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
-            "in": "from_right",
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_98",
+      "text": "En España, fondos buitre es una etiqueta política muy extendida.",
+      "scenes": [
+        {
+          "id": "scene_98",
+          "image_id": 98,
+          "tipo_midia": "imagem",
+          "asset_key": "vulture-funds-spanish-debate",
+          "image": "cena_98.png",
+          "visual": {
+            "subject": "manifestantes y edificios propiedad de fondos",
+            "action": "representando el debate español sobre grandes tenedores",
+            "setting": "calle urbana española",
+            "framing": "plano general horizontal 16:9 sin pancartas legibles",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_99",
+      "text": "En comunidades latinas estadounidenses, grandes carteras inmobiliarias ya influyen directamente.",
+      "scenes": [
+        {
+          "id": "scene_99",
+          "image_id": 99,
+          "tipo_midia": "video_generico",
+          "asset_key": "political-label-not-legal-proof",
+          "image": "cena_99.mp4",
+          "visual": {
+            "subject": "una etiqueta periodística separada de un expediente judicial",
+            "action": "mostrando diferencia entre lenguaje político y prueba legal",
+            "setting": "mesa editorial y jurídica",
+            "framing": "plano cenital horizontal 16:9",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_100",
+      "text": "En comunidades latinas estadounidenses, grandes portafolios ya influyen directamente.",
+      "scenes": [
+        {
+          "id": "scene_100",
+          "image_id": 100,
+          "tipo_midia": "imagem",
+          "asset_key": "latino-renters-us-apartments",
+          "image": "cena_100.png",
+          "visual": {
+            "subject": "familias latinas entrando a complejos residenciales estadounidenses",
+            "action": "buscando vivienda en un mercado corporativo",
+            "setting": "ciudad del sur de Estados Unidos",
+            "framing": "plano general horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_101",
+      "text": "Allí, renta, historial crediticio y mudanza pueden decidir una vida.",
+      "scenes": [
+        {
+          "id": "scene_101",
+          "image_id": 101,
+          "tipo_midia": "imagem",
+          "asset_key": "rent-credit-moving-life",
+          "image": "cena_101.png",
+          "visual": {
+            "subject": "una familia revisando crédito, contrato y cajas",
+            "action": "tomando una decisión difícil sobre su próxima vivienda",
+            "setting": "apartamento latino en Estados Unidos",
+            "framing": "B-roll horizontal 16:9 íntimo y documental",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_102",
+      "text": "La tecnología no inventó la ambición de cobrar el máximo.",
+      "scenes": [
+        {
+          "id": "scene_102",
+          "image_id": 102,
+          "tipo_midia": "imagem",
+          "asset_key": "maximum-rent-old-ambition",
+          "image": "cena_102.png",
+          "visual": {
+            "subject": "un propietario tradicional calculando el precio de una vivienda",
+            "action": "intentando maximizar ingresos con métodos manuales",
+            "setting": "oficina inmobiliaria clásica",
+            "framing": "plano medio horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
             "out": "none",
             "speed": "normal"
           },
           "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_103",
+      "text": "Lo nuevo fue convertir esa ambición en una instrucción coordinada.",
+      "scenes": [
+        {
+          "id": "scene_103",
+          "image_id": 103,
+          "tipo_midia": "imagem",
+          "asset_key": "coordinated-digital-instruction",
+          "image": "cena_103.png",
+          "visual": {
+            "subject": "varios administradores recibiendo la misma señal digital",
+            "action": "actuando de forma sincronizada desde oficinas diferentes",
+            "setting": "red corporativa de gestión residencial",
+            "framing": "plano múltiple horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_104",
+      "text": "Un precio algorítmico puede ser legítimo usando datos propios y públicos.",
+      "scenes": [
+        {
+          "id": "scene_104",
+          "image_id": 104,
+          "tipo_midia": "imagem",
+          "asset_key": "legitimate-own-data-pricing",
+          "image": "cena_104.png",
+          "visual": {
+            "subject": "un administrador usando solamente datos de su propio edificio",
+            "action": "calculando un precio independiente",
+            "setting": "oficina de una propiedad residencial",
+            "framing": "plano medio horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
             "transition": [
-              "whoosh_cinematic"
+              "whoosh_soft"
             ],
             "context": null
           }
@@ -1776,21 +3226,302 @@
       ]
     },
     {
-      "id": "block_58",
-      "text": "Identidades e 13 obras seguem desaparecidas. Qual pista resolve o caso? Inscreva-se para o próximo mistério.",
+      "id": "block_105",
+      "text": "El problema comienza al alimentar decisiones con secretos de competidores.",
       "scenes": [
         {
-          "id": "scene_58",
-          "image_id": 58,
-          "tipo_midia": "video_generico",
-          "asset_key": "empty-museum-gallery-frames",
-          "image": "cena_58.mp4",
+          "id": "scene_105",
+          "image_id": 105,
+          "tipo_midia": "imagem",
+          "asset_key": "competitor-secrets-feed-algorithm",
+          "image": "cena_105.png",
           "visual": {
-            "subject": "galeria genérica com molduras vazias e luz baixa",
-            "action": "permanecendo sem resposta enquanto a câmera recua lentamente",
-            "setting": "museu silencioso ligado a um crime não solucionado",
-            "framing": "plano fullscreen cinematográfico horizontal 16:9 com composição documental",
-            "details": "B-roll amplo e plausível, sem representar pessoa, obra ou local específico como registro real, sem texto, legendas, letras, logotipos, marcas, marca-d'água ou interface"
+            "subject": "carpetas confidenciales de empresas rivales entrando a un servidor",
+            "action": "alimentando un modelo central de precios",
+            "setting": "centro de datos conceptual",
+            "framing": "plano horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_106",
+      "text": "También aparece cuando rechazar recomendaciones trae presión o consecuencias.",
+      "scenes": [
+        {
+          "id": "scene_106",
+          "image_id": 106,
+          "tipo_midia": "video_generico",
+          "asset_key": "pressure-to-follow-recommendations",
+          "image": "cena_106.mp4",
+          "visual": {
+            "subject": "un operador recibiendo alertas tras rechazar una sugerencia",
+            "action": "sintiendo presión para volver a aceptar el precio",
+            "setting": "centro de gestión inmobiliaria",
+            "framing": "plano cercano horizontal 16:9",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "LA MÁQUINA",
+              "EMPIEZA A DISCIPLINAR"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_107",
+      "text": "Entonces la máquina deja de informar y empieza a disciplinar.",
+      "scenes": [
+        {
+          "id": "scene_107",
+          "image_id": 107,
+          "tipo_midia": "imagem",
+          "asset_key": "machine-disciplines-decisions",
+          "image": "cena_107.png",
+          "visual": {
+            "subject": "una fila de operadores siguiendo señales idénticas",
+            "action": "ajustando precios al mismo ritmo bajo supervisión digital",
+            "setting": "centro operativo genérico",
+            "framing": "B-roll horizontal 16:9 con movimiento coordinado",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_108",
+      "text": "El verdadero producto no era solamente una cifra diaria.",
+      "scenes": [
+        {
+          "id": "scene_108",
+          "image_id": 108,
+          "tipo_midia": "video_generico",
+          "asset_key": "daily-number-not-product",
+          "image": "cena_108.mp4",
+          "visual": {
+            "subject": "una cifra de alquiler flotando sobre una pantalla",
+            "action": "quedando pequeña frente a una red más amplia",
+            "setting": "composición tecnológica documental",
+            "framing": "plano horizontal 16:9",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_109",
+      "text": "Era la confianza de que otros propietarios tampoco bajarían primero.",
+      "scenes": [
+        {
+          "id": "scene_109",
+          "image_id": 109,
+          "tipo_midia": "imagem",
+          "asset_key": "landlords-trust-no-one-cuts",
+          "image": "cena_109.png",
+          "visual": {
+            "subject": "varios edificios manteniendo precios altos simultáneamente",
+            "action": "confiando en que ninguno reducirá primero",
+            "setting": "horizonte urbano nocturno",
+            "framing": "plano general horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_110",
+      "text": "Por eso los apartamentos vacíos podían sostener alquileres cada vez mayores.",
+      "scenes": [
+        {
+          "id": "scene_110",
+          "image_id": 110,
+          "tipo_midia": "imagem",
+          "asset_key": "vacant-apartments-support-rents",
+          "image": "cena_110.png",
+          "visual": {
+            "subject": "apartamentos vacíos dentro de una torre iluminada",
+            "action": "sosteniendo simbólicamente una curva de precios ascendente",
+            "setting": "zona residencial de alta demanda",
+            "framing": "plano amplio horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_111",
+      "text": "El edificio parecía ofrecer mercado, pero el mercado estaba parcialmente cerrado.",
+      "scenes": [
+        {
+          "id": "scene_111",
+          "image_id": 111,
+          "tipo_midia": "imagem",
+          "asset_key": "market-partially-closed",
+          "image": "cena_111.png",
+          "visual": {
+            "subject": "una calle llena de edificios con pocas puertas abiertas",
+            "action": "mostrando oferta visible pero acceso comercial restringido",
+            "setting": "distrito residencial moderno",
+            "framing": "plano general horizontal 16:9",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_112",
+      "text": "Eso responde la contradicción inicial: vacío no siempre significa barato.",
+      "scenes": [
+        {
+          "id": "scene_112",
+          "image_id": 112,
+          "tipo_midia": "imagem",
+          "asset_key": "vacancy-not-cheap-reveal",
+          "image": "cena_112.png",
+          "visual": {
+            "subject": "una vivienda vacía junto a una etiqueta de precio ascendente",
+            "action": "revelando la contradicción central de la historia",
+            "setting": "interior residencial oscuro y elegante",
+            "framing": "B-roll horizontal 16:9 con acercamiento lento",
+            "details": "composición documental realista, iluminación cinematográfica, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_113",
+      "text": "Cuando la competencia se coordina, incluso la vacancia puede encarecerte la vivienda.",
+      "scenes": [
+        {
+          "id": "scene_113",
+          "image_id": 113,
+          "tipo_midia": "video_generico",
+          "asset_key": "coordination-makes-housing-costlier",
+          "image": "cena_113.mp4",
+          "visual": {
+            "subject": "varios edificios conectados elevando precios al mismo tiempo",
+            "action": "cerrando el circuito de coordinación y encarecimiento",
+            "setting": "panorama urbano nocturno",
+            "framing": "plano aéreo horizontal 16:9",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "VACÍO NO SIGNIFICA",
+              "BARATO"
+            ],
+            "at": "middle"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_114",
+      "text": "¿Quién debería controlar el algoritmo? Suscríbete para el próximo caso.",
+      "scenes": [
+        {
+          "id": "scene_114",
+          "image_id": 114,
+          "tipo_midia": "video_generico",
+          "asset_key": "city-apartments-digital-night",
+          "image": "cena_114.mp4",
+          "visual": {
+            "subject": "edificios residenciales y luces urbanas nocturnas",
+            "action": "manteniendo el ambiente de investigación tecnológica",
+            "setting": "gran ciudad genérica al anochecer",
+            "framing": "B-roll horizontal 16:9 con movimiento suave y sin interfaces",
+            "details": "B-roll documental amplio y plausible, sin representar una empresa, persona o evento exacto, sin texto, subtítulos, letras, logotipos, marcas de agua ni interfaces legibles"
           },
           "transition": {
             "in": "zoom_in",
@@ -1806,8 +3537,8 @@
           },
           "annotation": {
             "lines": [
-              "SE INSCREVA",
-              "PARA MAIS"
+              "SUSCRÍBETE",
+              "PARA MÁS"
             ],
             "at": "start",
             "emoji": "🔔"

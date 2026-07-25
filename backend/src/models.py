@@ -251,6 +251,9 @@ class ValidationRequest(BaseModel):
 class PexelsCandidatesRequest(BaseModel):
     script: Script
     queries: dict[str, str] = Field(default_factory=dict)
+    # Uma edição de descrição no painel não deve refazer a busca de todas as
+    # cenas de B-roll do roteiro.
+    scene_id: str | None = None
 
     @field_validator("queries")
     @classmethod

@@ -9,6 +9,7 @@ import sys
 import shutil
 import time
 import traceback
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -153,25 +154,51 @@ def prompts(script: Script) -> list[dict[str, str | int]]:
 @app.post("/api/pexels/candidates")
 def pexels_candidates(request: PexelsCandidatesRequest) -> dict[str, object]:
     """Busca alternativas horizontais; nada é baixado antes da aprovação humana."""
-    scenes = [scene for block in request.script.blocks for scene in block.scenes if scene.tipo_midia == "video_generico"]
+    targets = [
+        (block, scene)
+        for block in request.script.blocks
+        for scene in block.scenes
+        if scene.tipo_midia == "video_generico" and (request.scene_id is None or scene.id == request.scene_id)
+    ]
+    if request.scene_id is not None and not targets:
+        raise HTTPException(status_code=404, detail="Cena de B-roll não encontrada no roteiro enviado.")
+
+    def item_for(block: object, scene: object) -> dict[str, object]:
+        # Os atributos são garantidos pelo contrato Pydantic de Script/Scene.
+        query = request.queries.get(scene.id, (scene.asset_key or "").replace("-", " "))
+        visual = scene.visual
+        reference = " · ".join(part for part in [visual.subject, visual.action, visual.setting] if part)
+        item = {
+            "scene_id": scene.id,
+            "scene_image": scene.image,
+            "query": query,
+            "asset_key": scene.asset_key,
+            "text": block.text,
+            "visual_reference": reference,
+            "is_annotation": scene.annotation is not None,
+        }
+        try:
+            item["candidates"] = search_videos(query)
+        except PexelsError as exc:
+            # Uma busca sem resultado ou uma falha transitória não pode fazer
+            # a cena desaparecer. Ela continua visível para o operador ajustar
+            # a descrição e tentar novamente.
+            item["candidates"] = []
+            item["search_error"] = str(exc)
+        return item
+
     try:
-        items = []
-        for block in request.script.blocks:
-            for scene in block.scenes:
-                if scene.tipo_midia != "video_generico":
-                    continue
-                query = request.queries.get(scene.id, (scene.asset_key or "").replace("-", " "))
-                candidates = search_videos(query)
-                items.append({
-                    "scene_id": scene.id,
-                    "scene_image": scene.image,
-                    "query": query,
-                    "asset_key": scene.asset_key,
-                    "text": block.text,
-                    "candidates": candidates,
-                    "is_annotation": scene.annotation is not None,
-                })
-        return {"items": items, "count": len(scenes), "folder_url": "/api/pexels/open-folder"}
+        # Quatro buscas simultâneas reduzem a espera sem disparar dezenas de
+        # requisições paralelas contra o Pexels.
+        with ThreadPoolExecutor(max_workers=min(4, max(1, len(targets)))) as executor:
+            items = list(executor.map(lambda target: item_for(*target), targets))
+        expected_scene_ids = [scene.id for _, scene in targets]
+        return {
+            "items": items,
+            "count": len(targets),
+            "expected_scene_ids": expected_scene_ids,
+            "folder_url": "/api/pexels/open-folder",
+        }
     except PexelsError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 

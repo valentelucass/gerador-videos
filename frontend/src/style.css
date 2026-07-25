@@ -92,6 +92,13 @@ button, select { cursor: pointer; }
 .panel-index { color: #f3d536; font: 800 .67rem/1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; }
 .panel h1 { margin: 0; font-size: .92rem; letter-spacing: -.01em; white-space: nowrap; }
 .panel-hint { margin: 10px 0 8px; color: #7e8995; font-size: .74rem; }
+.flow-export { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 9px; margin-top: 8px; padding: 8px 9px; border: 1px solid #34404c; border-radius: 8px; background: linear-gradient(90deg, #101921, #0c1218); }
+.flow-export > div { display: grid; gap: 2px; min-width: 0; }
+.flow-export b { color: #f0d334; font-size: .7rem; letter-spacing: .03em; }
+.flow-export small { overflow: hidden; color: #8392a0; font-size: .61rem; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+.flow-export label { display: flex; align-items: center; gap: 5px; color: #8d9aa7; font-size: .62rem; font-weight: 700; }
+.flow-export select { padding: 5px 6px; font-size: .62rem; }
+.flow-export .button { white-space: nowrap; }
 
 .flow-progress { margin: 0 0 10px; }
 .flow-progress > div { display: flex; justify-content: space-between; gap: 12px; color: #85919e; font-size: .67rem; }
@@ -214,9 +221,17 @@ button, select { cursor: pointer; }
 .curation-empty { display: grid; place-content: center; min-height: 220px; gap: 6px; color: #d9e2eb; text-align: center; }
 .curation-empty span { max-width: 360px; color: #8494a2; font-size: .7rem; line-height: 1.45; }
 .pexels-review a { color: #f3d536; }
+.pexels-results-summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 8px; color: #aebbc7; border: 1px solid #2d3c48; border-radius: 6px; background: #0b141c; font-size: .63rem; }
+.pexels-results-summary b { color: #dce6ee; font-size: .67rem; }
+.pexels-results-summary span { color: #81919f; text-align: right; }
 .pexels-item { display: grid; gap: 7px; padding: 8px; border: 1px solid #2c3945; border-radius: 7px; background: #0e151d; }
+.pexels-item.selected { border-color: #3f9d69; background: linear-gradient(100deg, #10261e, #0e151d 58%); }
 .pexels-copy { display: grid; gap: 4px; color: #aebac5; font-size: .65rem; line-height: 1.35; }
 .pexels-copy b { color: #e4ebf2; font-size: .7rem; }
+.pexels-reference { color: #8ec7dc; font-size: .6rem; font-weight: 700; letter-spacing: .025em; }
+.pexels-selected-summary { display: flex; align-items: center; justify-content: space-between; gap: 9px; width: 100%; padding: 7px 8px; color: #c5ead2; border: 1px solid #3c8f60; border-radius: 6px; background: #102a1e; font-size: .64rem; text-align: left; }
+.pexels-selected-summary:hover { border-color: #69c78c; background: #143524; }
+.pexels-selected-summary b { color: #f1d339; font-size: .62rem; white-space: nowrap; }
 .pexels-search { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; }
 .pexels-search input { min-width: 0; padding: 6px 7px; color: #e1e8ef; border: 1px solid #34404c; border-radius: 6px; outline: none; background: #090d12; font-size: .66rem; }
 .pexels-search input:focus { border-color: #f3d536; }
@@ -224,6 +239,9 @@ button, select { cursor: pointer; }
 .pexels-candidates figure { display: grid; gap: 5px; min-width: 0; margin: 0; padding: 6px; border: 1px solid #2e3944; border-radius: 6px; background: #080c10; }
 .pexels-candidates video { width: 100%; aspect-ratio: 16 / 9; border-radius: 4px; background: #000; object-fit: cover; }
 .pexels-candidates figcaption { overflow: hidden; color: #8f9ba8; font-size: .58rem; text-overflow: ellipsis; white-space: nowrap; }
+.pexels-preview-error { display: grid; min-height: 94px; place-content: center; gap: 5px; padding: 8px; color: #9eabb7; border: 1px dashed #51606e; border-radius: 4px; background: #070a0d; font-size: .6rem; text-align: center; }
+.pexels-preview-error a { color: #f3d536; }
+.pexels-pagination { margin-top: 3px; }
 .text-button { justify-self: start; padding: 0; color: #f3d536; border: 0; background: transparent; font-size: .63rem; text-decoration: underline; }
 .annotation-broll { margin: 0; padding: 8px; color: #b7d9e5; border-left: 2px solid #56c4e7; background: linear-gradient(90deg, #11303b, #10212a); font-size: .64rem; line-height: 1.4; }
 

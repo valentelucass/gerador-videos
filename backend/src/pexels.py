@@ -41,17 +41,19 @@ def _request_json(query: str, per_page: int = 4) -> dict[str, object]:
         raise PexelsError("Não foi possível conectar ao Pexels agora. Tente novamente.") from exc
 
 
-def _best_file(video: dict[str, object]) -> dict[str, object] | None:
+def _best_file(video: dict[str, object], target_width: int) -> dict[str, object] | None:
     files = video.get("video_files")
     if not isinstance(files, list):
         return None
     candidates = [item for item in files if isinstance(item, dict) and isinstance(item.get("link"), str) and item.get("file_type") == "video/mp4"]
     if not candidates:
         return None
-    # Prioriza Full HD horizontal sem baixar, sem necessidade, um arquivo 4K.
+    # A prévia não precisa transportar o mesmo arquivo do render final. Para a
+    # curadoria escolhemos perto de 960 px; para download, perto de 1920 px.
     return min(candidates, key=lambda item: (
-        0 if int(item.get("width") or 0) >= 1280 and int(item.get("height") or 0) >= 720 else 1,
-        abs(int(item.get("width") or 0) - 1920) + abs(int(item.get("height") or 0) - 1080),
+        0 if int(item.get("width") or 0) >= 854 and int(item.get("height") or 0) >= 480 else 1,
+        abs(int(item.get("width") or 0) - target_width),
+        abs(int(item.get("height") or 0) - round(target_width * 9 / 16)),
     ))
 
 
@@ -64,22 +66,25 @@ def search_videos(query: str, per_page: int = 4) -> list[dict[str, object]]:
     for raw in payload.get("videos", []):
         if not isinstance(raw, dict):
             continue
-        media = _best_file(raw)
-        if media is None:
+        preview_media = _best_file(raw, 960)
+        download_media = _best_file(raw, 1920)
+        if preview_media is None or download_media is None:
             continue
         width, height = int(raw.get("width") or 0), int(raw.get("height") or 0)
         if not width or not height or width < height:
             continue
         video_id = raw.get("id")
-        link = media.get("link")
-        if not isinstance(video_id, int) or not isinstance(link, str):
+        preview_link = preview_media.get("link")
+        download_link = download_media.get("link")
+        if not isinstance(video_id, int) or not isinstance(preview_link, str) or not isinstance(download_link, str):
             continue
         result.append({
             "id": video_id,
-            "preview_url": link,
+            "preview_url": preview_link,
+            "download_url": download_link,
             "thumbnail": raw.get("image"),
-            "width": width,
-            "height": height,
+            "width": int(preview_media.get("width") or width),
+            "height": int(preview_media.get("height") or height),
             "duration": raw.get("duration"),
             "creator": raw.get("user", {}).get("name") if isinstance(raw.get("user"), dict) else None,
             "pexels_url": raw.get("url"),
@@ -92,7 +97,7 @@ def download_selected_video(query: str, video_id: int, destination_name: str) ->
     candidate = next((item for item in candidates if item["id"] == video_id), None)
     if candidate is None:
         raise PexelsError("A opção escolhida não pertence mais à busca atual. Pesquise novamente.")
-    url = str(candidate["preview_url"])
+    url = str(candidate["download_url"])
     host = (urlparse(url).hostname or "").lower()
     if not host.endswith("pexels.com"):
         raise PexelsError("O Pexels retornou uma origem de vídeo não reconhecida.")

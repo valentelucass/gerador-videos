@@ -25,7 +25,7 @@ type Script = {
 
 type Catalog = { images: string[]; videos: string[]; backgrounds: string[]; default_background?: string | null; music: string[]; sounds: string[] };
 type PexelsCandidate = { id: number; preview_url: string; thumbnail?: string; width: number; height: number; duration?: number; creator?: string; pexels_url?: string };
-type PexelsItem = { scene_id: string; scene_image: string; query: string; asset_key?: string; text: string; candidates: PexelsCandidate[]; is_annotation?: boolean };
+type PexelsItem = { scene_id: string; scene_image: string; query: string; asset_key?: string; text: string; visual_reference?: string; candidates: PexelsCandidate[]; is_annotation?: boolean; search_error?: string };
 type RenderJob = {
   status: string;
   output?: string;
@@ -55,10 +55,102 @@ const LEGACY_SESSION_IMAGES_KEY = "synthreel:session-images";
 const IMAGE_BINDING_STRATEGY_VERSION = "synthreel:semantic-image-bindings-v1";
 const PLACEHOLDER_IMAGE_PATTERN = /^cena_\d+(?:_[a-z])?\.(?:png|jpe?g|webp)$/i;
 const THUMBNAIL_PAGE_SIZE = 24;
+const PEXELS_SCENES_PAGE_SIZE = 4;
 const RENDER_COMPLETE_SOUND_URL = "/assets/sounds/Mountain%20Audio%20-%20New%20Idea%20Notification.mp3";
 const RENDER_ERROR_SOUND_URL = "/assets/sounds/Wrong%20Answer.mp3";
 let renderAudioContext: AudioContext | null = null;
 let renderErrorBuffer: Promise<AudioBuffer> | null = null;
+
+function downloadTextFile(filename: string, text: string): void {
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+function fileSlug(value: string): string {
+  const normalized = value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+  return normalized || "roteiro";
+}
+
+function googleFlowText(script: Script, batchSize: number): { text: string; imageCount: number; batchCount: number } {
+  const items = script.blocks.flatMap(block => block.scenes
+    .filter(scene => scene.tipo_midia === "imagem")
+    .map(scene => ({ blockText: block.text.trim(), scene })));
+  const batchCount = Math.ceil(items.length / batchSize);
+  const batches = Array.from({ length: batchCount }, (_, batchIndex) => {
+    const start = batchIndex * batchSize;
+    const batch = items.slice(start, start + batchSize);
+    const firstId = batch[0]?.scene.image_id ?? 0;
+    const lastId = batch.at(-1)?.scene.image_id ?? 0;
+    const body = Array.from({ length: Math.ceil(batch.length / 5) }, (_, groupIndex) => {
+      const group = batch.slice(groupIndex * 5, groupIndex * 5 + 5);
+      const startNumber = groupIndex * 5 + 1;
+      const endNumber = startNumber + group.length - 1;
+      const prompts = group.map(({ blockText, scene }, sceneIndex) => {
+        const visual = scene.visual ?? {};
+        const number = String(startNumber + sceneIndex).padStart(2, "0");
+        return [
+          `IMAGEM ${number} DE ${String(batch.length).padStart(2, "0")} · REFERÊNCIA FLOW ID ${scene.image_id}`,
+          `Arquivo esperado: ${scene.image}`,
+          `Narração de contexto: ${blockText}`,
+          "Cena:",
+          `- Sujeito: ${visual.subject ?? ""}`,
+          `- Ação: ${visual.action ?? ""}`,
+          `- Ambiente: ${visual.setting ?? ""}`,
+          `- Enquadramento: ${visual.framing ?? ""}`,
+          `- Detalhes: ${visual.details ?? ""}`,
+        ].join("\n");
+      }).join("\n\n────────────────────────────────────────\n\n");
+      return [
+        "────────────────────────────────────────────────────────────────────────────────",
+        `SUBLOTE ${String(groupIndex + 1).padStart(2, "0")} · GERE EXATAMENTE AS IMAGENS ${String(startNumber).padStart(2, "0")} A ${String(endNumber).padStart(2, "0")} · ${group.length} FOTOS`,
+        "Depois destas 5 fotos, pare. Não avance para o próximo sublote sem novo comando.",
+        "────────────────────────────────────────────────────────────────────────────────",
+        "",
+        prompts,
+      ].join("\n");
+    }).join("\n\n\n");
+    const number = String(batchIndex + 1).padStart(2, "0");
+    const header = [
+      "================================================================================",
+      `INÍCIO — LOTE GOOGLE FLOW ${number} · ${batch.length} IMAGENS · FLOW IDs ${firstId}–${lastId}`,
+      "================================================================================",
+      "",
+      "INSTRUÇÕES DE GERAÇÃO — APLICAR A TODAS AS IMAGENS DESTE LOTE",
+      `- Este lote contém EXATAMENTE ${batch.length} imagens solicitadas. Não gere uma imagem para cada número entre os FLOW IDs ${firstId} e ${lastId}.`,
+      "- FLOW ID é somente uma etiqueta de referência; a numeração que vale é IMAGEM 01 DE N até IMAGEM N DE N.",
+      "- Gere somente 5 fotos por vez, seguindo cada SUBLOTE. Ao terminar um sublote, pare e espere um novo comando antes de iniciar o próximo.",
+      "- Siga o brief de cada cena com precisão; não misture cenas, IDs ou personagens.",
+      "- O resultado deve parecer uma fotografia documental real, capturada no mundo real — nunca uma imagem genérica de banco, publicidade polida ou visual de IA perfeito.",
+      "- Varie a linguagem fotográfica de modo coerente com cada cena: celular comum com flash direto para pessoas, interiores ou noite; fotografia analógica/envelhecida para memória, arquivo, época ou evidência; câmera documental comum com luz natural para o restante.",
+      "- Prefira enquadramentos vivos e específicos: pequenas imperfeições naturais, flash pontual, grão discreto, foto antiga ou composição levemente imperfeita são bem-vindos quando fizerem sentido. Não aplique o mesmo efeito a todas as imagens.",
+      "- Preserve cores vivas e naturais, contraste e textura realista; evite cores lavadas, simetria artificial, pele plástica, iluminação excessivamente perfeita e acabamento publicitário.",
+      "- Quando houver pessoas, mostre anatomia, idade, postura, roupa e expressões críveis e contidas; prefira momentos espontâneos, nunca rostos deformados, poses artificiais ou emoções exageradas.",
+      "- Quando a cena for conceitual e não existir uma fotografia literal forte, crie uma ilustração editorial ou colagem visual criativa ligada EXATAMENTE ao assunto da cena. Nunca use ícones genéricos, dashboards, redes abstratas ou desenho desconectado.",
+      "- Não gere texto, legendas, letras, logotipos, marcas, marca-d'água, interfaces ou placas legíveis.",
+      "- Cenas de vídeo foram removidas intencionalmente: gere somente os itens deste lote.",
+      "",
+      body,
+      "",
+      "================================================================================",
+      `FIM DO LOTE GOOGLE FLOW ${number} · ${batch.length} IMAGENS CONCLUÍDAS`,
+      "================================================================================",
+    ].join("\n");
+    return header;
+  });
+  return { text: batches.join("\n\n\n\n\n\n\n\n"), imageCount: items.length, batchCount };
+}
 
 function playRenderCompleteSound(): void {
   const sound = new Audio(RENDER_COMPLETE_SOUND_URL);
@@ -262,11 +354,21 @@ function App() {
   const [pexelsItems, setPexelsItems] = useState<PexelsItem[]>([]);
   const [pexelsQueries, setPexelsQueries] = useState<Record<string, string>>({});
   const [translations, setTranslations] = useState<Record<string, string>>({});
+  const [visualTranslations, setVisualTranslations] = useState<Record<string, string>>({});
+  const [translationLoading, setTranslationLoading] = useState<Record<string, boolean>>({});
+  const [visualTranslationLoading, setVisualTranslationLoading] = useState<Record<string, boolean>>({});
+  const [selectedPexels, setSelectedPexels] = useState<Record<string, PexelsCandidate>>({});
+  const [expandedPexelsScene, setExpandedPexelsScene] = useState<string | null>(null);
+  const [pexelsPreviewErrors, setPexelsPreviewErrors] = useState<Record<string, boolean>>({});
+  const [pexelsPage, setPexelsPage] = useState(0);
+  const [pexelsExpectedCount, setPexelsExpectedCount] = useState(0);
   const [pexelsBusy, setPexelsBusy] = useState(false);
   const [mediaTab, setMediaTab] = useState<MediaTab>("assets");
   const [musicPreviewPlaying, setMusicPreviewPlaying] = useState(false);
   const [musicPreviewVolume, setMusicPreviewVolume] = useState(0.14);
   const [promptCopied, setPromptCopied] = useState(false);
+  const [flowExportReady, setFlowExportReady] = useState(false);
+  const [flowBatchSize, setFlowBatchSize] = useState<25 | 50>(25);
   const jsonInput = useRef<HTMLInputElement>(null);
   const imagesInput = useRef<HTMLInputElement>(null);
   const backgroundInput = useRef<HTMLInputElement>(null);
@@ -453,6 +555,7 @@ function App() {
     setImageBindings({});
     setActiveImagePickerKey(null);
     setTimingWarnings([]);
+    setFlowExportReady(false);
     setSource(text);
     void parseScript(text);
   };
@@ -609,16 +712,46 @@ function App() {
     try {
       setPexelsBusy(true);
       setStatus("Buscando alternativas horizontais no Pexels…");
-      const result = await api<{ items: PexelsItem[] }>("/api/pexels/candidates", {
+      const result = await api<{ items: PexelsItem[]; expected_scene_ids: string[] }>("/api/pexels/candidates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ script: activeScript, queries: pexelsQueryPayload(activeScript) }),
+        body: JSON.stringify({ script: activeScript, queries: pexelsQueryPayload(activeScript), ...(sceneId ? { scene_id: sceneId } : {}) }),
       });
-      setPexelsItems(current => sceneId
-        ? [...current.filter(item => item.scene_id !== sceneId), ...result.items.filter(item => item.scene_id === sceneId)]
-        : result.items);
+      const existingIndex = sceneId ? pexelsItems.findIndex(item => item.scene_id === sceneId) : -1;
+      setPexelsItems(current => {
+        if (!sceneId) return result.items;
+        const index = current.findIndex(item => item.scene_id === sceneId);
+        if (index < 0) return [...current, ...result.items];
+        const next = [...current];
+        next.splice(index, 1, ...result.items);
+        return next;
+      });
+      setPexelsPage(sceneId && existingIndex >= 0 ? Math.floor(existingIndex / PEXELS_SCENES_PAGE_SIZE) : 0);
+      if (!sceneId) setPexelsExpectedCount(result.expected_scene_ids.length);
+      setTranslations(current => sceneId
+        ? Object.fromEntries(Object.entries(current).filter(([key]) => key !== sceneId))
+        : {});
+      setVisualTranslations(current => sceneId
+        ? Object.fromEntries(Object.entries(current).filter(([key]) => key !== sceneId))
+        : {});
+      if (sceneId) {
+        setSelectedPexels(current => {
+          const next = { ...current };
+          delete next[sceneId];
+          return next;
+        });
+      }
+      void translatePexelsItems(activeScript, result.items);
       setMediaTab("curadoria");
-      setStatus(result.items.length ? "Escolha um B-roll por cena. Nenhum vídeo é baixado antes da sua aprovação." : "O roteiro não possui cenas de vídeo genérico.");
+      const missing = result.expected_scene_ids.filter(id => !result.items.some(item => item.scene_id === id));
+      const failedSearches = result.items.filter(item => item.search_error).length;
+      setStatus(
+        missing.length
+          ? `Falha de conferência: faltam ${missing.join(", ")} na curadoria.`
+          : result.items.length
+            ? `${result.items.length}/${result.expected_scene_ids.length} cenas video_generico carregadas.${failedSearches ? ` ${failedSearches} cena(s) sem opções; ajuste a descrição e busque novamente.` : " Escolha um B-roll por cena."}`
+            : "O roteiro não possui cenas de vídeo genérico.",
+      );
     } catch (error) {
       setStatus(readableError(error));
     } finally {
@@ -643,6 +776,8 @@ function App() {
         }),
       });
       await refreshCatalog();
+      setSelectedPexels(current => ({ ...current, [item.scene_id]: candidate }));
+      setExpandedPexelsScene(null);
       setStatus(`B-roll ${result.filename} aprovado e salvo. Ele já será usado pela cena ${item.scene_id}.`);
     } catch (error) {
       setStatus(readableError(error));
@@ -651,23 +786,42 @@ function App() {
     }
   };
 
-  const translateScene = async (item: PexelsItem) => {
-    const activeScript = parseScript(source, false);
-    if (!activeScript) return;
+  const translatePexelsItems = async (activeScript: Script, items: PexelsItem[]) => {
     if (activeScript.language.toLowerCase().startsWith("pt")) {
-      setTranslations(current => ({ ...current, [item.scene_id]: item.text }));
+      setTranslations(current => ({ ...current, ...Object.fromEntries(items.map(item => [item.scene_id, item.text])) }));
+      setVisualTranslations(current => ({ ...current, ...Object.fromEntries(items.filter(item => item.visual_reference).map(item => [item.scene_id, item.visual_reference ?? ""])) }));
       return;
     }
-    try {
-      const result = await api<{ portuguese: string }>("/api/translate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: item.text, source_language: activeScript.language }),
-      });
-      setTranslations(current => ({ ...current, [item.scene_id]: result.portuguese }));
-    } catch (error) {
-      setStatus(readableError(error));
-    }
+    const pending = items.flatMap(item => [
+      { sceneId: item.scene_id, kind: "text" as const, value: item.text },
+      ...(item.visual_reference ? [{ sceneId: item.scene_id, kind: "visual" as const, value: item.visual_reference }] : []),
+    ]);
+    setTranslationLoading(current => ({ ...current, ...Object.fromEntries(items.map(item => [item.scene_id, true])) }));
+    setVisualTranslationLoading(current => ({ ...current, ...Object.fromEntries(items.filter(item => item.visual_reference).map(item => [item.scene_id, true])) }));
+    // Mantém poucas requisições simultâneas ao serviço de tradução, sem exigir
+    // que o operador clique cena por cena ou sature o serviço externo.
+    const worker = async () => {
+      while (pending.length) {
+        const task = pending.shift();
+        if (!task) return;
+        try {
+          const result = await api<{ portuguese: string }>("/api/translate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: task.value, source_language: activeScript.language }),
+          });
+          if (task.kind === "text") setTranslations(current => ({ ...current, [task.sceneId]: result.portuguese }));
+          else setVisualTranslations(current => ({ ...current, [task.sceneId]: result.portuguese }));
+        } catch {
+          if (task.kind === "text") setTranslations(current => ({ ...current, [task.sceneId]: "Tradução indisponível; use o original acima." }));
+          else setVisualTranslations(current => ({ ...current, [task.sceneId]: "Tradução indisponível; use a referência original acima." }));
+        } finally {
+          if (task.kind === "text") setTranslationLoading(current => ({ ...current, [task.sceneId]: false }));
+          else setVisualTranslationLoading(current => ({ ...current, [task.sceneId]: false }));
+        }
+      }
+    };
+    await Promise.all(Array.from({ length: Math.min(4, pending.length) }, worker));
   };
 
   const openVideosFolder = async () => {
@@ -701,6 +855,7 @@ function App() {
         }),
       });
       setImageBindings(bindingsFromResolvedSources(activeScript, report.resolved_image_sources));
+      setFlowExportReady(report.valid);
       const warnings = report.timing?.scenes.filter(scene => scene.duration > 9) ?? [];
       setTimingWarnings(warnings);
       const validationNotes = [
@@ -715,8 +870,25 @@ function App() {
           : report.errors.join("\n"),
       );
     } catch (error) {
+      setFlowExportReady(false);
       setStatus(readableError(error));
     }
+  };
+
+  const downloadGoogleFlowTxt = () => {
+    const activeScript = parseScript(source, false);
+    if (!activeScript || !flowExportReady) {
+      setStatus("Valide o JSON antes de preparar o arquivo para o Google Flow.");
+      return;
+    }
+    const result = googleFlowText(activeScript, flowBatchSize);
+    if (!result.imageCount) {
+      setStatus("Este roteiro não possui cenas com tipo_midia: imagem para enviar ao Google Flow.");
+      return;
+    }
+    const filename = `google-flow_${fileSlug(activeScript.title)}_${result.imageCount}-imagens_lotes-${flowBatchSize}.txt`;
+    downloadTextFile(filename, result.text);
+    setStatus(`TXT do Google Flow baixado: ${result.imageCount} imagens em ${result.batchCount} lote(s). Vídeos, transições e sons foram ignorados.`);
   };
 
   const render = async () => {
@@ -771,6 +943,10 @@ function App() {
   const imageProgress = requiredAssets.length ? Math.round((linkedImages / requiredAssets.length) * 100) : 0;
   const scriptProgress = script ? 100 : 0;
   const backgroundProgress = background ? 100 : 0;
+  const pexelsPageCount = Math.max(1, Math.ceil(pexelsItems.length / PEXELS_SCENES_PAGE_SIZE));
+  const currentPexelsPage = Math.min(pexelsPage, pexelsPageCount - 1);
+  const pexelsStart = currentPexelsPage * PEXELS_SCENES_PAGE_SIZE;
+  const visiblePexelsItems = pexelsItems.slice(pexelsStart, pexelsStart + PEXELS_SCENES_PAGE_SIZE);
 
   return (
     <main className="app-shell">
@@ -808,6 +984,7 @@ function App() {
               // cenas; os vínculos anteriores não devem vazar para ela.
               setImageBindings({});
               setActiveImagePickerKey(null);
+              setFlowExportReady(false);
             }}
           />
           <section className={`script-feedback${timingWarnings.length ? " has-warnings" : ""}`} aria-label="Validação e avisos do roteiro">
@@ -821,6 +998,16 @@ function App() {
               ))}
             </> : <span>Validação, duração acústica e sugestões de corte aparecem aqui.</span>}
           </section>
+          {script && <section className="flow-export" aria-label="Exportação para Google Flow">
+            <div><b>Google Flow</b><small>Exporta somente cenas de imagem; B-roll, transições, sons e anotações ficam de fora.</small></div>
+            <label>Lotes
+              <select value={flowBatchSize} onChange={event => setFlowBatchSize(Number(event.target.value) as 25 | 50)}>
+                <option value={25}>25 imagens</option>
+                <option value={50}>50 imagens</option>
+              </select>
+            </label>
+            <button className="button quiet compact" disabled={!flowExportReady} title={flowExportReady ? "Baixar roteiro compacto para o Google Flow" : "Valide o JSON para liberar a exportação"} onClick={downloadGoogleFlowTxt}>Baixar TXT Flow</button>
+          </section>}
           <div className="music-select" onMouseEnter={startMusicPreview} onMouseLeave={stopMusicPreview}>
             <span><b>Trilha do vídeo</b><small>{catalog.music.length ? "Escolha a música usada nesta renderização" : "Nenhuma música disponível"}</small></span>
             <button type="button" className={`music-preview-toggle${musicPreviewPlaying ? " playing" : ""}`} aria-label={musicPreviewPlaying ? "Pausar prévia da trilha" : "Ouvir prévia da trilha"} title={musicPreviewPlaying ? "Pausar prévia" : "Ouvir prévia"} disabled={!music} onClick={toggleMusicPreview}>{musicPreviewPlaying ? "❚❚" : "▶"}</button>
@@ -947,30 +1134,43 @@ function App() {
             <section className="pexels-review standalone" aria-label="Curadoria de B-roll do Pexels">
               <div className="curation-heading"><div><span className="panel-index">B-ROLL</span><b>Escolhas editoriais</b><small>O gancho e as inserções visíveis passam pela sua aprovação.</small></div><button className="button quiet compact" onClick={() => void openVideosFolder()}>Abrir pasta dos vídeos</button></div>
               {pexelsItems.length > 0 ? <>
-                  <p className="scene-bindings-note">Prévia e aprovação humana de B-roll horizontal. Vídeos fornecidos por <a href="https://www.pexels.com" target="_blank" rel="noreferrer">Pexels</a>.</p>
-                  {pexelsItems.map(item => {
+                  <p className="scene-bindings-note">Prévia automática, tradução e aprovação humana de B-roll horizontal. As cenas são paginadas para não carregar todas as prévias de uma vez. Vídeos fornecidos por <a href="https://www.pexels.com" target="_blank" rel="noreferrer">Pexels</a>.</p>
+                  <div className="pexels-results-summary"><b>Conferência: {pexelsItems.length}/{pexelsExpectedCount || pexelsItems.length} cenas video_generico</b><span>Exibindo cenas {pexelsStart + 1}–{Math.min(pexelsStart + PEXELS_SCENES_PAGE_SIZE, pexelsItems.length)} · página {currentPexelsPage + 1} de {pexelsPageCount}</span></div>
+                  {visiblePexelsItems.map(item => {
                     const scene = script?.blocks.flatMap(block => block.scenes).find(candidate => candidate.id === item.scene_id);
                     const saved = Boolean(scene && catalog.videos.includes(scene.image));
+                    const chosen = selectedPexels[item.scene_id];
+                    const collapsed = Boolean(chosen && expandedPexelsScene !== item.scene_id);
                     return (
-                      <article className="pexels-item" key={item.scene_id}>
+                      <article className={`pexels-item${chosen ? " selected" : ""}`} key={item.scene_id}>
                         <div className="pexels-copy"><b>{item.scene_id} · {saved ? "aprovado" : "aguardando aprovação"}</b><span>Original: {item.text}</span>
-                          {translations[item.scene_id] ? <span>Português: {translations[item.scene_id]}</span> : <button className="text-button" onClick={() => void translateScene(item)}>Traduzir para português</button>}
+                          <span>Português: {translations[item.scene_id] ?? (translationLoading[item.scene_id] ? "traduzindo…" : "traduzindo…")}</span>
+                          {item.visual_reference && <span className="pexels-reference">REFERÊNCIA VISUAL (PT-BR): {visualTranslations[item.scene_id] ?? (visualTranslationLoading[item.scene_id] ? "traduzindo…" : "traduzindo…")}</span>}
                         </div>
+                        {chosen && <button className="pexels-selected-summary" type="button" onClick={() => setExpandedPexelsScene(current => current === item.scene_id ? null : item.scene_id)}>
+                          <span>✓ Escolhido · {chosen.width}×{chosen.height} · {chosen.duration ?? "?"}s</span><b>{expandedPexelsScene === item.scene_id ? "Minimizar" : "Trocar vídeo"}</b>
+                        </button>}
+                        {!collapsed && <>
                         {item.is_annotation && <p className="annotation-broll">FUNÇÃO: este vídeo fica fullscreen atrás da anotação, com blur leve. Ele não é uma cena independente; escolha a atmosfera que você quer que permaneça visível por trás do texto.</p>}
-                        <div className="pexels-search"><input value={pexelsQueries[item.scene_id] ?? item.query} aria-label={`Busca Pexels para ${item.scene_id}`} onChange={event => setPexelsQueries(current => ({ ...current, [item.scene_id]: event.target.value }))} /><button className="button quiet compact" disabled={pexelsBusy} onClick={() => void searchPexels(item.scene_id)}>Buscar descrição</button></div>
+                        <div className="pexels-search"><input value={pexelsQueries[item.scene_id] ?? item.query} aria-label={`Busca Pexels para ${item.scene_id}`} onChange={event => setPexelsQueries(current => ({ ...current, [item.scene_id]: event.target.value }))} /><button className="button quiet compact" disabled={pexelsBusy} onClick={() => void searchPexels(item.scene_id)}>Buscar 4 novas opções</button></div>
                         <div className="pexels-candidates">
                           {item.candidates.map(candidate => (
                             <figure key={candidate.id}>
-                              <video src={candidate.preview_url} poster={candidate.thumbnail} controls muted preload="metadata" />
+                              {pexelsPreviewErrors[`${item.scene_id}:${candidate.id}`] ? <div className="pexels-preview-error"><span>Prévia indisponível neste navegador.</span>{candidate.pexels_url && <a href={candidate.pexels_url} target="_blank" rel="noreferrer">Abrir no Pexels</a>}</div> : <video src={candidate.preview_url} poster={candidate.thumbnail} controls autoPlay muted loop playsInline preload="metadata" onError={() => setPexelsPreviewErrors(current => ({ ...current, [`${item.scene_id}:${candidate.id}`]: true }))} />}
                               <figcaption>{candidate.width}×{candidate.height} · {candidate.duration ?? "?"}s{candidate.creator ? ` · ${candidate.creator}` : ""}</figcaption>
                               <button className="button compact" disabled={pexelsBusy} onClick={() => void downloadPexelsVideo(item, candidate)}>{item.is_annotation ? "Usar como fundo" : "Usar este vídeo"}</button>
                             </figure>
                           ))}
-                          {!item.candidates.length && <p className="asset-grid-empty">Nenhum B-roll horizontal foi encontrado. Altere a descrição em inglês e busque de novo.</p>}
+                          {!item.candidates.length && <p className="asset-grid-empty">{item.search_error ?? "Nenhum B-roll horizontal foi encontrado."} Altere a descrição em inglês e busque de novo.</p>}
                         </div>
+                        </>}
                       </article>
                     );
                   })}
+                  {pexelsItems.length > PEXELS_SCENES_PAGE_SIZE && <div className="asset-grid-pagination pexels-pagination" aria-label="Navegação da curadoria Pexels">
+                    <span>Cenas {pexelsStart + 1}–{Math.min(pexelsStart + PEXELS_SCENES_PAGE_SIZE, pexelsItems.length)} de {pexelsItems.length}</span>
+                    <div><button className="button quiet compact" disabled={currentPexelsPage === 0} onClick={() => setPexelsPage(page => Math.max(0, page - 1))}>Anteriores</button><button className="button quiet compact" disabled={currentPexelsPage >= pexelsPageCount - 1} onClick={() => setPexelsPage(page => Math.min(pexelsPageCount - 1, page + 1))}>Próximas</button></div>
+                  </div>}
               </> : <div className="curation-empty"><b>Nenhuma busca realizada</b><span>Depois de validar o roteiro, use “Buscar B-roll” no cabeçalho. A curadoria aparece aqui, sem disputar espaço com as imagens.</span></div>}
             </section>
           )}
