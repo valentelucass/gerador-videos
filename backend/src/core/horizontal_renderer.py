@@ -13,7 +13,8 @@ import shutil
 import subprocess
 import unicodedata
 from collections.abc import Callable, Mapping
-from contextvars import ContextVar
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from contextvars import ContextVar, copy_context
 from dataclasses import dataclass
 from logging import Logger
 from pathlib import Path
@@ -99,6 +100,16 @@ MUSIC_BED_VOLUME = 0.23
 # threads de filtro deixam espaço para o sistema e evitam grafos 1080p
 # excessivamente paralelos em renderizações longas.
 VIDEO_FILTER_THREADS = max(2, min(4, os.cpu_count() or 4))
+# Os filtros ``perspective``/alpha dos cartões são majoritariamente CPU e cada
+# processo FFmpeg usa pouco mais de um núcleo. Dois processos independentes
+# aproveitam melhor o Ryzen sem abrir sessões AMF demais nem dobrar a memória
+# de trabalho para um nível arriscado. A fila é deliberadamente limitada: a
+# estabilidade visual e de driver vale mais que paralelismo irrestrito.
+SCENE_RENDER_WORKERS = 2
+# Segmentos só dependem das cenas já prontas e escrevem arquivos distintos.
+# Reaproveitamos o mesmo teto para não criar mais de duas sessões AMF em
+# paralelo em nenhuma etapa do job.
+SEGMENT_RENDER_WORKERS = SCENE_RENDER_WORKERS
 VIDEO_ENCODER_ARGS = (
     "-c:v", "h264_amf", "-usage", "transcoding", "-quality", "speed",
     "-rc", "cqp", "-qp_i", "20", "-qp_p", "22", "-qp_b", "24",
@@ -1070,9 +1081,16 @@ def _native_render_scene_clips(
     progress_end: int = 42,
 ) -> list[Path]:
     scene_dir.mkdir(parents=True, exist_ok=True)
-    clips: list[Path] = []
-    fullscreen_index = 0
-    for index, (scene, frames) in enumerate(zip(scenes, clip_frames, strict=True)):
+    # O ponto de foco de fullscreen é editorial e precisa continuar estável
+    # mesmo quando as cenas terminam fora de ordem na fila paralela.
+    fullscreen_image_indices: dict[int, int] = {}
+    next_fullscreen_image = 0
+    for index, scene in enumerate(scenes):
+        if modes[index] == "fullscreen" and scene.tipo_midia != "video_generico":
+            fullscreen_image_indices[index] = next_fullscreen_image
+            next_fullscreen_image += 1
+
+    def render_one(index: int, scene: object, frames: int) -> Path:
         output = scene_dir / f"cena_{index + 1:03d}.mp4"
         source = source_dir / scene.image
         target_seconds = frames / FPS
@@ -1095,10 +1113,12 @@ def _native_render_scene_clips(
         )
         source_prefix = f"[0:v]setpts=PTS*{video_time_scale:.8f}," if is_video else "[0:v]"
         if modes[index] == "fullscreen":
-            filter = _native_video_fullscreen_filter() if is_video else _fullscreen_filter(fullscreen_index, target_seconds)
+            filter = (
+                _native_video_fullscreen_filter()
+                if is_video
+                else _fullscreen_filter(fullscreen_image_indices[index], target_seconds)
+            )
             filter_graph = f"{source_prefix}{filter}{finite_tail}[out]"
-            if scene.tipo_midia != "video_generico":
-                fullscreen_index += 1
         else:
             # Fotos de cartão também precisam do Ken Burns previsto pelo
             # contrato horizontal. Fazê-lo aqui mantém cada encoder com um
@@ -1116,13 +1136,42 @@ def _native_render_scene_clips(
             *VIDEO_ENCODER_ARGS,
             "-r", str(FPS), str(output),
         ])
-        clips.append(output)
-        _report(
-            progress_callback,
-            progress_start + round((progress_end - progress_start) * (index + 1) / max(1, len(scenes))),
-            f"Normalizando cena {index + 1}/{len(scenes)}",
-        )
-    return clips
+        return output
+
+    workers = min(SCENE_RENDER_WORKERS, len(scenes))
+    clips: list[Path | None] = [None] * len(scenes)
+    if workers == 1:
+        for index, (scene, frames) in enumerate(zip(scenes, clip_frames, strict=True)):
+            clips[index] = render_one(index, scene, frames)
+            _report(
+                progress_callback,
+                progress_start + round((progress_end - progress_start) * (index + 1) / max(1, len(scenes))),
+                f"Normalizando cena {index + 1}/{len(scenes)}",
+            )
+    else:
+        completed = 0
+        with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="horizontal-scene") as executor:
+            futures = {
+                executor.submit(copy_context().run, render_one, index, scene, frames): index
+                for index, (scene, frames) in enumerate(zip(scenes, clip_frames, strict=True))
+            }
+            try:
+                for future in as_completed(futures):
+                    index = futures[future]
+                    clips[index] = future.result()
+                    completed += 1
+                    _report(
+                        progress_callback,
+                        progress_start + round((progress_end - progress_start) * completed / max(1, len(scenes))),
+                        f"Normalizando cena {completed}/{len(scenes)}",
+                    )
+            except Exception:
+                for pending in futures:
+                    pending.cancel()
+                raise
+    if any(clip is None for clip in clips):
+        raise RuntimeError("A fila de normalização não retornou todas as cenas.")
+    return [clip for clip in clips if clip is not None]
 
 
 def _native_render_scene_canvases(
@@ -1156,10 +1205,9 @@ def _native_render_scene_canvases(
     ``boxblur`` por frame nem o antigo canvas para cenas fullscreen.
     """
     canvas_dir.mkdir(parents=True, exist_ok=True)
-    prepared: list[Path] = []
-    card_total = modes.count("card")
-    rendered_cards = 0
-    for scene_index, source in enumerate(clips):
+
+    def render_one(scene_index: int) -> Path:
+        source = clips[scene_index]
         scene_tail = tail_seconds if scene_index == len(scenes) - 1 else 0.0
         # Cada pré-clipe não final inclui a janela que se sobrepõe à
         # próxima cena. Eles são indispensáveis para reconstruir o xfade de
@@ -1167,8 +1215,7 @@ def _native_render_scene_canvases(
         duration = clip_durations[scene_index]
         padding = f",tpad=stop_mode=clone:stop_duration={scene_tail:.6f}" if scene_tail else ""
         if modes[scene_index] == "fullscreen" and not scene_tail:
-            prepared.append(source)
-            continue
+            return source
 
         output = canvas_dir / f"cena_{scene_index + 1:03d}.mp4"
         if modes[scene_index] == "fullscreen":
@@ -1267,15 +1314,56 @@ def _native_render_scene_canvases(
             "-filter_complex", graph, "-map", "[out]", "-an", *VIDEO_ENCODER_ARGS,
             "-r", str(FPS), str(output),
         ])
-        prepared.append(output)
-        if modes[scene_index] == "card":
-            rendered_cards += 1
-            _report(
-                progress_callback,
-                progress_start + round((progress_end - progress_start) * rendered_cards / max(1, card_total)),
-                f"Compondo cartão {rendered_cards}/{card_total}",
-            )
-    return prepared
+        return output
+
+    # Fullscreen sem cauda já é o próprio pré-clipe. Somente cartões (e a
+    # rara última tela fullscreen com padding) precisam de compositor. Cada
+    # tarefa lê/escreve arquivos distintos e só compartilha PNGs imutáveis,
+    # portanto duas execuções são seguras e reduzem pela metade o gargalo
+    # CPU que antes preparava os 67 cartões estritamente em série.
+    task_indices = [
+        index for index in range(len(scenes))
+        if modes[index] == "card" or (index == len(scenes) - 1 and tail_seconds > 0)
+    ]
+    prepared: list[Path | None] = list(clips)
+    workers = min(SCENE_RENDER_WORKERS, len(task_indices))
+    if workers == 1:
+        rendered_cards = 0
+        for scene_index in task_indices:
+            prepared[scene_index] = render_one(scene_index)
+            if modes[scene_index] == "card":
+                rendered_cards += 1
+                _report(
+                    progress_callback,
+                    progress_start + round((progress_end - progress_start) * rendered_cards / max(1, modes.count("card"))),
+                    f"Compondo cartão {rendered_cards}/{modes.count('card')}",
+                )
+    elif workers:
+        rendered_cards = 0
+        card_total = modes.count("card")
+        with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="horizontal-card") as executor:
+            futures = {
+                executor.submit(copy_context().run, render_one, scene_index): scene_index
+                for scene_index in task_indices
+            }
+            try:
+                for future in as_completed(futures):
+                    scene_index = futures[future]
+                    prepared[scene_index] = future.result()
+                    if modes[scene_index] == "card":
+                        rendered_cards += 1
+                        _report(
+                            progress_callback,
+                            progress_start + round((progress_end - progress_start) * rendered_cards / max(1, card_total)),
+                            f"Compondo cartão {rendered_cards}/{card_total}",
+                        )
+            except Exception:
+                for pending in futures:
+                    pending.cancel()
+                raise
+    if any(path is None for path in prepared):
+        raise RuntimeError("A fila de cartões não retornou todas as cenas preparadas.")
+    return [path for path in prepared if path is not None]
 
 
 def _native_render_card_to_card_transition(
@@ -1724,11 +1812,15 @@ def _native_render_segment(
         if not ANNOTATION_FONT.is_file():
             raise FileNotFoundError("A fonte Impact para as anotações não está disponível.")
         annotation_dir = segment_dir / f"anotacoes_{number:03d}"
+        # Cada anotação mantém seu próprio render curto. Encadear várias
+        # janelas no mesmo grafo economiza uma recodificação, mas em alguns
+        # segmentos faz o FFmpeg reutilizar o último quadro do ramo anterior
+        # até a próxima janela. A prioridade aqui é preservar uma linha do
+        # tempo contínua; RenderPart já evita recodificar prefixo e sufixo.
         for annotation_index, (lines, start, end, emoji) in enumerate(sorted(annotations, key=lambda item: item[1])):
-            local_start = start - first_start
-            local_end = end - first_start
             current = _native_apply_segment_annotation(
-                current, total_frames, annotation_index, lines, local_start, local_end, emoji, annotation_dir,
+                current, total_frames, annotation_index, lines,
+                start - first_start, end - first_start, emoji, annotation_dir,
             )
 
     # As vinhetas pertencem aos fragmentos de borda. Assim a montagem final
@@ -2086,6 +2178,7 @@ def _native_windowed_annotation_filters(
     emoji_input_index: int | None,
     *,
     label_prefix: str,
+    source_duration: float | None = None,
 ) -> str:
     """Aplica a anotação em uma janela finita e recompõe a linha do tempo.
 
@@ -2129,9 +2222,10 @@ def _native_windowed_annotation_filters(
     )
     parts.append(effect)
 
-    suffix = f"[{label_prefix}_annotation_{annotation_index}_suffix]"
-    graph.append(f"{source_suffix}trim=start={end:.6f},setpts=PTS-STARTPTS{suffix}")
-    parts.append(suffix)
+    if source_duration is None or end < source_duration - 1 / FPS:
+        suffix = f"[{label_prefix}_annotation_{annotation_index}_suffix]"
+        graph.append(f"{source_suffix}trim=start={end:.6f},setpts=PTS-STARTPTS{suffix}")
+        parts.append(suffix)
     output = f"[{label_prefix}_annotation_{annotation_index}_timeline]"
     graph.append("".join(parts) + f"concat=n={len(parts)}:v=1:a=0{output}")
     return output
@@ -2299,7 +2393,7 @@ def _native_finalize(
         for index, (lines, start, end, emoji) in enumerate(annotations):
             video = _native_windowed_annotation_filters(
                 graph, video, index, lines, start, end, emoji,
-                sticker_input_indices.get(emoji), label_prefix="final",
+                sticker_input_indices.get(emoji), label_prefix="final", source_duration=visual_duration,
             )
     if annotations:
         opening_fade = min(OPENING_FADE_SECONDS, visual_duration)
@@ -2427,10 +2521,11 @@ def _native_composite(
     visual_tail_seconds = visual_tail_frames / FPS
     visual_duration = visual_total_frames / FPS
     exits = _transition_directions(scenes, seed_context=script.title)
-    # A normalização é deliberadamente sequencial. Cada pré-clipe tem duração
-    # finita e impede que ``-loop 1`` e ``-stream_loop -1`` alimentem a cadeia
-    # cumulativa de xfade. Somente cartões recebem um segundo passe curto com
-    # fundo e sombra PNG; fullscreen segue direto para os segmentos.
+    # Cada pré-clipe tem duração finita e impede que ``-loop 1`` e
+    # ``-stream_loop -1`` alimentem a cadeia cumulativa de xfade. Somente
+    # cartões recebem um segundo passe curto com fundo e sombra PNG;
+    # fullscreen segue direto para os segmentos. As tarefas independentes são
+    # limitadas a dois workers para aproveitar CPU/AMF sem saturar a máquina.
     _report(progress_callback, 30, "Normalizando cenas visuais")
     base_paths = _native_render_scene_clips(
         scenes, job_dir / "cenas_base", scene_assets, modes, clip_frames,
@@ -2468,23 +2563,57 @@ def _native_composite(
         if not assigned:
             deferred_annotations.append(annotation)
 
-    segment_paths: list[Path] = []
-    for number, segment in enumerate(render_segments, start=1):
-        _report(
-            progress_callback,
-            54 + round(26 * (number - 1) / max(1, len(render_segments))),
-            f"Compondo trecho visual {number}/{len(render_segments)}",
-        )
-        segment_paths.append(_native_render_segment(
+    def render_segment(number: int, segment: RenderSegment) -> Path:
+        return _native_render_segment(
             segment, number, job_dir / "segmentos", scene_paths, base_paths, background, card_background_blur, card_shadow, card_mask,
             visual_starts, scene_durations, modes, card_focuses, exits, script.background_animation,
             segment_annotations[number - 1],
             opening_fade=OPENING_FADE_SECONDS if number == 1 else 0.0,
             closing_fade=CLOSING_FADE_SECONDS if number == len(render_segments) else 0.0,
-        ))
+        )
+
+    # Os segmentos não compartilham filtros, arquivos de transição ou pastas
+    # de anotação; a única dependência é a ordem do manifesto final. Processar
+    # dois por vez remove o gargalo seriado sem voltar a criar um grafo global
+    # que retenha frames de todo o vídeo na memória.
+    _report(progress_callback, 54, "Compondo trechos visuais em paralelo")
+    segment_paths: list[Path | None] = [None] * len(render_segments)
+    workers = min(SEGMENT_RENDER_WORKERS, len(render_segments))
+    if workers == 1:
+        for number, segment in enumerate(render_segments, start=1):
+            segment_paths[number - 1] = render_segment(number, segment)
+            _report(
+                progress_callback,
+                54 + round(26 * number / max(1, len(render_segments))),
+                f"Compondo trecho visual {number}/{len(render_segments)}",
+            )
+    else:
+        completed = 0
+        with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="horizontal-segment") as executor:
+            futures = {
+                executor.submit(copy_context().run, render_segment, number, segment): number
+                for number, segment in enumerate(render_segments, start=1)
+            }
+            try:
+                for future in as_completed(futures):
+                    number = futures[future]
+                    segment_paths[number - 1] = future.result()
+                    completed += 1
+                    _report(
+                        progress_callback,
+                        54 + round(26 * completed / max(1, len(render_segments))),
+                        f"Compondo trecho visual {completed}/{len(render_segments)}",
+                    )
+            except Exception:
+                for pending in futures:
+                    pending.cancel()
+                raise
+    if any(path is None for path in segment_paths):
+        raise RuntimeError("A fila de trechos não retornou todos os segmentos visuais.")
+    ordered_segment_paths = [path for path in segment_paths if path is not None]
 
     _report(progress_callback, 80, "Preparando trilha, efeitos e fechamento")
-    visual_manifest = _native_segment_manifest(segment_paths, job_dir)
+    visual_manifest = _native_segment_manifest(ordered_segment_paths, job_dir)
     final = job_dir / f"{_slug(script.title)}.mp4"
     sfx_directory = job_dir / "sfx"
     music_directory = job_dir / "trilha"
@@ -2497,7 +2626,7 @@ def _native_composite(
     )
     if abs(_duration(final) - visual_duration) > 2 / FPS:
         raise RuntimeError("A entrega final não respeitou a duração da linha do tempo visual.")
-    for path in [*segment_paths, visual_manifest]:
+    for path in [*ordered_segment_paths, visual_manifest]:
         if path is None:
             continue
         if path.is_file():
