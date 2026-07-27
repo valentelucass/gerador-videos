@@ -285,7 +285,7 @@ IDENTIFICADORES E MÍDIAS
   termos visuais curtos em inglês, minúsculos e separados por hífen.
 - Para `tipo_midia: "imagem"`, faça o `asset_key` focar no sujeito específico
   da narrativa, como `rescue-team-snow-ravine` ou
-  `abandoned-lighthouse-fog`. O `visual` deve ser um brief detalhado e
+  `abandoned-lighthouse-fog`. O `visual` deve ser um brief factual, simples e
   específico para geração de imagem por IA. O campo `image` deve terminar
   obrigatoriamente em `.png`, por exemplo `cena_02.png`.
 - Para `tipo_midia: "video_generico"`, é PROIBIDO usar no `asset_key` o
@@ -307,11 +307,57 @@ IDENTIFICADORES E MÍDIAS
 BRIEF VISUAL OBRIGATÓRIO
 - Cada cena deve ter `visual.subject`, `visual.action`, `visual.setting`,
   `visual.framing` e `visual.details`, todos específicos e visíveis.
-- Descreva uma única composição cinematográfica 16:9, documental e coerente
-  com a frase narrada naquele bloco.
-- Em `details`, exija imagem sem texto, legendas, letras, logotipos, marcas,
-  marca-d'água ou interface. Não descreva resolução, FPS, codec, música ou
-  nome de saída.
+- Os cinco campos descrevem SOMENTE conteúdo indispensável: sujeito principal,
+  ação, ambiente, posição dos elementos e detalhes necessários para representar
+  a narração. Não descreva estilo artístico, paleta, iluminação elaborada,
+  lente, granulação, qualidade fotográfica ou atmosfera cinematográfica.
+- Use composição simples, com no máximo dois ou três elementos principais.
+  Evite metáforas visuais, objetos flutuantes, cenários conceituais e
+  combinações difíceis de gerar.
+- `framing` descreve apenas onde os elementos ficam na imagem; não use nele
+  termos de estética ou especificações como "cinematográfico" e "16:9".
+- Em `details`, inclua somente fatos visuais indispensáveis, como objetos ou
+  posições. Não peça texto, legendas, logotipos, marca-d'água, interface,
+  resolução, FPS, codec, música, estilo ou nome de saída.
+
+PRESET VISUAL AUTOMÁTICO DO GOOGLE FLOW
+- O JSON NÃO escolhe estética. Ao exportar o prompt para o Google Flow, o
+  painel e a API acrescentam automaticamente um preset sem alterar o JSON.
+- Cenas fotográficas recebem o preset: `Raw smartphone documentary photography,
+  harsh direct flash, natural imperfections, slightly grainy texture, muted
+  brown, gray and dark tones, worn everyday environments, candid unposed
+  people, realistic ordinary faces, tired, neutral or concerned expressions,
+  non-commercial appearance, clear main subject, simple composition, sharp
+  enough to understand the scene, horizontal 16:9.`
+- O bloco negativo fotográfico é: `Avoid glossy advertising, studio photography,
+  cinematic lighting, luxury environments, perfect models, plastic skin,
+  excessive retouching, overly clean surfaces, symmetrical posing, dramatic
+  movie color grading, neon colors, oversaturation, artificial smiles, CGI
+  appearance, 3D render, fantasy elements, abstract metaphors, excessive
+  objects, visual clutter, deformed hands, distorted faces and unreadable text.`
+- Se qualquer campo do `visual` tiver termos de gráfico — por exemplo `gráfico`,
+  `barras`, `linha`, `comparação`, `evolução`, `porcentagem`, `inflação`,
+  `margem` ou `preço` — aplique o preset: `Simple editorial data visualization,
+  clean neutral background, clear lines or bars, strong contrast, few elements,
+  accurate proportions, visually understandable, horizontal 16:9.`
+- O bloco negativo de gráficos é: `Avoid 3D charts, floating objects,
+  metaphorical graphics, decorative illustrations, futuristic dashboards,
+  excessive colors, perspective distortion, tiny labels, visual clutter and
+  complex interfaces.`
+- Nunca use os termos `low-quality photo` ou `poor quality`. A aparência é
+  documental e amadora, mas a cena precisa continuar nítida e utilizável.
+- Exemplo correto de conteúdo de gráfico no JSON:
+  ```json
+  {
+    "subject": "gráfico de duas linhas",
+    "action": "a linha da inflação desce enquanto o preço dos alimentos permanece alto",
+    "setting": "fundo simples",
+    "framing": "gráfico ocupando o centro da imagem",
+    "details": "duas linhas bem separadas e composição fácil de entender"
+  }
+  ```
+- Exemplo incorreto: `Uma cesta construída com barras de gráfico em um estúdio
+  escuro, com piso refletivo, luz cinematográfica e moedas flutuando.`
 
 LAYOUT E TRANSIÇÕES
 - `transition.in: "zoom_in"` gera uma cena fullscreen com zoom suave para
@@ -418,9 +464,9 @@ Use esta forma, preenchendo todos os blocos/cenas necessários para a duração:
           "visual": {
             "subject": "mergulhador com lanterna explorando um naufrágio",
             "action": "descendo lentamente e procurando objetos entre estruturas submersas",
-            "setting": "fundo oceânico genérico ao redor de um casco antigo",
-            "framing": "plano horizontal 16:9 amplo acompanhando a busca subaquática",
-            "details": "B-roll de descoberta e exploração, sem referência a navio, pessoa ou local histórico específico, sem texto, logotipos ou marca-d'água"
+            "setting": "fundo oceânico ao redor de um casco antigo",
+            "framing": "mergulhador no centro e casco ocupando o fundo",
+            "details": "lanterna e estruturas submersas visíveis"
           },
           "transition": {
             "in": "zoom_in",
@@ -447,9 +493,9 @@ Use esta forma, preenchendo todos os blocos/cenas necessários para a duração:
           "visual": {
             "subject": "mecanismo antigo de bronze coberto por engrenagens",
             "action": "repousando sobre uma mesa de conservação",
-            "setting": "laboratório arqueológico documental com luz lateral suave",
-            "framing": "close-up cinematográfico horizontal 16:9",
-            "details": "metal oxidado, detalhes de engrenagens visíveis, sem texto, logotipos, marca-d'água ou interface"
+            "setting": "laboratório arqueológico",
+            "framing": "mecanismo ocupando o centro da imagem",
+            "details": "metal oxidado e engrenagens visíveis"
           },
           "transition": {
             "in": "from_left",
@@ -476,9 +522,9 @@ Use esta forma, preenchendo todos os blocos/cenas necessários para a duração:
           "visual": {
             "subject": "mecanismo antigo de bronze guardado em uma gaveta de arquivo",
             "action": "sendo revelado entre etiquetas envelhecidas e luvas de conservação",
-            "setting": "arquivo de museu silencioso com luz lateral dramática",
-            "framing": "plano médio cinematográfico horizontal 16:9 focado na descoberta",
-            "details": "contraste entre o objeto valioso e o armazenamento esquecido, sem texto legível, logotipos, marca-d'água ou interface"
+            "setting": "arquivo de museu",
+            "framing": "gaveta aberta no centro e mãos nas laterais",
+            "details": "objeto, etiquetas e luvas de conservação visíveis"
           },
           "transition": {
             "in": "from_right",

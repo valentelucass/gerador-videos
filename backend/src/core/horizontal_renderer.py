@@ -32,6 +32,13 @@ FPS = 30
 WIDTH, HEIGHT = 1920, 1080
 CARD_W, CARD_H = 1500, 844
 CARD_RADIUS = 48
+# A sombra continua sendo a mesma sombra discreta deslocada para baixo/direita,
+# mas agora ganha área transparente ao redor. Antes o blur era calculado dentro
+# da própria caixa do cartão e era cortado exatamente nas bordas inferior e
+# lateral, criando a linha dura que aparecia em alguns frames.
+CARD_SHADOW_PADDING = 32
+CARD_SHADOW_OFFSET_X = 14
+CARD_SHADOW_OFFSET_Y = 17
 # O cartão cresce inteiro antes de sair de cena. A transição parte exatamente
 # deste tamanho para não haver o "pulo" de escala no primeiro quadro. A
 # composição aplica essa escala por transformação subpixel, não por degraus de
@@ -822,21 +829,34 @@ def _native_card_filter(*, animate_image: bool = False) -> str:
     return f"[0:v]{_native_card_filter_chain(animate_image=animate_image)}[out]"
 
 
-def _native_card_round_mask_expression() -> str:
-    """Expressão alfa para os quatro cantos arredondados do cartão."""
-    right = CARD_W - CARD_RADIUS - 1
-    bottom = CARD_H - CARD_RADIUS - 1
+def _native_card_round_mask_expression(*, offset_x: int = 0, offset_y: int = 0) -> str:
+    """Expressão alfa para os quatro cantos arredondados do cartão.
+
+    ``offset_*`` permite desenhar o mesmo cartão em um canvas maior e
+    transparente, necessário para que a penumbra da sombra não seja cortada
+    nas quatro extremidades.
+    """
+    left = offset_x
+    top = offset_y
+    right_edge = offset_x + CARD_W - 1
+    bottom_edge = offset_y + CARD_H - 1
+    right = offset_x + CARD_W - CARD_RADIUS - 1
+    bottom = offset_y + CARD_H - CARD_RADIUS - 1
+    left_curve = offset_x + CARD_RADIUS
+    top_curve = offset_y + CARD_RADIUS
     radius_squared = CARD_RADIUS * CARD_RADIUS
-    return (
-        f"if(lt(X\\,{CARD_RADIUS})*lt(Y\\,{CARD_RADIUS})\\,"
-        f"if(lte((X-{CARD_RADIUS})*(X-{CARD_RADIUS})+(Y-{CARD_RADIUS})*(Y-{CARD_RADIUS})\\,{radius_squared})\\,255\\,0)\\,"
-        f"if(gt(X\\,{right})*lt(Y\\,{CARD_RADIUS})\\,"
-        f"if(lte((X-{right})*(X-{right})+(Y-{CARD_RADIUS})*(Y-{CARD_RADIUS})\\,{radius_squared})\\,255\\,0)\\,"
-        f"if(lt(X\\,{CARD_RADIUS})*gt(Y\\,{bottom})\\,"
-        f"if(lte((X-{CARD_RADIUS})*(X-{CARD_RADIUS})+(Y-{bottom})*(Y-{bottom})\\,{radius_squared})\\,255\\,0)\\,"
+    rounded_rectangle = (
+        f"if(lt(X\\,{left_curve})*lt(Y\\,{top_curve})\\,"
+        f"if(lte((X-{left_curve})*(X-{left_curve})+(Y-{top_curve})*(Y-{top_curve})\\,{radius_squared})\\,255\\,0)\\,"
+        f"if(gt(X\\,{right})*lt(Y\\,{top_curve})\\,"
+        f"if(lte((X-{right})*(X-{right})+(Y-{top_curve})*(Y-{top_curve})\\,{radius_squared})\\,255\\,0)\\,"
+        f"if(lt(X\\,{left_curve})*gt(Y\\,{bottom})\\,"
+        f"if(lte((X-{left_curve})*(X-{left_curve})+(Y-{bottom})*(Y-{bottom})\\,{radius_squared})\\,255\\,0)\\,"
         f"if(gt(X\\,{right})*gt(Y\\,{bottom})\\,"
         f"if(lte((X-{right})*(X-{right})+(Y-{bottom})*(Y-{bottom})\\,{radius_squared})\\,255\\,0)\\,255))))"
     )
+    bounds = f"gte(X\\,{left})*lte(X\\,{right_edge})*gte(Y\\,{top})*lte(Y\\,{bottom_edge})"
+    return f"if({bounds}\\,{rounded_rectangle}\\,0)"
 
 
 def _native_card_mask_asset(job_dir: Path) -> Path:
@@ -855,7 +875,13 @@ def _native_card_mask_asset(job_dir: Path) -> Path:
     return output
 
 
-def _native_card_shadow_asset(job_dir: Path) -> Path:
+def _native_card_shadow_asset(
+    job_dir: Path,
+    *,
+    padding: int = CARD_SHADOW_PADDING,
+    offset_x: int = CARD_SHADOW_OFFSET_X,
+    offset_y: int = CARD_SHADOW_OFFSET_Y,
+) -> Path:
     """Materializa uma única vez a sombra arredondada dos cartões.
 
     O cartão sempre ocupa a mesma caixa opaca de 1500x844. Desfocar a própria
@@ -865,14 +891,18 @@ def _native_card_shadow_asset(job_dir: Path) -> Path:
     segmentos.
     """
     job_dir.mkdir(parents=True, exist_ok=True)
-    output = job_dir / "sombra_cartao_1500x844.png"
+    if padding < 18:
+        raise ValueError("A sombra do cartão precisa de ao menos 18 px de margem para o blur.")
+    shadow_w = CARD_W + 2 * padding
+    shadow_h = CARD_H + 2 * padding
+    output = job_dir / f"sombra_cartao_{shadow_w}x{shadow_h}_p{padding}_x{offset_x}_y{offset_y}.png"
     if output.is_file():
         return output
     _run_compositor([
-        str(FFMPEG), "-y", "-f", "lavfi", "-i", f"color=c=black:s={CARD_W}x{CARD_H}:r=1",
+        str(FFMPEG), "-y", "-f", "lavfi", "-i", f"color=c=black:s={shadow_w}x{shadow_h}:r=1",
         "-vf", (
             "format=rgba,"
-            f"geq=r='0':g='0':b='0':a='{_native_card_round_mask_expression()}',"
+            f"geq=r='0':g='0':b='0':a='{_native_card_round_mask_expression(offset_x=padding, offset_y=padding)}',"
             "colorchannelmixer=aa=0.42,boxblur=18:2"
         ),
         "-frames:v", "1", str(output),
@@ -1289,7 +1319,8 @@ def _native_render_scene_canvases(
                 f"[3:v]settb=1/{FPS},setpts=PTS-STARTPTS,trim=duration={duration:.6f}[shadow_source]",
                 f"color=c=black@0.0:s={WIDTH}x{HEIGHT}:r={FPS},format=rgba,"
                 f"trim=duration={duration:.6f},setpts=PTS-STARTPTS[card_canvas]",
-                f"[card_canvas][shadow_source]overlay=x='({card_x})+18':y='(main_h-overlay_h)/2+22':"
+                f"[card_canvas][shadow_source]overlay=x='({card_x})-{CARD_SHADOW_PADDING}+{CARD_SHADOW_OFFSET_X}':"
+                f"y='(main_h-overlay_h)/2-{CARD_SHADOW_PADDING}+{CARD_SHADOW_OFFSET_Y}':"
                 "format=auto[card_shadow_layer]",
                 f"[card_shadow_layer][card]overlay=x='{card_x}':y='(main_h-overlay_h)/2':format=auto,"
                 "format=rgba[card_layer]",
@@ -1444,19 +1475,19 @@ def _native_render_card_to_card_transition(
         "split=2[card_transition_old_mask_source][card_transition_new_mask]",
         "[card_transition_old_rgb][card_transition_old_mask_source]alphamerge[card_transition_old_alpha]",
         "[card_transition_new_rgb][card_transition_new_mask]alphamerge[card_transition_new_alpha]",
-        f"[card_transition_old_shadow_source]scale=w='trunc({CARD_W}*({old_zoom_overlay}))':"
-        f"h='trunc(({CARD_H}/{CARD_W})*{CARD_W}*({old_zoom_overlay}))':"
+        f"[card_transition_old_shadow_source]scale=w='trunc(({CARD_W}+2*{CARD_SHADOW_PADDING})*({old_zoom_overlay}))':"
+        f"h='trunc(({CARD_H}+2*{CARD_SHADOW_PADDING})*({old_zoom_overlay}))':"
         "eval=frame:flags=bicubic[card_transition_old_shadow]",
         f"[card_transition_old_alpha]scale=w='trunc({CARD_W}*({old_zoom_overlay}))':"
         f"h='trunc(({CARD_H}/{CARD_W})*{CARD_W}*({old_zoom_overlay}))':"
         "eval=frame:flags=bicubic[card_transition_old]",
         f"[card_transition_new_alpha]scale={CARD_W}:{CARD_H}:flags=bicubic[card_transition_new]",
-        f"[card_transition_bg][card_transition_old_shadow]overlay=x='(W-w)/2+({old_x})+18':"
-        "y='(H-h)/2+22':format=auto[card_transition_old_shadow_layer]",
+        f"[card_transition_bg][card_transition_old_shadow]overlay=x='(W-w)/2+({old_x})+{CARD_SHADOW_OFFSET_X}*({old_zoom_overlay})':"
+        f"y='(H-h)/2+{CARD_SHADOW_OFFSET_Y}*({old_zoom_overlay})':format=auto[card_transition_old_shadow_layer]",
         f"[card_transition_old_shadow_layer][card_transition_old]overlay=x='(W-w)/2+({old_x})':"
         "y='(H-h)/2':format=auto[card_transition_old_composite]",
-        f"[card_transition_old_composite][card_transition_new_shadow]overlay=x='(W-w)/2+({new_x})+18':"
-        "y='(H-h)/2+22':format=auto[card_transition_new_shadow_layer]",
+        f"[card_transition_old_composite][card_transition_new_shadow]overlay=x='(W-w)/2+({new_x})+{CARD_SHADOW_OFFSET_X}':"
+        f"y='(H-h)/2+{CARD_SHADOW_OFFSET_Y}':format=auto[card_transition_new_shadow_layer]",
         f"[card_transition_new_shadow_layer][card_transition_new]overlay=x='(W-w)/2+({new_x})':"
         "y='(H-h)/2':format=auto,trim=duration="
         f"{CARD_TRANSITION_SECONDS:.6f},format=yuv420p[out]",
@@ -1643,6 +1674,86 @@ def _native_concat_video_parts(parts: list[Path | RenderPart], output: Path) -> 
     return output
 
 
+def _native_ass_timestamp(seconds: float) -> str:
+    """Converte segundos para o formato centesimal usado pelo libass."""
+    centiseconds = max(0, round(seconds * 100))
+    hours, remainder = divmod(centiseconds, 360_000)
+    minutes, remainder = divmod(remainder, 6_000)
+    return f"{hours}:{minutes:02d}:{remainder // 100:02d}.{remainder % 100:02d}"
+
+
+def _native_escape_ass_text(value: str) -> str:
+    """Preserva texto do roteiro em eventos ASS sem permitir tags acidentais."""
+    return value.replace("\\", r"\\").replace("{", r"\{").replace("}", r"\}").replace("\n", r"\N")
+
+
+def _native_annotation_ass(
+    directory: Path,
+    annotation_index: int,
+    lines: list[str],
+    duration: float,
+    emoji: str | None,
+) -> Path:
+    """Materializa a digitação em ASS, sem encadear ``drawtext`` entre frames.
+
+    Em certos builds do FFmpeg, filtros ``drawtext`` consecutivos com
+    ``enable`` devolvem o frame de entrada quando um estado futuro está
+    desativado. Por isso a primeira linha de uma annotation de duas linhas
+    desaparecia enquanto a segunda era digitada. O libass tem eventos
+    independentes e sobrepostos, logo preserva as duas linhas em todo quadro.
+    """
+    directory.mkdir(parents=True, exist_ok=True)
+    output = directory / f"annotation_{annotation_index:02d}_typing.ass"
+    text_end = _native_annotation_text_end(0.0, duration, lines, emoji)
+    cursor = ANNOTATION_TYPING_DELAY
+    typing_step, _ = _native_annotation_timing(emoji)
+    line_y = (488, 592) if len(lines) == 2 else (540,)
+    events: list[str] = []
+
+    def add_state(state_lines: list[tuple[str, int]], start: float, end: float) -> None:
+        if end <= start:
+            return
+        for text, y in state_lines:
+            events.append(
+                "Dialogue: 0,"
+                f"{_native_ass_timestamp(start)},{_native_ass_timestamp(end)},SynthReelCTA,,0,0,0,,"
+                f"{{\\an5\\pos(960,{y})}}{_native_escape_ass_text(text)}"
+            )
+
+    complete: list[tuple[str, int]] = []
+    for line_index, (line, y) in enumerate(zip(lines, line_y, strict=True)):
+        for char_count in range(1, len(line) + 1):
+            next_cursor = cursor + typing_step
+            add_state([*complete, (line[:char_count], y)], cursor, next_cursor)
+            cursor = next_cursor
+        complete.append((line, y))
+        if line_index < len(lines) - 1 and ANNOTATION_LINE_GAP > 0:
+            gap_end = cursor + ANNOTATION_LINE_GAP
+            add_state(complete, cursor, gap_end)
+            cursor = gap_end
+    add_state(complete, cursor, text_end)
+
+    output.write_text(
+        "[Script Info]\n"
+        "ScriptType: v4.00+\n"
+        "PlayResX: 1920\n"
+        "PlayResY: 1080\n"
+        "ScaledBorderAndShadow: yes\n\n"
+        "[V4+ Styles]\n"
+        "Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,"
+        "Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,"
+        "Alignment,MarginL,MarginR,MarginV,Encoding\n"
+        "Style: SynthReelCTA,Impact,102,&H0029D4FF,&H0029D4FF,&H00000000,&H00000000,"
+        "0,0,0,0,100,100,0,0,1,5,0,5,10,10,10,1\n\n"
+        "[Events]\n"
+        "Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text\n"
+        + "\n".join(events)
+        + "\n",
+        encoding="utf-8-sig",
+    )
+    return output
+
+
 def _native_render_annotation_effect(
     source: Path,
     start_frame: int,
@@ -1651,6 +1762,8 @@ def _native_render_annotation_effect(
     lines: list[str],
     emoji: str | None,
     output: Path,
+    *,
+    encoder_args: list[str] | None = None,
 ) -> Path:
     """Renderiza apenas a janela finita de uma CTA com blur e digitação.
 
@@ -1682,19 +1795,41 @@ def _native_render_annotation_effect(
     text_end = _native_annotation_text_end(0.0, duration, lines, emoji)
     blur_mix = _native_blur_mix_expression(0.0, text_end, duration)
     graph.append(f"{sharp}{blur}blend=all_expr='A*(1-({blur_mix}))+B*({blur_mix})'{blended}")
-    styled = _native_typing_annotation_filters(
-        graph, blended, annotation_index, lines, 0.0, text_end, emoji, sticker_input_index,
-    )
+    ass = _native_annotation_ass(output.parent, annotation_index, lines, duration, emoji)
+    styled = f"[annotation_{annotation_index}_ass]"
+    graph.append(f"{blended}ass=filename='{_native_filter_path(ass)}'{styled}")
+    if sticker is None and emoji:
+        if not SYSTEM_EMOJI_FONT.is_file():
+            raise FileNotFoundError("A fonte de emoji do Windows não está disponível para o fallback de annotations.")
+        emoji_output = f"[annotation_{annotation_index}_emoji_system]"
+        emoji_font = SYSTEM_EMOJI_FONT.as_posix().replace(":", r"\:")
+        graph.append(
+            f"{styled}drawtext=fontfile='{emoji_font}':text='{_escape_drawtext(emoji)}':"
+            "fontcolor=white:fontsize=76:borderw=2:bordercolor=black@0.90:"
+            "x='(w+text_w)/2+32':y='h/2-text_h/2':"
+            f"enable='{_native_time_window(0.0, text_end)}'{emoji_output}"
+        )
+        styled = emoji_output
+    elif sticker is not None:
+        sticker_label = f"[annotation_{annotation_index}_sticker]"
+        emoji_output = f"[annotation_{annotation_index}_emoji]"
+        graph.append(f"[{sticker_input_index}:v]format=rgba,scale=-1:{EMOJI_STICKER_HEIGHT}{sticker_label}")
+        graph.append(
+            f"{styled}{sticker_label}overlay=x='{EMOJI_STICKER_X}':y='(main_h-overlay_h)/2':format=auto:"
+            f"enable='{_native_time_window(0.0, text_end)}'{emoji_output}"
+        )
+        styled = emoji_output
     graph.append(
         f"{styled}trim=duration={duration:.6f},setpts=PTS-STARTPTS,"
         "setsar=1,format=yuv420p[out]"
     )
+    effective_encoder_args = VIDEO_ENCODER_ARGS if encoder_args is None else encoder_args
     _run_compositor([
         *inputs,
         "-filter_complex_threads", str(VIDEO_FILTER_THREADS), "-filter_threads", str(VIDEO_FILTER_THREADS),
         "-filter_buffered_frames", str(MAX_FILTER_BUFFERED_FRAMES),
         "-filter_complex", ";".join(graph), "-map", "[out]", "-an",
-        *VIDEO_ENCODER_ARGS, "-r", str(FPS), str(output),
+        *effective_encoder_args, "-r", str(FPS), str(output),
     ])
     return output
 
@@ -2115,29 +2250,68 @@ def _native_typing_annotation_filters(
     cursor = annotation_start + ANNOTATION_TYPING_DELAY
     typing_step, _ = _native_annotation_timing(emoji)
     line_centers = ("h/2-52", "h/2+52") if len(lines) == 2 else ("h/2",)
+
+    def overlay_state(
+        base: str,
+        state_lines: list[tuple[str, str]],
+        start: float,
+        end: float,
+        suffix: str,
+    ) -> str:
+        """Desenha um estado completo em camada RGBA transparente.
+
+        ``drawtext`` desabilitado pode devolver o frame de entrada original em
+        vez do resultado de um filtro anterior. Em uma cadeia de duas linhas,
+        isso apagava a primeira ao iniciar a segunda. Cada estado agora nasce
+        transparente, recebe somente as linhas que devem coexistir naquele
+        intervalo e é sobreposto ao vídeo; uma camada inativa é transparente e
+        jamais pode apagar texto já desenhado por outra camada.
+        """
+        layer = f"[annotation_{annotation_index}_{suffix}_layer]"
+        graph.append(
+            f"color=c=black@0.0:s={WIDTH}x{HEIGHT}:r={FPS},format=rgba,"
+            f"trim=duration={max(1 / FPS, text_end):.6f},setpts=PTS-STARTPTS{layer}"
+        )
+        for line_number, (text, y_center) in enumerate(state_lines):
+            output = f"[annotation_{annotation_index}_{suffix}_text_{line_number}]"
+            graph.append(
+                f"{layer}drawtext=fontfile='{_native_filter_path(ANNOTATION_FONT)}':"
+                f"text='{_escape_drawtext(text)}':fontcolor=0xFFD429:fontsize=102:"
+                "borderw=5:bordercolor=black@0.96:"
+                f"x=(w-text_w)/2:y={y_center}-text_h/2:"
+                f"enable='{_native_time_window(start, end)}'{output}"
+            )
+            layer = output
+        output = f"[annotation_{annotation_index}_{suffix}_composite]"
+        graph.append(f"{base}{layer}overlay=0:0:format=auto{output}")
+        return output
+
+    completed_lines: list[tuple[str, str]] = []
     for line_index, (line, y_center) in enumerate(zip(lines, line_centers, strict=True)):
         for char_count in range(1, len(line) + 1):
             next_cursor = cursor + typing_step
-            output = f"[annotation_{annotation_index}_typed_{line_index}_{char_count}]"
-            graph.append(
-                f"{current}drawtext=fontfile='{_native_filter_path(ANNOTATION_FONT)}':"
-                f"text='{_escape_drawtext(line[:char_count])}':fontcolor=0xFFD429:fontsize=102:"
-                "borderw=5:bordercolor=black@0.96:"
-                f"x=(w-text_w)/2:y={y_center}-text_h/2:"
-                f"enable='{_native_time_window(cursor, next_cursor)}'{output}"
+            current = overlay_state(
+                current,
+                [*completed_lines, (line[:char_count], y_center)],
+                cursor,
+                next_cursor,
+                f"typed_{line_index}_{char_count}",
             )
-            current = output
             cursor = next_cursor
-        output = f"[annotation_{annotation_index}_line_{line_index}]"
-        graph.append(
-            f"{current}drawtext=fontfile='{_native_filter_path(ANNOTATION_FONT)}':"
-            f"text='{_escape_drawtext(line)}':fontcolor=0xFFD429:fontsize=102:"
-            "borderw=5:bordercolor=black@0.96:"
-            f"x=(w-text_w)/2:y={y_center}-text_h/2:"
-            f"enable='{_native_time_window(cursor, text_end)}'{output}"
-        )
-        current = output
-        cursor += ANNOTATION_LINE_GAP
+        completed_lines.append((line, y_center))
+        if line_index < len(lines) - 1 and ANNOTATION_LINE_GAP > 0:
+            gap_end = cursor + ANNOTATION_LINE_GAP
+            current = overlay_state(
+                current,
+                completed_lines,
+                cursor,
+                gap_end,
+                f"line_{line_index}_gap",
+            )
+            cursor = gap_end
+
+    # Mantém todas as linhas completas até o início da saída gradual do blur.
+    current = overlay_state(current, completed_lines, cursor, text_end, "hold")
     if emoji:
         if emoji_input_index is None:
             if not SYSTEM_EMOJI_FONT.is_file():

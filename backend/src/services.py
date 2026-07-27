@@ -16,6 +16,40 @@ AUDIO_EXTENSIONS = {".mp3", ".wav", ".m4a", ".aac", ".ogg"}
 # costuma baixar, como "1_-_cena_01.png_202607...".
 IMAGE_ID_PREFIX = re.compile(r"^\s*(\d+)(?:\s*[-_]\s*)+(?:[^\s].*)?$")
 
+# O roteiro descreve fatos visuais. A linguagem estética é adicionada apenas
+# quando o prompt chega ao Google Flow, para que a mesma cena não carregue
+# decisões de direção de arte misturadas ao conteúdo editorial.
+PHOTO_VISUAL_PRESET = (
+    "Raw smartphone documentary photography, harsh direct flash, natural imperfections, "
+    "slightly grainy texture, muted brown, gray and dark tones, worn everyday environments, "
+    "candid unposed people, realistic ordinary faces, tired, neutral or concerned expressions, "
+    "non-commercial appearance, clear main subject, simple composition, sharp enough to understand "
+    "the scene, horizontal 16:9."
+)
+PHOTO_NEGATIVE_PROMPT = (
+    "Avoid glossy advertising, studio photography, cinematic lighting, luxury environments, perfect models, "
+    "plastic skin, excessive retouching, overly clean surfaces, symmetrical posing, dramatic movie color grading, "
+    "neon colors, oversaturation, artificial smiles, CGI appearance, 3D render, fantasy elements, abstract metaphors, "
+    "excessive objects, visual clutter, deformed hands, distorted faces and unreadable text."
+)
+GRAPHIC_VISUAL_PRESET = (
+    "Simple editorial data visualization, clean neutral background, clear lines or bars, strong contrast, "
+    "few elements, accurate proportions, visually understandable, horizontal 16:9."
+)
+GRAPHIC_NEGATIVE_PROMPT = (
+    "Avoid 3D charts, floating objects, metaphorical graphics, decorative illustrations, futuristic dashboards, "
+    "excessive colors, perspective distortion, tiny labels, visual clutter and complex interfaces."
+)
+GRAPHIC_VISUAL_TERMS = frozenset({
+    "grafico", "graficos", "grafica", "graficas", "graph", "graphs", "chart", "charts",
+    "barras", "barra", "bars", "bar", "linha", "linhas", "line", "lines", "lineas",
+    "comparacao", "comparacoes", "comparison", "comparisons", "evolucao", "evolucoes", "trend",
+    "trends", "porcentagem", "porcentagens", "porcentaje", "porcentajes", "percentage", "percent",
+    "inflacao", "inflacoes", "inflacion", "inflaciones", "inflation", "inflations", "margem",
+    "margens", "margen", "margenes", "margin", "margins", "preco", "precos", "precio", "precios",
+    "price", "prices",
+})
+
 ASSET_NAME_STOP_WORDS = frozenset({
     "a", "o", "as", "os", "de", "da", "do", "das", "dos", "e", "em", "na", "no", "com", "sem",
     "uma", "um", "para", "por", "the", "and", "of", "in", "with", "on", "at", "from", "image",
@@ -354,13 +388,32 @@ def words(text: str) -> int:
     return len(re.findall(r"\b[\wÀ-ÿ'-]+\b", text))
 
 
+def _visual_is_graphic(scene: object) -> bool:
+    """Classifica gráficos pelo conteúdo declarado no brief, não pela estética."""
+    visual = scene.visual
+    content = " ".join((visual.subject, visual.action, visual.setting, visual.framing, visual.details))
+    normalized = unicodedata.normalize("NFKD", content).encode("ascii", "ignore").decode("ascii").casefold()
+    terms = set(re.findall(r"[a-z0-9]+", normalized))
+    return bool(terms.intersection(GRAPHIC_VISUAL_TERMS))
+
+
+def _google_flow_visual_preset(scene: object) -> tuple[str, str, str]:
+    """Retorna o preset final sem contaminar os cinco campos do JSON."""
+    if _visual_is_graphic(scene):
+        return "gráfico", GRAPHIC_VISUAL_PRESET, GRAPHIC_NEGATIVE_PROMPT
+    return "fotografia documental", PHOTO_VISUAL_PRESET, PHOTO_NEGATIVE_PROMPT
+
+
 def google_flow_prompt(script: Script, block_id: str, scene_id: str) -> str:
     scene = next(scene for block in script.blocks if block.id == block_id for scene in block.scenes if scene.id == scene_id)
     visual = scene.visual
+    preset_kind, preset, negative = _google_flow_visual_preset(scene)
     return (
-        f"{visual.subject}. {visual.action}. {visual.setting}. "
-        f"{visual.framing}. {visual.details}. "
-        "Imagem ilustrativa horizontal para documentário do YouTube, sem palavras, sem legendas, sem logotipos, sem marcas d'água. "
+        "Conteúdo da cena (não invente estilo além do preset): "
+        f"Sujeito: {visual.subject}. Ação: {visual.action}. Ambiente: {visual.setting}. "
+        f"Enquadramento: {visual.framing}. Detalhes necessários: {visual.details}. "
+        f"Preset visual automático — {preset_kind}: {preset} "
+        f"Bloco negativo: {negative} "
         f"Referência editorial desta imagem: ID {scene.image_id}. "
         + (f"Use estes termos visuais em inglês: {scene.asset_key}. " if scene.asset_key else "")
         + f"Sugestão de nome ao baixar: "

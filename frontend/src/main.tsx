@@ -77,6 +77,19 @@ const THUMBNAIL_PAGE_SIZE = 24;
 const PEXELS_SCENES_PAGE_SIZE = 4;
 const RENDER_COMPLETE_SOUND_URL = "/assets/sounds/Mountain%20Audio%20-%20New%20Idea%20Notification.mp3";
 const RENDER_ERROR_SOUND_URL = "/assets/sounds/Wrong%20Answer.mp3";
+const PHOTO_VISUAL_PRESET = "Raw smartphone documentary photography, harsh direct flash, natural imperfections, slightly grainy texture, muted brown, gray and dark tones, worn everyday environments, candid unposed people, realistic ordinary faces, tired, neutral or concerned expressions, non-commercial appearance, clear main subject, simple composition, sharp enough to understand the scene, horizontal 16:9.";
+const PHOTO_NEGATIVE_PROMPT = "Avoid glossy advertising, studio photography, cinematic lighting, luxury environments, perfect models, plastic skin, excessive retouching, overly clean surfaces, symmetrical posing, dramatic movie color grading, neon colors, oversaturation, artificial smiles, CGI appearance, 3D render, fantasy elements, abstract metaphors, excessive objects, visual clutter, deformed hands, distorted faces and unreadable text.";
+const GRAPHIC_VISUAL_PRESET = "Simple editorial data visualization, clean neutral background, clear lines or bars, strong contrast, few elements, accurate proportions, visually understandable, horizontal 16:9.";
+const GRAPHIC_NEGATIVE_PROMPT = "Avoid 3D charts, floating objects, metaphorical graphics, decorative illustrations, futuristic dashboards, excessive colors, perspective distortion, tiny labels, visual clutter and complex interfaces.";
+const GRAPHIC_VISUAL_TERMS = new Set([
+  "grafico", "graficos", "grafica", "graficas", "graph", "graphs", "chart", "charts",
+  "barras", "barra", "bars", "bar", "linha", "linhas", "line", "lines", "lineas",
+  "comparacao", "comparacoes", "comparison", "comparisons", "evolucao", "evolucoes", "trend",
+  "trends", "porcentagem", "porcentagens", "porcentaje", "porcentajes", "percentage", "percent",
+  "inflacao", "inflacoes", "inflacion", "inflaciones", "inflation", "inflations", "margem",
+  "margens", "margen", "margenes", "margin", "margins", "preco", "precos", "precio", "precios",
+  "price", "prices",
+]);
 let renderAudioContext: AudioContext | null = null;
 let renderErrorBuffer: Promise<AudioBuffer> | null = null;
 
@@ -128,6 +141,22 @@ function mediaLabel(filename: string): string {
   return base ? base.replace(/\b\w/g, letter => letter.toUpperCase()) : filename;
 }
 
+function flowVisualPreset(scene: Scene): { kind: string; preset: string; negative: string } {
+  const visual = scene.visual ?? {};
+  const terms = new Set(
+    Object.values(visual)
+      .join(" ")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .match(/[a-z0-9]+/g) ?? [],
+  );
+  if ([...terms].some(term => GRAPHIC_VISUAL_TERMS.has(term))) {
+    return { kind: "GRÁFICO", preset: GRAPHIC_VISUAL_PRESET, negative: GRAPHIC_NEGATIVE_PROMPT };
+  }
+  return { kind: "FOTOGRAFIA DOCUMENTAL", preset: PHOTO_VISUAL_PRESET, negative: PHOTO_NEGATIVE_PROMPT };
+}
+
 function googleFlowText(script: Script, batchSize: number): { text: string; imageCount: number; batchCount: number } {
   const items = script.blocks.flatMap(block => block.scenes
     .filter(scene => scene.tipo_midia === "imagem")
@@ -144,6 +173,7 @@ function googleFlowText(script: Script, batchSize: number): { text: string; imag
       const endNumber = startNumber + group.length - 1;
       const prompts = group.map(({ blockText, scene }, sceneIndex) => {
         const visual = scene.visual ?? {};
+        const preset = flowVisualPreset(scene);
         const number = String(startNumber + sceneIndex).padStart(2, "0");
         return [
           `IMAGEM ${number} DE ${String(batch.length).padStart(2, "0")} · REFERÊNCIA FLOW ID ${scene.image_id}`,
@@ -155,12 +185,14 @@ function googleFlowText(script: Script, batchSize: number): { text: string; imag
           `- Ambiente: ${visual.setting ?? ""}`,
           `- Enquadramento: ${visual.framing ?? ""}`,
           `- Detalhes: ${visual.details ?? ""}`,
+          `- Preset automático (${preset.kind}): ${preset.preset}`,
+          `- Bloco negativo: ${preset.negative}`,
         ].join("\n");
       }).join("\n\n────────────────────────────────────────\n\n");
       return [
         "────────────────────────────────────────────────────────────────────────────────",
-        `SUBLOTE ${String(groupIndex + 1).padStart(2, "0")} · GERE EXATAMENTE AS IMAGENS ${String(startNumber).padStart(2, "0")} A ${String(endNumber).padStart(2, "0")} · ${group.length} FOTOS`,
-        "Depois destas 5 fotos, pare. Não avance para o próximo sublote sem novo comando.",
+        `SUBLOTE ${String(groupIndex + 1).padStart(2, "0")} · GERE EXATAMENTE AS IMAGENS ${String(startNumber).padStart(2, "0")} A ${String(endNumber).padStart(2, "0")} · ${group.length} ITENS`,
+        "Depois destas 5 imagens, pare. Não avance para o próximo sublote sem novo comando.",
         "────────────────────────────────────────────────────────────────────────────────",
         "",
         prompts,
@@ -175,15 +207,10 @@ function googleFlowText(script: Script, batchSize: number): { text: string; imag
       "INSTRUÇÕES DE GERAÇÃO — APLICAR A TODAS AS IMAGENS DESTE LOTE",
       `- Este lote contém EXATAMENTE ${batch.length} imagens solicitadas. Não gere uma imagem para cada número entre os FLOW IDs ${firstId} e ${lastId}.`,
       "- FLOW ID é somente uma etiqueta de referência; a numeração que vale é IMAGEM 01 DE N até IMAGEM N DE N.",
-      "- Gere somente 5 fotos por vez, seguindo cada SUBLOTE. Ao terminar um sublote, pare e espere um novo comando antes de iniciar o próximo.",
+      "- Gere somente 5 imagens por vez, seguindo cada SUBLOTE. Ao terminar um sublote, pare e espere um novo comando antes de iniciar o próximo.",
       "- Siga o brief de cada cena com precisão; não misture cenas, IDs ou personagens.",
-      "- O resultado deve parecer uma fotografia documental real, capturada no mundo real — nunca uma imagem genérica de banco, publicidade polida ou visual de IA perfeito.",
-      "- Varie a linguagem fotográfica de modo coerente com cada cena: celular comum com flash direto para pessoas, interiores ou noite; fotografia analógica/envelhecida para memória, arquivo, época ou evidência; câmera documental comum com luz natural para o restante.",
-      "- Prefira enquadramentos vivos e específicos: pequenas imperfeições naturais, flash pontual, grão discreto, foto antiga ou composição levemente imperfeita são bem-vindos quando fizerem sentido. Não aplique o mesmo efeito a todas as imagens.",
-      "- Preserve cores vivas e naturais, contraste e textura realista; evite cores lavadas, simetria artificial, pele plástica, iluminação excessivamente perfeita e acabamento publicitário.",
-      "- Quando houver pessoas, mostre anatomia, idade, postura, roupa e expressões críveis e contidas; prefira momentos espontâneos, nunca rostos deformados, poses artificiais ou emoções exageradas.",
-      "- Quando a cena for conceitual e não existir uma fotografia literal forte, crie uma ilustração editorial ou colagem visual criativa ligada EXATAMENTE ao assunto da cena. Nunca use ícones genéricos, dashboards, redes abstratas ou desenho desconectado.",
-      "- Não gere texto, legendas, letras, logotipos, marcas, marca-d'água, interfaces ou placas legíveis.",
+      "- Os cinco campos do brief descrevem apenas conteúdo. Aplique somente o preset automático e o bloco negativo impressos em cada imagem; não acrescente estética, metáforas, objetos flutuantes ou cenários conceituais.",
+      "- Mantenha no máximo dois ou três elementos principais e uma composição simples, fácil de entender.",
       "- Cenas de vídeo foram removidas intencionalmente: gere somente os itens deste lote.",
       "",
       body,

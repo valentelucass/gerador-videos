@@ -130,9 +130,9 @@ Cada `block` contém exatamente uma `scene`. Isso mantém uma unidade editorial:
           "visual": {
             "subject": "assunto visível específico",
             "action": "ação concreta",
-            "setting": "local e atmosfera",
-            "framing": "enquadramento documental horizontal 16:9",
-            "details": "detalhes visuais, sem texto, logotipos ou marca-d'água"
+            "setting": "local concreto",
+            "framing": "posição dos elementos principais na imagem",
+            "details": "somente detalhes necessários para entender a cena"
           },
           "transition": {
             "in": "zoom_in",
@@ -164,6 +164,10 @@ Regras importantes:
 - Os efeitos disponíveis são `whoosh_fast`, `whoosh_cinematic`, `whoosh_soft`, `click`, `wrong_answer`, `camera_shutter`, `cash_register`, `crumpled_paper`, `new_idea`, `boxing_bell`, `paper_flip`, `shutter_click`, `bottle_cork`, `celebration` e `writing`.
 - `annotation` é opcional e aceita uma ou duas linhas, com até 32 caracteres por linha.
 - A voz é parte do roteiro. A API não aceita substituí-la no pedido de renderização.
+- Os cinco campos de `visual` descrevem apenas conteúdo factual. O painel e a
+  API acrescentam automaticamente o preset documental ou o preset de gráfico
+  ao prompt enviado ao Google Flow; não inclua estilo, lente, paleta ou
+  iluminação no JSON.
 
 Para boa retenção, planeje geralmente 10–12 cenas por minuto, cerca de 8–12 palavras por cena e 3–7 segundos de áudio. A validação acústica aborta a renderização se uma cena ultrapassar **9 segundos**; o limite total da narração é 20 minutos.
 
