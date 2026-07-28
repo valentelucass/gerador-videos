@@ -24,6 +24,17 @@ class HorizontalMusicMixTests(unittest.TestCase):
             self.assertEqual(audio_filter, "aresample=48000,asetpts=PTS-STARTPTS")
             self.assertNotIn("silenceremove", audio_filter)
 
+    def test_music_cycle_rejects_any_future_truncation_of_an_imported_track(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+
+            with (
+                patch.object(renderer, "_run_compositor"),
+                patch.object(renderer, "_duration", side_effect=[173.48, 0.19]),
+            ):
+                with self.assertRaisesRegex(RuntimeError, "encurtou o áudio importado"):
+                    renderer._native_looped_music_bed(root / "with-pauses.mp3", 600.0, root / "music")
+
     def test_final_mix_keeps_the_selected_music_and_uses_moderate_ducking(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

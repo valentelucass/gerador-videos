@@ -89,6 +89,10 @@ MAX_SFX_EVENTS_PER_CHUNK = 24
 # A trilha não pode reiniciar em corte seco. A sobreposição é longa o bastante
 # para mascarar a troca sem transformar duas músicas em uma massa sonora.
 MUSIC_LOOP_CROSSFADE_SECONDS = 1.2
+# Uma recodificação AAC pode variar alguns milissegundos por atraso de codec,
+# mas jamais pode encurtar a música de forma material. Esta trava impede que
+# uma futura alteração volte a descartar pausas internas de faixas importadas.
+MUSIC_CYCLE_DURATION_TOLERANCE_SECONDS = 0.25
 # O Windows impõe um limite para o tamanho da linha de comando. Um vídeo longo
 # com uma faixa curta não pode passar uma entrada FFmpeg por repetição de uma
 # só vez; a trilha é reduzida em árvores de blocos deste tamanho.
@@ -2060,6 +2064,7 @@ def _native_looped_music_bed(music: Path, duration: float, directory: Path) -> P
     if duration <= 0:
         raise ValueError("A duração da trilha de fundo precisa ser positiva.")
     directory.mkdir(parents=True, exist_ok=True)
+    source_duration = _duration(music)
     cycle = directory / "trilha_ciclo.m4a"
     _run_compositor([
         str(FFMPEG), "-y", "-i", str(music),
@@ -2067,6 +2072,12 @@ def _native_looped_music_bed(music: Path, duration: float, directory: Path) -> P
         "-c:a", "aac", "-b:a", "192k", str(cycle),
     ])
     cycle_duration = _duration(cycle)
+    if cycle_duration + MUSIC_CYCLE_DURATION_TOLERANCE_SECONDS < source_duration:
+        raise RuntimeError(
+            "A preparação da trilha encurtou o áudio importado de "
+            f"{source_duration:.2f}s para {cycle_duration:.2f}s. "
+            "A renderização foi interrompida para não publicar um vídeo sem música."
+        )
     crossfade = min(MUSIC_LOOP_CROSSFADE_SECONDS, cycle_duration / 4)
     if cycle_duration <= crossfade:
         raise ValueError(f"A trilha {music.name} é curta demais para formar um loop suave.")
