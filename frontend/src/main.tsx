@@ -47,6 +47,7 @@ type RenderJob = {
   status: string;
   output?: string;
   output_url?: string;
+  music_name?: string | null;
   error?: string;
   progress?: number;
   stage?: string;
@@ -75,6 +76,7 @@ const LOCAL_ACTIVE_PROJECT_STORAGE_KEY = "synthreel:horizontal-active-project:v1
 const PLACEHOLDER_IMAGE_PATTERN = /^cena_\d+(?:_[a-z])?\.(?:png|jpe?g|webp)$/i;
 const THUMBNAIL_PAGE_SIZE = 24;
 const PEXELS_SCENES_PAGE_SIZE = 4;
+const TRANSLATION_CONCURRENCY = 2;
 const RENDER_COMPLETE_SOUND_URL = "/assets/sounds/Mountain%20Audio%20-%20New%20Idea%20Notification.mp3";
 const RENDER_ERROR_SOUND_URL = "/assets/sounds/Wrong%20Answer.mp3";
 const PHOTO_VISUAL_PRESET = "Raw smartphone documentary photography, harsh direct flash, natural imperfections, slightly grainy texture, muted brown, gray and dark tones, worn everyday environments, candid unposed people, realistic ordinary faces, tired, neutral or concerned expressions, non-commercial appearance, clear main subject, simple composition, sharp enough to understand the scene, horizontal 16:9.";
@@ -433,6 +435,8 @@ function App() {
   const [visualTranslations, setVisualTranslations] = useState<Record<string, string>>({});
   const [translationLoading, setTranslationLoading] = useState<Record<string, boolean>>({});
   const [visualTranslationLoading, setVisualTranslationLoading] = useState<Record<string, boolean>>({});
+  const [translationFailures, setTranslationFailures] = useState<Record<string, boolean>>({});
+  const [visualTranslationFailures, setVisualTranslationFailures] = useState<Record<string, boolean>>({});
   const [selectedPexels, setSelectedPexels] = useState<Record<string, PexelsCandidate>>({});
   const [expandedPexelsScene, setExpandedPexelsScene] = useState<string | null>(null);
   const [pexelsPreviewErrors, setPexelsPreviewErrors] = useState<Record<string, boolean>>({});
@@ -453,6 +457,11 @@ function App() {
   const musicPreview = useRef<HTMLAudioElement | null>(null);
   const promptCopyTimer = useRef<number | null>(null);
   const projectsHydrated = useRef(false);
+  // A leitura inicial do catálogo pode terminar depois de um upload. Sem um
+  // identificador monotônico, essa resposta antiga reverte a música recém
+  // importada para a trilha padrão.
+  const catalogRefreshSequence = useRef(0);
+  const translationRequests = useRef(new Map<string, Promise<string>>());
 
   const stopMusicPreview = () => {
     const preview = musicPreview.current;
@@ -491,8 +500,10 @@ function App() {
   }, []);
 
   const refreshCatalog = async () => {
+    const sequence = ++catalogRefreshSequence.current;
     try {
       const next = await api<Catalog>("/api/catalog");
+      if (sequence !== catalogRefreshSequence.current) return;
       setCatalog(next);
       setBackground(current => (
         current && next.backgrounds.includes(current)
@@ -506,6 +517,7 @@ function App() {
       ));
       setStatus(current => current.startsWith("Inicie o backend") ? "Catálogo conectado." : current);
     } catch {
+      if (sequence !== catalogRefreshSequence.current) return;
       setStatus("Inicie o backend em http://localhost:8000.");
     }
   };
@@ -650,7 +662,7 @@ function App() {
           setRenderProgress(100);
           setRenderStage(job.stage ?? "Vídeo final pronto");
           setOutputUrl(job.output_url ?? "");
-          setStatus("Vídeo final pronto.");
+          setStatus(`Vídeo final pronto. Trilha usada: ${job.music_name ?? "nenhuma"}.`);
           setRenderError("");
           setRenderLogUrl("");
           setJobId("");
@@ -782,11 +794,16 @@ function App() {
 
   const uploadMusic = async (files: FileList | File[]) => {
     try {
+      // O hover do seletor pode estar reproduzindo a trilha anterior quando o
+      // operador clica no +. Paramos essa prévia para ela não parecer a
+      // música que acabou de ser escolhida.
+      stopMusicPreview();
       setStatus("Importando trilha sonora…");
       const saved = await uploadMedia("/api/music", files);
       if (saved.length) {
-        setMusic(saved.at(-1) ?? "");
-        setStatus("Trilha importada e selecionada para este projeto.");
+        const selectedMusic = saved.at(-1) ?? "";
+        setMusic(selectedMusic);
+        setStatus(`Trilha importada e selecionada para este projeto: ${selectedMusic}`);
       }
     } catch (error) {
       setStatus(readableError(error));
@@ -924,6 +941,12 @@ function App() {
       setVisualTranslations(current => sceneId
         ? Object.fromEntries(Object.entries(current).filter(([key]) => key !== sceneId))
         : {});
+      setTranslationFailures(current => sceneId
+        ? Object.fromEntries(Object.entries(current).filter(([key]) => key !== sceneId))
+        : {});
+      setVisualTranslationFailures(current => sceneId
+        ? Object.fromEntries(Object.entries(current).filter(([key]) => key !== sceneId))
+        : {});
       if (sceneId) {
         setSelectedPexels(current => {
           const next = { ...current };
@@ -982,12 +1005,36 @@ function App() {
       setVisualTranslations(current => ({ ...current, ...Object.fromEntries(items.filter(item => item.visual_reference).map(item => [item.scene_id, item.visual_reference ?? ""])) }));
       return;
     }
-    const pending = items.flatMap(item => [
-      { sceneId: item.scene_id, kind: "text" as const, value: item.text },
+    type TranslationTask = { sceneId: string; kind: "text" | "visual"; value: string };
+    const pending = items.flatMap<TranslationTask>(item => [
+      { sceneId: item.scene_id, kind: "text", value: item.text },
       ...(item.visual_reference ? [{ sceneId: item.scene_id, kind: "visual" as const, value: item.visual_reference }] : []),
     ]);
     setTranslationLoading(current => ({ ...current, ...Object.fromEntries(items.map(item => [item.scene_id, true])) }));
     setVisualTranslationLoading(current => ({ ...current, ...Object.fromEntries(items.filter(item => item.visual_reference).map(item => [item.scene_id, true])) }));
+    setTranslationFailures(current => ({ ...current, ...Object.fromEntries(items.map(item => [item.scene_id, false])) }));
+    setVisualTranslationFailures(current => ({ ...current, ...Object.fromEntries(items.filter(item => item.visual_reference).map(item => [item.scene_id, false])) }));
+
+    // Muitas cenas compartilham o mesmo texto do bloco. Uma única requisição
+    // atende todas elas; isso evita estourar o limite do tradutor externo e
+    // impede que uma falha transitória deixe a referência sem tradução.
+    const requestTranslation = (value: string): Promise<string> => {
+      const key = `${activeScript.language.toLowerCase()}\u0000${value}`;
+      const running = translationRequests.current.get(key);
+      if (running) return running;
+      const request = api<{ portuguese: string }>("/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: value, source_language: activeScript.language }),
+      }).then(result => result.portuguese);
+      translationRequests.current.set(key, request);
+      void request.then(
+        () => translationRequests.current.delete(key),
+        () => translationRequests.current.delete(key),
+      );
+      return request;
+    };
+
     // Mantém poucas requisições simultâneas ao serviço de tradução, sem exigir
     // que o operador clique cena por cena ou sature o serviço externo.
     const worker = async () => {
@@ -995,29 +1042,57 @@ function App() {
         const task = pending.shift();
         if (!task) return;
         try {
-          const result = await api<{ portuguese: string }>("/api/translate", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: task.value, source_language: activeScript.language }),
-          });
-          if (task.kind === "text") setTranslations(current => ({ ...current, [task.sceneId]: result.portuguese }));
-          else setVisualTranslations(current => ({ ...current, [task.sceneId]: result.portuguese }));
+          const portuguese = await requestTranslation(task.value);
+          if (task.kind === "text") setTranslations(current => ({ ...current, [task.sceneId]: portuguese }));
+          else setVisualTranslations(current => ({ ...current, [task.sceneId]: portuguese }));
         } catch {
-          if (task.kind === "text") setTranslations(current => ({ ...current, [task.sceneId]: "Tradução indisponível; use o original acima." }));
-          else setVisualTranslations(current => ({ ...current, [task.sceneId]: "Tradução indisponível; use a referência original acima." }));
+          if (task.kind === "text") {
+            setTranslations(current => ({ ...current, [task.sceneId]: task.value }));
+            setTranslationFailures(current => ({ ...current, [task.sceneId]: true }));
+          } else {
+            setVisualTranslations(current => ({ ...current, [task.sceneId]: task.value }));
+            setVisualTranslationFailures(current => ({ ...current, [task.sceneId]: true }));
+          }
         } finally {
           if (task.kind === "text") setTranslationLoading(current => ({ ...current, [task.sceneId]: false }));
           else setVisualTranslationLoading(current => ({ ...current, [task.sceneId]: false }));
         }
       }
     };
-    await Promise.all(Array.from({ length: Math.min(4, pending.length) }, worker));
+    await Promise.all(Array.from({ length: Math.min(TRANSLATION_CONCURRENCY, pending.length) }, worker));
   };
+
+  const retryPexelsTranslation = (item: PexelsItem) => {
+    if (!script) return;
+    void translatePexelsItems(script, [item]);
+  };
+
+  // A curadoria é persistida no navegador. Se a página fechar no meio das
+  // requisições, as entradas que voltarem sem texto em PT-BR são retomadas
+  // automaticamente ao abrir o projeto, em vez de ficarem presas em
+  // "traduzindo…" para sempre.
+  useEffect(() => {
+    if (!script || script.language.toLowerCase().startsWith("pt")) return;
+    const missing = pexelsItems.filter(item => (
+      (!translations[item.scene_id] && !translationLoading[item.scene_id])
+      || Boolean(item.visual_reference && !visualTranslations[item.scene_id] && !visualTranslationLoading[item.scene_id])
+    ));
+    if (missing.length) void translatePexelsItems(script, missing);
+  }, [script, pexelsItems, translations, visualTranslations, translationLoading, visualTranslationLoading]);
 
   const openVideosFolder = async () => {
     try {
       await api<{ folder: string }>("/api/pexels/open-folder", { method: "POST" });
       setStatus("A pasta local dos B-rolls foi aberta no Explorador de Arquivos.");
+    } catch (error) {
+      setStatus(readableError(error));
+    }
+  };
+
+  const openFinalVideosFolder = async () => {
+    try {
+      await api<{ folder: string }>("/api/outputs/open-folder", { method: "POST" });
+      setStatus("A pasta dos vídeos finalizados foi aberta no Explorador de Arquivos.");
     } catch (error) {
       setStatus(readableError(error));
     }
@@ -1112,7 +1187,7 @@ function App() {
       setJobId(result.job_id);
       setRenderProgress(5);
       setRenderStage("Preparando narração, imagens e trilha");
-      setStatus("Renderizando o vídeo completo. O andamento aparece na barra inferior.");
+      setStatus(`Renderizando o vídeo completo com a trilha: ${music || "padrão do catálogo"}. O andamento aparece na barra inferior.`);
     } catch (error) {
       setRenderProgress(0);
       setRenderStage("");
@@ -1327,7 +1402,7 @@ function App() {
             <section className="pexels-review standalone" aria-label="Curadoria de B-roll do Pexels">
               <div className="curation-heading"><div><span className="panel-index">B-ROLL</span><b>Escolhas editoriais</b><small>O gancho e as inserções visíveis passam pela sua aprovação.</small></div><button className="button quiet compact" onClick={() => void openVideosFolder()}>Abrir pasta dos vídeos</button></div>
               {pexelsItems.length > 0 ? <>
-                  <p className="scene-bindings-note">Prévia automática, tradução e aprovação humana de B-roll horizontal. As cenas são paginadas para não carregar todas as prévias de uma vez. Vídeos fornecidos por <a href="https://www.pexels.com" target="_blank" rel="noreferrer">Pexels</a>.</p>
+                  <p className="scene-bindings-note">Prévia manual, tradução e aprovação humana de B-roll horizontal. As cenas são paginadas para não carregar todas as prévias de uma vez. Vídeos fornecidos por <a href="https://www.pexels.com" target="_blank" rel="noreferrer">Pexels</a>.</p>
                   <div className="pexels-results-summary"><b>Conferência: {pexelsItems.length}/{pexelsExpectedCount || pexelsItems.length} cenas video_generico</b><span>Exibindo cenas {pexelsStart + 1}–{Math.min(pexelsStart + PEXELS_SCENES_PAGE_SIZE, pexelsItems.length)} · página {currentPexelsPage + 1} de {pexelsPageCount}</span></div>
                   {visiblePexelsItems.map(item => {
                     const scene = script?.blocks.flatMap(block => block.scenes).find(candidate => candidate.id === item.scene_id);
@@ -1337,8 +1412,9 @@ function App() {
                     return (
                       <article className={`pexels-item${chosen ? " selected" : ""}`} key={item.scene_id}>
                         <div className="pexels-copy"><b>{item.scene_id} · {saved ? "aprovado" : "aguardando aprovação"}</b><span>Original: {item.text}</span>
-                          <span>Português: {translations[item.scene_id] ?? (translationLoading[item.scene_id] ? "traduzindo…" : "traduzindo…")}</span>
-                          {item.visual_reference && <span className="pexels-reference">REFERÊNCIA VISUAL (PT-BR): {visualTranslations[item.scene_id] ?? (visualTranslationLoading[item.scene_id] ? "traduzindo…" : "traduzindo…")}</span>}
+                          <span>Português: {translations[item.scene_id] ?? "traduzindo…"}{translationLoading[item.scene_id] ? " (traduzindo…)" : ""}</span>
+                          {item.visual_reference && <span className="pexels-reference">REFERÊNCIA VISUAL (PT-BR): {visualTranslations[item.scene_id] ?? "traduzindo…"}{visualTranslationLoading[item.scene_id] ? " (traduzindo…)" : ""}</span>}
+                          {(translationFailures[item.scene_id] || visualTranslationFailures[item.scene_id]) && <button className="text-button" type="button" onClick={() => retryPexelsTranslation(item)}>A tradução falhou temporariamente. Tentar de novo</button>}
                         </div>
                         {chosen && <button className="pexels-selected-summary" type="button" onClick={() => setExpandedPexelsScene(current => current === item.scene_id ? null : item.scene_id)}>
                           <span>✓ Escolhido · {chosen.width}×{chosen.height} · {chosen.duration ?? "?"}s</span><b>{expandedPexelsScene === item.scene_id ? "Minimizar" : "Trocar vídeo"}</b>
@@ -1349,7 +1425,7 @@ function App() {
                         <div className="pexels-candidates">
                           {item.candidates.map(candidate => (
                             <figure key={candidate.id}>
-                              {pexelsPreviewErrors[`${item.scene_id}:${candidate.id}`] ? <div className="pexels-preview-error"><span>Prévia indisponível neste navegador.</span>{candidate.pexels_url && <a href={candidate.pexels_url} target="_blank" rel="noreferrer">Abrir no Pexels</a>}</div> : <video src={candidate.preview_url} poster={candidate.thumbnail} controls autoPlay muted loop playsInline preload="metadata" onError={() => setPexelsPreviewErrors(current => ({ ...current, [`${item.scene_id}:${candidate.id}`]: true }))} />}
+                              {pexelsPreviewErrors[`${item.scene_id}:${candidate.id}`] ? <div className="pexels-preview-error"><span>Prévia indisponível neste navegador.</span>{candidate.pexels_url && <a href={candidate.pexels_url} target="_blank" rel="noreferrer">Abrir no Pexels</a>}</div> : <video src={candidate.preview_url} poster={candidate.thumbnail} controls muted loop playsInline preload="none" onError={() => setPexelsPreviewErrors(current => ({ ...current, [`${item.scene_id}:${candidate.id}`]: true }))} />}
                               <figcaption>{candidate.width}×{candidate.height} · {candidate.duration ?? "?"}s{candidate.creator ? ` · ${candidate.creator}` : ""}</figcaption>
                               <button className="button compact" disabled={pexelsBusy} onClick={() => void downloadPexelsVideo(item, candidate)}>{item.is_annotation ? "Usar como fundo" : "Usar este vídeo"}</button>
                             </figure>
@@ -1428,7 +1504,7 @@ function App() {
           )}
         </div>
         {outputUrl ? (
-          <a className="output-link" href={outputUrl} target="_blank" rel="noreferrer">Abrir vídeo final</a>
+          <button className="button quiet compact" onClick={() => void openFinalVideosFolder()}>Abrir pasta dos vídeos</button>
         ) : renderLogUrl ? (
           <a className="output-link error-log-link" href={renderLogUrl} target="_blank" rel="noreferrer">Abrir log técnico</a>
         ) : (

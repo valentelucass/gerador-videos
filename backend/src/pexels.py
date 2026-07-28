@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
+from functools import lru_cache
+from html import unescape
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlparse
@@ -184,18 +187,70 @@ def download_selected_video(query: str, video_id: int, destination_name: str) ->
     return {"filename": target.name, **candidate}
 
 
-def translate_to_portuguese(text: str, source_language: str) -> str:
-    """Traduz sob demanda para a revisão humana, sem salvar texto em serviço externo."""
-    if source_language.lower().startswith("pt"):
-        return text
-    source = source_language.split("-", 1)[0].lower()
+TRANSLATION_CHUNK_SIZE = 450
+
+
+def _translation_chunks(text: str, maximum: int = TRANSLATION_CHUNK_SIZE) -> list[str]:
+    """Divide texto longo em limites seguros, preservando palavras e frases."""
+    cleaned = " ".join(text.split())
+    if not cleaned:
+        return []
+
+    chunks: list[str] = []
+    current = ""
+    # Primeiro preservamos frases inteiras. Uma frase excepcionalmente longa é
+    # então dividida somente entre palavras, nunca no meio de um termo.
+    sentences = re.split(r"(?<=[.!?…])\s+", cleaned)
+    for sentence in sentences:
+        words = sentence.split()
+        if not words:
+            continue
+        parts: list[str] = []
+        part = ""
+        for word in words:
+            candidate = f"{part} {word}".strip()
+            if part and len(candidate) > maximum:
+                parts.append(part)
+                part = word
+            else:
+                part = candidate
+        if part:
+            parts.append(part)
+        for part in parts:
+            candidate = f"{current} {part}".strip()
+            if current and len(candidate) > maximum:
+                chunks.append(current)
+                current = part
+            else:
+                current = candidate
+    if current:
+        chunks.append(current)
+    return chunks
+
+
+@lru_cache(maxsize=4_096)
+def _translate_chunk_to_portuguese(text: str, source: str) -> str:
+    """Traduz um trecho curto e memoriza somente respostas bem-sucedidas."""
     params = urlencode({"q": text, "langpair": f"{source}|pt"})
     try:
         with urlopen(f"https://api.mymemory.translated.net/get?{params}", timeout=20) as response:
             payload = json.loads(response.read().decode("utf-8"))
+        if payload.get("responseStatus") not in {None, 200}:
+            raise ValueError(f"resposta de tradução inválida ({payload.get('responseStatus')})")
         translated = payload.get("responseData", {}).get("translatedText")
         if not isinstance(translated, str) or not translated.strip():
             raise ValueError("resposta sem tradução")
-        return translated.strip()
+        return unescape(translated).strip()
     except Exception as exc:
         raise PexelsError("A tradução não está disponível agora. O texto original continua visível.") from exc
+
+
+def translate_to_portuguese(text: str, source_language: str) -> str:
+    """Traduz para revisão humana, aceitando blocos narrativos longos."""
+    if source_language.lower().startswith("pt"):
+        return text
+    source = source_language.split("-", 1)[0].lower()
+    chunks = _translation_chunks(text)
+    if not chunks:
+        return text
+    return " ".join(_translate_chunk_to_portuguese(chunk, source) for chunk in chunks)

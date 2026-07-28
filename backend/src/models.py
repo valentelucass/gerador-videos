@@ -270,5 +270,7 @@ class PexelsDownloadRequest(PexelsCandidatesRequest):
 
 
 class TranslationRequest(BaseModel):
-    text: str = Field(min_length=1, max_length=800)
+    # Blocos narrativos podem ser maiores que uma única requisição ao serviço
+    # de tradução. O adaptador os divide internamente, sem descartar texto.
+    text: str = Field(min_length=1, max_length=12_000)
     source_language: str = Field(min_length=2, max_length=10)

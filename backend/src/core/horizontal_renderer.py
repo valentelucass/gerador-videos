@@ -89,6 +89,10 @@ MAX_SFX_EVENTS_PER_CHUNK = 24
 # A trilha não pode reiniciar em corte seco. A sobreposição é longa o bastante
 # para mascarar a troca sem transformar duas músicas em uma massa sonora.
 MUSIC_LOOP_CROSSFADE_SECONDS = 1.2
+# O Windows impõe um limite para o tamanho da linha de comando. Um vídeo longo
+# com uma faixa curta não pode passar uma entrada FFmpeg por repetição de uma
+# só vez; a trilha é reduzida em árvores de blocos deste tamanho.
+MUSIC_LOOP_MAX_INPUTS_PER_COMMAND = 12
 # Cadeia editorial aprovada na amostra "forte documental". Ela atua antes do
 # ducking, portanto funciona de forma idêntica para todas as vozes e idiomas
 # aceitos pelo TTS sem alterar os time-codes da narração.
@@ -100,8 +104,13 @@ VOICE_MASTERING_FILTER = (
 )
 FINAL_AUDIO_LIMIT = 0.89
 # Presença audível de trilha durante a fala; o sidechain abaixo ainda reduz
-# automaticamente a música quando a narração entra.
-MUSIC_BED_VOLUME = 0.23
+# automaticamente a música quando a narração entra. O ganho é deliberadamente
+# moderado para manter a voz como elemento principal da mixagem.
+MUSIC_BED_VOLUME = 0.26
+# Os efeitos precisam aparecer um pouco mais à frente sem disparar o limiter
+# com a voz. Aplicar o mesmo ganho a todos preserva as diferenças editoriais
+# entre os volumes individuais abaixo.
+SFX_VOLUME_BOOST = 1.12
 # A RX 7600 disponível nesta estação possui AMF validado pelo FFmpeg. O encoder
 # tira a codificação H.264 da CPU, enquanto os filtros continuam no CPU. Quatro
 # threads de filtro deixam espaço para o sistema e evitam grafos 1080p
@@ -2069,20 +2078,49 @@ def _native_looped_music_bed(music: Path, duration: float, directory: Path) -> P
     effective_cycle = cycle_duration - crossfade
     copies = math.ceil((duration - cycle_duration) / effective_cycle) + 1
     bed = directory / "trilha_continua.m4a"
-    inputs = [part for _ in range(copies) for part in ("-i", str(cycle))]
-    graph = [f"[{index}:a]aresample=48000,asetpts=PTS-STARTPTS[music_{index}]" for index in range(copies)]
-    mixed = "[music_0]"
-    for index in range(1, copies):
-        output = f"[music_mix_{index}]"
-        graph.append(f"{mixed}[music_{index}]acrossfade=d={crossfade:.3f}:c1=tri:c2=tri{output}")
-        mixed = output
-    graph.append(f"{mixed}atrim=duration={duration:.6f},asetpts=PTS-STARTPTS[audio]")
-    _run_compositor([
-        str(FFMPEG), "-y", *inputs,
-        "-filter_complex_threads", "1", "-filter_threads", "1",
-        "-filter_complex", ";".join(graph), "-map", "[audio]",
-        "-c:a", "aac", "-b:a", "192k", str(bed),
-    ])
+
+    def compose_crossfaded(sources: list[Path], output: Path, *, trim_to: float | None = None) -> None:
+        """Une fontes em série sem estourar o limite de argumentos do Windows."""
+        inputs = [part for source in sources for part in ("-i", str(source))]
+        graph = [
+            f"[{index}:a]aresample=48000,asetpts=PTS-STARTPTS[music_{index}]"
+            for index in range(len(sources))
+        ]
+        mixed = "[music_0]"
+        for index in range(1, len(sources)):
+            output_label = f"[music_mix_{index}]"
+            graph.append(
+                f"{mixed}[music_{index}]acrossfade=d={crossfade:.3f}:c1=tri:c2=tri{output_label}"
+            )
+            mixed = output_label
+        tail = f"atrim=duration={trim_to:.6f}," if trim_to is not None else ""
+        graph.append(f"{mixed}{tail}asetpts=PTS-STARTPTS[audio]")
+        _run_compositor([
+            str(FFMPEG), "-y", *inputs,
+            "-filter_complex_threads", "1", "-filter_threads", "1",
+            "-filter_complex", ";".join(graph), "-map", "[audio]",
+            "-c:a", "aac", "-b:a", "192k", str(output),
+        ])
+
+    # Cada redução preserva as transições entre os ciclos. Ao juntar os
+    # resultados na etapa seguinte, a transição entre blocos também recebe o
+    # mesmo acrossfade; portanto a sequência continua equivalente à linear.
+    sources = [cycle] * copies
+    level = 0
+    while len(sources) > MUSIC_LOOP_MAX_INPUTS_PER_COMMAND:
+        reduced: list[Path] = []
+        for index in range(0, len(sources), MUSIC_LOOP_MAX_INPUTS_PER_COMMAND):
+            group = sources[index:index + MUSIC_LOOP_MAX_INPUTS_PER_COMMAND]
+            if len(group) == 1:
+                reduced.append(group[0])
+                continue
+            chunk = directory / f"trilha_bloco_{level:02d}_{index // MUSIC_LOOP_MAX_INPUTS_PER_COMMAND:03d}.m4a"
+            compose_crossfaded(group, chunk)
+            reduced.append(chunk)
+        sources = reduced
+        level += 1
+
+    compose_crossfaded(sources, bed, trim_to=duration)
     return bed
 
 
@@ -2468,7 +2506,7 @@ def _native_render_sfx_tracks(
                 source = _NATIVE_SOUND_EFFECTS[effect]
                 lead = _NATIVE_SOUND_LEAD.get(effect, 0.0)
                 duration = _NATIVE_SOUND_SECONDS.get(effect, 0.9)
-                volume = _NATIVE_SOUND_VOLUMES.get(effect, 0.46)
+                volume = _NATIVE_SOUND_VOLUMES.get(effect, 0.46) * SFX_VOLUME_BOOST
                 fade_seconds = min(_NATIVE_SOUND_FADE_OUT.get(effect, 0.0), duration)
                 fade = (
                     f",afade=t=out:st={duration - fade_seconds:.3f}:d={fade_seconds:.3f}"

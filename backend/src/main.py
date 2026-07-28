@@ -167,7 +167,20 @@ def pexels_candidates(request: PexelsCandidatesRequest) -> dict[str, object]:
         # Os atributos são garantidos pelo contrato Pydantic de Script/Scene.
         query = request.queries.get(scene.id, (scene.asset_key or "").replace("-", " "))
         visual = scene.visual
-        reference = " · ".join(part for part in [visual.subject, visual.action, visual.setting] if part)
+        # A referência precisa trazer o brief completo. O operador deve poder
+        # revisar em PT-BR não só sujeito/local, mas também enquadramento e os
+        # detalhes que distinguem uma opção de B-roll da outra.
+        reference = " · ".join(
+            f"{label}: {value}"
+            for label, value in (
+                ("Assunto", visual.subject),
+                ("Ação", visual.action),
+                ("Cenário", visual.setting),
+                ("Enquadramento", visual.framing),
+                ("Detalhes", visual.details),
+            )
+            if value
+        )
         item = {
             "scene_id": scene.id,
             "scene_image": scene.image,
@@ -240,6 +253,21 @@ def open_pexels_folder() -> dict[str, str]:
     except OSError as exc:
         raise HTTPException(status_code=500, detail="Não foi possível abrir a pasta local de vídeos.") from exc
     return {"folder": str(VIDEO_DIR)}
+
+
+@app.post("/api/outputs/open-folder")
+def open_outputs_folder() -> dict[str, str]:
+    """Abre no sistema a pasta estável das entregas horizontais publicadas."""
+    try:
+        if os.name == "nt":
+            os.startfile(str(FINAL_OUTPUT_DIR))  # type: ignore[attr-defined]
+        elif sys.platform == "darwin":
+            subprocess.Popen(["open", str(FINAL_OUTPUT_DIR)])
+        else:
+            subprocess.Popen(["xdg-open", str(FINAL_OUTPUT_DIR)])
+    except OSError as exc:
+        raise HTTPException(status_code=500, detail="Não foi possível abrir a pasta dos vídeos finalizados.") from exc
+    return {"folder": str(FINAL_OUTPUT_DIR)}
 
 
 @app.post("/api/images")
