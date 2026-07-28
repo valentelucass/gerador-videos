@@ -103,10 +103,16 @@ VOICE_MASTERING_FILTER = (
     "volume=1.41"
 )
 FINAL_AUDIO_LIMIT = 0.89
-# Presença audível de trilha durante a fala; o sidechain abaixo ainda reduz
-# automaticamente a música quando a narração entra. O ganho é deliberadamente
-# moderado para manter a voz como elemento principal da mixagem.
-MUSIC_BED_VOLUME = 0.26
+# A trilha precisa continuar perceptível durante a fala. A combinação anterior
+# (ganho 0.26, threshold muito baixo e razão 8:1) reduzia uma música normal a
+# um nível praticamente inaudível em narrativas sem pausas. Mantemos a voz como
+# elemento principal, mas partimos de uma cama musical audível e aplicamos um
+# ducking moderado de verdade, em vez de silenciá-la.
+MUSIC_BED_VOLUME = 0.40
+MUSIC_DUCKING_THRESHOLD = 0.10
+MUSIC_DUCKING_RATIO = 2.4
+MUSIC_DUCKING_ATTACK_MS = 25
+MUSIC_DUCKING_RELEASE_MS = 320
 # Os efeitos precisam aparecer um pouco mais à frente sem disparar o limiter
 # com a voz. Aplicar o mesmo ganho a todos preserva as diferenças editoriais
 # entre os volumes individuais abaixo.
@@ -2044,12 +2050,12 @@ def _native_music_path(music_name: str | None) -> Path:
 
 
 def _native_looped_music_bed(music: Path, duration: float, directory: Path) -> Path:
-    """Cria uma trilha de fundo contínua, sem reaproveitar silêncio de cauda.
+    """Cria uma trilha de fundo contínua preservando a faixa escolhida.
 
-    ``-stream_loop`` repetia o MP3 inteiro, inclusive o silêncio já presente
-    no fim de algumas faixas, e a nova volta entrava de forma seca. Primeiro
-    normalizamos um ciclo sem esse silêncio final; depois encadeamos somente os
-    ciclos necessários com ``acrossfade``.
+    O ciclo é normalizado e encadeado com ``acrossfade``. Não usamos
+    ``silenceremove``: algumas músicas têm pausas intencionais ou uma abertura
+    delicada e o filtro encerra o stream no primeiro silêncio encontrado,
+    transformando a trilha inteira em um loop curto e praticamente mudo.
     """
     if duration <= 0:
         raise ValueError("A duração da trilha de fundo precisa ser positiva.")
@@ -2057,15 +2063,7 @@ def _native_looped_music_bed(music: Path, duration: float, directory: Path) -> P
     cycle = directory / "trilha_ciclo.m4a"
     _run_compositor([
         str(FFMPEG), "-y", "-i", str(music),
-        # Remove as duas pontas silenciosas antes de repetir a faixa. Sem a
-        # remoção da abertura, uma música com introdução vazia ainda deixaria
-        # uma lacuna perceptível a cada volta, mesmo com crossfade.
-        "-af", (
-            "aresample=48000,"
-            "silenceremove=start_periods=1:start_duration=0.15:start_threshold=-45dB:"
-            "stop_periods=1:stop_duration=0.15:stop_threshold=-45dB,"
-            "asetpts=PTS-STARTPTS"
-        ),
+        "-af", "aresample=48000,asetpts=PTS-STARTPTS",
         "-c:a", "aac", "-b:a", "192k", str(cycle),
     ])
     cycle_duration = _duration(cycle)
@@ -2634,7 +2632,9 @@ def _native_finalize(
     graph.extend([
         f"[1:a]aresample=48000,{VOICE_MASTERING_FILTER},apad=pad_dur={audio_padding:.6f},asplit=2[voice][voice_key]",
         f"[2:a]aresample=48000,volume={MUSIC_BED_VOLUME:.2f}[music]",
-        "[music][voice_key]sidechaincompress=threshold=0.035:ratio=8:attack=20:release=250[ducked]",
+        "[music][voice_key]sidechaincompress="
+        f"threshold={MUSIC_DUCKING_THRESHOLD:.3f}:ratio={MUSIC_DUCKING_RATIO:.1f}:"
+        f"attack={MUSIC_DUCKING_ATTACK_MS}:release={MUSIC_DUCKING_RELEASE_MS}[ducked]",
         f"[voice][ducked][sfx]amix=inputs=3:duration=first:normalize=0[mix];[mix]alimiter=limit={FINAL_AUDIO_LIMIT:.2f}[audio]",
     ])
     filter_script.write_text(";".join(graph), encoding="utf-8")
