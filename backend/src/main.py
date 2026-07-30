@@ -112,11 +112,19 @@ def get_catalog() -> dict[str, object]:
 
 
 @app.get("/api/script-prompt", response_class=PlainTextResponse)
-def get_script_prompt() -> str:
-    """Entrega o contrato canônico para o operador copiar sem abrir arquivos."""
-    prompt_path = ROOT / "backend" / "PROMPT_JSON_ROTEIRO.md"
+def get_script_prompt(mode: str = "with_broll") -> str:
+    """Entrega o contrato de roteiro selecionado pelo operador."""
+    prompt_names = {
+        "with_broll": "PROMPT_JSON_ROTEIRO.md",
+        "without_broll": "PROMPT_JSON_ROTEIRO_SEM_BROLL.md",
+        "psychology_without_broll": "PROMPT_JSON_ROTEIRO_PSICOLOGIA_SEM_BROLL.md",
+    }
+    prompt_name = prompt_names.get(mode)
+    if prompt_name is None:
+        raise HTTPException(status_code=422, detail="Modo de prompt inválido.")
+    prompt_path = ROOT / "backend" / prompt_name
     if not prompt_path.is_file():
-        raise HTTPException(status_code=404, detail="O prompt canônico não foi encontrado no projeto.")
+        raise HTTPException(status_code=404, detail="O prompt solicitado não foi encontrado no projeto.")
     return prompt_path.read_text(encoding="utf-8")
 
 
@@ -282,6 +290,31 @@ async def upload_images(files: list[UploadFile] = File(...)) -> dict[str, list[s
             shutil.copyfileobj(file.file, output)
         saved.append(name)
     return {"saved": saved}
+
+
+@app.delete("/api/images")
+def delete_images(filenames: list[str]) -> dict[str, list[str]]:
+    """Remove somente os assets de imagem explicitamente enviados pelo painel."""
+    if not filenames:
+        raise HTTPException(status_code=400, detail="Informe ao menos uma imagem para apagar.")
+    names = list(dict.fromkeys(filenames))
+    invalid = [
+        name for name in names
+        if Path(name).name != name or Path(name).suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp"}
+    ]
+    if invalid:
+        raise HTTPException(status_code=400, detail="Nome de imagem inválido para exclusão: " + ", ".join(invalid))
+
+    deleted: list[str] = []
+    missing: list[str] = []
+    for name in names:
+        target = IMAGE_DIR / name
+        if target.is_file():
+            target.unlink()
+            deleted.append(name)
+        else:
+            missing.append(name)
+    return {"deleted": deleted, "missing": missing}
 
 
 @app.post("/api/backgrounds")

@@ -171,11 +171,15 @@ GANCHO, PROMESSA, CTA E ENCERRAMENTO
 - Antes da CTA final, responda à pergunta central, feche o loop principal,
   mostre o mecanismo completo e explique por que a situação inicial fazia
   sentido. O encerramento deve mudar a forma como o espectador interpreta o
-  começo. A ÚLTIMA cena continua exclusivamente a CTA final: uma pergunta
-  específica sobre o conflito real do vídeo e convite curto para o próximo
-  mistério, sem fato novo, conclusão, data, lista ou explicação. Em português,
-  limite essa CTA final a no máximo 12 palavras para preservar a duração acústica.
-- Perguntas são exceções editoriais, não fórmula de retenção. Use-as somente
+  começo. A ÚLTIMA cena continua exclusivamente a CTA final: a fala deve pedir
+  que a pessoa comente uma resposta curta para uma pergunta instigante e
+  específica sobre o mecanismo, exemplo ou conflito central deste vídeo, além
+  do convite breve para se inscrever. A pergunta deve convidar uma experiência,
+  escolha ou posição concreta do espectador — nunca "o que você acha?", "comente
+  abaixo" sem contexto, nem uma pergunta genérica reutilizável. Não introduza
+  fato novo, conclusão, data, lista ou explicação. Em português, limite essa
+  CTA final a no máximo 12 palavras para preservar a duração acústica.
+- Fora da CTA final, perguntas são exceções editoriais, não fórmula de retenção. Use-as somente
   quando abrirem hipótese relevante que será respondida depois; nunca em cenas
   consecutivas, nunca como pergunta curta e solta ("Como?", "Por quê?", "E
   agora?") e nunca para repetir o que a narração acabou de explicar. Prefira
@@ -420,8 +424,9 @@ ANOTAÇÕES
   mesma cena. O renderizador acrescenta uma pausa real quando necessário para
   concluir a CTA antes de iniciar a próxima fala e imagem; nunca misture uma
   nova imagem com essa fala.
-- A última cena deve conter SOMENTE a CTA final curta, sem fechar o loop nem
-  introduzir informação nova, e:
+- A última cena deve conter SOMENTE a CTA final curta: a narração pede inscrição
+  e uma resposta nos comentários à pergunta específica exigida acima, sem fechar
+  o loop nem introduzir informação nova. A annotation permanece:
   `"annotation":{"lines":["SE INSCREVA","PARA MAIS"],"at":"start","emoji":"🔔"}`,
   além de `context` com `click` em `start`. A imagem final deve permanecer na
   tela até o fim da CTA, mesmo após a última palavra da narração.
@@ -597,7 +602,8 @@ ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
     consequência, fechamento do loop e CTA final.
 18. Antes da CTA final, o loop central está fechado, o mecanismo foi explicado e
     o encerramento reinterpreta o começo. A última cena contém somente a CTA final
-    curta prevista neste contrato, sem informação nova.
+    curta prevista neste contrato, pede uma resposta nos comentários a uma pergunta
+    específica do vídeo e não traz informação nova.
 19. A persona permaneceu documental e investigativa: não se apresenta como
     especialista nem recomenda, prescreve ou instrui o espectador sobre
     decisões financeiras, jurídicas, médicas, tributárias, migratórias ou

@@ -36,6 +36,16 @@ GRAPHIC_VISUAL_PRESET = (
     "Simple editorial data visualization, clean neutral background, clear lines or bars, strong contrast, "
     "few elements, accurate proportions, visually understandable, horizontal 16:9."
 )
+PSYCHOLOGY_LITHOGRAPH_VISUAL_PRESET = (
+    "Vintage cosmic lithograph illustration, therapeutic fairy-tale mood, distressed antique paper texture, "
+    "soft organic hand-drawn linework, deep silent dark void background, hopeful protagonist and symbolic tools "
+    "drawn in delicate golden lines and constellations, open flowing composition, artwork bleeding cleanly to every edge, "
+    "horizontal 16:9."
+)
+PSYCHOLOGY_LITHOGRAPH_NEGATIVE_PROMPT = (
+    "Avoid frames, borders, decorative margins, dividers, enclosed panels, lotus ornaments, white outlines, "
+    "modern glossy digital illustration, neon glow, 3D render, visual clutter, tiny unreadable text and watermarks."
+)
 GRAPHIC_NEGATIVE_PROMPT = (
     "Avoid 3D charts, floating objects, metaphorical graphics, decorative illustrations, futuristic dashboards, "
     "excessive colors, perspective distortion, tiny labels, visual clutter and complex interfaces."
@@ -397,8 +407,19 @@ def _visual_is_graphic(scene: object) -> bool:
     return bool(terms.intersection(GRAPHIC_VISUAL_TERMS))
 
 
+def _visual_is_psychology_lithograph(scene: object) -> bool:
+    """Reconhece o marcador do prompt psicológico sem alterar o contrato JSON."""
+    visual = scene.visual
+    content = " ".join((visual.subject, visual.action, visual.setting, visual.framing, visual.details))
+    normalized = unicodedata.normalize("NFKD", content).encode("ascii", "ignore").decode("ascii").casefold()
+    terms = set(re.findall(r"[a-z0-9]+", normalized))
+    return {"litografia", "cosmica", "vintage"}.issubset(terms)
+
+
 def _google_flow_visual_preset(scene: object) -> tuple[str, str, str]:
     """Retorna o preset final sem contaminar os cinco campos do JSON."""
+    if _visual_is_psychology_lithograph(scene):
+        return "litografia cósmica vintage", PSYCHOLOGY_LITHOGRAPH_VISUAL_PRESET, PSYCHOLOGY_LITHOGRAPH_NEGATIVE_PROMPT
     if _visual_is_graphic(scene):
         return "gráfico", GRAPHIC_VISUAL_PRESET, GRAPHIC_NEGATIVE_PROMPT
     return "fotografia documental", PHOTO_VISUAL_PRESET, PHOTO_NEGATIVE_PROMPT
@@ -523,14 +544,27 @@ def validate_script(
 
     missing_images = missing_scene_images(script, resolved_sources)
     scenes = [scene for block in script.blocks for scene in block.scenes]
-    if scenes and scenes[0].tipo_midia != "video_generico":
-        errors.append("A scene_01 precisa usar tipo_midia='video_generico' para o gancho.")
-    for scene in scenes:
-        if scene.annotation is not None and scene.tipo_midia != "video_generico":
-            errors.append(f"A cena {scene.id} possui annotation e precisa usar tipo_midia='video_generico'.")
+    uses_broll = any(scene.tipo_midia == "video_generico" for scene in scenes)
+    if uses_broll:
+        # O contrato híbrido legado continua exigindo B-roll no gancho e atrás
+        # das annotations. O novo formato estático é inferido somente quando
+        # não existe nenhuma cena de vídeo no JSON.
+        if scenes and scenes[0].tipo_midia != "video_generico":
+            errors.append("No formato com B-roll, a scene_01 precisa usar tipo_midia='video_generico'.")
+        for scene in scenes:
+            if scene.annotation is not None and scene.tipo_midia != "video_generico":
+                errors.append(f"A cena {scene.id} possui annotation e precisa usar tipo_midia='video_generico'.")
+    else:
+        for scene in scenes:
+            if scene.annotation is not None and scene.transition.in_ != "zoom_in":
+                errors.append(
+                    f"No formato sem B-roll, a annotation da cena {scene.id} precisa usar imagem fullscreen "
+                    "com transition.in='zoom_in'."
+                )
     return {
         "valid": not errors,
         "errors": errors,
+        "media_mode": "with_broll" if uses_broll else "without_broll",
         "blocks": blocks,
         # A lista usa o nome do JSON para o painel mostrar exatamente qual
         # cena ainda precisa de um vínculo, mesmo que o arquivo real tenha

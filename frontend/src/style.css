@@ -63,6 +63,8 @@ button, select { cursor: pointer; }
 .button:disabled { cursor: progress; opacity: .62; transform: none; }
 .button.quiet { background: transparent; }
 .button.primary { color: #111317; border-color: #f3d536; background: #f3d536; }
+.button.danger { color: #ffd9d9; border-color: #8e3e46; background: #3a1d22; }
+.button.danger:hover { border-color: #f06d77; background: #4d2229; }
 .button.compact { padding: 7px 10px; font-size: .71rem; }
 
 .workbench {
@@ -306,6 +308,10 @@ button, select { cursor: pointer; }
 .timing-report { display: grid; gap: 7px; max-height: 250px; overflow-y: auto; margin-top: 10px; padding: 10px; border: 1px solid #5d4827; border-radius: 8px; background: #2e251a; color: #ffdc8d; font-size: .76rem; }
 .script-feedback { min-height: 68px; display: grid; align-content: center; gap: 6px; margin-top: 10px; padding: 9px 10px; color: #71808f; border: 1px dashed #34414d; border-radius: 8px; background: #0b1118; font-size: .67rem; line-height: 1.35; }
 .script-feedback.has-warnings { max-height: 138px; overflow-y: auto; color: #ffdc8d; border-style: solid; border-color: #5d4827; background: #2a231a; }
+.video-duration-estimate { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; color: #cbd6e0; }
+.video-duration-estimate b { color: #f3d536; }
+.video-duration-estimate span { color: #fff; font-size: .88rem; font-weight: 800; }
+.video-duration-estimate small { color: #84909c; }
 .script-feedback .timing-warning { border-color: #5d4827; }
 .timing-warning { display: grid; gap: 2px; padding: 7px 0; border-top: 1px solid #5d4827; color: #ffcf70; line-height: 1.35; }
 .timing-warning:first-of-type { border-top: 0; padding-top: 0; }

@@ -4,6 +4,7 @@ import "./style.css";
 
 type BackgroundAnimation = "none" | "movimento_sutil" | "movimento_lateral" | "pulsacao";
 type MediaTab = "assets" | "curadoria";
+type PromptMode = "with_broll" | "without_broll" | "psychology_without_broll";
 
 type MediaType = "imagem" | "video_generico";
 type Scene = {
@@ -61,7 +62,7 @@ type TimingScene = {
   duration: number;
   suggested_split?: { first_text: string; second_text: string };
 };
-type TimingReport = { scenes: TimingScene[] };
+type TimingReport = { narration_duration: number; scenes: TimingScene[] };
 
 const animationOptions: { value: BackgroundAnimation; label: string }[] = [
   { value: "movimento_sutil", label: "Movimento suave" },
@@ -78,11 +79,20 @@ const THUMBNAIL_PAGE_SIZE = 24;
 const PEXELS_SCENES_PAGE_SIZE = 4;
 const TRANSLATION_CONCURRENCY = 2;
 const RENDER_COMPLETE_SOUND_URL = "/assets/sounds/Mountain%20Audio%20-%20New%20Idea%20Notification.mp3";
+
+const formatVideoDuration = (seconds: number) => {
+  const totalSeconds = Math.max(0, Math.round(seconds));
+  const minutes = Math.floor(totalSeconds / 60);
+  const remainder = totalSeconds % 60;
+  return minutes ? `${minutes} min ${remainder.toString().padStart(2, "0")} s` : `${remainder} s`;
+};
 const RENDER_ERROR_SOUND_URL = "/assets/sounds/Wrong%20Answer.mp3";
 const PHOTO_VISUAL_PRESET = "Raw smartphone documentary photography, harsh direct flash, natural imperfections, slightly grainy texture, muted brown, gray and dark tones, worn everyday environments, candid unposed people, realistic ordinary faces, tired, neutral or concerned expressions, non-commercial appearance, clear main subject, simple composition, sharp enough to understand the scene, horizontal 16:9.";
 const PHOTO_NEGATIVE_PROMPT = "Avoid glossy advertising, studio photography, cinematic lighting, luxury environments, perfect models, plastic skin, excessive retouching, overly clean surfaces, symmetrical posing, dramatic movie color grading, neon colors, oversaturation, artificial smiles, CGI appearance, 3D render, fantasy elements, abstract metaphors, excessive objects, visual clutter, deformed hands, distorted faces and unreadable text.";
 const GRAPHIC_VISUAL_PRESET = "Simple editorial data visualization, clean neutral background, clear lines or bars, strong contrast, few elements, accurate proportions, visually understandable, horizontal 16:9.";
 const GRAPHIC_NEGATIVE_PROMPT = "Avoid 3D charts, floating objects, metaphorical graphics, decorative illustrations, futuristic dashboards, excessive colors, perspective distortion, tiny labels, visual clutter and complex interfaces.";
+const PSYCHOLOGY_LITHOGRAPH_VISUAL_PRESET = "Vintage cosmic lithograph illustration, therapeutic fairy-tale mood, distressed antique paper texture, soft organic hand-drawn linework, deep silent dark void background, hopeful protagonist and symbolic tools drawn in delicate golden lines and constellations, open flowing composition, artwork bleeding cleanly to every edge, horizontal 16:9.";
+const PSYCHOLOGY_LITHOGRAPH_NEGATIVE_PROMPT = "Avoid frames, borders, decorative margins, dividers, enclosed panels, lotus ornaments, white outlines, modern glossy digital illustration, neon glow, 3D render, visual clutter, tiny unreadable text and watermarks.";
 const GRAPHIC_VISUAL_TERMS = new Set([
   "grafico", "graficos", "grafica", "graficas", "graph", "graphs", "chart", "charts",
   "barras", "barra", "bars", "bar", "linha", "linhas", "line", "lines", "lineas",
@@ -153,6 +163,9 @@ function flowVisualPreset(scene: Scene): { kind: string; preset: string; negativ
       .toLowerCase()
       .match(/[a-z0-9]+/g) ?? [],
   );
+  if (["litografia", "cosmica", "vintage"].every(term => terms.has(term))) {
+    return { kind: "LITOGRAFIA CÓSMICA VINTAGE", preset: PSYCHOLOGY_LITHOGRAPH_VISUAL_PRESET, negative: PSYCHOLOGY_LITHOGRAPH_NEGATIVE_PROMPT };
+  }
   if ([...terms].some(term => GRAPHIC_VISUAL_TERMS.has(term))) {
     return { kind: "GRÁFICO", preset: GRAPHIC_VISUAL_PRESET, negative: GRAPHIC_NEGATIVE_PROMPT };
   }
@@ -428,6 +441,7 @@ function App() {
   const [outputUrl, setOutputUrl] = useState("");
   const [renderError, setRenderError] = useState("");
   const [timingWarnings, setTimingWarnings] = useState<TimingScene[]>([]);
+  const [narrationDuration, setNarrationDuration] = useState<number | null>(null);
   const [renderLogUrl, setRenderLogUrl] = useState("");
   const [pexelsItems, setPexelsItems] = useState<PexelsItem[]>([]);
   const [pexelsQueries, setPexelsQueries] = useState<Record<string, string>>({});
@@ -446,7 +460,7 @@ function App() {
   const [mediaTab, setMediaTab] = useState<MediaTab>("assets");
   const [musicPreviewPlaying, setMusicPreviewPlaying] = useState(false);
   const [musicPreviewVolume, setMusicPreviewVolume] = useState(0.14);
-  const [promptCopied, setPromptCopied] = useState(false);
+  const [promptCopied, setPromptCopied] = useState<PromptMode | null>(null);
   const [flowExportReady, setFlowExportReady] = useState(false);
   const [flowBatchSize, setFlowBatchSize] = useState<25 | 50>(25);
   const jsonInput = useRef<HTMLInputElement>(null);
@@ -558,6 +572,7 @@ function App() {
     setExpandedPexelsScene(null);
     setPexelsPage(0);
     setTimingWarnings([]);
+    setNarrationDuration(null);
     setFlowExportReady(Boolean(project.source));
     setJobId("");
     setOutputUrl("");
@@ -703,9 +718,9 @@ function App() {
     }
   };
 
-  const copyScriptPrompt = async () => {
+  const copyScriptPrompt = async (mode: PromptMode) => {
     try {
-      const prompt = await api<string>("/api/script-prompt");
+      const prompt = await api<string>(`/api/script-prompt?mode=${mode}`);
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(prompt);
       } else {
@@ -719,12 +734,18 @@ function App() {
         temporary.remove();
       }
       if (promptCopyTimer.current !== null) window.clearTimeout(promptCopyTimer.current);
-      setPromptCopied(true);
+      setPromptCopied(mode);
       promptCopyTimer.current = window.setTimeout(() => {
-        setPromptCopied(false);
+        setPromptCopied(null);
         promptCopyTimer.current = null;
       }, 1800);
-      setStatus("Prompt canônico copiado. Cole-o no ChatGPT e preencha o tema do vídeo.");
+      setStatus(
+        mode === "without_broll"
+          ? "Prompt sem B-roll copiado. Ele gera somente imagens para fullscreen e cartões."
+          : mode === "psychology_without_broll"
+            ? "Prompt de psicologia sem B-roll copiado. Ele gera somente imagens para fullscreen e cartões."
+            : "Prompt com B-roll copiado. Cole-o no ChatGPT e preencha o tema do vídeo.",
+      );
     } catch (error) {
       setStatus(`Não foi possível copiar o prompt: ${readableError(error)}`);
     }
@@ -739,6 +760,7 @@ function App() {
     setImageBindings({});
     setActiveImagePickerKey(null);
     setTimingWarnings([]);
+    setNarrationDuration(null);
     setFlowExportReady(false);
     setSource(text);
     void parseScript(text);
@@ -899,6 +921,32 @@ function App() {
     setThumbnailPage(0);
     setActiveImagePickerKey(null);
     setStatus("Lista local e vínculos limpos. Nenhum arquivo foi apagado e o roteiro foi preservado.");
+  };
+
+  const deleteUploadedImages = async () => {
+    if (!uploadedImages.length) return;
+    const count = uploadedImages.length;
+    if (!window.confirm(`Apagar permanentemente as ${count} imagens enviadas nesta tela? Elas serão removidas apenas da pasta de imagens; o roteiro será preservado.`)) return;
+    try {
+      setStatus(`Apagando ${count} imagens enviadas…`);
+      const result = await api<{ deleted: string[]; missing: string[] }>("/api/images", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(uploadedImages),
+      });
+      setUploadedImages([]);
+      setImageBindings({});
+      setThumbnailPage(0);
+      setActiveImagePickerKey(null);
+      await refreshCatalog();
+      setStatus(
+        result.missing.length
+          ? `${result.deleted.length} imagem(ns) apagada(s); ${result.missing.length} já não estava(m) na pasta.`
+          : `${result.deleted.length} imagem(ns) apagada(s). Você já pode enviar outro conjunto.`,
+      );
+    } catch (error) {
+      setStatus(`Não foi possível apagar as imagens: ${readableError(error)}`);
+    }
   };
 
   const pexelsQueryPayload = (activeScript: Script): Record<string, string> => {
@@ -1123,7 +1171,9 @@ function App() {
       setFlowExportReady(report.valid);
       const warnings = report.timing?.scenes.filter(scene => scene.duration > 9) ?? [];
       setTimingWarnings(warnings);
+      setNarrationDuration(report.timing?.narration_duration ?? null);
       const validationNotes = [
+        ...(report.timing ? [`Duração estimada do vídeo: ${formatVideoDuration(report.timing.narration_duration)}.`] : []),
         ...(warnings.length ? [`${warnings.length} cena(s) ultrapassam 9 s; veja as sugestões de corte abaixo.`] : []),
         ...(report.missing_images.length ? [`Faltam: ${report.missing_images.join(", ")}`] : []),
       ];
@@ -1212,6 +1262,11 @@ function App() {
   const currentPexelsPage = Math.min(pexelsPage, pexelsPageCount - 1);
   const pexelsStart = currentPexelsPage * PEXELS_SCENES_PAGE_SIZE;
   const visiblePexelsItems = pexelsItems.slice(pexelsStart, pexelsStart + PEXELS_SCENES_PAGE_SIZE);
+  const hasBrollScenes = Boolean(script?.blocks.some(block => block.scenes.some(scene => scene.tipo_midia === "video_generico")));
+
+  useEffect(() => {
+    if (!hasBrollScenes) setMediaTab("assets");
+  }, [hasBrollScenes]);
 
   return (
     <main className="app-shell">
@@ -1221,7 +1276,7 @@ function App() {
           <button className="project-trigger" onClick={() => setProjectDialogOpen(true)} title="Abrir projetos salvos"><span>Projetos</span><b>{projectName}</b><i>⌄</i></button>
           <span className="scene-indicator">{script ? `${sceneCount(script)} cenas` : "sem roteiro"}</span>
           <button className="button quiet" onClick={validate}>Validar</button>
-          <button className="button quiet" disabled={!script || pexelsBusy} onClick={() => void searchPexels()}>{pexelsBusy ? "Buscando…" : "Buscar B-roll"}</button>
+          {hasBrollScenes && <button className="button quiet" disabled={pexelsBusy} onClick={() => void searchPexels()}>{pexelsBusy ? "Buscando…" : "Buscar B-roll"}</button>}
           <button className="button primary" disabled={Boolean(jobId)} onClick={render}>{jobId ? "Renderizando…" : "Gerar vídeo"}</button>
         </div>
       </header>
@@ -1230,7 +1285,7 @@ function App() {
         <article className="panel json-panel">
           <div className="panel-header">
             <div><span className="panel-index">01</span><h1>Roteiro JSON</h1></div>
-            <div className="json-header-actions"><button className={`button quiet compact prompt-copy-button${promptCopied ? " copied" : ""}`} onClick={() => void copyScriptPrompt()}>{promptCopied ? "✓ Copiado" : "Copiar prompt"}</button><button className="button quiet compact" onClick={() => jsonInput.current?.click()}>Importar JSON</button></div>
+            <div className="json-header-actions"><button className={`button quiet compact prompt-copy-button${promptCopied === "with_broll" ? " copied" : ""}`} onClick={() => void copyScriptPrompt("with_broll")}>{promptCopied === "with_broll" ? "✓ Copiado" : "Prompt com B-roll"}</button><button className={`button quiet compact prompt-copy-button${promptCopied === "without_broll" ? " copied" : ""}`} onClick={() => void copyScriptPrompt("without_broll")}>{promptCopied === "without_broll" ? "✓ Copiado" : "Prompt sem B-roll"}</button><button className={`button quiet compact prompt-copy-button${promptCopied === "psychology_without_broll" ? " copied" : ""}`} onClick={() => void copyScriptPrompt("psychology_without_broll")}>{promptCopied === "psychology_without_broll" ? "✓ Copiado" : "Prompt psicologia"}</button><button className="button quiet compact" onClick={() => jsonInput.current?.click()}>Importar JSON</button></div>
             <input ref={jsonInput} type="file" accept="application/json,.json" hidden onChange={importJson} />
           </div>
           <p className="panel-hint">Cole o JSON ou importe um arquivo.</p>
@@ -1250,10 +1305,13 @@ function App() {
               // cenas; os vínculos anteriores não devem vazar para ela.
               setImageBindings({});
               setActiveImagePickerKey(null);
+              setTimingWarnings([]);
+              setNarrationDuration(null);
               setFlowExportReady(false);
             }}
           />
           <section className={`script-feedback${timingWarnings.length ? " has-warnings" : ""}`} aria-label="Validação e avisos do roteiro">
+            {narrationDuration !== null && <div className="video-duration-estimate"><b>Duração estimada do vídeo</b><span>{formatVideoDuration(narrationDuration)}</span><small>Medida pela narração com a voz selecionada.</small></div>}
             {timingWarnings.length > 0 ? <>
               <b>Prévia acústica · {timingWarnings.length} cena(s) precisam de corte</b>
               {timingWarnings.map(scene => (
@@ -1262,7 +1320,7 @@ function App() {
                   <small>Corte: “{scene.suggested_split?.first_text ?? "divida próximo à metade"}” / “{scene.suggested_split?.second_text ?? "crie a segunda cena"}”</small>
                 </div>
               ))}
-            </> : <span>Validação, duração acústica e sugestões de corte aparecem aqui.</span>}
+            </> : narrationDuration === null && <span>Validação, duração acústica e sugestões de corte aparecem aqui.</span>}
           </section>
           {script && <section className="flow-export" aria-label="Exportação para Google Flow">
             <div><b>Google Flow</b><small>Exporta somente cenas de imagem; B-roll, transições, sons e anotações ficam de fora.</small></div>
@@ -1305,13 +1363,13 @@ function App() {
             <div className="scene-panel-actions">
               <span className="panel-count">{uploadedImages.length} enviada(s) nesta tela</span>
               {uploadedImages.length > 0 && (
-                <button className="button quiet compact" onClick={clearUploadedImages}>Limpar lista</button>
+                <><button className="button quiet compact" onClick={clearUploadedImages}>Limpar lista</button><button className="button danger compact" onClick={() => void deleteUploadedImages()}>Apagar imagens</button></>
               )}
             </div>
           </div>
           <div className="media-tabs" aria-label="Áreas de mídia">
             <button className={mediaTab === "assets" ? "active" : ""} onClick={() => setMediaTab("assets")}>Imagens e vínculos</button>
-            <button className={mediaTab === "curadoria" ? "active" : ""} onClick={() => setMediaTab("curadoria")}>Curadoria B-roll{pexelsItems.length ? ` · ${pexelsItems.length}` : ""}</button>
+            {hasBrollScenes && <button className={mediaTab === "curadoria" ? "active" : ""} onClick={() => setMediaTab("curadoria")}>Curadoria B-roll{pexelsItems.length ? ` · ${pexelsItems.length}` : ""}</button>}
           </div>
           {!script && <div className="media-await"><b>Carregue o roteiro para preparar as mídias.</b><span>As cenas, os vínculos e a curadoria aparecem aqui depois da leitura do JSON.</span></div>}
           {script && mediaTab === "assets" && <>

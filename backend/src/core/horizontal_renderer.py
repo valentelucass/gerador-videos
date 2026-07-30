@@ -70,6 +70,10 @@ CARD_EXIT_ZOOM = 0.580
 # Até 10,5 s a mesma arte permanece em tela; acima disso o bloco ainda precisa
 # ser dividido para preservar a retenção e o ritmo documental.
 MAX_SCENE_ACOUSTIC_SECONDS = 9.0
+# Um B-roll pode desacelerar um pouco para acompanhar a fala, mas nunca pode
+# ser prolongado clonando o último quadro. Se ainda for curto, a curadoria
+# humana precisa fornecer outra mídia para a cena.
+MAX_BROLL_SLOWDOWN = 1.20
 # O produto foi dimensionado para narrativas de até vinte minutos. Acima disso
 # a fila, o espaço temporário e a revisão humana deixam de ter a mesma
 # previsibilidade; o operador deve dividir o roteiro em episódios.
@@ -112,7 +116,7 @@ FINAL_AUDIO_LIMIT = 0.89
 # um nível praticamente inaudível em narrativas sem pausas. Mantemos a voz como
 # elemento principal, mas partimos de uma cama musical audível e aplicamos um
 # ducking moderado de verdade, em vez de silenciá-la.
-MUSIC_BED_VOLUME = 0.40
+MUSIC_BED_VOLUME = 0.38
 MUSIC_DUCKING_THRESHOLD = 0.10
 MUSIC_DUCKING_RATIO = 2.4
 MUSIC_DUCKING_ATTACK_MS = 25
@@ -1144,20 +1148,26 @@ def _native_render_scene_clips(
         source = source_dir / scene.image
         target_seconds = frames / FPS
         is_video = scene.tipo_midia == "video_generico"
-        # B-roll finito não pode usar -stream_loop: se a fonte termina um
-        # pouco antes da janela acústica, o primeiro plano reaparecia e dava
-        # a sensação de drop/reinício. Uma redução de velocidade limitada a
-        # 20% preserva o movimento natural; tpad só cobre arredondamentos ou
-        # assets excepcionalmente curtos, sem voltar ao início da mídia.
+        # B-roll finito não pode usar -stream_loop nem congelar no último
+        # quadro. Uma redução de velocidade limitada a 20% preserva o
+        # movimento natural; se não bastar, a renderização falha para que o
+        # operador substitua a mídia na curadoria.
         video_time_scale = 1.0
         if is_video:
             source_seconds = _duration(source)
             if source_seconds <= 0:
                 raise RuntimeError(f"B-roll inválido ou sem duração: {source.name}")
-            video_time_scale = min(1.20, max(1.0, target_seconds / source_seconds))
+            minimum_source_seconds = target_seconds / MAX_BROLL_SLOWDOWN
+            if source_seconds < minimum_source_seconds:
+                raise ValueError(
+                    f"B-roll curto demais na cena {scene.id} ({source.name}): "
+                    f"tem {source_seconds:.2f}s, mas precisa de ao menos "
+                    f"{minimum_source_seconds:.2f}s para cobrir {target_seconds:.2f}s "
+                    "sem congelar. Substitua o arquivo por um clipe mais longo."
+                )
+            video_time_scale = max(1.0, target_seconds / source_seconds)
         finite_tail = (
-            f",tpad=stop_mode=clone:stop_duration={target_seconds:.6f},"
-            f"trim=duration={target_seconds:.6f},setpts=PTS-STARTPTS"
+            f",trim=duration={target_seconds:.6f},setpts=PTS-STARTPTS"
             if is_video else ""
         )
         source_prefix = f"[0:v]setpts=PTS*{video_time_scale:.8f}," if is_video else "[0:v]"
@@ -1817,6 +1827,10 @@ def _native_render_annotation_effect(
     ass = _native_annotation_ass(output.parent, annotation_index, lines, duration, emoji)
     styled = f"[annotation_{annotation_index}_ass]"
     graph.append(f"{blended}ass=filename='{_native_filter_path(ass)}'{styled}")
+    # Este é o caminho usado pelas annotations que cabem dentro de um segmento.
+    # O sticker não pode nascer junto da primeira letra: ele entra no mesmo
+    # cursor que agenda bottle_cork/new_idea, no fim da digitação.
+    emoji_start = _native_annotation_emoji_offset(lines, emoji) if emoji else text_end
     if sticker is None and emoji:
         if not SYSTEM_EMOJI_FONT.is_file():
             raise FileNotFoundError("A fonte de emoji do Windows não está disponível para o fallback de annotations.")
@@ -1826,7 +1840,7 @@ def _native_render_annotation_effect(
             f"{styled}drawtext=fontfile='{emoji_font}':text='{_escape_drawtext(emoji)}':"
             "fontcolor=white:fontsize=76:borderw=2:bordercolor=black@0.90:"
             "x='(w+text_w)/2+32':y='h/2-text_h/2':"
-            f"enable='{_native_time_window(0.0, text_end)}'{emoji_output}"
+            f"enable='{_native_time_window(emoji_start, text_end)}'{emoji_output}"
         )
         styled = emoji_output
     elif sticker is not None:
@@ -1835,7 +1849,7 @@ def _native_render_annotation_effect(
         graph.append(f"[{sticker_input_index}:v]format=rgba,scale=-1:{EMOJI_STICKER_HEIGHT}{sticker_label}")
         graph.append(
             f"{styled}{sticker_label}overlay=x='{EMOJI_STICKER_X}':y='(main_h-overlay_h)/2':format=auto:"
-            f"enable='{_native_time_window(0.0, text_end)}'{emoji_output}"
+            f"enable='{_native_time_window(emoji_start, text_end)}'{emoji_output}"
         )
         styled = emoji_output
     graph.append(
@@ -2170,9 +2184,9 @@ def _native_annotation_plan(script: Script, timing: list[dict[str, object]]) -> 
         annotations.append((scene.annotation.lines, annotation_start, annotation_end, scene.annotation.emoji))
         events.append(("typing", annotation_start + ANNOTATION_TYPING_DELAY))
         if scene.annotation.emoji == "👍":
-            events.append(("bottle_cork", _native_annotation_emoji_time(annotation_start, scene.annotation.lines)))
+            events.append(("bottle_cork", _native_annotation_emoji_time(annotation_start, scene.annotation.lines, "👍")))
         elif scene.annotation.emoji == "🔔":
-            events.append(("new_idea", _native_annotation_emoji_time(annotation_start, scene.annotation.lines)))
+            events.append(("new_idea", _native_annotation_emoji_time(annotation_start, scene.annotation.lines, "🔔")))
     missing = sorted({effect for effect, _ in events if effect not in _NATIVE_SOUND_EFFECTS or not _NATIVE_SOUND_EFFECTS[effect].is_file()})
     if missing:
         raise FileNotFoundError("Efeitos sonoros ausentes: " + ", ".join(missing))
@@ -2195,12 +2209,23 @@ def _native_annotation_duration(lines: list[str], emoji: str | None) -> float:
     )
 
 
-def _native_annotation_emoji_time(annotation_start: float, lines: list[str]) -> float:
+def _native_annotation_emoji_time(annotation_start: float, lines: list[str], emoji: str | None) -> float:
+    """Retorna o instante absoluto em que o sticker entra ao fim da digitação.
+
+    O mesmo cursor é usado pelo compositor visual: há intervalo apenas entre
+    linhas, nunca após a última. Assim o início audível de ``bottle cork.mp3``
+    coincide com a aparição do polegar.
+    """
+    return annotation_start + _native_annotation_emoji_offset(lines, emoji)
+
+
+def _native_annotation_emoji_offset(lines: list[str], emoji: str | None) -> float:
+    """Cursor local compartilhado pelo sticker e pelo efeito sonoro da CTA."""
+    typing_step, _ = _native_annotation_timing(emoji)
     return (
-        annotation_start
-        + ANNOTATION_TYPING_DELAY
-        + sum(len(line) for line in lines) * CTA_TYPING_STEP
-        + len(lines) * ANNOTATION_LINE_GAP
+        ANNOTATION_TYPING_DELAY
+        + sum(len(line) for line in lines) * typing_step
+        + max(0, len(lines) - 1) * ANNOTATION_LINE_GAP
     )
 
 

@@ -7,6 +7,47 @@ from backend.src.core import horizontal_renderer as renderer
 
 
 class HorizontalMusicMixTests(unittest.TestCase):
+    def test_cta_emoji_sound_starts_when_the_sticker_appears(self) -> None:
+        annotation_start = 12.5
+        lines = ["DEJA TU ME GUSTA", "Y SUSCRIBETE"]
+
+        expected_sticker_start = (
+            annotation_start
+            + renderer.ANNOTATION_TYPING_DELAY
+            + sum(len(line) for line in lines) * renderer.CTA_TYPING_STEP
+            + (len(lines) - 1) * renderer.ANNOTATION_LINE_GAP
+        )
+
+        self.assertEqual(
+            renderer._native_annotation_emoji_time(annotation_start, lines, "👍"),
+            expected_sticker_start,
+        )
+
+    def test_segment_cta_sticker_uses_the_same_cursor_as_its_sound(self) -> None:
+        lines = ["SUSCRIBETE", "PARA MAS"]
+        expected_offset = renderer._native_annotation_emoji_offset(lines, "🔔")
+
+        self.assertEqual(
+            expected_offset,
+            renderer.ANNOTATION_TYPING_DELAY
+            + sum(len(line) for line in lines) * renderer.CTA_TYPING_STEP
+            + (len(lines) - 1) * renderer.ANNOTATION_LINE_GAP,
+        )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with (
+                patch.object(renderer, "_native_required_stickers", return_value={"🔔": root / "bell.png"}),
+                patch.object(renderer, "_run_compositor") as run_compositor,
+            ):
+                renderer._native_render_annotation_effect(
+                    root / "source.mp4", 0, 150, 0, lines, "🔔", root / "effect.mp4", encoder_args=[]
+                )
+
+            graph = run_compositor.call_args.args[0]
+            filter_graph = graph[graph.index("-filter_complex") + 1]
+            self.assertIn(f"enable='gte(t,{expected_offset:.3f})*lt(t,", filter_graph)
+
     def test_music_cycle_preserves_pauses_in_the_imported_track(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
