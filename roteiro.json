@@ -1,32 +1,39 @@
 {
-  "_instrucoes_flow": "Google Flow, gere UMA imagem horizontal 16:9 para TODAS as cenas. Não gere vídeos, MP4s ou B-roll.",
-  "title": "A Psicologia das Mulheres que Fazem Tudo Sozinhas",
-  "language": "pt-BR",
-  "narrator_gender": "female",
-  "voice": "pt-BR-FranciscaNeural",
+  "_instrucoes_flow": "Google Flow, leia apenas as cenas com tipo_midia: imagem. IGNORE COMPLETAMENTE as cenas com tipo_midia: video_generico, não gere imagens para elas.",
+  "title": "7 Engaños Psicológicos de Temu y Shein para Vaciar tu Cuenta",
+  "language": "es-ES",
+  "narrator_gender": "male",
+  "voice": "es-ES-AlvaroNeural",
   "background": "black",
   "background_animation": "movimento_sutil",
   "blocks": [
     {
       "id": "block_01",
-      "text": "Alguém oferece ajuda para carregar um peso ou para resolver aquele problema chato no trabalho.",
+      "text": "Entras a la aplicación solo para comprar un cable barato que necesitas urgentemente.",
       "scenes": [
         {
           "id": "scene_01",
           "image_id": 1,
-          "tipo_midia": "imagem",
-          "asset_key": "woman-looking-at-heavy-box",
-          "image": "cena_01.png",
+          "tipo_midia": "video_generico",
+          "asset_key": "scrolling-smartphone-screen",
+          "image": "cena_01.mp4",
           "visual": {
-            "subject": "mulher adulta e colega de trabalho",
-            "action": "colega estendendo a mão para ajudar com uma caixa",
-            "setting": "escritório iluminado",
-            "framing": "plano médio dos dois",
-            "details": "expressão de hesitação no rosto da mulher"
+            "subject": "pulgar deslizando rápidamente la pantalla de un teléfono",
+            "action": "navegando por una tienda online infinita",
+            "setting": "entorno oscuro iluminado por la pantalla",
+            "framing": "plano detalle sobre el teléfono y la mano",
+            "details": "imágenes borrosas de productos pasando a gran velocidad"
+          },
+          "annotation": {
+            "lines": [
+              "LA TRAMPA",
+              "DIGITAL"
+            ],
+            "at": "middle"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_left",
+            "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
@@ -43,30 +50,28 @@
     },
     {
       "id": "block_02",
-      "text": "E antes mesmo de pensar, a sua resposta automática e quase defensiva sai imediatamente.",
+      "text": "Pero media hora después, te encuentras mirando tu carrito con treinta artículos inútiles.",
       "scenes": [
         {
           "id": "scene_02",
           "image_id": 2,
           "tipo_midia": "imagem",
-          "asset_key": "woman-gesturing-no-politely",
+          "asset_key": "shopping-cart-full-junk",
           "image": "cena_02.png",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "fazendo gesto sutil com a mão recusando a ajuda",
-            "setting": "mesmo escritório",
-            "framing": "close-up no rosto e mão",
-            "details": "sorriso educado mas postura rígida"
+            "subject": "pantalla de carrito de compras digital",
+            "action": "mostrando una lista interminable de productos de plástico",
+            "setting": "interfaz de aplicación móvil",
+            "framing": "plano detalle de la pantalla",
+            "details": "miniaturas de productos extraños y un botón de pago brillante"
           },
           "transition": {
-            "in": "from_right",
+            "in": "from_left",
             "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
+            "transition": [],
             "context": null
           }
         }
@@ -74,25 +79,25 @@
     },
     {
       "id": "block_03",
-      "text": "Você solta um sorriso e diz: 'Não precisa se preocupar, pode deixar que eu resolvo isso'.",
+      "text": "Crees que has hackeado el sistema porque todo es ridículamente barato.",
       "scenes": [
         {
           "id": "scene_03",
           "image_id": 3,
           "tipo_midia": "imagem",
-          "asset_key": "woman-handling-box-alone",
+          "asset_key": "person-smiling-phone-screen",
           "image": "cena_03.png",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "segurando a caixa sozinha com certa dificuldade",
-            "setting": "escritório iluminado",
-            "framing": "plano médio",
-            "details": "colega ao fundo recuando as mãos"
+            "subject": "persona sonriendo con satisfacción",
+            "action": "mirando la pantalla de su móvil iluminada",
+            "setting": "habitación a oscuras",
+            "framing": "primer plano del rostro iluminado",
+            "details": "reflejo naranja de la interfaz en las gafas"
           },
           "transition": {
             "in": "from_right",
-            "out": "to_left",
-            "speed": "normal"
+            "out": "none",
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
@@ -105,29 +110,29 @@
     },
     {
       "id": "block_04",
-      "text": "A sociedade costuma aplaudir muito esse tipo de atitude no nosso dia a dia.",
+      "text": "Sin embargo, la realidad es mucho más oscura. No estás usando una simple tienda de ropa o accesorios.",
       "scenes": [
         {
           "id": "scene_04",
           "image_id": 4,
           "tipo_midia": "imagem",
-          "asset_key": "people-clapping-approval",
+          "asset_key": "smartphone-glowing-wires",
           "image": "cena_04.png",
           "visual": {
-            "subject": "grupo de pessoas desfocadas",
-            "action": "olhando com admiração",
-            "setting": "ambiente corporativo",
-            "framing": "visão em primeira pessoa",
-            "details": "expressões de aprovação social"
+            "subject": "teléfono móvil emitiendo una luz intensa",
+            "action": "conectado a múltiples cables oscuros",
+            "setting": "superficie metálica negra",
+            "framing": "plano cenital centrado",
+            "details": "apariencia tecnológica y amenazante"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "slow"
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_cinematic"
+              "click"
             ],
             "context": null
           }
@@ -136,56 +141,25 @@
     },
     {
       "id": "block_05",
-      "text": "Eles te chamam de mulher forte, dona de si, aquela que não precisa de ninguém.",
+      "text": "Plataformas de consumo ultra rápido como Temu y Shein son máquinas de manipulación psicológica masiva.",
       "scenes": [
         {
           "id": "scene_05",
           "image_id": 5,
-          "tipo_midia": "imagem",
-          "asset_key": "woman-standing-confident-alone",
-          "image": "cena_05.png",
+          "tipo_midia": "video_generico",
+          "asset_key": "brain-hologram-scanning",
+          "image": "cena_05.mp4",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "parada com postura ereta de braços cruzados",
-            "setting": "rua urbana movimentada",
-            "framing": "plano americano",
-            "details": "multidão passando ao redor dela"
+            "subject": "holograma tridimensional de un cerebro humano",
+            "action": "siendo escaneado por líneas de luz digital",
+            "setting": "espacio cibernético oscuro",
+            "framing": "plano medio rotativo",
+            "details": "nodos brillantes y conexiones de red"
           },
           "transition": {
-            "in": "none",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_06",
-      "text": "É a estética perfeita da heroína moderna e independente que resolve qualquer crise em silêncio.",
-      "scenes": [
-        {
-          "id": "scene_06",
-          "image_id": 6,
-          "tipo_midia": "imagem",
-          "asset_key": "woman-working-late-calmly",
-          "image": "cena_06.png",
-          "visual": {
-            "subject": "mulher adulta",
-            "action": "digitando calmamente no notebook",
-            "setting": "mesa de casa à noite",
-            "framing": "perfil",
-            "details": "xícara de café ao lado e luz suave da tela"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
@@ -197,30 +171,70 @@
       ]
     },
     {
+      "id": "block_06",
+      "text": "Hoy vamos a destripar los siete engaños estructurales que estas aplicaciones utilizan para vaciar tu cuenta sin que lo notes.",
+      "scenes": [
+        {
+          "id": "scene_06",
+          "image_id": 6,
+          "tipo_midia": "video_generico",
+          "asset_key": "digital-security-padlock",
+          "image": "cena_06.mp4",
+          "visual": {
+            "subject": "candado digital brillante y holográfico",
+            "action": "cerrándose sobre un fondo de datos en movimiento",
+            "setting": "espacio cibernético oscuro",
+            "framing": "plano central fijo",
+            "details": "líneas de código y luz azul de seguridad"
+          },
+          "annotation": {
+            "lines": [
+              "DEJA TU ME GUSTA",
+              "Y SUSCRÍBETE"
+            ],
+            "at": "start",
+            "emoji": "👍"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "click",
+              "at": "start"
+            }
+          }
+        }
+      ]
+    },
+    {
       "id": "block_07",
-      "text": "Mas e se essa necessidade constante de abraçar o mundo não for exatamente força?",
+      "text": "El primer engaño te asalta nada más abrir la aplicación: la urgencia artificial extrema.",
       "scenes": [
         {
           "id": "scene_07",
           "image_id": 7,
           "tipo_midia": "imagem",
-          "asset_key": "woman-looking-tired-mirror",
+          "asset_key": "red-countdown-timer",
           "image": "cena_07.png",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "encarando o próprio reflexo com olhar exausto",
-            "setting": "banheiro escuro",
-            "framing": "close-up no reflexo",
-            "details": "marcas sutis de cansaço sob os olhos"
+            "subject": "cronómetro digital en números rojos brillantes",
+            "action": "marcando pocos minutos restantes",
+            "setting": "pantalla negra de interfaz móvil",
+            "framing": "plano detalle extremo en los números",
+            "details": "números en rojo fuego y texto de casi agotado"
           },
           "transition": {
-            "in": "zoom_in",
+            "in": "from_left",
             "out": "to_left",
-            "speed": "slow"
+            "speed": "fast"
           },
           "sounds": {
             "transition": [
-              "whoosh_cinematic"
+              "click"
             ],
             "context": null
           }
@@ -229,25 +243,25 @@
     },
     {
       "id": "block_08",
-      "text": "E se resolver tudo sozinha não for uma escolha de liberdade, mas uma resposta automática?",
+      "text": "Ves un cartel que grita que la oferta relámpago termina en dos horas, acompañado de un aviso de existencias bajas.",
       "scenes": [
         {
           "id": "scene_08",
           "image_id": 8,
           "tipo_midia": "imagem",
-          "asset_key": "woman-holding-many-files",
+          "asset_key": "low-stock-warning-bar",
           "image": "cena_08.png",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "equilibrando várias pastas e objetos pesados nas mãos",
-            "setting": "corredor de escritório",
-            "framing": "plano médio",
-            "details": "postura rígida tentando não deixar nada cair"
+            "subject": "barra de progreso roja casi vacía",
+            "action": "indicando que solo quedan tres unidades",
+            "setting": "interfaz de producto en tienda digital",
+            "framing": "plano detalle horizontal",
+            "details": "iconos de fuego y texto de advertencia"
           },
           "transition": {
             "in": "from_right",
-            "out": "to_left",
-            "speed": "normal"
+            "out": "none",
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
@@ -260,170 +274,220 @@
     },
     {
       "id": "block_09",
-      "text": "A psicologia revela que essa extrema independência esconde mecanismos fascinantes sobre como a mente se protege.",
+      "text": "Tu corazón se acelera un poco. Es un impulso primario basado en el miedo a perder una oportunidad.",
       "scenes": [
         {
           "id": "scene_09",
           "image_id": 9,
           "tipo_midia": "imagem",
-          "asset_key": "human-brain-glowing-protect",
+          "asset_key": "anxious-person-staring-phone",
           "image": "cena_09.png",
           "visual": {
-            "subject": "silhueta de perfil de uma mulher",
-            "action": "olhando para frente de forma neutra",
-            "setting": "fundo abstrato escuro",
-            "framing": "close-up",
-            "details": "pequeno brilho dourado na região da cabeça representando a mente"
+            "subject": "persona sudando ligeramente mientras mira su teléfono",
+            "action": "con los ojos muy abiertos y el dedo sobre la pantalla",
+            "setting": "habitación a oscuras",
+            "framing": "primer plano iluminado solo por el móvil",
+            "details": "expresión de ansiedad e impaciencia"
           },
           "transition": {
-            "in": "from_right",
-            "out": "none",
+            "in": "from_left",
+            "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": {
-              "type": "new_idea",
-              "at": "start"
-            }
+            "transition": [],
+            "context": null
           }
         }
       ]
     },
     {
       "id": "block_10",
-      "text": "Se esse assunto desperta sua curiosidade, apoie o canal para mergulharmos nos três perfis psicológicos.",
+      "text": "En la psicología conductual, esto se conoce como el sesgo de escasez.",
       "scenes": [
         {
           "id": "scene_10",
           "image_id": 10,
-          "tipo_midia": "imagem",
-          "asset_key": "woman-opening-a-door-light",
-          "image": "cena_10.png",
+          "tipo_midia": "video_generico",
+          "asset_key": "empty-cookie-jar",
+          "image": "cena_10.mp4",
           "visual": {
-            "subject": "mulher adulta de costas",
-            "action": "abrindo uma porta pesada",
-            "setting": "corredor sombrio",
-            "framing": "plano aberto",
-            "details": "feixe de luz brilhante vindo de trás da porta"
+            "subject": "tarro de cristal para galletas casi vacío",
+            "action": "mostrando una única galleta en el fondo",
+            "setting": "mesa de cocina rústica",
+            "framing": "plano medio centrado",
+            "details": "cristal transparente y migas en el fondo"
+          },
+          "annotation": {
+            "lines": [
+              "EL SESGO",
+              "DE ESCASEZ"
+            ],
+            "at": "middle"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_right",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_cinematic"
+              "whoosh_soft"
             ],
             "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_10b",
+      "text": "Nuestro cerebro está programado para valorar más lo que percibe como limitado.",
+      "scenes": [
+        {
+          "id": "scene_10b",
+          "image_id": 11,
+          "tipo_midia": "video_generico",
+          "asset_key": "empty-cookie-jar",
+          "image": "cena_10.mp4",
+          "visual": {
+            "subject": "tarro de cristal para galletas casi vacío",
+            "action": "mostrando una única galleta en el fondo",
+            "setting": "mesa de cocina rústica",
+            "framing": "plano medio centrado",
+            "details": "cristal transparente y migas en el fondo"
           },
-          "annotation": {
-            "lines": [
-              "DEIXE O LIKE",
-              "E SE INSCREVA"
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
             ],
-            "at": "start",
-            "emoji": "👍"
+            "context": null
           }
         }
       ]
     },
     {
       "id": "block_11",
-      "text": "Para entender esse comportamento, precisamos primeiro olhar para as desculpas que contamos a nós mesmas.",
+      "text": "Pero en este caso, la urgencia es una farsa programada en el código.",
       "scenes": [
         {
           "id": "scene_11",
-          "image_id": 11,
-          "tipo_midia": "imagem",
-          "asset_key": "woman-writing-in-diary",
-          "image": "cena_11.png",
+          "image_id": 12,
+          "tipo_midia": "video_generico",
+          "asset_key": "looping-loading-circle",
+          "image": "cena_11.mp4",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "escrevendo com caneta em um caderno",
-            "setting": "mesa iluminada por luminária",
-            "framing": "plano detalhe nas mãos e caderno",
-            "details": "páginas com textos densos"
+            "subject": "círculo de carga digital girando infinitamente",
+            "action": "reiniciándose una y otra vez",
+            "setting": "pantalla negra",
+            "framing": "plano centrado",
+            "details": "luz de neón naranja y movimiento constante"
           },
           "transition": {
-            "in": "none",
-            "out": "to_right",
-            "speed": "normal"
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "fast"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "click"
             ],
-            "context": {
-              "type": "writing",
-              "at": "start"
-            }
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_11b",
+      "text": "Si esperas a que el reloj llegue a cero, la oferta simplemente se reinicia.",
+      "scenes": [
+        {
+          "id": "scene_11b",
+          "image_id": 13,
+          "tipo_midia": "video_generico",
+          "asset_key": "looping-loading-circle",
+          "image": "cena_11.mp4",
+          "visual": {
+            "subject": "círculo de carga digital girando infinitamente",
+            "action": "reiniciándose una y otra vez",
+            "setting": "pantalla negra",
+            "framing": "plano centrado",
+            "details": "luz de neón naranja y movimiento constante"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "click"
+            ],
+            "context": null
           }
         }
       ]
     },
     {
       "id": "block_12",
-      "text": "O primeiro mecanismo psicológico costuma ser mascarado de pura eficiência e otimização de tempo.",
+      "text": "Crean un estado de pánico artificial para obligarte a pulsar el botón de compra antes de que tu parte lógica pueda intervenir.",
       "scenes": [
         {
           "id": "scene_12",
-          "image_id": 12,
+          "image_id": 14,
           "tipo_midia": "imagem",
-          "asset_key": "clock-ticking-office",
+          "asset_key": "finger-pressing-buy-button",
           "image": "cena_12.png",
           "visual": {
-            "subject": "relógio de parede minimalista",
-            "action": "marcando o tempo",
-            "setting": "parede branca de escritório",
-            "framing": "close-up",
-            "details": "ponteiro dos segundos em movimento congelado"
+            "subject": "dedo índice presionando un botón naranja brillante",
+            "action": "confirmando un pedido en la pantalla",
+            "setting": "superficie borrosa en el fondo",
+            "framing": "plano detalle extremo en la acción",
+            "details": "texto de comprar ahora y brillo de la interfaz"
           },
           "transition": {
-            "in": "from_left",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": {
-              "type": "click",
-              "at": "start"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_13",
-      "text": "Você diz que faz tudo sozinha simplesmente porque é muito mais rápido do que pedir.",
-      "scenes": [
-        {
-          "id": "scene_13",
-          "image_id": 13,
-          "tipo_midia": "imagem",
-          "asset_key": "woman-typing-very-fast",
-          "image": "cena_13.png",
-          "visual": {
-            "subject": "mulher adulta",
-            "action": "digitando intensamente no teclado",
-            "setting": "ambiente de trabalho focado",
-            "framing": "plano médio",
-            "details": "olhar fixo e concentrado na tela"
-          },
-          "transition": {
-            "in": "zoom_in",
+            "in": "from_right",
             "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
               "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_13",
+      "text": "Una vez que la urgencia te ha enganchado, te enfrentas al segundo engaño: el precio fantasma.",
+      "scenes": [
+        {
+          "id": "scene_13",
+          "image_id": 15,
+          "tipo_midia": "imagem",
+          "asset_key": "ghost-figure-numbers",
+          "image": "cena_13.png",
+          "visual": {
+            "subject": "figura translúcida con forma de fantasma",
+            "action": "sosteniendo un cartel de precio falso",
+            "setting": "entorno digital oscuro",
+            "framing": "plano medio conceptual",
+            "details": "efecto de humo y números flotantes"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "click"
             ],
             "context": null
           }
@@ -432,29 +496,29 @@
     },
     {
       "id": "block_14",
-      "text": "Na verdade, o seu cérebro sofre do que a psicologia chama de fadiga de decisão.",
+      "text": "Encuentras unos auriculares por doce euros, pero justo al lado, aparece tachado un precio de ciento veinte.",
       "scenes": [
         {
           "id": "scene_14",
-          "image_id": 14,
+          "image_id": 16,
           "tipo_midia": "imagem",
-          "asset_key": "brain-overload-conceptual",
+          "asset_key": "crossed-out-high-price",
           "image": "cena_14.png",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "massageando as têmporas com os olhos fechados",
-            "setting": "sala de estar bagunçada",
-            "framing": "close-up no rosto",
-            "details": "expressão de clara sobrecarga mental"
+            "subject": "número ciento veinte tachado con una línea roja",
+            "action": "colocado justo encima de un número doce brillante",
+            "setting": "fondo blanco de tienda online",
+            "framing": "plano detalle tipográfico",
+            "details": "tinta negra, línea roja gruesa y etiqueta de descuento noventa por ciento"
           },
           "transition": {
-            "in": "from_left",
-            "out": "to_right",
+            "in": "from_right",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
+              "paper_flip"
             ],
             "context": null
           }
@@ -463,30 +527,28 @@
     },
     {
       "id": "block_15",
-      "text": "Explicar para outra pessoa exatamente como você quer que algo seja feito gasta muita energia.",
+      "text": "Ese precio inicial gigantesco nunca fue real. Es una cifra completamente inventada por la plataforma.",
       "scenes": [
         {
           "id": "scene_15",
-          "image_id": 15,
+          "image_id": 17,
           "tipo_midia": "imagem",
-          "asset_key": "woman-explaining-task-frustrated",
+          "asset_key": "fake-price-tag-creation",
           "image": "cena_15.png",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "apontando para um documento tentando explicar",
-            "setting": "cozinha de casa",
-            "framing": "plano médio",
-            "details": "parceiro olhando confuso para o papel"
+            "subject": "etiqueta de precio en blanco",
+            "action": "siendo escrita con un número absurdo y aleatorio",
+            "setting": "escritorio de madera",
+            "framing": "plano cenital cercano",
+            "details": "bolígrafo oscuro y papel texturizado"
           },
           "transition": {
-            "in": "none",
-            "out": "to_left",
-            "speed": "slow"
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "fast"
           },
           "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
+            "transition": [],
             "context": null
           }
         }
@@ -494,29 +556,36 @@
     },
     {
       "id": "block_16",
-      "text": "O cérebro calcula que é mais barato simplesmente executar a tarefa e garantir o resultado correto.",
+      "text": "Su único propósito es activar lo que los psicólogos llaman el efecto ancla.",
       "scenes": [
         {
           "id": "scene_16",
-          "image_id": 16,
-          "tipo_midia": "imagem",
-          "asset_key": "woman-finishing-task-relieved",
-          "image": "cena_16.png",
+          "image_id": 18,
+          "tipo_midia": "video_generico",
+          "asset_key": "heavy-metal-anchor-dropping",
+          "image": "cena_16.mp4",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "guardando o documento e assumindo a tarefa",
-            "setting": "mesma cozinha",
-            "framing": "plano médio",
-            "details": "expressão de alívio por ter assumido o controle"
+            "subject": "ancla de metal pesado cayendo rápidamente",
+            "action": "hundiéndose en el agua oscura",
+            "setting": "profundidades del océano",
+            "framing": "plano frontal siguiendo la caída",
+            "details": "burbujas y metal oxidado"
+          },
+          "annotation": {
+            "lines": [
+              "EL EFECTO",
+              "ANCLA"
+            ],
+            "at": "start"
           },
           "transition": {
-            "in": "from_right",
-            "out": "to_left",
+            "in": "zoom_in",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
+              "whoosh_soft"
             ],
             "context": null
           }
@@ -525,30 +594,28 @@
     },
     {
       "id": "block_17",
-      "text": "Mas se fosse apenas uma questão de otimizar tempo, você não se sentiria tão solitária.",
+      "text": "Para tomar decisiones rápidas, nuestro cerebro necesita un punto de referencia. La primera información que recibe ancla su juicio.",
       "scenes": [
         {
           "id": "scene_17",
-          "image_id": 17,
+          "image_id": 19,
           "tipo_midia": "imagem",
-          "asset_key": "woman-sitting-alone-couch",
+          "asset_key": "brain-processing-numbers",
           "image": "cena_17.png",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "sentada sozinha abraçando os joelhos",
-            "setting": "sofá grande e vazio",
-            "framing": "plano aberto",
-            "details": "iluminação melancólica de fim de tarde"
+            "subject": "diagrama de un cerebro humano leyendo un precio",
+            "action": "enfocado en el primer número que ve",
+            "setting": "página de estudio psicológico",
+            "framing": "plano detalle de la ilustración",
+            "details": "líneas de visión esquemáticas y tinta negra"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
+            "in": "from_right",
+            "out": "to_left",
             "speed": "slow"
           },
           "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
+            "transition": [],
             "context": null
           }
         }
@@ -556,20 +623,20 @@
     },
     {
       "id": "block_18",
-      "text": "E é aqui que entramos no segundo perfil, onde a explicação ganha camadas mais profundas.",
+      "text": "Al ver el número ciento veinte, doce euros parece un regalo del cielo. Una oportunidad que sería estúpido rechazar.",
       "scenes": [
         {
           "id": "scene_18",
-          "image_id": 18,
+          "image_id": 20,
           "tipo_midia": "imagem",
-          "asset_key": "staircase-going-down-shadows",
+          "asset_key": "brain-celebrating-discount",
           "image": "cena_18.png",
           "visual": {
-            "subject": "escadaria em espiral",
-            "action": "descendo para um ambiente mais escuro",
-            "setting": "interior antigo",
-            "framing": "visão de cima para baixo",
-            "details": "degraus de madeira com sombras intensas"
+            "subject": "ilustración de un cerebro humano",
+            "action": "rodeado de símbolos de menos noventa por ciento",
+            "setting": "fondo naranja y rojo",
+            "framing": "plano centrado brillante",
+            "details": "colores saturados y flechas descendentes"
           },
           "transition": {
             "in": "from_left",
@@ -578,7 +645,7 @@
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "click"
             ],
             "context": null
           }
@@ -587,29 +654,29 @@
     },
     {
       "id": "block_19",
-      "text": "Muitas mulheres recusam ajuda constante não pela eficiência, mas por um medo terrível da decepção.",
+      "text": "En realidad, no estás evaluando la calidad del plástico. Estás celebrando un descuento de cien euros que solo existe en tu imaginación.",
       "scenes": [
         {
           "id": "scene_19",
-          "image_id": 19,
+          "image_id": 21,
           "tipo_midia": "imagem",
-          "asset_key": "woman-looking-disappointed",
+          "asset_key": "imaginary-discount-bubble",
           "image": "cena_19.png",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "olhando para baixo com semblante magoado",
-            "setting": "fundo neutro e cinza",
-            "framing": "close-up",
-            "details": "olhos levemente marejados"
+            "subject": "burbuja de pensamiento sobre una persona",
+            "action": "conteniendo un billete de cien euros tachado",
+            "setting": "fondo gris neutro",
+            "framing": "plano medio conceptual",
+            "details": "trazos de cómic y expresión ilusa"
           },
           "transition": {
-            "in": "none",
-            "out": "to_left",
+            "in": "from_right",
+            "out": "none",
             "speed": "slow"
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
+              "whoosh_soft"
             ],
             "context": null
           }
@@ -618,63 +685,67 @@
     },
     {
       "id": "block_20",
-      "text": "Na teoria do apego, isso se aproxima muito do chamado estilo de apego evitativo.",
+      "text": "El tercer engaño va un paso más allá y transforma la tienda en Las Vegas. Es la gamificación del consumo.",
       "scenes": [
         {
           "id": "scene_20",
-          "image_id": 20,
-          "tipo_midia": "imagem",
-          "asset_key": "psychology-attachment-concept",
-          "image": "cena_20.png",
+          "image_id": 22,
+          "tipo_midia": "video_generico",
+          "asset_key": "casino-slot-machine-spinning",
+          "image": "cena_20.mp4",
           "visual": {
-            "subject": "duas silhuetas de mãos",
-            "action": "quase se tocando mas com uma barreira invisível",
-            "setting": "fundo suave e desfocado",
-            "framing": "plano detalhe nas mãos",
-            "details": "espaço vazio evidente entre elas"
+            "subject": "tambores de una máquina tragaperras de casino",
+            "action": "girando rápidamente y deteniéndose",
+            "setting": "luces brillantes de sala de apuestas",
+            "framing": "plano detalle extremo en los rodillos",
+            "details": "colores dorados y movimiento borroso"
+          },
+          "annotation": {
+            "lines": [
+              "EL CASINO",
+              "DIGITAL"
+            ],
+            "at": "middle"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": {
-              "type": "new_idea",
-              "at": "start"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_21",
-      "text": "No passado, depender de alguém significou ser deixada na mão ou ter que consertar o erro alheio.",
-      "scenes": [
-        {
-          "id": "scene_21",
-          "image_id": 21,
-          "tipo_midia": "imagem",
-          "asset_key": "woman-waiting-alone-rain",
-          "image": "cena_21.png",
-          "visual": {
-            "subject": "mulher jovem",
-            "action": "esperando sozinha debaixo de um guarda-chuva",
-            "setting": "rua vazia à noite",
-            "framing": "plano aberto",
-            "details": "olhando o relógio de pulso"
-          },
-          "transition": {
-            "in": "from_right",
             "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
               "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_21",
+      "text": "Si usas estas aplicaciones, te habrás cruzado con ruletas de la suerte o granjas virtuales donde debes regar plantas digitales.",
+      "scenes": [
+        {
+          "id": "scene_21",
+          "image_id": 23,
+          "tipo_midia": "imagem",
+          "asset_key": "digital-roulette-wheel-phone",
+          "image": "cena_21.png",
+          "visual": {
+            "subject": "ruleta de la fortuna digital con premios",
+            "action": "girando en la pantalla de un teléfono móvil",
+            "setting": "manos sosteniendo el teléfono en primer plano",
+            "framing": "plano detalle centrado",
+            "details": "colores vibrantes amarillos y rojos"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "click"
             ],
             "context": null
           }
@@ -683,30 +754,57 @@
     },
     {
       "id": "block_22",
-      "text": "O seu sistema nervoso aprendeu uma lição amarga e decidiu forjar uma armadura de proteção definitiva.",
+      "text": "Te prometen enviarte productos totalmente gratis si completas estas tareas.",
       "scenes": [
         {
           "id": "scene_22",
-          "image_id": 22,
+          "image_id": 24,
           "tipo_midia": "imagem",
-          "asset_key": "woman-putting-on-armor-metaphor",
+          "asset_key": "fast-progress-bar-game",
           "image": "cena_22.png",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "cruzando os braços de forma defensiva",
-            "setting": "ambiente frio e azulado",
-            "framing": "plano médio",
-            "details": "olhar endurecido e postura impenetrável"
+            "subject": "barra de progreso verde llenándose rápidamente",
+            "action": "avanzando grandes bloques en la pantalla",
+            "setting": "interfaz de minijuego brillante",
+            "framing": "plano detalle horizontal",
+            "details": "iconos de recompensa y destellos"
           },
           "transition": {
-            "in": "none",
-            "out": "to_right",
+            "in": "from_right",
+            "out": "none",
             "speed": "slow"
           },
           "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_22b",
+      "text": "Y al principio, el juego es increíblemente generoso.",
+      "scenes": [
+        {
+          "id": "scene_22b",
+          "image_id": 25,
+          "tipo_midia": "imagem",
+          "asset_key": "fast-progress-bar-game",
+          "image": "cena_22.png",
+          "visual": {
+            "subject": "barra de progreso verde llenándose rápidamente",
+            "action": "avanzando grandes bloques en la pantalla",
+            "setting": "interfaz de minijuego brillante",
+            "framing": "plano detalle horizontal",
+            "details": "iconos de recompensa y destellos"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [],
             "context": null
           }
         }
@@ -714,63 +812,60 @@
     },
     {
       "id": "block_23",
-      "text": "A expectativa em relação aos outros sempre acaba gerando frustração, conflito e muito estresse emocional.",
+      "text": "Cada clic te da monedas. Tu cerebro recibe chutes de dopamina constante. Sientes que estás a punto de ganar.",
       "scenes": [
         {
           "id": "scene_23",
-          "image_id": 23,
+          "image_id": 26,
           "tipo_midia": "imagem",
-          "asset_key": "crumpled-paper-ball-frustration",
+          "asset_key": "dopamine-brain-glowing",
           "image": "cena_23.png",
           "visual": {
-            "subject": "mãos femininas",
-            "action": "amassando um papel com força",
-            "setting": "mesa de escritório de madeira",
-            "framing": "plano detalhe",
-            "details": "nós dos dedos tensos"
+            "subject": "silueta de cabeza humana",
+            "action": "con el centro del cerebro brillando intensamente",
+            "setting": "fondo oscuro con partículas",
+            "framing": "plano medio lateral",
+            "details": "luz azul y amarilla pulsante"
           },
           "transition": {
             "in": "from_left",
-            "out": "to_right",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
               "whoosh_soft"
             ],
-            "context": {
-              "type": "crumpled_paper",
-              "at": "middle"
-            }
+            "context": null
           }
         }
       ]
     },
     {
       "id": "block_24",
-      "text": "Então, a mente conclui, de forma trágica, que a única forma de não se decepcionar é assumindo o controle.",
+      "text": "Pero cuando estás a un milímetro de la meta, el algoritmo frena en seco. El progreso se vuelve casi nulo.",
       "scenes": [
         {
           "id": "scene_24",
-          "image_id": 24,
+          "image_id": 27,
           "tipo_midia": "imagem",
-          "asset_key": "woman-holding-steering-wheel-tight",
+          "asset_key": "progress-bar-stuck-99",
           "image": "cena_24.png",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "segurando o volante do carro com muita firmeza",
-            "setting": "interior de carro",
-            "framing": "close-up nas mãos e volante",
-            "details": "postura que demonstra necessidade de controle total"
+            "subject": "barra de progreso en una pantalla",
+            "action": "estancada exactamente antes del cien por cien",
+            "setting": "interfaz gráfica frustrante",
+            "framing": "plano detalle cerrado",
+            "details": "número 99 coma 9 y espacio vacío diminuto"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "fast"
           },
           "sounds": {
             "transition": [
-              "whoosh_cinematic"
+              "click"
             ],
             "context": null
           }
@@ -779,24 +874,155 @@
     },
     {
       "id": "block_25",
-      "text": "Delegar uma tarefa, nesse cenário íntimo, significa correr o imenso risco da vulnerabilidade e da falha.",
+      "text": "Para dar el último paso, la aplicación te exige invitar a contactos, ver catálogos diarios o añadir productos a tu carrito.",
       "scenes": [
         {
           "id": "scene_25",
-          "image_id": 25,
+          "image_id": 28,
           "tipo_midia": "imagem",
-          "asset_key": "woman-looking-hesitant-to-hand-over",
+          "asset_key": "person-sending-invites-phone",
           "image": "cena_25.png",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "hesitando em entregar um objeto para outra pessoa",
-            "setting": "sala de estar comum",
-            "framing": "plano médio",
-            "details": "segurando o objeto com força contra o próprio peito"
+            "subject": "dedo pulsando múltiples botones de enviar",
+            "action": "mandando invitaciones a una larga lista de contactos",
+            "setting": "aplicación de mensajería",
+            "framing": "plano detalle sobre la pantalla iluminada",
+            "details": "iconos verdes de envío y fotos de perfil"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "paper_flip"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_26",
+      "text": "Sin saberlo, te acaban de convertir en su empleado publicitario.",
+      "scenes": [
+        {
+          "id": "scene_26",
+          "image_id": 29,
+          "tipo_midia": "video_generico",
+          "asset_key": "factory-assembly-line",
+          "image": "cena_26.mp4",
+          "visual": {
+            "subject": "línea de ensamblaje industrial monótona",
+            "action": "moviendo productos idénticos en un ciclo sin fin",
+            "setting": "fábrica automatizada gris",
+            "framing": "plano de seguimiento aéreo",
+            "details": "brazos robóticos y ritmo mecánico constante"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_26b",
+      "text": "Estás haciendo trabajo comercial gratis a cambio de la esperanza de una chuchería.",
+      "scenes": [
+        {
+          "id": "scene_26b",
+          "image_id": 30,
+          "tipo_midia": "video_generico",
+          "asset_key": "factory-assembly-line",
+          "image": "cena_26.mp4",
+          "visual": {
+            "subject": "línea de ensamblaje industrial monótona",
+            "action": "moviendo productos idénticos en un ciclo sin fin",
+            "setting": "fábrica automatizada gris",
+            "framing": "plano de seguimiento aéreo",
+            "details": "brazos robóticos y ritmo mecánico constante"
+          },
+          "annotation": {
+            "lines": [
+              "TRABAJO",
+              "GRATUITO"
+            ],
+            "at": "middle"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_27",
+      "text": "El cuarto engaño es la trampa del envío gratuito mínimo. Esa barra que te dice que te faltan cinco euros para no pagar portes.",
+      "scenes": [
+        {
+          "id": "scene_27",
+          "image_id": 31,
+          "tipo_midia": "imagem",
+          "asset_key": "free-shipping-progress-bar",
+          "image": "cena_27.png",
+          "visual": {
+            "subject": "aviso de envío gratuito en la parte superior de la pantalla",
+            "action": "indicando que faltan pocos euros para alcanzar la meta",
+            "setting": "resumen de carrito de compras digital",
+            "framing": "plano detalle del texto y la barra amarilla",
+            "details": "texto promocional y pequeño icono de camión"
           },
           "transition": {
             "in": "from_right",
-            "out": "to_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "click"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_28",
+      "text": "En economía, esto juega con la falacia del coste hundido.",
+      "scenes": [
+        {
+          "id": "scene_28",
+          "image_id": 32,
+          "tipo_midia": "imagem",
+          "asset_key": "money-falling-into-trash",
+          "image": "cena_28.png",
+          "visual": {
+            "subject": "monedas cayendo directamente en un cubo de basura",
+            "action": "desapareciendo en la oscuridad del recipiente",
+            "setting": "fondo gris neutro",
+            "framing": "plano frontal conceptual",
+            "details": "metal brillante y basura borrosa"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
             "speed": "slow"
           },
           "sounds": {
@@ -809,88 +1035,26 @@
       ]
     },
     {
-      "id": "block_26",
-      "text": "Porém, existe um terceiro grupo, e ele revela o cenário emocional mais delicado e escondido de todos.",
+      "id": "block_28b",
+      "text": "Odias la idea de pagar tres euros por el envío, porque sientes que es dinero perdido.",
       "scenes": [
         {
-          "id": "scene_26",
-          "image_id": 26,
+          "id": "scene_28b",
+          "image_id": 33,
           "tipo_midia": "imagem",
-          "asset_key": "locked-diary-with-key",
-          "image": "cena_26.png",
-          "visual": {
-            "subject": "diário antigo e desgastado",
-            "action": "fechado com um pequeno cadeado",
-            "setting": "mesa de madeira escura",
-            "framing": "plano detalhe no cadeado",
-            "details": "poeira fina sobre a capa indicando segredos guardados"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_27",
-      "text": "Algumas mulheres não apenas evitam pedir ajuda, elas sentem uma culpa quase paralisante quando precisam dela.",
-      "scenes": [
-        {
-          "id": "scene_27",
-          "image_id": 27,
-          "tipo_midia": "imagem",
-          "asset_key": "woman-feeling-guilty",
-          "image": "cena_27.png",
-          "visual": {
-            "subject": "mulher adulta",
-            "action": "olhando para o chão com os ombros encolhidos",
-            "setting": "ambiente hospitalar ou consultório",
-            "framing": "plano médio",
-            "details": "expressão de profundo desconforto por estar vulnerável"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_28",
-      "text": "E a verdadeira origem desse padrão geralmente não está no excesso de trabalho, mas lá na infância.",
-      "scenes": [
-        {
-          "id": "scene_28",
-          "image_id": 28,
-          "tipo_midia": "imagem",
-          "asset_key": "little-girl-looking-sad-alone",
+          "asset_key": "money-falling-into-trash",
           "image": "cena_28.png",
           "visual": {
-            "subject": "criança pequena",
-            "action": "sentada sozinha no chão brincando de forma quieta",
-            "setting": "quarto grande e vazio",
-            "framing": "plano geral",
-            "details": "ausência completa de adultos por perto"
+            "subject": "monedas cayendo directamente en un cubo de basura",
+            "action": "desapareciendo en la oscuridad del recipiente",
+            "setting": "fondo gris neutro",
+            "framing": "plano frontal conceptual",
+            "details": "metal brillante y basura borrosa"
           },
           "transition": {
-            "in": "from_right",
+            "in": "from_left",
             "out": "none",
-            "speed": "normal"
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
@@ -903,29 +1067,29 @@
     },
     {
       "id": "block_29",
-      "text": "A psicologia clínica chama isso de trauma de parentificação familiar.",
+      "text": "Así que, para ahorrar tres euros, terminas agregando diez euros de artículos de plástico que jamás habrías buscado por tu cuenta.",
       "scenes": [
         {
           "id": "scene_29",
-          "image_id": 29,
+          "image_id": 34,
           "tipo_midia": "imagem",
-          "asset_key": "child-holding-adult-tools",
+          "asset_key": "adding-random-items-cart",
           "image": "cena_29.png",
           "visual": {
-            "subject": "mãos de criança",
-            "action": "segurando objetos pesados e ferramentas de adulto",
-            "setting": "fundo neutro escuro",
-            "framing": "close-up",
-            "details": "contraste entre o tamanho das mãos e o peso dos objetos"
+            "subject": "dedo pulsando el botón de añadir al carrito",
+            "action": "seleccionando productos extraños en la sección de sugerencias",
+            "setting": "interfaz móvil iluminada",
+            "framing": "plano detalle extremo",
+            "details": "iconos de más y miniaturas de objetos inútiles"
           },
           "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
+            "in": "from_right",
+            "out": "to_left",
+            "speed": "fast"
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
+              "cash_register"
             ],
             "context": null
           }
@@ -934,25 +1098,32 @@
     },
     {
       "id": "block_30",
-      "text": "São meninas que cresceram em lares disfuncionais e precisaram assumir o papel de cuidadoras muito cedo.",
+      "text": "El quinto mecanismo es un asalto directo a tus sentidos: el scroll infinito y la sobrecarga visual.",
       "scenes": [
         {
           "id": "scene_30",
-          "image_id": 30,
-          "tipo_midia": "imagem",
-          "asset_key": "little-girl-cooking-stove",
-          "image": "cena_30.png",
+          "image_id": 35,
+          "tipo_midia": "video_generico",
+          "asset_key": "chaotic-popup-interface",
+          "image": "cena_30.mp4",
           "visual": {
-            "subject": "menina pequena",
-            "action": "na ponta dos pés tentando alcançar o fogão para cozinhar",
-            "setting": "cozinha humilde",
-            "framing": "plano médio",
-            "details": "expressão de seriedade que não condiz com a idade"
+            "subject": "docenas de ventanas emergentes brillantes",
+            "action": "superponiéndose unas sobre otras caóticamente",
+            "setting": "pantalla de dispositivo digital",
+            "framing": "plano cerrado lleno de elementos",
+            "details": "colores rojo y naranja, botones falsos de cerrar"
+          },
+          "annotation": {
+            "lines": [
+              "SOBRECARGA",
+              "SENSORIAL"
+            ],
+            "at": "start"
           },
           "transition": {
-            "in": "none",
-            "out": "to_left",
-            "speed": "slow"
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
           },
           "sounds": {
             "transition": [
@@ -965,29 +1136,29 @@
     },
     {
       "id": "block_31",
-      "text": "Tiveram que lidar com pais emocionalmente ausentes ou cuidar dos irmãos menores quando ainda precisavam de colo.",
+      "text": "A diferencia de un comercio tradicional, donde buscas lo que necesitas, estas plataformas están diseñadas exactamente como TikTok.",
       "scenes": [
         {
           "id": "scene_31",
-          "image_id": 31,
+          "image_id": 36,
           "tipo_midia": "imagem",
-          "asset_key": "little-girl-comforting-toddler",
+          "asset_key": "infinite-scroll-finger",
           "image": "cena_31.png",
           "visual": {
-            "subject": "menina de oito anos",
-            "action": "abraçando e consolando um irmão bebê que chora",
-            "setting": "sala mal iluminada",
-            "framing": "plano americano",
-            "details": "olhar cansado da criança mais velha"
+            "subject": "mano deslizando hacia arriba sin parar en un móvil",
+            "action": "viendo videos o productos pasar como un flujo continuo",
+            "setting": "fondo oscuro neutro",
+            "framing": "plano detalle lateral",
+            "details": "movimiento repetitivo y automático"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
+            "in": "from_left",
+            "out": "none",
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
-              "whoosh_cinematic"
+              "click"
             ],
             "context": null
           }
@@ -996,20 +1167,20 @@
     },
     {
       "id": "block_32",
-      "text": "Elas aprenderam dolorosamente que não havia um adulto seguro e estável para resolver os problemas da casa.",
+      "text": "Buscas un destornillador y el algoritmo te bombardea con un masajeador para gatos, luces de neón y un molde para huevos.",
       "scenes": [
         {
           "id": "scene_32",
-          "image_id": 32,
+          "image_id": 37,
           "tipo_midia": "imagem",
-          "asset_key": "empty-chair-living-room",
+          "asset_key": "bizarre-products-grid",
           "image": "cena_32.png",
           "visual": {
-            "subject": "poltrona grande de adulto",
-            "action": "vazia",
-            "setting": "sala de estar sombria",
-            "framing": "plano aberto",
-            "details": "brinquedo infantil esquecido ao lado do pé da cadeira"
+            "subject": "cuadrícula de productos absurdos y coloridos",
+            "action": "mostrados simultáneamente en una pantalla pequeña",
+            "setting": "interfaz de descubrimientos de la tienda",
+            "framing": "plano frontal a la pantalla",
+            "details": "colores saturados y falta de coherencia lógica"
           },
           "transition": {
             "in": "from_right",
@@ -1027,30 +1198,57 @@
     },
     {
       "id": "block_33",
-      "text": "A hiperindependência delas não nasceu como uma virtude, foi um mecanismo de sobrevivência infantil totalmente silencioso.",
+      "text": "Esta cascada de información agota tu capacidad de análisis.",
       "scenes": [
         {
           "id": "scene_33",
-          "image_id": 33,
+          "image_id": 38,
           "tipo_midia": "imagem",
-          "asset_key": "child-building-wall-blocks",
+          "asset_key": "tired-eyes-smartphone-glare",
           "image": "cena_33.png",
           "visual": {
-            "subject": "mãos de criança",
-            "action": "empilhando blocos de montar formando uma parede alta",
-            "setting": "chão de quarto",
-            "framing": "close-up",
-            "details": "a parede de brinquedo isolando a criança"
+            "subject": "ojos cansados de una persona",
+            "action": "reflejando la luz naranja de una pantalla",
+            "setting": "oscuridad total",
+            "framing": "primer plano extremo en la mirada",
+            "details": "ojeras leves y reflejo cuadrado en las pupilas"
           },
           "transition": {
-            "in": "none",
+            "in": "from_left",
             "out": "to_right",
-            "speed": "normal"
+            "speed": "fast"
           },
           "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_33b",
+      "text": "Tu cerebro se rinde ante la fatiga visual y cede a la compra impulsiva por simple agotamiento.",
+      "scenes": [
+        {
+          "id": "scene_33b",
+          "image_id": 39,
+          "tipo_midia": "imagem",
+          "asset_key": "tired-eyes-smartphone-glare",
+          "image": "cena_33.png",
+          "visual": {
+            "subject": "ojos cansados de una persona",
+            "action": "reflejando la luz naranja de una pantalla",
+            "setting": "oscuridad total",
+            "framing": "primer plano extremo en la mirada",
+            "details": "ojeras leves y reflejo cuadrado en las pupilas"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
             "context": null
           }
         }
@@ -1058,25 +1256,32 @@
     },
     {
       "id": "block_34",
-      "text": "Hoje, a mulher adulta continua carregando o mundo nas costas simplesmente porque nunca pôde ser vulnerável.",
+      "text": "El sexto engaño es el núcleo de la ultra moda rápida: la ilusión de calidad.",
       "scenes": [
         {
           "id": "scene_34",
-          "image_id": 34,
-          "tipo_midia": "imagem",
-          "asset_key": "adult-woman-carrying-heavy-bag",
-          "image": "cena_34.png",
+          "image_id": 40,
+          "tipo_midia": "video_generico",
+          "asset_key": "glamorous-fashion-shoot",
+          "image": "cena_34.mp4",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "carregando uma bolsa imensamente pesada no ombro",
-            "setting": "rua cinza",
-            "framing": "plano médio de perfil",
-            "details": "postura curvada mas expressão estóica"
+            "subject": "sesión fotográfica de moda con luces brillantes",
+            "action": "modelo posando en un estudio profesional",
+            "setting": "estudio de fotografía de alto nivel",
+            "framing": "plano general con flashes disparándose",
+            "details": "focos, fondo blanco y pose estilizada"
+          },
+          "annotation": {
+            "lines": [
+              "LA ILUSIÓN",
+              "VISUAL"
+            ],
+            "at": "middle"
           },
           "transition": {
-            "in": "from_left",
-            "out": "to_left",
-            "speed": "slow"
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
           },
           "sounds": {
             "transition": [
@@ -1089,29 +1294,29 @@
     },
     {
       "id": "block_35",
-      "text": "Fazer tudo sozinha se tornou a única realidade segura e previsível que o corpo dela conhece.",
+      "text": "Ves una prenda espectacular que luce como un diseño de alta costura, gracias a la iluminación y la edición fotográfica.",
       "scenes": [
         {
           "id": "scene_35",
-          "image_id": 35,
+          "image_id": 41,
           "tipo_midia": "imagem",
-          "asset_key": "woman-inside-glass-bubble",
+          "asset_key": "perfect-dress-phone-screen",
           "image": "cena_35.png",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "em pé dentro de um ambiente seguro mas isolado",
-            "setting": "espaço limpo e organizado",
-            "framing": "plano geral",
-            "details": "sensação visual de isolamento protetor"
+            "subject": "fotografía perfecta de un vestido elegante",
+            "action": "mostrándose en el catálogo de la aplicación",
+            "setting": "pantalla de móvil brillante",
+            "framing": "plano detalle centrado",
+            "details": "colores vibrantes y tejido con apariencia sedosa"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "normal"
+            "in": "from_right",
+            "out": "to_left",
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
-              "whoosh_cinematic"
+              "click"
             ],
             "context": null
           }
@@ -1120,30 +1325,28 @@
     },
     {
       "id": "block_36",
-      "text": "Como você pode ver, a recusa automática por ajuda quase nunca tem uma única causa exata.",
+      "text": "Pero cuando llega a tu casa, el material es un poliéster translúcido que apenas sobrevive al primer lavado.",
       "scenes": [
         {
           "id": "scene_36",
-          "image_id": 36,
+          "image_id": 42,
           "tipo_midia": "imagem",
-          "asset_key": "three-paths-diverging",
+          "asset_key": "cheap-fabric-tearing",
           "image": "cena_36.png",
           "visual": {
-            "subject": "três caminhos diferentes",
-            "action": "se separando em direções opostas",
-            "setting": "floresta enevoada",
-            "framing": "visão panorâmica",
-            "details": "placas sem texto apontando rumos distintos"
+            "subject": "tejido sintético de muy baja calidad",
+            "action": "deshilachándose o rompiéndose levemente",
+            "setting": "manos sosteniendo la prenda",
+            "framing": "plano detalle extremo en la tela",
+            "details": "hilos sueltos, textura plástica y costuras torcidas"
           },
           "transition": {
-            "in": "from_right",
-            "out": "to_left",
+            "in": "from_left",
+            "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
+            "transition": [],
             "context": null
           }
         }
@@ -1151,29 +1354,29 @@
     },
     {
       "id": "block_37",
-      "text": "Pode ser o esgotamento silencioso da mente, uma barreira contra decepções ou o eco doloroso do passado.",
+      "text": "Esta obsolescencia extrema te obliga a comprar cinco camisas de tres euros en un mes, en lugar de una buena que dure años.",
       "scenes": [
         {
           "id": "scene_37",
-          "image_id": 37,
+          "image_id": 43,
           "tipo_midia": "imagem",
-          "asset_key": "woman-looking-at-horizon-thoughtful",
+          "asset_key": "trash-can-full-clothes",
           "image": "cena_37.png",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "olhando pensativa para fora da janela",
-            "setting": "casa aconchegante",
-            "framing": "perfil suave",
-            "details": "luz de fim de tarde iluminando o rosto"
+            "subject": "cubo de basura o bolsa de donación",
+            "action": "rebosando de ropa arrugada y desechada",
+            "setting": "rincón de una habitación",
+            "framing": "plano medio contrapicado",
+            "details": "tejidos coloridos pero arruinados"
           },
           "transition": {
-            "in": "none",
-            "out": "to_right",
-            "speed": "slow"
+            "in": "from_right",
+            "out": "none",
+            "speed": "fast"
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
+              "whoosh_soft"
             ],
             "context": null
           }
@@ -1182,24 +1385,160 @@
     },
     {
       "id": "block_38",
-      "text": "Mas a verdadeira força talvez não esteja em conseguir carregar todos os pesos do mundo eternamente.",
+      "text": "Creías ahorrar, pero estás atrapado en un ciclo de recompra perpetuo que te mantiene pobre.",
       "scenes": [
         {
           "id": "scene_38",
-          "image_id": 38,
+          "image_id": 44,
           "tipo_midia": "imagem",
-          "asset_key": "atlas-statue-world-weight",
+          "asset_key": "person-looking-empty-wallet",
           "image": "cena_38.png",
           "visual": {
-            "subject": "estátua de pedra",
-            "action": "segurando um peso enorme nas costas",
-            "setting": "jardim antigo",
-            "framing": "plano médio",
-            "details": "marcas de desgaste na pedra"
+            "subject": "manos abriendo una cartera de cuero completamente vacía",
+            "action": "mostrando la falta de billetes",
+            "setting": "fondo borroso de cajas de envío",
+            "framing": "plano detalle sobre la cartera",
+            "details": "cuero desgastado e interior sin dinero"
           },
           "transition": {
             "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "paper_flip"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_39",
+      "text": "Pero el séptimo engaño es la revelación definitiva del negocio.",
+      "scenes": [
+        {
+          "id": "scene_39",
+          "image_id": 45,
+          "tipo_midia": "video_generico",
+          "asset_key": "burning-money-flames",
+          "image": "cena_39.mp4",
+          "visual": {
+            "subject": "fajos de billetes ardiendo en llamas",
+            "action": "quemándose lentamente hasta volverse ceniza",
+            "setting": "fondo negro absoluto",
+            "framing": "plano detalle centrado",
+            "details": "fuego real y billetes reconocibles"
+          },
+          "transition": {
+            "in": "zoom_in",
             "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_39b",
+      "text": "Un informe del sector estimó que estas plataformas pierden unos treinta dólares por cada envío en Estados Unidos.",
+      "scenes": [
+        {
+          "id": "scene_39b",
+          "image_id": 46,
+          "tipo_midia": "video_generico",
+          "asset_key": "burning-money-flames",
+          "image": "cena_39.mp4",
+          "visual": {
+            "subject": "fajos de billetes ardiendo en llamas",
+            "action": "quemándose lentamente hasta volverse ceniza",
+            "setting": "fondo negro absoluto",
+            "framing": "plano detalle centrado",
+            "details": "fuego real y billetes reconocibles"
+          },
+          "annotation": {
+            "lines": [
+              "PÉRDIDAS",
+              "MILLONARIAS"
+            ],
+            "at": "start"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_40",
+      "text": "¿Por qué una corporación aceptaría quemar miles de millones de dólares a propósito?",
+      "scenes": [
+        {
+          "id": "scene_40",
+          "image_id": 47,
+          "tipo_midia": "imagem",
+          "asset_key": "question-mark-corporate-building",
+          "image": "cena_40.png",
+          "visual": {
+            "subject": "gran signo de interrogación proyectado o dibujado",
+            "action": "situado frente a un enorme rascacielos corporativo",
+            "setting": "ciudad de noche fría",
+            "framing": "plano contrapicado hacia la cima del edificio",
+            "details": "cristales oscuros y luces frías"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_41",
+      "text": "Porque el negocio principal de estas aplicaciones no es el comercio electrónico. Es la extracción masiva de datos.",
+      "scenes": [
+        {
+          "id": "scene_41",
+          "image_id": 48,
+          "tipo_midia": "video_generico",
+          "asset_key": "data-servers-glowing",
+          "image": "cena_41.mp4",
+          "visual": {
+            "subject": "hileras masivas de servidores informáticos",
+            "action": "procesando información con luces parpadeantes",
+            "setting": "centro de datos gigante y frío",
+            "framing": "plano general en perspectiva",
+            "details": "cables estructurados y luces led constantes"
+          },
+          "annotation": {
+            "lines": [
+              "LA EXTRACCIÓN",
+              "DE DATOS"
+            ],
+            "at": "middle"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
@@ -1212,30 +1551,30 @@
       ]
     },
     {
-      "id": "block_39",
-      "text": "A verdadeira coragem, muitas vezes, é ter a ousadia e a permissão de abaixar um pouco as armas.",
+      "id": "block_42",
+      "text": "Si te detienes a revisar los permisos de sistema que exigen en tu teléfono, son extraordinariamente invasivos.",
       "scenes": [
         {
-          "id": "scene_39",
-          "image_id": 39,
+          "id": "scene_42",
+          "image_id": 49,
           "tipo_midia": "imagem",
-          "asset_key": "woman-dropping-heavy-bags",
-          "image": "cena_39.png",
+          "asset_key": "invasive-permissions-screen",
+          "image": "cena_42.png",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "soltando bolsas pesadas no chão",
-            "setting": "hall de entrada da própria casa",
-            "framing": "plano médio",
-            "details": "ombros finalmente relaxando com a respiração"
+            "subject": "lista de permisos de seguridad en un teléfono",
+            "action": "todos los interruptores encendidos en verde para la cámara y ubicación",
+            "setting": "pantalla de ajustes del móvil",
+            "framing": "plano detalle extremo en los botones de permiso",
+            "details": "texto claro de advertencia de sistema"
           },
           "transition": {
-            "in": "none",
-            "out": "to_left",
+            "in": "from_left",
+            "out": "to_right",
             "speed": "slow"
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
+              "click"
             ],
             "context": null
           }
@@ -1243,21 +1582,189 @@
       ]
     },
     {
-      "id": "block_40",
-      "text": "E você, recusa ajuda porque gosta de ser livre ou porque aprendeu a se defender? Se inscreva e comente.",
+      "id": "block_43",
+      "text": "Cada microsegundo que pasas mirando un producto, cada vez que cedes ante la urgencia, todo queda registrado.",
       "scenes": [
         {
-          "id": "scene_40",
-          "image_id": 40,
+          "id": "scene_43",
+          "image_id": 50,
           "tipo_midia": "imagem",
-          "asset_key": "woman-smiling-softly-camera",
-          "image": "cena_40.png",
+          "asset_key": "binary-code-over-face",
+          "image": "cena_43.png",
           "visual": {
-            "subject": "mulher adulta",
-            "action": "olhando diretamente para a câmera com um olhar empático",
-            "setting": "ambiente acolhedor e leve",
-            "framing": "close-up",
-            "details": "expressão de quem entende o sentimento"
+            "subject": "rostro humano inexpresivo",
+            "action": "iluminado por líneas de código digital cayendo",
+            "setting": "fondo completamente oscuro",
+            "framing": "primer plano frontal",
+            "details": "números reflejados en la piel y los ojos"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_44",
+      "text": "Están construyendo un perfil psicológico increíblemente detallado sobre tus debilidades, impulsos y nivel adquisitivo.",
+      "scenes": [
+        {
+          "id": "scene_44",
+          "image_id": 51,
+          "tipo_midia": "imagem",
+          "asset_key": "psychological-profile-folder",
+          "image": "cena_44.png",
+          "visual": {
+            "subject": "carpeta digital de un perfil de usuario",
+            "action": "mostrando gráficos de debilidades y comportamiento",
+            "setting": "interfaz de software analítico",
+            "framing": "plano detalle en los gráficos del perfil",
+            "details": "silueta humana y barras de estadísticas"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "paper_flip"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_45",
+      "text": "La paradoja es brutal. Crees que estás comprando barato, pero el producto vendido barato, en realidad, eres tú.",
+      "scenes": [
+        {
+          "id": "scene_45",
+          "image_id": 52,
+          "tipo_midia": "video_generico",
+          "asset_key": "fishing-hook-underwater",
+          "image": "cena_45.mp4",
+          "visual": {
+            "subject": "anzuelo de pesca afilado y brillante",
+            "action": "sumergiéndose en aguas oscuras y quietas",
+            "setting": "profundidades submarinas",
+            "framing": "plano detalle siguiendo el anzuelo",
+            "details": "metal brillando sutilmente en el agua"
+          },
+          "annotation": {
+            "lines": [
+              "ERES EL",
+              "PRODUCTO"
+            ],
+            "at": "start"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_46",
+      "text": "La próxima vez que abras una aplicación llena de cronómetros rojos y descuentos del ochenta por ciento, párate a pensar.",
+      "scenes": [
+        {
+          "id": "scene_46",
+          "image_id": 53,
+          "tipo_midia": "imagem",
+          "asset_key": "red-alert-notification-phone",
+          "image": "cena_46.png",
+          "visual": {
+            "subject": "teléfono mostrando una notificación roja agresiva",
+            "action": "brillando en la mano de una persona",
+            "setting": "fondo desenfocado",
+            "framing": "plano detalle centrado en el dispositivo",
+            "details": "texto de alerta de oferta parpadeante"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "click"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_47",
+      "text": "Puede que pagues con tu tarjeta de crédito, pero la verdadera factura la estás abonando con tu tiempo, tus datos y tu paz mental.",
+      "scenes": [
+        {
+          "id": "scene_47",
+          "image_id": 54,
+          "tipo_midia": "imagem",
+          "asset_key": "credit-card-melting-data",
+          "image": "cena_47.png",
+          "visual": {
+            "subject": "tarjeta de crédito de plástico",
+            "action": "desintegrándose visualmente en partículas de datos",
+            "setting": "vacío negro",
+            "framing": "plano detalle flotante",
+            "details": "números de tarjeta y bits digitales azules"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "none",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_48",
+      "text": "¿Cuál de estas trampas te parece la más difícil de evitar en tu día a día? Cuéntame y suscríbete.",
+      "scenes": [
+        {
+          "id": "scene_48",
+          "image_id": 55,
+          "tipo_midia": "video_generico",
+          "asset_key": "abstract-digital-maze",
+          "image": "cena_48.mp4",
+          "visual": {
+            "subject": "laberinto tridimensional hecho de luz digital",
+            "action": "cámara avanzando lentamente por los pasillos",
+            "setting": "espacio cibernético sin fin",
+            "framing": "plano subjetivo moviéndose por el laberinto",
+            "details": "líneas de neón brillantes y fondo oscuro"
+          },
+          "annotation": {
+            "lines": [
+              "SUSCRÍBETE",
+              "PARA MÁS"
+            ],
+            "at": "start",
+            "emoji": "🔔"
           },
           "transition": {
             "in": "zoom_in",
@@ -1265,18 +1772,11 @@
             "speed": "normal"
           },
           "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          },
-          "annotation": {
-            "lines": [
-              "SE INSCREVA",
-              "PARA MAIS"
-            ],
-            "at": "start",
-            "emoji": "🔔"
+            "transition": [],
+            "context": {
+              "type": "click",
+              "at": "start"
+            }
           }
         }
       ]

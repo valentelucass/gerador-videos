@@ -181,7 +181,7 @@ As imagens das cenas ficam em `assets/images/`. Use PNG, JPG, JPEG ou WEBP. Há 
 
 A ordem de upload nunca é usada como critério. Isso reduz associações erradas quando uma ferramenta de imagem salva arquivos com nomes próprios. O endpoint de prompts também fornece um prompt visual e um nome sugerido por cena.
 
-Cenas `video_generico` usam MP4 em `assets/videos/`. O botão **Buscar B-roll** consulta o Pexels com `orientation=landscape`, apresenta prévias para curadoria humana e só baixa o vídeo aprovado. No render, um clipe curto pode ser desacelerado automaticamente até **1,9×** para cobrir a cena, sem congelar o último quadro; se nem isso bastar, o render falha pedindo uma mídia mais longa. O painel mostra o texto original da cena e permite pedir a versão em português quando o roteiro estiver em outro idioma. **Abrir pasta dos vídeos** abre exatamente essa pasta local no Explorador de Arquivos.
+Cenas `video_generico` usam MP4 em `assets/videos/`. O botão **Buscar B-roll** consulta o Pexels com `orientation=landscape`, apresenta prévias para curadoria humana e só baixa o vídeo aprovado. No render, um clipe curto pode ser desacelerado automaticamente até **2,2×** para cobrir a cena, sem congelar o último quadro; se nem isso bastar, o render falha pedindo uma mídia mais longa. O painel mostra o texto original da cena e permite pedir a versão em português quando o roteiro estiver em outro idioma. **Abrir pasta dos vídeos** abre exatamente essa pasta local no Explorador de Arquivos.
 
 ## Áudio, visual e sincronização
 

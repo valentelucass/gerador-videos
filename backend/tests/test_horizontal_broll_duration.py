@@ -28,6 +28,26 @@ class HorizontalBrollDurationTests(unittest.TestCase):
             ]
             self.assertIn("setpts=PTS*1.72744722", filter_graph)
 
+    def test_slows_a_short_broll_when_the_transition_extends_the_scene(self) -> None:
+        scene = SimpleNamespace(id="scene_45", image="cena_45.mp4", tipo_midia="video_generico")
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with (
+                patch.object(renderer, "SCENE_RENDER_WORKERS", 1),
+                patch.object(renderer, "_duration", return_value=4.56),
+                patch.object(renderer, "_run_compositor") as run_compositor,
+            ):
+                renderer._native_render_scene_clips(
+                    [scene], root / "clips", root / "assets", ["fullscreen"], [289]
+                )
+
+            run_compositor.assert_called_once()
+            filter_graph = run_compositor.call_args.args[0][
+                run_compositor.call_args.args[0].index("-filter_complex") + 1
+            ]
+            self.assertIn("setpts=PTS*2.11257310", filter_graph)
+
     def test_rejects_a_broll_clip_that_would_freeze_before_the_scene_ends(self) -> None:
         scene = SimpleNamespace(id="scene_10", image="cena_10.mp4", tipo_midia="video_generico")
 

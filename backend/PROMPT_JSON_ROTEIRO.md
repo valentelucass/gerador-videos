@@ -95,13 +95,15 @@ NARRAÇÃO CONVERSACIONAL E PROGRESSÃO
 - O nome do narrador é opcional e pode entrar naturalmente depois que conflito e
   promessa estiverem claros. Nunca faça saudação, apresentação ou "Oi, eu sou"
   nos primeiros 10 segundos.
-- Planeje normalmente cenas curtas o bastante para sustentar o ritmo do YouTube,
-  mas a naturalidade vale mais que uma contagem rígida de palavras. Use blocos
-  curtos para impacto e blocos um pouco maiores quando a explicação precisar
-  respirar. Cada cena DEVE permanecer abaixo de 9 segundos na prévia acústica:
-  datas, vírgulas, enumerações e vozes lentas alongam a fala; divida a frase se
-  ultrapassar esse limite. A contagem de palavras é apenas referência aproximada,
-  nunca uma obrigação superior à fala natural.
+- Planeje normalmente cenas curtas o bastante para sustentar o ritmo do YouTube.
+  Use um orçamento acústico preventivo de no máximo **7,5 segundos por cena**,
+  nunca o teto técnico de 9 segundos: a voz neural pausada, números, datas,
+  vírgulas, enumerações e palavras longas alongam a fala real. Em espanhol,
+  prefira 10 a 16 palavras por cena e nunca ultrapasse 18 palavras, exceto por
+  uma CTA muito simples. Divida a fala depois de uma frase completa ou conectivo
+  natural antes de chegar ao limite; não deixe duas frases explicativas longas
+  na mesma cena. A naturalidade continua essencial, mas não autoriza exceder
+  esse orçamento de segurança.
 - Nunca apresente primeiro um conceito econômico, jurídico, tecnológico ou
   acadêmico. A ordem preferida é: situação cotidiana, consequência prática,
   analogia simples, termo técnico somente quando necessário e evidência
@@ -617,9 +619,10 @@ ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
     foram planejados internamente e são sustentados por evidências, sem criar
     campos novos no JSON nem inventar culpados.
 15. A narrativa, a quantidade de cenas e a fala natural atendem à duração alvo;
-    nenhuma cena ultrapassa 9 segundos na prévia acústica. Um mesmo dado pode ser
-    desenvolvido em vários blocos sem exigir fato novo ou precisão artificial a
-    cada cena.
+    cada cena foi revisada mentalmente para caber em até 7,5 segundos de voz
+    neural, normalmente com 10 a 16 palavras e no máximo 18. Um mesmo dado pode
+    ser desenvolvido em vários blocos sem exigir fato novo ou precisão artificial
+    a cada cena; nunca compacte duas frases explicativas só para reduzir cenas.
 16. Lidos em sequência, os blocos soam como uma fala única: cada etapa responde
     algo, revela uma camada e abre uma dúvida maior; não há lista de curiosidades
     reorganizável, perguntas curtas e isoladas ou loops que mencionem minutos,
