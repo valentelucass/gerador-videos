@@ -149,6 +149,28 @@ class Script(BaseModel):
             raise ValueError(
                 f"A voz {self.voice} exige narrator_gender='{voice_gender}'."
             )
+
+        # ``image`` é também a chave física do asset no workspace. Se duas
+        # cenas a reutilizarem, uma escolha feita na curadoria do Pexels
+        # sobrescreve silenciosamente a outra no mesmo arquivo. A duplicação
+        # ainda faz a revisão e o render parecerem usar a mídia errada.
+        scenes = [scene for block in self.blocks for scene in block.scenes]
+        image_names = [scene.image for scene in scenes]
+        repeated_images = sorted({name for name in image_names if image_names.count(name) > 1})
+        if repeated_images:
+            raise ValueError(
+                "Cada cena deve usar um nome de arquivo 'image' exclusivo; "
+                "nomes repetidos sobrescrevem a mídia escolhida na curadoria: "
+                + ", ".join(repeated_images)
+            )
+
+        asset_keys = [scene.asset_key for scene in scenes if scene.asset_key]
+        repeated_asset_keys = sorted({key for key in asset_keys if asset_keys.count(key) > 1})
+        if repeated_asset_keys:
+            raise ValueError(
+                "Cada cena deve usar um 'asset_key' exclusivo; chaves repetidas: "
+                + ", ".join(repeated_asset_keys)
+            )
         return self
 
 

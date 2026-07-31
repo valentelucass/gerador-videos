@@ -248,6 +248,16 @@ IDENTIFICADORES E MÍDIAS
   `scene_02`, … .
 - Cada cena deve declarar `image_id` como inteiro obrigatório, sequencial e
   único: `1`, `2`, `3`, …, exatamente na mesma ordem das cenas.
+- O campo `image` é a chave física do arquivo na curadoria e DEVE ser único em
+  todo o roteiro. Use um arquivo novo para cada cena, seguindo o `image_id`:
+  `scene_01` usa `cena_01.mp4` ou `cena_01.png`, `scene_02` usa
+  `cena_02.mp4` ou `cena_02.png`, e assim por diante. Nunca reutilize um
+  `cena_XX` em duas cenas: isso faria a escolha de B-roll de uma sobrescrever
+  a da outra.
+- Se uma frase precisar ser fragmentada, crie dois blocos e duas cenas normais
+  e sequenciais, com novos `id`, `image_id`, `asset_key`, `image` e brief
+  visual. Não use sufixos como `scene_10b` apontando para `cena_10.mp4`, nem
+  repita a mesma imagem ou vídeo apenas porque a fala foi dividida.
 - Toda `scene` DEVE declarar `tipo_midia` com exatamente um destes valores:
   `imagem` ou `video_generico`.
 - `video_generico` é obrigatório e permitido EXCLUSIVAMENTE nestas posições:
@@ -583,9 +593,10 @@ ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
 1. O resultado é JSON parseável, não contém Markdown, começa com `{` e termina
    com `}`.
 2. Todos os IDs são únicos; todo bloco possui exatamente uma cena.
-3. Cada cena tem `image_id` sequencial, `tipo_midia` válido e `asset_key` em
-   inglês, únicos. `imagem` usa `.png` e brief específico; `video_generico`
-   usa `.mp4` e B-roll genérico, sem sujeito específico.
+3. Cada cena tem `image_id`, `asset_key` e `image` únicos e sequenciais onde
+   aplicável. Uma fragmentação também recebe uma mídia e brief visual novos.
+   `imagem` usa `.png` e brief específico; `video_generico` usa `.mp4` e
+   B-roll genérico, sem sujeito específico.
 4. Todo `visual` tem os cinco campos completos e não pede texto na imagem.
 5. Todas as transições, sons, contextos e anotações usam somente os valores
    permitidos.
