@@ -70,10 +70,11 @@ CARD_EXIT_ZOOM = 0.580
 # Até 10,5 s a mesma arte permanece em tela; acima disso o bloco ainda precisa
 # ser dividido para preservar a retenção e o ritmo documental.
 MAX_SCENE_ACOUSTIC_SECONDS = 9.0
-# Um B-roll pode desacelerar um pouco para acompanhar a fala, mas nunca pode
-# ser prolongado clonando o último quadro. Se ainda for curto, a curadoria
-# humana precisa fornecer outra mídia para a cena.
-MAX_BROLL_SLOWDOWN = 1.20
+# Um B-roll pode ser desacelerado para acompanhar a fala, mas nunca pode ser
+# prolongado clonando o último quadro. O limite de 1,9× foi aprovado na prévia
+# visual: um clipe de cerca de 5,2 s cobre uma cena de 9 s mantendo movimento.
+# Se ainda for curto, a curadoria humana precisa fornecer outra mídia.
+MAX_BROLL_SLOWDOWN = 1.90
 # O produto foi dimensionado para narrativas de até vinte minutos. Acima disso
 # a fila, o espaço temporário e a revisão humana deixam de ter a mesma
 # previsibilidade; o operador deve dividir o roteiro em episódios.
@@ -1247,8 +1248,8 @@ def _native_render_scene_clips(
         is_video = scene.tipo_midia == "video_generico" or source.suffix.lower() in VIDEO_EXTENSIONS
         trim_outer_edges = not is_video and _scene_needs_psychology_frame_cleanup(scene)
         # Todo vídeo de cena, seja B-roll ou upload manual, é finito: nunca
-        # clonamos seu último quadro. Uma redução de velocidade limitada a 20%
-        # preserva o movimento natural; se não bastar, o operador o substitui.
+        # clonamos seu último quadro. A redução pode estender o clipe até 1,9×,
+        # conforme a prévia aprovada; se não bastar, o operador o substitui.
         video_time_scale = 1.0
         if is_video:
             source_seconds = _duration(source)

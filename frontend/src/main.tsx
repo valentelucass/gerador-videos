@@ -11,6 +11,7 @@ type MediaType = "imagem" | "video_generico";
 type Scene = {
   id: string; image_id: number; tipo_midia: MediaType; asset_key?: string; image: string;
   visual?: { subject?: string; action?: string; setting?: string; framing?: string; details?: string };
+  transition?: { in?: string; out?: string };
   annotation?: { lines: string[]; at: string; emoji?: string | null };
 };
 type ImageBinding = { expectedImage: string; sourceImage: string };
@@ -66,6 +67,9 @@ type TimingScene = {
   suggested_split?: { first_text: string; second_text: string };
 };
 type TimingReport = { narration_duration: number; scenes: TimingScene[] };
+type SceneCompositionPreview = {
+  scene: Scene; blockIndex: number; sceneIndex: number; sourceImage: string | null; isVideo: boolean; fullscreen: boolean;
+};
 
 const animationOptions: { value: BackgroundAnimation; label: string }[] = [
   { value: "movimento_sutil", label: "Movimento suave" },
@@ -516,6 +520,7 @@ function App() {
   const [thumbnailPage, setThumbnailPage] = useState(0);
   const [sceneReviewPage, setSceneReviewPage] = useState(0);
   const [activeImagePickerKey, setActiveImagePickerKey] = useState<string | null>(null);
+  const [activeScenePreview, setActiveScenePreview] = useState<SceneCompositionPreview | null>(null);
   const [background, setBackground] = useState("");
   const [music, setMusic] = useState("");
   const [animation, setAnimation] = useState<BackgroundAnimation>("movimento_sutil");
@@ -551,6 +556,7 @@ function App() {
   const [flowBatchSize, setFlowBatchSize] = useState<25 | 50>(25);
   const jsonInput = useRef<HTMLInputElement>(null);
   const imagesInput = useRef<HTMLInputElement>(null);
+  const scenePreviewInput = useRef<HTMLInputElement>(null);
   const backgroundInput = useRef<HTMLInputElement>(null);
   const musicInput = useRef<HTMLInputElement>(null);
   const notifiedCompletedJob = useRef<string | null>(null);
@@ -562,6 +568,7 @@ function App() {
   // importada para a trilha padrão.
   const catalogRefreshSequence = useRef(0);
   const translationRequests = useRef(new Map<string, Promise<string>>());
+  const automaticBindingRequestKey = useRef("");
 
   const stopMusicPreview = () => {
     const preview = musicPreview.current;
@@ -888,6 +895,22 @@ function App() {
           ? `${saved.length} mídia(s) importada(s), incluindo ${videoCount} vídeo(s). Os vídeos entram mudos: somente imagem, narração, trilha e efeitos serão usados.`
           : `${saved.length} imagem(ns) importada(s). O sistema usará a descrição do arquivo e o brief da cena; a ordem do envio não importa.`);
       }
+    } catch (error) {
+      setStatus(readableError(error));
+    }
+  };
+
+  const uploadMediaForScenePreview = async (files: FileList | File[]) => {
+    try {
+      setStatus("Importando mídia para a prévia da cena…");
+      const saved = await uploadMedia("/api/images", files);
+      if (!saved.length) return;
+      setUploadedImages(current => [...new Set([...saved, ...current])]);
+      const selected = saved[0];
+      setActiveScenePreview(current => current ? {
+        ...current, sourceImage: selected, isVideo: isUploadedVideo(selected),
+      } : current);
+      setStatus(`${saved.length} mídia(s) importada(s). A primeira já está na prévia desta cena.`);
     } catch (error) {
       setStatus(readableError(error));
     }
@@ -1238,14 +1261,14 @@ function App() {
     }
   };
 
-  const validate = async () => {
+  const validate = async (measureTiming = true) => {
     const activeScript = parseScript(source, false);
     if (!activeScript) {
       setStatus("Cole ou importe um roteiro JSON antes de validar.");
       return;
     }
     try {
-      setStatus("Medindo a narração com a voz definida no JSON…");
+      setStatus(measureTiming ? "Medindo a narração com a voz definida no JSON…" : "Associando mídias às cenas…");
       const report = await api<{
         valid: boolean; errors: string[]; missing_images: string[]; resolved_image_sources: Record<string, string>;
         timing?: TimingReport; timing_error?: string;
@@ -1256,14 +1279,16 @@ function App() {
           script: activeScript,
           manual_image_bindings: bindingPayload(activeScript, imageBindings),
           uploaded_images: uploadedImages,
-          measure_timing: true,
+          measure_timing: measureTiming,
         }),
       });
       setImageBindings(bindingsFromResolvedSources(activeScript, report.resolved_image_sources));
       setFlowExportReady(report.valid);
       const warnings = report.timing?.scenes.filter(scene => scene.duration > 9) ?? [];
-      setTimingWarnings(warnings);
-      setNarrationDuration(report.timing?.narration_duration ?? null);
+      if (measureTiming) {
+        setTimingWarnings(warnings);
+        setNarrationDuration(report.timing?.narration_duration ?? null);
+      }
       const validationNotes = [
         ...(report.timing ? [`Duração estimada do vídeo: ${formatVideoDuration(report.timing.narration_duration)}.`] : []),
         ...(warnings.length ? [`${warnings.length} cena(s) ultrapassam 9 s; veja as sugestões de corte abaixo.`] : []),
@@ -1273,7 +1298,9 @@ function App() {
         report.valid
           ? (report.timing_error
             ? report.timing_error
-            : validationNotes.join(" ") || "Roteiro válido. Assets e duração acústica aprovados.")
+            : validationNotes.join(" ") || (measureTiming
+              ? "Roteiro válido. Assets e duração acústica aprovados."
+              : "Mídias associadas. Revise as prévias de composição antes do render."))
           : report.errors.join("\n"),
       );
     } catch (error) {
@@ -1281,6 +1308,46 @@ function App() {
       setStatus(readableError(error));
     }
   };
+
+  useEffect(() => {
+    if (mediaTab !== "review" || !script || !uploadedImages.length || jobId) return;
+    const requestKey = JSON.stringify({
+      script: source,
+      uploadedImages: [...uploadedImages].sort(),
+      bindings: bindingPayload(script, imageBindings),
+    });
+    if (automaticBindingRequestKey.current === requestKey) return;
+    automaticBindingRequestKey.current = requestKey;
+
+    const associateBeforePreview = async () => {
+      try {
+        const report = await api<{
+          resolved_image_sources: Record<string, string>; missing_images: string[];
+        }>("/api/validate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            script,
+            manual_image_bindings: bindingPayload(script, imageBindings),
+            uploaded_images: uploadedImages,
+            measure_timing: false,
+          }),
+        });
+        const resolved = bindingsFromResolvedSources(script, report.resolved_image_sources);
+        setImageBindings(resolved);
+        const associated = Object.keys(resolved).length;
+        setStatus(
+          associated
+            ? `${associated} mídia(s) associada(s) automaticamente para revisão antes do render.`
+            : "Não foi possível associar as mídias automaticamente. Use “Escolher e pré-visualizar” para decidir a imagem da cena.",
+        );
+      } catch (error) {
+        automaticBindingRequestKey.current = "";
+        setStatus(`Não foi possível preparar as prévias: ${readableError(error)}`);
+      }
+    };
+    void associateBeforePreview();
+  }, [mediaTab, script, source, uploadedImages, imageBindings, jobId]);
 
   const downloadGoogleFlowTxt = () => {
     const activeScript = parseScript(source, false);
@@ -1418,7 +1485,7 @@ function App() {
         <div className="appbar-actions">
           <button className="project-trigger" onClick={() => setProjectDialogOpen(true)} title="Abrir projetos salvos"><span>Projetos</span><b>{projectName}</b><i>⌄</i></button>
           <span className="scene-indicator">{script ? `${sceneCount(script)} cenas` : "sem roteiro"}</span>
-          <button className="button quiet" onClick={validate}>Validar</button>
+          <button className="button quiet" onClick={() => void validate()}>Validar</button>
           {hasBrollScenes && <button className="button quiet" disabled={pexelsBusy} onClick={() => void searchPexels()}>{pexelsBusy ? "Buscando…" : "Buscar B-roll"}</button>}
           <button className="button primary" disabled={Boolean(jobId)} onClick={render}>{jobId ? "Renderizando…" : "Gerar vídeo"}</button>
         </div>
@@ -1564,8 +1631,10 @@ function App() {
           </>}
           {script && mediaTab === "review" && <section className="scene-review" aria-label="Revisão de mídia por cena">
             <div className="scene-review-heading">
-              <div><b>Revisão de mídia por cena</b><small>Veja a mídia real, o bloco e a tradução antes de trocar a seleção.</small></div>
-              <button className="button quiet compact" onClick={() => void openVideosFolder()}>Abrir pasta dos vídeos</button>
+              <div><b>Revisão de mídia por cena</b><small>Abra a prévia para escolher a mídia já posicionada, antes do render.</small></div>
+              <div className="scene-review-heading-actions">
+                <button className="button quiet compact" onClick={() => void openVideosFolder()}>Abrir pasta dos vídeos</button>
+              </div>
             </div>
             {!uploadedImages.length && <p className="scene-bindings-empty">Envie imagens ou vídeos pela Biblioteca para liberar as substituições visuais.</p>}
             <div className="scene-review-list">
@@ -1591,10 +1660,16 @@ function App() {
                     <p className="scene-review-translation"><strong>PT-BR:</strong> {translations[scene.id] ?? (translationLoading[scene.id] ? "traduzindo…" : "abrindo tradução…")}</p>
                     <small>Brief visual: {scene.visual?.subject ?? scene.asset_key ?? "sem descrição"}{scene.visual?.action ? ` · ${scene.visual.action}` : ""}</small>
                   </div>
-                  {scene.tipo_midia === "imagem" && <div className="scene-review-actions">
-                    <button type="button" className="button quiet compact" disabled={!uploadedImages.length || Boolean(jobId)} onClick={() => setActiveImagePickerKey(pickerOpen ? null : pickerKey)}>{pickerOpen ? "Fechar opções" : "Trocar mídia"}</button>
-                    {boundImage && <button type="button" className="button quiet compact" disabled={Boolean(jobId)} onClick={() => bindUploadedImageToScene(blockIndex, sceneIndex, "")}>Usar mídia do JSON</button>}
-                  </div>}
+                  <div className="scene-review-actions">
+                    <button type="button" className="button quiet compact" onClick={() => setActiveScenePreview({
+                      scene, blockIndex, sceneIndex, sourceImage: isReady ? sourceImage : null, isVideo,
+                      fullscreen: scene.tipo_midia === "video_generico" || scene.transition?.in === "zoom_in",
+                    })}>{isReady ? "Prévia de composição" : "Escolher e pré-visualizar"}</button>
+                    {scene.tipo_midia === "imagem" && <>
+                      <button type="button" className="button quiet compact" disabled={!uploadedImages.length || Boolean(jobId)} onClick={() => setActiveImagePickerKey(pickerOpen ? null : pickerKey)}>{pickerOpen ? "Fechar opções" : "Trocar mídia"}</button>
+                      {boundImage && <button type="button" className="button quiet compact" disabled={Boolean(jobId)} onClick={() => bindUploadedImageToScene(blockIndex, sceneIndex, "")}>Usar mídia do JSON</button>}
+                    </>}
+                  </div>
                   {scene.tipo_midia === "video_generico" && <span className="scene-review-broll">{catalog.videos.includes(scene.image) ? "B-roll salvo. Você pode revisar ou trocar na Curadoria B-roll." : "B-roll pendente na Curadoria B-roll."}</span>}
                   {pickerOpen && <div className="scene-review-picker" aria-label={`Escolher mídia visual para ${scene.id}`}>
                     {uploadedImages.map(image => <button type="button" key={image} className={sourceImage === image ? "selected" : ""} disabled={Boolean(jobId)} title={image} onClick={() => { bindUploadedImageToScene(blockIndex, sceneIndex, image); setActiveImagePickerKey(null); }}>
@@ -1729,6 +1804,43 @@ function App() {
           <button className="button primary project-new" onClick={createProject}>＋ Criar novo projeto</button>
         </section>
       </div>}
+      {activeScenePreview && <div className="scene-preview-backdrop" role="presentation" onMouseDown={() => setActiveScenePreview(null)}>
+        <section className="scene-preview-dialog" role="dialog" aria-modal="true" aria-label={`Prévia de composição de ${activeScenePreview.scene.id}`} onMouseDown={event => event.stopPropagation()}>
+          <header><div><span>Prévia antes do render</span><h2>{activeScenePreview.scene.id}</h2></div><button className="dialog-close" onClick={() => setActiveScenePreview(null)} aria-label="Fechar prévia">×</button></header>
+          <div className={`scene-composition-preview${activeScenePreview.fullscreen ? " fullscreen" : " card"}`}>
+            {!activeScenePreview.fullscreen && (backgroundUrl ? <img className={`scene-composition-background ${animation}`} src={backgroundUrl} alt="Fundo da composição" /> : <div className="scene-composition-no-background">Escolha um fundo para ver a composição completa.</div>)}
+            <div className="scene-composition-media">
+              {activeScenePreview.sourceImage ? (activeScenePreview.isVideo
+                ? <video src={sceneMediaUrl(activeScenePreview.sourceImage, uploadedImages)} muted controls autoPlay loop playsInline />
+                : <img src={sceneMediaUrl(activeScenePreview.sourceImage, uploadedImages)} alt={`Mídia escolhida para ${activeScenePreview.scene.id}`} />)
+                : <div className="scene-composition-empty">Escolha uma mídia abaixo para vê-la nesta cena.</div>}
+            </div>
+            {activeScenePreview.scene.annotation && <div className="scene-composition-annotation">{activeScenePreview.scene.annotation.lines.map(line => <span key={line}>{line}</span>)}</div>}
+          </div>
+          {activeScenePreview.scene.tipo_midia === "imagem" && <div className="scene-preview-picker" aria-label="Mídias disponíveis para esta cena">
+            {uploadedImages.map(image => <button type="button" key={image} className={activeScenePreview.sourceImage === image ? "selected" : ""} onClick={() => setActiveScenePreview(current => current ? {
+              ...current, sourceImage: image, isVideo: isUploadedVideo(image),
+            } : current)}>
+              {isUploadedVideo(image) ? <video src={uploadedMediaUrl(image)} muted playsInline preload="metadata" /> : <img src={uploadedMediaUrl(image)} alt={image} loading="lazy" />}
+              <span>{mediaLabel(image)}</span>
+            </button>)}
+            {!uploadedImages.length && <p>Nenhuma mídia foi enviada nesta tela.</p>}
+          </div>}
+          {activeScenePreview.scene.tipo_midia === "imagem" && <div className="scene-preview-actions">
+            <button className="button quiet compact" disabled={Boolean(jobId)} onClick={() => scenePreviewInput.current?.click()}>Importar de outra pasta</button>
+            <button className="button primary compact" disabled={!activeScenePreview.sourceImage || Boolean(jobId)} onClick={() => {
+              if (!activeScenePreview.sourceImage) return;
+              bindUploadedImageToScene(activeScenePreview.blockIndex, activeScenePreview.sceneIndex, activeScenePreview.sourceImage);
+              setActiveScenePreview(null);
+            }}>Usar esta mídia nesta cena</button>
+          </div>}
+          <p>Mostra o vínculo, recorte e posição previstos. Legendas, transições, som e a desaceleração automática de vídeo são aplicados somente no render final.</p>
+        </section>
+      </div>}
+      <input ref={scenePreviewInput} type="file" hidden accept="image/png,image/jpeg,image/webp,video/mp4,video/quicktime,video/webm,.mp4,.mov,.webm" onChange={event => {
+        if (event.target.files) void uploadMediaForScenePreview(event.target.files);
+        event.target.value = "";
+      }} />
 
       <footer className={`statusbar${jobId || renderProgress ? " has-render-progress" : ""}`}>
         <div className="status-detail">
