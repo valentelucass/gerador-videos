@@ -30,6 +30,8 @@ from .models import PexelsCandidatesRequest, PexelsDownloadRequest, RenderReques
 from .pexels import PexelsError, download_selected_video, search_videos, translate_to_portuguese
 from .services import (
     AUDIO_EXTENSIONS,
+    IMAGE_EXTENSIONS,
+    VIDEO_EXTENSIONS,
     catalog,
     default_background_name,
     google_flow_prompt,
@@ -63,6 +65,7 @@ class _QueuedRender:
     script: Script
     background_image: str
     music_name: str | None
+    text_style: str
     image_bindings: dict[str, str]
     job_dir: Path
 
@@ -280,12 +283,19 @@ def open_outputs_folder() -> dict[str, str]:
 
 @app.post("/api/images")
 async def upload_images(files: list[UploadFile] = File(...)) -> dict[str, list[str]]:
+    """Recebe imagens e vídeos manuais para as cenas.
+
+    Vídeos ficam no acervo de vídeo, mas podem ser vinculados a cenas cujo
+    JSON continua ``tipo_midia: imagem``. O compositor nunca mapeia o áudio
+    desses arquivos; ele usa somente a faixa visual.
+    """
     saved = []
     for file in files:
         name = Path(file.filename or "").name
-        if not name or Path(name).suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp"}:
-            raise HTTPException(status_code=400, detail=f"Imagem inválida: {file.filename}")
-        target = IMAGE_DIR / name
+        suffix = Path(name).suffix.lower()
+        if not name or suffix not in IMAGE_EXTENSIONS | VIDEO_EXTENSIONS:
+            raise HTTPException(status_code=400, detail=f"Mídia inválida: {file.filename}")
+        target = (VIDEO_DIR if suffix in VIDEO_EXTENSIONS else IMAGE_DIR) / name
         with target.open("wb") as output:
             shutil.copyfileobj(file.file, output)
         saved.append(name)
@@ -294,21 +304,21 @@ async def upload_images(files: list[UploadFile] = File(...)) -> dict[str, list[s
 
 @app.delete("/api/images")
 def delete_images(filenames: list[str]) -> dict[str, list[str]]:
-    """Remove somente os assets de imagem explicitamente enviados pelo painel."""
+    """Remove somente mídias de cena explicitamente enviadas pelo painel."""
     if not filenames:
         raise HTTPException(status_code=400, detail="Informe ao menos uma imagem para apagar.")
     names = list(dict.fromkeys(filenames))
     invalid = [
         name for name in names
-        if Path(name).name != name or Path(name).suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp"}
+        if Path(name).name != name or Path(name).suffix.lower() not in IMAGE_EXTENSIONS | VIDEO_EXTENSIONS
     ]
     if invalid:
-        raise HTTPException(status_code=400, detail="Nome de imagem inválido para exclusão: " + ", ".join(invalid))
+        raise HTTPException(status_code=400, detail="Nome de mídia inválido para exclusão: " + ", ".join(invalid))
 
     deleted: list[str] = []
     missing: list[str] = []
     for name in names:
-        target = IMAGE_DIR / name
+        target = (VIDEO_DIR if Path(name).suffix.lower() in VIDEO_EXTENSIONS else IMAGE_DIR) / name
         if target.is_file():
             target.unlink()
             deleted.append(name)
@@ -616,6 +626,7 @@ def _render_in_background(
     script: Script,
     background_image: str,
     music_name: str | None,
+    text_style: str,
     image_bindings: dict[str, str],
     job_dir: Path,
 ) -> None:
@@ -643,6 +654,7 @@ def _render_in_background(
             BACKGROUND_DIR / background_image,
             job_dir,
             music_name=music_name,
+            text_style=text_style,
             image_bindings=image_bindings,
             progress_callback=lambda progress, stage: _update_render_progress(manifest_path, progress, stage, logger),
             job_logger=logger,
@@ -749,6 +761,7 @@ def _render_queue_worker() -> None:
                 job.script,
                 job.background_image,
                 job.music_name,
+                job.text_style,
                 job.image_bindings,
                 job.job_dir,
             )
@@ -862,6 +875,7 @@ def start_render(request: RenderRequest) -> dict[str, object]:
         "resolved_image_sources": report["resolved_image_sources"],
         "background_image": background_image,
         "music_name": music_name,
+        "text_style": request.text_style,
         "validation": report,
         "status": "queued",
         "progress": 2,
@@ -874,6 +888,7 @@ def start_render(request: RenderRequest) -> dict[str, object]:
             script=request.script,
             background_image=background_image,
             music_name=music_name,
+            text_style=request.text_style,
             image_bindings=image_bindings,
             job_dir=job_dir,
         ))

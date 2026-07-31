@@ -22,7 +22,7 @@ from tempfile import mkdtemp
 
 from ..config import FINAL_OUTPUT_DIR, FFMPEG, FFPROBE, IMAGE_DIR, MUSIC_DIR, RENDER_CACHE_DIR, SOUND_DIR
 from ..models import Script
-from ..services import missing_scene_images, resolve_scene_image_sources, scene_asset_path
+from ..services import VIDEO_EXTENSIONS, missing_scene_images, resolve_scene_image_sources, scene_asset_path
 from .tts_neural import TTSNeuralEngine, WordBoundary
 
 # A cadência de 30 fps é importante para o zoom do cartão: a 24 fps a borda
@@ -113,12 +113,12 @@ VOICE_MASTERING_FILTER = (
 FINAL_AUDIO_LIMIT = 0.89
 # A trilha precisa continuar perceptível durante a fala. A combinação anterior
 # (ganho 0.26, threshold muito baixo e razão 8:1) reduzia uma música normal a
-# um nível praticamente inaudível em narrativas sem pausas. Mantemos a voz como
-# elemento principal, mas partimos de uma cama musical audível e aplicamos um
-# ducking moderado de verdade, em vez de silenciá-la.
-MUSIC_BED_VOLUME = 0.38
-MUSIC_DUCKING_THRESHOLD = 0.10
-MUSIC_DUCKING_RATIO = 2.4
+# um nível praticamente inaudível em narrativas sem pausas. A amostra aprovada
+# ainda deixava a voz dominante demais; aumentamos a cama só o necessário e
+# deixamos o ducking atuar apenas quando a voz realmente sobe.
+MUSIC_BED_VOLUME = 0.48
+MUSIC_DUCKING_THRESHOLD = 0.13
+MUSIC_DUCKING_RATIO = 1.7
 MUSIC_DUCKING_ATTACK_MS = 25
 MUSIC_DUCKING_RELEASE_MS = 320
 # Os efeitos precisam aparecer um pouco mais à frente sem disparar o limiter
@@ -158,6 +158,20 @@ FOCUS_POINTS = (
 
 ProgressCallback = Callable[[int, str], None]
 _COMPOSITOR_LOGGER: ContextVar[Logger | None] = ContextVar("horizontal_compositor_logger", default=None)
+
+
+@dataclass(frozen=True)
+class AnnotationTextStyle:
+    """Família tipográfica aprovada para annotations do vídeo horizontal."""
+
+    font_path: Path
+    ass_font_name: str
+    font_size: int
+    bold: int
+    font_color: str
+    outline_color: str
+    outline_width: int
+    shadow: int
 
 
 @dataclass(frozen=True)
@@ -463,9 +477,50 @@ CTA_POST_TYPING_HOLD = 1.80
 # O convite já tem uma cena e anotação próprias; uma pausa longa depois dele
 # soa como narração cortada. Mantemos apenas uma respiração editorial curta.
 MAX_CTA_NARRATION_PAUSE = 0.20
-# A tela de anotação é um elemento editorial próprio: mantém a mesma fonte,
-# digitação amarela, blur de fundo e posição que já estavam aprovados.
-ANNOTATION_FONT = Path(r"C:/Windows/Fonts/impact.ttf")
+# A tela de anotação é um elemento editorial próprio: mantém a digitação
+# amarela, blur de fundo e posição aprovados, mas a família vem da escolha do
+# projeto. Os arquivos são fontes presentes na instalação Windows suportada.
+ANNOTATION_TEXT_STYLES: dict[str, AnnotationTextStyle] = {
+    "impact": AnnotationTextStyle(Path(r"C:/Windows/Fonts/impact.ttf"), "Impact", 102, 0, "FFD429", "000000", 5, 0),
+    "serif_vintage": AnnotationTextStyle(Path(r"C:/Windows/Fonts/georgia.ttf"), "Georgia", 94, 1, "F4D98A", "2C1D06", 3, 1),
+    "minimalista": AnnotationTextStyle(Path(r"C:/Windows/Fonts/arial.ttf"), "Arial", 98, 1, "BFF7FF", "000000", 0, 0),
+    # O FFmpeg desenha a chamada com uma serifada dourada legível; o aspecto
+    # de constelação propriamente dito é instruído no lote do Flow, onde ele
+    # faz parte da arte, não uma sobreposição posterior.
+    "constelacao_dourada": AnnotationTextStyle(Path(r"C:/Windows/Fonts/georgia.ttf"), "Georgia", 94, 1, "FFD429", "3A2800", 1, 1),
+    "impact_sem_borda": AnnotationTextStyle(Path(r"C:/Windows/Fonts/impact.ttf"), "Impact", 102, 0, "FF3DE8", "000000", 0, 0),
+    "branco_limpo": AnnotationTextStyle(Path(r"C:/Windows/Fonts/arial.ttf"), "Arial", 96, 1, "F5F7FA", "000000", 0, 0),
+    "neon_violeta": AnnotationTextStyle(Path(r"C:/Windows/Fonts/arial.ttf"), "Arial", 98, 1, "B56BFF", "130722", 3, 2),
+    "coral_contorno": AnnotationTextStyle(Path(r"C:/Windows/Fonts/impact.ttf"), "Impact", 102, 0, "FF6B5F", "000000", 5, 0),
+    "ouro_sem_contorno": AnnotationTextStyle(Path(r"C:/Windows/Fonts/georgia.ttf"), "Georgia", 94, 1, "FFE7A3", "000000", 0, 0),
+    "prata_azul": AnnotationTextStyle(Path(r"C:/Windows/Fonts/segoeuib.ttf"), "Segoe UI", 96, 1, "DDEBFF", "1F3C66", 2, 1),
+    "verde_lima": AnnotationTextStyle(Path(r"C:/Windows/Fonts/verdanab.ttf"), "Verdana", 92, 1, "A9FF58", "102800", 4, 0),
+    "azul_eletrico": AnnotationTextStyle(Path(r"C:/Windows/Fonts/arialbd.ttf"), "Arial", 98, 1, "46B8FF", "001C35", 4, 1),
+    "vermelho_alerta": AnnotationTextStyle(Path(r"C:/Windows/Fonts/impact.ttf"), "Impact", 102, 0, "FF3B30", "2B0000", 4, 0),
+    "rosa_chiclete": AnnotationTextStyle(Path(r"C:/Windows/Fonts/arialbd.ttf"), "Arial", 96, 1, "FF8FCC", "3A0827", 3, 1),
+    "laranja_energia": AnnotationTextStyle(Path(r"C:/Windows/Fonts/trebucbd.ttf"), "Trebuchet MS", 94, 1, "FFAA32", "3D1900", 4, 0),
+    "cinza_aco": AnnotationTextStyle(Path(r"C:/Windows/Fonts/consolab.ttf"), "Consolas", 88, 1, "D7E1E8", "1C2A33", 3, 1),
+    "azul_marinho": AnnotationTextStyle(Path(r"C:/Windows/Fonts/georgiab.ttf"), "Georgia", 94, 1, "94C7FF", "001B3D", 3, 1),
+    "roxo_real": AnnotationTextStyle(Path(r"C:/Windows/Fonts/georgiab.ttf"), "Georgia", 94, 1, "D7B4FF", "2A0C4A", 3, 1),
+    "verde_menta": AnnotationTextStyle(Path(r"C:/Windows/Fonts/segoeuib.ttf"), "Segoe UI", 96, 1, "7FFFD4", "00382B", 2, 1),
+    "amarelo_retro": AnnotationTextStyle(Path(r"C:/Windows/Fonts/verdanab.ttf"), "Verdana", 91, 1, "F7E65D", "543F00", 3, 0),
+}
+_ANNOTATION_TEXT_STYLE: ContextVar[str] = ContextVar("horizontal_annotation_text_style", default="impact")
+
+
+def _annotation_text_style() -> AnnotationTextStyle:
+    key = _ANNOTATION_TEXT_STYLE.get()
+    try:
+        return ANNOTATION_TEXT_STYLES[key]
+    except KeyError as exc:
+        raise ValueError(f"Estilo de fonte de annotation inválido: {key!r}.") from exc
+
+
+def _require_annotation_font() -> AnnotationTextStyle:
+    style = _annotation_text_style()
+    if not style.font_path.is_file():
+        raise FileNotFoundError(f"A fonte selecionada para as anotações não está disponível: {style.font_path.name}.")
+    return style
 # Quando o roteiro usa um emoji que ainda não possui arte 3D curada, o
 # renderizador preserva o conteúdo usando o emoji nativo do Windows em vez de
 # cancelar um job longo. Os stickers aprovados abaixo continuam prioritários.
@@ -759,12 +814,12 @@ def _materialize_scene_assets(
     image_bindings: Mapping[str, str] | None,
     job_dir: Path,
 ) -> tuple[Path, dict[str, str]]:
-    """Cria aliases privados das imagens sem tocar no JSON nem no acervo.
+    """Cria cópias privadas das mídias sem tocar no JSON nem no acervo.
 
     Em vez de alterar o arquivo editorial, cada fonte enviada é copiada para
-    um diretório efêmero do job sob o nome esperado pelo JSON. Assim dois jobs
+    um diretório efêmero do job preservando a extensão física. Assim dois jobs
     podem usar vínculos diferentes para ``cena_01.png`` ao mesmo tempo, sem
-    sobrescrever nada em ``assets/images``.
+    sobrescrever os acervos de imagem ou vídeo.
     """
     resolved_sources = resolve_scene_image_sources(script, image_bindings)
     missing = missing_scene_images(script, resolved_sources)
@@ -776,7 +831,7 @@ def _materialize_scene_assets(
         for block in script.blocks:
             for scene in block.scenes:
                 source_name = resolved_sources[scene.image]
-                shutil.copy2(scene_asset_path(scene, source_name), asset_dir / scene.image)
+                shutil.copy2(scene_asset_path(scene, source_name), asset_dir / source_name)
     except Exception:
         shutil.rmtree(asset_dir, ignore_errors=True)
         raise
@@ -823,7 +878,36 @@ def _run_compositor(command: list[str]) -> None:
         )
 
 
-def _native_card_filter_chain(*, animate_image: bool = False) -> str:
+PSYCHOLOGY_LITHOGRAPH_MARKER = "litografia cosmica vintage"
+PSYCHOLOGY_FRAME_EDGE_TRIM = 0.90
+
+
+def _scene_needs_psychology_frame_cleanup(scene: object) -> bool:
+    """Reconhece a direção que exige arte full-bleed, sem um novo campo JSON."""
+    visual = getattr(scene, "visual", None)
+    details = getattr(visual, "details", "") if visual is not None else ""
+    normalized = "".join(
+        character
+        for character in unicodedata.normalize("NFKD", str(details)).casefold()
+        if not unicodedata.combining(character)
+    )
+    return PSYCHOLOGY_LITHOGRAPH_MARKER in normalized
+
+
+def _native_psychology_frame_trim_filter() -> str:
+    """Remove a moldura que uma IA ocasionalmente desenha dentro da litografia.
+
+    O crop é aplicado só em cenas marcadas como litografia psicológica. Assim
+    não muda fotos/documentários normais e também corrige os assets já gerados.
+    """
+    retained = PSYCHOLOGY_FRAME_EDGE_TRIM
+    return (
+        f"crop=w='trunc(iw*{retained:.3f}/2)*2':h='trunc(ih*{retained:.3f}/2)*2':"
+        "x='(iw-ow)/2':y='(ih-oh)/2',"
+    )
+
+
+def _native_card_filter_chain(*, animate_image: bool = False, trim_outer_edges: bool = False) -> str:
     """Prepara o cartão; B-roll mantém seu movimento e fotos ficam estáveis."""
     motion = (
         # O zoom editorial já é aplicado ao cartão completo por ``perspective``
@@ -837,19 +921,19 @@ def _native_card_filter_chain(*, animate_image: bool = False) -> str:
         if animate_image
         else ""
     )
+    edge_trim = _native_psychology_frame_trim_filter() if trim_outer_edges else ""
     return (
-        f"scale={CARD_W}:{CARD_H}:force_original_aspect_ratio=increase,crop={CARD_W}:{CARD_H},"
+        f"{edge_trim}scale={CARD_W}:{CARD_H}:force_original_aspect_ratio=increase,crop={CARD_W}:{CARD_H},"
         # A entrada agora acontece pelo deslocamento físico do cartão. O fade
         # inicial escurecia seus primeiros quadros e parecia um piscar quando
         # o próximo cartão já vinha ocupando o lado livre.
-        f"fps={FPS},{motion}setsar=1,"
-        "drawbox=x=1:y=1:w=iw-2:h=ih-2:color=0x40444C@0.92:t=1"
+        f"fps={FPS},{motion}setsar=1"
     )
 
 
-def _native_card_filter(*, animate_image: bool = False) -> str:
+def _native_card_filter(*, animate_image: bool = False, trim_outer_edges: bool = False) -> str:
     """Compatibilidade do filtro de cartão isolado usado em diagnósticos."""
-    return f"[0:v]{_native_card_filter_chain(animate_image=animate_image)}[out]"
+    return f"[0:v]{_native_card_filter_chain(animate_image=animate_image, trim_outer_edges=trim_outer_edges)}[out]"
 
 
 def _native_card_round_mask_expression(*, offset_x: int = 0, offset_y: int = 0) -> str:
@@ -936,7 +1020,12 @@ def _native_card_shadow_asset(
 
 
 def _native_card_background_blur_asset(background: Path, job_dir: Path) -> Path:
-    """Pré-borra o fundo uma vez para os cartões não borram 1080p por frame."""
+    """Prepara o fundo discreto que fica fora do cartão.
+
+    Não usamos o fundo nítido nessa área: grades, linhas retas e outros
+    detalhes de fundos decorativos ficavam visíveis até encostar na borda
+    arredondada do cartão, parecendo um contorno involuntário da própria arte.
+    """
     job_dir.mkdir(parents=True, exist_ok=True)
     output = job_dir / "fundo_cartoes_borrado.png"
     if output.is_file():
@@ -945,7 +1034,7 @@ def _native_card_background_blur_asset(background: Path, job_dir: Path) -> Path:
         str(FFMPEG), "-y", "-i", str(background),
         "-vf", (
             f"scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=increase,crop={WIDTH}:{HEIGHT},"
-            "boxblur=18:3"
+            "boxblur=52:8,eq=brightness=-0.14:saturation=0.58"
         ),
         "-frames:v", "1", str(output),
     ])
@@ -1129,29 +1218,37 @@ def _native_render_scene_clips(
     modes: list[str],
     clip_frames: list[int],
     *,
+    source_names: Mapping[str, str] | None = None,
     progress_callback: ProgressCallback | None = None,
     progress_start: int = 30,
     progress_end: int = 42,
 ) -> list[Path]:
     scene_dir.mkdir(parents=True, exist_ok=True)
+    source_names = source_names or {}
     # O ponto de foco de fullscreen é editorial e precisa continuar estável
     # mesmo quando as cenas terminam fora de ordem na fila paralela.
     fullscreen_image_indices: dict[int, int] = {}
     next_fullscreen_image = 0
     for index, scene in enumerate(scenes):
-        if modes[index] == "fullscreen" and scene.tipo_midia != "video_generico":
+        source_name = source_names.get(scene.image, scene.image)
+        if (
+            modes[index] == "fullscreen"
+            and scene.tipo_midia != "video_generico"
+            and Path(source_name).suffix.lower() not in VIDEO_EXTENSIONS
+        ):
             fullscreen_image_indices[index] = next_fullscreen_image
             next_fullscreen_image += 1
 
     def render_one(index: int, scene: object, frames: int) -> Path:
         output = scene_dir / f"cena_{index + 1:03d}.mp4"
-        source = source_dir / scene.image
+        source_name = source_names.get(scene.image, scene.image)
+        source = source_dir / source_name
         target_seconds = frames / FPS
-        is_video = scene.tipo_midia == "video_generico"
-        # B-roll finito não pode usar -stream_loop nem congelar no último
-        # quadro. Uma redução de velocidade limitada a 20% preserva o
-        # movimento natural; se não bastar, a renderização falha para que o
-        # operador substitua a mídia na curadoria.
+        is_video = scene.tipo_midia == "video_generico" or source.suffix.lower() in VIDEO_EXTENSIONS
+        trim_outer_edges = not is_video and _scene_needs_psychology_frame_cleanup(scene)
+        # Todo vídeo de cena, seja B-roll ou upload manual, é finito: nunca
+        # clonamos seu último quadro. Uma redução de velocidade limitada a 20%
+        # preserva o movimento natural; se não bastar, o operador o substitui.
         video_time_scale = 1.0
         if is_video:
             source_seconds = _duration(source)
@@ -1160,7 +1257,7 @@ def _native_render_scene_clips(
             minimum_source_seconds = target_seconds / MAX_BROLL_SLOWDOWN
             if source_seconds < minimum_source_seconds:
                 raise ValueError(
-                    f"B-roll curto demais na cena {scene.id} ({source.name}): "
+                    f"Vídeo curto demais na cena {scene.id} ({source.name}): "
                     f"tem {source_seconds:.2f}s, mas precisa de ao menos "
                     f"{minimum_source_seconds:.2f}s para cobrir {target_seconds:.2f}s "
                     "sem congelar. Substitua o arquivo por um clipe mais longo."
@@ -1175,7 +1272,7 @@ def _native_render_scene_clips(
             filter = (
                 _native_video_fullscreen_filter()
                 if is_video
-                else _fullscreen_filter(fullscreen_image_indices[index], target_seconds)
+                else _fullscreen_filter(fullscreen_image_indices[index], target_seconds, trim_outer_edges=trim_outer_edges)
             )
             filter_graph = f"{source_prefix}{filter}{finite_tail}[out]"
         else:
@@ -1184,7 +1281,7 @@ def _native_render_scene_clips(
             # único input finito, em vez de multiplicar frames no grafo do
             # segmento.
             filter_graph = (
-                f"{source_prefix}{_native_card_filter_chain(animate_image=not is_video)}"
+                f"{source_prefix}{_native_card_filter_chain(animate_image=not is_video, trim_outer_edges=trim_outer_edges)}"
                 f"{finite_tail}[out]"
             )
         input_args = ["-i", str(source)] if is_video else ["-loop", "1", "-framerate", str(FPS), "-i", str(source)]
@@ -1311,7 +1408,14 @@ def _native_render_scene_canvases(
                     exiting = f"{centered}+(main_w-{centered})*(t-{exit_start:.6f})/{TRANSITION_SECONDS:.6f}"
             card_x = f"if(lt(t,{TRANSITION_SECONDS:.6f}),{entry},if(lt(t,{exit_start:.6f}),{centered},{exiting}))"
             card_zoom = "1"
-            background_graph = "[bg_sharp]null[bg]"
+            # O fundo selecionado no painel precisa permanecer reconhecível no
+            # vídeo. A moldura indesejada era o drawbox da própria mídia do
+            # cartão (removido acima), não motivo para substituir a escolha do
+            # usuário por uma cópia quase sem detalhes.
+            background_graph = (
+                f"[1:v]{_native_background_filter(animation, round(scene_starts[scene_index] * FPS))},"
+                f"fps={FPS},settb=1/{FPS},setsar=1,trim=duration={duration:.6f},setpts=PTS-STARTPTS[bg]"
+            )
             focus_window = _native_card_focus_window(scene_durations[scene_index], entry_seconds)
             if card_focuses[scene_index] and focus_window is not None:
                 focus_start, focus_end = focus_window
@@ -1321,7 +1425,13 @@ def _native_render_scene_canvases(
                 card_zoom = _native_card_focus_expression(
                     focus_start, focus_end, clock=f"(on/{FPS})",
                 )
+                # O zoom editorial sempre vem acompanhado de desfoque no
+                # fundo: a arte avança e o cenário escolhido pelo operador
+                # perde definição progressivamente. Fora desse estado, o
+                # fundo permanece nítido e reconhecível.
                 background_graph = (
+                    f"[1:v]{_native_background_filter(animation, round(scene_starts[scene_index] * FPS))},"
+                    f"fps={FPS},settb=1/{FPS},setsar=1,trim=duration={duration:.6f},setpts=PTS-STARTPTS[bg_sharp];"
                     f"[2:v]{_native_background_filter(animation, round(scene_starts[scene_index] * FPS))},"
                     f"fps={FPS},settb=1/{FPS},setsar=1,trim=duration={duration:.6f},setpts=PTS-STARTPTS,"
                     f"format=rgba,fade=t=in:st={focus_start:.6f}:d={focus_end - focus_start:.6f}:alpha=1,"
@@ -1339,8 +1449,6 @@ def _native_render_scene_canvases(
             card_view_x = f"({WIDTH}-({card_view_w}))/2"
             card_view_y = f"({HEIGHT}-({card_view_h}))/2"
             graph = ";".join([
-                f"[1:v]{_native_background_filter(animation, round(scene_starts[scene_index] * FPS))},"
-                f"fps={FPS},settb=1/{FPS},setsar=1,trim=duration={duration:.6f},setpts=PTS-STARTPTS[bg_sharp]",
                 background_graph,
                 f"[0:v]settb=1/{FPS},setpts=PTS-STARTPTS{padding},trim=duration={duration:.6f}[card_rgb]",
                 f"[4:v]format=gray,settb=1/{FPS},setpts=PTS-STARTPTS,trim=duration={duration:.6f}[card_mask]",
@@ -1487,6 +1595,9 @@ def _native_render_card_to_card_transition(
     )
     left_end_frame = left_start_frame + CARD_TRANSITION_FRAMES
     graph = ";".join([
+        # A passagem parte do desfoque da cena que estava em foco e retorna ao
+        # fundo nítido enquanto o cartão sai, preservando a mesma linguagem do
+        # zoom sem alterar a escolha de fundo do projeto.
         f"[2:v]{_native_background_filter(animation, transition_start_frame)},"
         f"fps={FPS},settb=1/{FPS},setsar=1,trim=duration={CARD_TRANSITION_SECONDS:.6f},"
         "setpts=PTS-STARTPTS[card_transition_sharp]",
@@ -1716,6 +1827,14 @@ def _native_escape_ass_text(value: str) -> str:
     return value.replace("\\", r"\\").replace("{", r"\{").replace("}", r"\}").replace("\n", r"\N")
 
 
+def _native_ass_color(rgb: str) -> str:
+    """Converte RRGGBB para AABBGGRR, a ordem de cor do formato ASS."""
+    value = rgb.removeprefix("#").upper()
+    if not re.fullmatch(r"[0-9A-F]{6}", value):
+        raise ValueError(f"Cor de annotation inválida: {rgb!r}.")
+    return f"&H00{value[4:6]}{value[2:4]}{value[:2]}"
+
+
 def _native_annotation_ass(
     directory: Path,
     annotation_index: int,
@@ -1762,6 +1881,7 @@ def _native_annotation_ass(
             cursor = gap_end
     add_state(complete, cursor, text_end)
 
+    text_style = _require_annotation_font()
     output.write_text(
         "[Script Info]\n"
         "ScriptType: v4.00+\n"
@@ -1772,8 +1892,10 @@ def _native_annotation_ass(
         "Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,"
         "Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,"
         "Alignment,MarginL,MarginR,MarginV,Encoding\n"
-        "Style: SynthReelCTA,Impact,102,&H0029D4FF,&H0029D4FF,&H00000000,&H00000000,"
-        "0,0,0,0,100,100,0,0,1,5,0,5,10,10,10,1\n\n"
+        f"Style: SynthReelCTA,{text_style.ass_font_name},{text_style.font_size},"
+        f"{_native_ass_color(text_style.font_color)},{_native_ass_color(text_style.font_color)},"
+        f"{_native_ass_color(text_style.outline_color)},&H00000000,"
+        f"{text_style.bold},0,0,0,100,100,0,0,1,{text_style.outline_width},{text_style.shadow},5,10,10,10,1\n\n"
         "[Events]\n"
         "Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text\n"
         + "\n".join(events)
@@ -1977,8 +2099,7 @@ def _native_render_segment(
     current = _native_concat_video_parts(component_paths, base)
     total_frames = segment.output_frames
     if annotations:
-        if not ANNOTATION_FONT.is_file():
-            raise FileNotFoundError("A fonte Impact para as anotações não está disponível.")
+        _require_annotation_font()
         annotation_dir = segment_dir / f"anotacoes_{number:03d}"
         # Cada anotação mantém seu próprio render curto. Encadear várias
         # janelas no mesmo grafo economiza uma recodificação, mas em alguns
@@ -2347,9 +2468,9 @@ def _native_typing_annotation_filters(
         for line_number, (text, y_center) in enumerate(state_lines):
             output = f"[annotation_{annotation_index}_{suffix}_text_{line_number}]"
             graph.append(
-                f"{layer}drawtext=fontfile='{_native_filter_path(ANNOTATION_FONT)}':"
-                f"text='{_escape_drawtext(text)}':fontcolor=0xFFD429:fontsize=102:"
-                "borderw=5:bordercolor=black@0.96:"
+                f"{layer}drawtext=fontfile='{_native_filter_path(_require_annotation_font().font_path)}':"
+                f"text='{_escape_drawtext(text)}':fontcolor=0x{_annotation_text_style().font_color}:fontsize={_annotation_text_style().font_size}:"
+                f"borderw={_annotation_text_style().outline_width}:bordercolor=0x{_annotation_text_style().outline_color}@0.96:"
                 f"x=(w-text_w)/2:y={y_center}-text_h/2:"
                 f"enable='{_native_time_window(start, end)}'{output}"
             )
@@ -2634,8 +2755,7 @@ def _native_finalize(
         for index, emoji in enumerate(stickers)
     }
     if annotations:
-        if not ANNOTATION_FONT.is_file():
-            raise FileNotFoundError("A fonte Impact para as anotações não está disponível.")
+        _require_annotation_font()
         for index, (lines, start, end, emoji) in enumerate(annotations):
             video = _native_windowed_annotation_filters(
                 graph, video, index, lines, start, end, emoji,
@@ -2698,6 +2818,7 @@ def _native_composite(
     background: Path,
     job_dir: Path,
     scene_assets: Path,
+    scene_source_names: Mapping[str, str],
     narration: Path,
     timing_payload: dict[str, object],
     music: Path,
@@ -2776,7 +2897,7 @@ def _native_composite(
     # limitadas a dois workers para aproveitar CPU/AMF sem saturar a máquina.
     _report(progress_callback, 30, "Normalizando cenas visuais")
     base_paths = _native_render_scene_clips(
-        scenes, job_dir / "cenas_base", scene_assets, modes, clip_frames,
+        scenes, job_dir / "cenas_base", scene_assets, modes, clip_frames, source_names=scene_source_names,
         progress_callback=progress_callback, progress_start=30, progress_end=42,
     )
     card_shadow = _native_card_shadow_asset(job_dir)
@@ -2913,7 +3034,7 @@ def _scene_x(index: int, scene: object, modes: list[str], directions: list[str],
     return f"if(lt(t,{enter_end:.3f}),{entry},if(lt(t,{exit_start:.3f}),{centered_x},{exiting}))"
 
 
-def _fullscreen_filter(index: int, seconds: float) -> str:
+def _fullscreen_filter(index: int, seconds: float, *, trim_outer_edges: bool = False) -> str:
     focus_x, focus_y, zoom = FOCUS_POINTS[index % len(FOCUS_POINTS)]
     progress = f"(on/{max(1, _frames_for_duration(seconds) - 1)})"
     # A troca por zoompan reduziu CPU, mas alterou a cadência: com d=1 o
@@ -2926,8 +3047,9 @@ def _fullscreen_filter(index: int, seconds: float) -> str:
     viewport_h = f"(({viewport_w})*0.5625)"
     viewport_x = f"(2400-({viewport_w}))*(0.50+({focus_x:.2f}-0.50)*{progress})"
     viewport_y = f"(1350-({viewport_h}))*(0.50+({focus_y:.2f}-0.50)*{progress})"
+    edge_trim = _native_psychology_frame_trim_filter() if trim_outer_edges else ""
     return (
-        "scale=2400:1350:force_original_aspect_ratio=increase,crop=2400:1350,"
+        f"{edge_trim}scale=2400:1350:force_original_aspect_ratio=increase,crop=2400:1350,"
         f"perspective=x0='{viewport_x}':y0='{viewport_y}':"
         f"x1='({viewport_x})+({viewport_w})':y1='{viewport_y}':"
         f"x2='{viewport_x}':y2='({viewport_y})+({viewport_h})':"
@@ -3140,6 +3262,7 @@ def render(
     background: Path,
     job_dir: Path,
     music_name: str | None = None,
+    text_style: str = "impact",
     image_bindings: Mapping[str, str] | None = None,
     progress_callback: ProgressCallback | None = None,
     job_logger: Logger | None = None,
@@ -3151,6 +3274,8 @@ def render(
     trilha com sidechain e mantém os efeitos declarados no roteiro. A
     composição é executada diretamente por este módulo do backend.
     """
+    if text_style not in ANNOTATION_TEXT_STYLES:
+        raise ValueError(f"Estilo de fonte inválido: {text_style!r}.")
     log = job_logger or logging.getLogger(__name__)
     if not background.is_file():
         raise FileNotFoundError(f"Imagem de fundo não encontrada: {background.name}")
@@ -3166,6 +3291,7 @@ def render(
     scene_asset_dir = render_dir / "cenas"
     resolved_sources: dict[str, str] = {}
     logger_token = _COMPOSITOR_LOGGER.set(log)
+    text_style_token = _ANNOTATION_TEXT_STYLE.set(text_style)
     try:
         # Fundo e trilha também entram no cache. Assim nenhum processo FFmpeg
         # da composição consulta arquivos mutáveis do OneDrive durante o job.
@@ -3204,6 +3330,7 @@ def render(
             cached_background,
             render_dir,
             scene_asset_dir,
+            resolved_sources,
             timeline_narration,
             timing_payload,
             cached_music,
@@ -3223,6 +3350,7 @@ def render(
                 "output": str(output),
                 "background": background.name,
                 "music": music_name,
+                "text_style": text_style,
                 "image_bindings": resolved_sources,
                 "scene_timing": "time-codes acústicos da narração",
                 "narration_duration_seconds": timing_payload["narration_duration"],
@@ -3241,4 +3369,5 @@ def render(
         # cópias de trabalho não ficam misturadas aos assets nem ao resultado.
         shutil.rmtree(scene_asset_dir, ignore_errors=True)
         shutil.rmtree(render_dir, ignore_errors=True)
+        _ANNOTATION_TEXT_STYLE.reset(text_style_token)
         _COMPOSITOR_LOGGER.reset(logger_token)

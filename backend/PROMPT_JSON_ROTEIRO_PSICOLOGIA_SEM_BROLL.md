@@ -87,6 +87,31 @@ O tom é calmo, reflexivo e curioso. Evite julgamento moral, certezas clínicas,
 rótulos e diagnósticos. O espectador deve terminar pensando que talvez tenha
 percebido algo novo sobre os próprios padrões.
 
+VÍDEOS EM FORMATO DE LISTA — APLICAR SOMENTE QUANDO O PEDIDO FOR UMA LISTA,
+RANKING OU NÚMERO DEFINIDO DE SINAIS, HÁBITOS OU SITUAÇÕES
+- Quando o pedido trouxer uma quantidade explícita, respeite esse total na
+  narração e planeje a ordem internamente, sem criar campos extras no JSON.
+  Para esse formato, o número de sinais ou situações pedido tem prioridade
+  sobre a sugestão padrão de 3 ou 4 perfis; mantenha, porém, nuance psicológica
+  e não trate um item como diagnóstico ou causa única.
+- Abra por uma situação reconhecível e útil, entregue valor nos primeiros itens
+  e guarde a conexão psicológica mais reveladora para o terço final ou o último
+  item. Não chame algo de "mais grave" ou "pior" sem explicar seu mecanismo e
+  suas limitações.
+- Nos primeiros blocos, plante um loop aberto concreto: uma consequência,
+  motivação ou mecanismo que será compreendido mais tarde. Nunca use ameaça,
+  sensacionalismo, contagem regressiva vazia ou "fique até o final".
+- Evite transformar a lista em catálogo mecânico. Alterne situação cotidiana,
+  mecanismo psicológico, exemplo e limite da explicação; cada item deve levar
+  naturalmente ao próximo em vez de repetir "sinal número X".
+- Até aproximadamente os primeiros dois minutos, é permitido fazer uma única
+  pergunta específica e acolhedora para comentários sobre uma situação comum
+  do tema. Ela não pede like/inscrição, não induz autodiagnóstico e não
+  substitui a pergunta específica obrigatória da CTA final.
+- O último item fecha o loop com reflexão, não com resposta definitiva. Depois
+  dele, sintetize brevemente que comportamentos semelhantes podem ter origens
+  diferentes e então siga para a CTA final.
+
 NARRAÇÃO E RITMO
 - `blocks[].text` é a narração oficial da cena. Escreva fala direta, natural e
   contínua, sem títulos de seção, rubricas ou instruções de edição.
@@ -112,11 +137,14 @@ IMAGENS E BRIEFS VISUAIS
 - A direção obrigatória é litografia cósmica vintage: textura de papel antigo
   ilustrado à mão, linhas orgânicas delicadas, vazio escuro silencioso e
   protagonista/ferramentas em linhas douradas e constelações. A imagem é uma
-  fábula terapêutica, não ilustração digital moderna brilhante.
+  fábula terapêutica, não ilustração digital moderna brilhante. A textura é
+  parte da arte em toda a tela; NUNCA represente uma folha física, cartão
+  impresso, pôster ou área retangular interna dentro da imagem.
 - A composição é aberta e fluida: elementos principais flutuam no vazio escuro
   e a arte se estende limpa até todas as bordas. É proibido moldura, borda,
   margem decorativa, painel, linha divisória, ornamento de lótus, contorno
-  branco ou qualquer elemento que pareça enquadrar a arte.
+  branco, margem bege/de papel, passe-partout ou qualquer elemento que pareça
+  enquadrar a arte. O fundo e a textura devem continuar até cada borda 16:9.
 - Descreva sujeito, ação congelada, ambiente, posição e objetos indispensáveis.
   Use no máximo dois ou três elementos principais e evite cenas que só funcionam
   animadas.

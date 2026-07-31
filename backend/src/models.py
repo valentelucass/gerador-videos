@@ -172,6 +172,15 @@ class RenderRequest(BaseModel):
     # Nome de arquivo escolhido no catálogo do painel. A API confere se ele
     # pertence à pasta de trilhas antes de iniciar o trabalho.
     music_name: str | None = None
+    # Escolha visual do projeto, separada do JSON editorial. Ela define a
+    # família usada nas annotations/CTAs sem alterar nenhum campo do roteiro.
+    text_style: Literal[
+        "impact", "serif_vintage", "minimalista", "constelacao_dourada",
+        "impact_sem_borda", "branco_limpo", "neon_violeta", "coral_contorno",
+        "ouro_sem_contorno", "prata_azul", "verde_lima", "azul_eletrico",
+        "vermelho_alerta", "rosa_chiclete", "laranja_energia", "cinza_aco",
+        "azul_marinho", "roxo_real", "verde_menta", "amarelo_retro",
+    ] = "impact"
 
     @field_validator("image_bindings")
     @classmethod

@@ -3,7 +3,8 @@ import { createRoot } from "react-dom/client";
 import "./style.css";
 
 type BackgroundAnimation = "none" | "movimento_sutil" | "movimento_lateral" | "pulsacao";
-type MediaTab = "assets" | "curadoria";
+type TextStyle = "impact" | "serif_vintage" | "minimalista" | "constelacao_dourada" | "impact_sem_borda" | "branco_limpo" | "neon_violeta" | "coral_contorno" | "ouro_sem_contorno" | "prata_azul" | "verde_lima" | "azul_eletrico" | "vermelho_alerta" | "rosa_chiclete" | "laranja_energia" | "cinza_aco" | "azul_marinho" | "roxo_real" | "verde_menta" | "amarelo_retro";
+type MediaTab = "assets" | "review" | "curadoria";
 type PromptMode = "with_broll" | "without_broll" | "psychology_without_broll";
 
 type MediaType = "imagem" | "video_generico";
@@ -33,10 +34,12 @@ type LocalProject = {
   updated_at: string;
   source: string;
   uploaded_images: string[];
+  uploaded_media_newest_first?: boolean;
   image_bindings: ImageBindings;
   background: string;
   music: string;
   animation: BackgroundAnimation;
+  text_style: TextStyle;
   pexels_items: PexelsItem[];
   pexels_queries: Record<string, string>;
   translations: Record<string, string>;
@@ -70,12 +73,76 @@ const animationOptions: { value: BackgroundAnimation; label: string }[] = [
   { value: "pulsacao", label: "Pulsação" },
   { value: "none", label: "Sem movimento" },
 ];
+const textStyleOptions: { value: TextStyle; label: string; description: string; flowInstruction: string }[] = [
+  {
+    value: "constelacao_dourada",
+    label: "Constelação dourada",
+    description: "Serif dourada · contorno suave",
+    flowInstruction: "Use letras em espanhol, em MAIÚSCULAS, desenhadas por linhas finas de luz dourada que conectam estrelas como uma constelação. Integre-as ao espaço negativo da cena e use-as somente nos momentos de revelação, dilema ou alívio.",
+  },
+  {
+    value: "impact",
+    label: "Impact forte",
+    description: "Amarela · borda preta forte",
+    flowInstruction: "Use letras fortes, em MAIÚSCULAS, de alto contraste, no estilo Impact. Reserve-as apenas para textos estratégicos e mantenha a leitura imediata.",
+  },
+  {
+    value: "serif_vintage",
+    label: "Serif vintage",
+    description: "Creme · contorno marrom",
+    flowInstruction: "Use uma tipografia serifada vintage, elegante e legível. Quando houver texto estratégico, mantenha-o curto, em espanhol e integrado organicamente à composição.",
+  },
+  {
+    value: "minimalista",
+    label: "Sans minimalista",
+    description: "Ciano claro · sem borda",
+    flowInstruction: "Use uma tipografia sans-serif limpa, minimalista e muito legível. Quando houver texto estratégico, mantenha-o curto, em espanhol e com bastante espaço negativo.",
+  },
+  {
+    value: "impact_sem_borda",
+    label: "Impact sem borda",
+    description: "Rosa vibrante · sem contorno",
+    flowInstruction: "Use letras Impact em MAIÚSCULAS, rosa vibrante e sem borda. Mantenha contraste suficiente com o fundo e use texto em espanhol somente nos momentos realmente importantes.",
+  },
+  {
+    value: "branco_limpo",
+    label: "Branco limpo",
+    description: "Branca · sem borda",
+    flowInstruction: "Use texto branco limpo, sem borda e com composição editorial minimalista. Mantenha-o curto, em espanhol, e sempre muito legível sobre espaço negativo escuro.",
+  },
+  {
+    value: "neon_violeta",
+    label: "Neon violeta",
+    description: "Violeta · brilho e borda escura",
+    flowInstruction: "Use texto violeta luminoso, com brilho sutil e contorno escuro. Use espanhol e evite excesso de neon ou aparência futurista fora do próprio texto.",
+  },
+  {
+    value: "coral_contorno",
+    label: "Coral contornado",
+    description: "Coral · borda preta marcante",
+    flowInstruction: "Use letras em coral quente, com contorno preto marcante, em espanhol e em MAIÚSCULAS. Reserve-as para uma afirmação emocional ou chamada decisiva.",
+  },
+  { value: "ouro_sem_contorno", label: "Ouro limpo", description: "Dourada · sem borda", flowInstruction: "Use texto dourado limpo, elegante, sem borda e em espanhol apenas nos momentos de destaque." },
+  { value: "prata_azul", label: "Prata azul", description: "Prateada · contorno azul", flowInstruction: "Use letras prateadas com contorno azul profundo, limpas e legíveis, em espanhol para uma revelação racional." },
+  { value: "verde_lima", label: "Verde lima", description: "Lima · borda escura", flowInstruction: "Use letras verde-lima com contorno escuro, em espanhol e com alto contraste, para destacar uma descoberta." },
+  { value: "azul_eletrico", label: "Azul elétrico", description: "Azul · borda marinho", flowInstruction: "Use letras azul-elétrico com contorno azul-marinho e brilho sutil, em espanhol somente em pontos-chave." },
+  { value: "vermelho_alerta", label: "Vermelho alerta", description: "Vermelha · borda vinho", flowInstruction: "Use texto vermelho intenso, com contorno vinho, em espanhol e somente quando houver alerta ou consequência importante." },
+  { value: "rosa_chiclete", label: "Rosa chiclete", description: "Rosa · contorno vinho", flowInstruction: "Use letras rosa-chiclete com contorno vinho, em espanhol, com aparência editorial divertida e legível." },
+  { value: "laranja_energia", label: "Laranja energia", description: "Laranja · borda marrom", flowInstruction: "Use letras laranja vibrante com contorno marrom escuro, em espanhol, para uma virada energética." },
+  { value: "cinza_aco", label: "Cinza aço", description: "Cinza · borda grafite", flowInstruction: "Use tipografia cinza-aço, monoespaçada e com contorno grafite, em espanhol para fatos, dados ou contraste racional." },
+  { value: "azul_marinho", label: "Azul marinho", description: "Azul claro · borda profunda", flowInstruction: "Use letras azul-claro com contorno azul-marinho, serifadas e elegantes, em espanhol para reflexão séria." },
+  { value: "roxo_real", label: "Roxo real", description: "Lilás · borda púrpura", flowInstruction: "Use letras lilás com contorno púrpura profundo, em espanhol e com tom sofisticado para uma conclusão marcante." },
+  { value: "verde_menta", label: "Verde menta", description: "Menta · contorno verde", flowInstruction: "Use texto verde-menta com contorno verde-escuro, em espanhol, para alívio, solução ou mensagem positiva." },
+  { value: "amarelo_retro", label: "Amarelo retrô", description: "Amarelo · borda oliva", flowInstruction: "Use letras amarelo-retro com contorno oliva, em espanhol, com aparência editorial clássica e legível." },
+];
 const LEGACY_SESSION_IMAGES_KEY = "synthreel:session-images";
 const IMAGE_BINDING_STRATEGY_VERSION = "synthreel:semantic-image-bindings-v1";
 const LOCAL_PROJECTS_STORAGE_KEY = "synthreel:horizontal-projects:v1";
 const LOCAL_ACTIVE_PROJECT_STORAGE_KEY = "synthreel:horizontal-active-project:v1";
 const PLACEHOLDER_IMAGE_PATTERN = /^cena_\d+(?:_[a-z])?\.(?:png|jpe?g|webp)$/i;
-const THUMBNAIL_PAGE_SIZE = 24;
+const VIDEO_MEDIA_PATTERN = /\.(?:mp4|mov|webm)$/i;
+const THUMBNAIL_PAGE_SIZE = 12;
+const SCENE_REVIEW_PAGE_SIZE = 6;
 const PEXELS_SCENES_PAGE_SIZE = 4;
 const TRANSLATION_CONCURRENCY = 2;
 const RENDER_COMPLETE_SOUND_URL = "/assets/sounds/Mountain%20Audio%20-%20New%20Idea%20Notification.mp3";
@@ -91,8 +158,8 @@ const PHOTO_VISUAL_PRESET = "Raw smartphone documentary photography, harsh direc
 const PHOTO_NEGATIVE_PROMPT = "Avoid glossy advertising, studio photography, cinematic lighting, luxury environments, perfect models, plastic skin, excessive retouching, overly clean surfaces, symmetrical posing, dramatic movie color grading, neon colors, oversaturation, artificial smiles, CGI appearance, 3D render, fantasy elements, abstract metaphors, excessive objects, visual clutter, deformed hands, distorted faces and unreadable text.";
 const GRAPHIC_VISUAL_PRESET = "Simple editorial data visualization, clean neutral background, clear lines or bars, strong contrast, few elements, accurate proportions, visually understandable, horizontal 16:9.";
 const GRAPHIC_NEGATIVE_PROMPT = "Avoid 3D charts, floating objects, metaphorical graphics, decorative illustrations, futuristic dashboards, excessive colors, perspective distortion, tiny labels, visual clutter and complex interfaces.";
-const PSYCHOLOGY_LITHOGRAPH_VISUAL_PRESET = "Vintage cosmic lithograph illustration, therapeutic fairy-tale mood, distressed antique paper texture, soft organic hand-drawn linework, deep silent dark void background, hopeful protagonist and symbolic tools drawn in delicate golden lines and constellations, open flowing composition, artwork bleeding cleanly to every edge, horizontal 16:9.";
-const PSYCHOLOGY_LITHOGRAPH_NEGATIVE_PROMPT = "Avoid frames, borders, decorative margins, dividers, enclosed panels, lotus ornaments, white outlines, modern glossy digital illustration, neon glow, 3D render, visual clutter, tiny unreadable text and watermarks.";
+const PSYCHOLOGY_LITHOGRAPH_VISUAL_PRESET = "Vintage cosmic lithograph illustration, therapeutic fairy-tale mood, distressed texture embedded across the full canvas (never a physical paper sheet or printed card), soft organic hand-drawn linework, deep silent dark void background, hopeful protagonist and symbolic tools drawn in delicate golden lines and constellations, open flowing composition, artwork bleeding cleanly to every edge as one continuous full-bleed image, horizontal 16:9.";
+const PSYCHOLOGY_LITHOGRAPH_NEGATIVE_PROMPT = "Avoid frames, borders, decorative margins, dividers, enclosed panels, paper sheet edges, printed-card layout, inner rectangular image area, mat board, parchment margin, beige or white outline, lotus ornaments, modern glossy digital illustration, neon glow, 3D render, visual clutter, tiny unreadable text and watermarks.";
 const GRAPHIC_VISUAL_TERMS = new Set([
   "grafico", "graficos", "grafica", "graficas", "graph", "graphs", "chart", "charts",
   "barras", "barra", "bars", "bar", "linha", "linhas", "line", "lines", "lineas",
@@ -135,8 +202,8 @@ function newProjectId(): string {
 
 function newLocalProject(name = "Projeto sem título"): LocalProject {
   return {
-    id: newProjectId(), name, updated_at: new Date().toISOString(), source: "", uploaded_images: [], image_bindings: {},
-    background: "", music: "", animation: "movimento_sutil", pexels_items: [], pexels_queries: {},
+    id: newProjectId(), name, updated_at: new Date().toISOString(), source: "", uploaded_images: [], uploaded_media_newest_first: true, image_bindings: {},
+    background: "", music: "", animation: "movimento_sutil", text_style: "impact", pexels_items: [], pexels_queries: {},
     translations: {}, visual_translations: {}, selected_pexels: {}, pexels_expected_count: 0,
   };
 }
@@ -172,7 +239,8 @@ function flowVisualPreset(scene: Scene): { kind: string; preset: string; negativ
   return { kind: "FOTOGRAFIA DOCUMENTAL", preset: PHOTO_VISUAL_PRESET, negative: PHOTO_NEGATIVE_PROMPT };
 }
 
-function googleFlowText(script: Script, batchSize: number): { text: string; imageCount: number; batchCount: number } {
+function googleFlowText(script: Script, batchSize: number, textStyle: TextStyle): { text: string; imageCount: number; batchCount: number } {
+  const typography = textStyleOptions.find(option => option.value === textStyle) ?? textStyleOptions[0];
   const items = script.blocks.flatMap(block => block.scenes
     .filter(scene => scene.tipo_midia === "imagem")
     .map(scene => ({ blockText: block.text.trim(), scene })));
@@ -225,6 +293,7 @@ function googleFlowText(script: Script, batchSize: number): { text: string; imag
       "- Gere somente 5 imagens por vez, seguindo cada SUBLOTE. Ao terminar um sublote, pare e espere um novo comando antes de iniciar o próximo.",
       "- Siga o brief de cada cena com precisão; não misture cenas, IDs ou personagens.",
       "- Os cinco campos do brief descrevem apenas conteúdo. Aplique somente o preset automático e o bloco negativo impressos em cada imagem; não acrescente estética, metáforas, objetos flutuantes ou cenários conceituais.",
+      `- Tipografia selecionada para este projeto (${typography.label}): ${typography.flowInstruction} Esta escolha substitui qualquer sugestão genérica de fonte no brief, mas não autoriza texto em toda cena.`,
       "- Mantenha no máximo dois ou três elementos principais e uma composição simples, fácil de entender.",
       "- Cenas de vídeo foram removidas intencionalmente: gere somente os itens deste lote.",
       "",
@@ -388,6 +457,21 @@ function imageIsReady(image: string, uploadedImages: string[], catalogImages: st
   return uploadedImages.includes(image) || (!isPlaceholderImage(image) && catalogImages.includes(image));
 }
 
+function isUploadedVideo(filename: string): boolean {
+  return VIDEO_MEDIA_PATTERN.test(filename);
+}
+
+function uploadedMediaUrl(filename: string): string {
+  const base = isUploadedVideo(filename) ? "/assets/videos/" : "/assets/images/";
+  return `${base}${encodeURIComponent(filename)}`;
+}
+
+function sceneMediaUrl(filename: string, uploadedImages: string[]): string {
+  return uploadedImages.includes(filename)
+    ? uploadedMediaUrl(filename)
+    : `${isUploadedVideo(filename) ? "/assets/videos/" : "/assets/images/"}${encodeURIComponent(filename)}`;
+}
+
 function assetIsReady(scene: Scene, asset: string, uploadedImages: string[], catalogImages: string[], catalogVideos: string[]): boolean {
   return scene.tipo_midia === "video_generico"
     ? catalogVideos.includes(asset)
@@ -430,10 +514,12 @@ function App() {
   // Assim, roteiros grandes não criam centenas de imagens e milhares de
   // <option>s logo no primeiro render.
   const [thumbnailPage, setThumbnailPage] = useState(0);
+  const [sceneReviewPage, setSceneReviewPage] = useState(0);
   const [activeImagePickerKey, setActiveImagePickerKey] = useState<string | null>(null);
   const [background, setBackground] = useState("");
   const [music, setMusic] = useState("");
   const [animation, setAnimation] = useState<BackgroundAnimation>("movimento_sutil");
+  const [textStyle, setTextStyle] = useState<TextStyle>("impact");
   const [status, setStatus] = useState("Aguardando roteiro JSON.");
   const [jobId, setJobId] = useState("");
   const [renderProgress, setRenderProgress] = useState(0);
@@ -558,11 +644,15 @@ function App() {
     setProjectId(project.id);
     setProjectName(project.name);
     setSource(project.source);
-    setUploadedImages(project.uploaded_images ?? []);
+    // Projetos antigos salvavam em ordem cronológica; os atuais apresentam o
+    // último envio primeiro, inclusive depois de reabrir o projeto.
+    const savedMedia = project.uploaded_images ?? [];
+    setUploadedImages(project.uploaded_media_newest_first ? savedMedia : [...savedMedia].reverse());
     setImageBindings(project.image_bindings ?? {});
     setBackground(project.background ?? "");
     setMusic(project.music ?? "");
     setAnimation(project.animation ?? "movimento_sutil");
+    setTextStyle(project.text_style ?? "impact");
     setPexelsItems(project.pexels_items ?? []);
     setPexelsQueries(project.pexels_queries ?? {});
     setTranslations(project.translations ?? {});
@@ -613,8 +703,8 @@ function App() {
   useEffect(() => {
     if (!projectsHydrated.current || !projectId) return;
     const snapshot: LocalProject = {
-      id: projectId, name: projectName.trim() || "Projeto sem título", updated_at: new Date().toISOString(), source, uploaded_images: uploadedImages,
-      image_bindings: imageBindings, background, music, animation, pexels_items: pexelsItems,
+      id: projectId, name: projectName.trim() || "Projeto sem título", updated_at: new Date().toISOString(), source, uploaded_images: uploadedImages, uploaded_media_newest_first: true,
+      image_bindings: imageBindings, background, music, animation, text_style: textStyle, pexels_items: pexelsItems,
       pexels_queries: pexelsQueries, translations, visual_translations: visualTranslations,
       selected_pexels: selectedPexels, pexels_expected_count: pexelsExpectedCount,
     };
@@ -626,7 +716,7 @@ function App() {
       } catch { /* quota/storage indisponível: o trabalho na tela continua intacto */ }
       return next;
     });
-  }, [projectId, projectName, source, uploadedImages, imageBindings, background, music, animation, pexelsItems, pexelsQueries, translations, visualTranslations, selectedPexels, pexelsExpectedCount]);
+  }, [projectId, projectName, source, uploadedImages, imageBindings, background, music, animation, textStyle, pexelsItems, pexelsQueries, translations, visualTranslations, selectedPexels, pexelsExpectedCount]);
 
   const createProject = () => {
     const next = newLocalProject(`Projeto ${projects.length + 1}`);
@@ -789,12 +879,14 @@ function App() {
 
   const uploadImages = async (files: FileList | File[]) => {
     try {
-      setStatus("Importando imagens de cena…");
+      setStatus("Importando mídias de cena…");
       const saved = await uploadMedia("/api/images", files);
       if (saved.length) {
-        const nextUploadedImages = [...new Set([...uploadedImages, ...saved])];
-        setUploadedImages(nextUploadedImages);
-        setStatus(`${saved.length} imagem(ns) importada(s). O sistema usará a descrição do arquivo e o brief da cena; a ordem do envio não importa.`);
+        setUploadedImages(current => [...new Set([...saved, ...current])]);
+        const videoCount = saved.filter(isUploadedVideo).length;
+        setStatus(videoCount
+          ? `${saved.length} mídia(s) importada(s), incluindo ${videoCount} vídeo(s). Os vídeos entram mudos: somente imagem, narração, trilha e efeitos serão usados.`
+          : `${saved.length} imagem(ns) importada(s). O sistema usará a descrição do arquivo e o brief da cena; a ordem do envio não importa.`);
       }
     } catch (error) {
       setStatus(readableError(error));
@@ -926,9 +1018,9 @@ function App() {
   const deleteUploadedImages = async () => {
     if (!uploadedImages.length) return;
     const count = uploadedImages.length;
-    if (!window.confirm(`Apagar permanentemente as ${count} imagens enviadas nesta tela? Elas serão removidas apenas da pasta de imagens; o roteiro será preservado.`)) return;
+    if (!window.confirm(`Apagar permanentemente as ${count} mídias enviadas nesta tela? Imagens e vídeos serão removidos dos respectivos acervos; o roteiro será preservado.`)) return;
     try {
-      setStatus(`Apagando ${count} imagens enviadas…`);
+      setStatus(`Apagando ${count} mídias enviadas…`);
       const result = await api<{ deleted: string[]; missing: string[] }>("/api/images", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -941,8 +1033,8 @@ function App() {
       await refreshCatalog();
       setStatus(
         result.missing.length
-          ? `${result.deleted.length} imagem(ns) apagada(s); ${result.missing.length} já não estava(m) na pasta.`
-          : `${result.deleted.length} imagem(ns) apagada(s). Você já pode enviar outro conjunto.`,
+          ? `${result.deleted.length} mídia(s) apagada(s); ${result.missing.length} já não estava(m) no acervo.`
+          : `${result.deleted.length} mídia(s) apagada(s). Você já pode enviar outro conjunto.`,
       );
     } catch (error) {
       setStatus(`Não foi possível apagar as imagens: ${readableError(error)}`);
@@ -1196,7 +1288,7 @@ function App() {
       setStatus("Valide o JSON antes de preparar o arquivo para o Google Flow.");
       return;
     }
-    const result = googleFlowText(activeScript, flowBatchSize);
+    const result = googleFlowText(activeScript, flowBatchSize, textStyle);
     if (!result.imageCount) {
       setStatus("Este roteiro não possui cenas com tipo_midia: imagem para enviar ao Google Flow.");
       return;
@@ -1214,6 +1306,19 @@ function App() {
       return;
     }
     const renderScript = { ...activeScript, background_animation: animation };
+    // A trilha é uma escolha do projeto. Só o áudio do vídeo enviado como
+    // mídia de cena é descartado no renderer; a faixa selecionada aqui deve
+    // sempre seguir no pedido de renderização.
+    const selectedMusic = music
+      || catalog.music.find(name => /fundo_documentario/i.test(name))
+      || catalog.music[0]
+      || "";
+    if (!selectedMusic) {
+      setRenderError("Escolha ou envie uma música de fundo antes de gerar o vídeo.");
+      setStatus("Nenhuma música de fundo está disponível para este projeto.");
+      return;
+    }
+    if (selectedMusic !== music) setMusic(selectedMusic);
     setScript(renderScript);
     setSource(JSON.stringify(renderScript, null, 2));
     try {
@@ -1230,14 +1335,15 @@ function App() {
           manual_image_bindings: bindingPayload(activeScript, imageBindings),
           uploaded_images: uploadedImages,
           ...(background ? { background_image: background } : {}),
-          ...(music ? { music_name: music } : {}),
+          music_name: selectedMusic,
+          text_style: textStyle,
         }),
       });
       notifiedCompletedJob.current = null;
       setJobId(result.job_id);
       setRenderProgress(5);
       setRenderStage("Preparando narração, imagens e trilha");
-      setStatus(`Renderizando o vídeo completo com a trilha: ${music || "padrão do catálogo"}. O andamento aparece na barra inferior.`);
+      setStatus(`Renderizando o vídeo completo com a trilha: ${selectedMusic}. O andamento aparece na barra inferior.`);
     } catch (error) {
       setRenderProgress(0);
       setRenderStage("");
@@ -1256,6 +1362,11 @@ function App() {
   const thumbnailStart = currentThumbnailPage * THUMBNAIL_PAGE_SIZE;
   const visibleUploadedImages = uploadedImages.slice(thumbnailStart, thumbnailStart + THUMBNAIL_PAGE_SIZE);
   const imageProgress = requiredAssets.length ? Math.round((linkedImages / requiredAssets.length) * 100) : 0;
+  const reviewScenes = script?.blocks.flatMap((block, blockIndex) => block.scenes.map((scene, sceneIndex) => ({ block, blockIndex, scene, sceneIndex }))) ?? [];
+  const sceneReviewPageCount = Math.max(1, Math.ceil(reviewScenes.length / SCENE_REVIEW_PAGE_SIZE));
+  const currentSceneReviewPage = Math.min(sceneReviewPage, sceneReviewPageCount - 1);
+  const reviewStart = currentSceneReviewPage * SCENE_REVIEW_PAGE_SIZE;
+  const visibleReviewScenes = reviewScenes.slice(reviewStart, reviewStart + SCENE_REVIEW_PAGE_SIZE);
   const scriptProgress = script ? 100 : 0;
   const backgroundProgress = background ? 100 : 0;
   const pexelsPageCount = Math.max(1, Math.ceil(pexelsItems.length / PEXELS_SCENES_PAGE_SIZE));
@@ -1264,9 +1375,41 @@ function App() {
   const visiblePexelsItems = pexelsItems.slice(pexelsStart, pexelsStart + PEXELS_SCENES_PAGE_SIZE);
   const hasBrollScenes = Boolean(script?.blocks.some(block => block.scenes.some(scene => scene.tipo_midia === "video_generico")));
 
+  // A revisão não depende da busca de B-roll. Ao abrir essa página, trazemos
+  // para PT-BR somente os textos dos blocos visíveis, para o operador entender
+  // o contexto antes de trocar uma imagem por outra ou por um vídeo mudo.
   useEffect(() => {
-    if (!hasBrollScenes) setMediaTab("assets");
-  }, [hasBrollScenes]);
+    if (!script || mediaTab !== "review") return;
+    const pending = visibleReviewScenes.filter(({ scene }) => !translations[scene.id] && !translationLoading[scene.id]);
+    if (!pending.length) return;
+    if (script.language.toLowerCase().startsWith("pt")) {
+      setTranslations(current => ({ ...current, ...Object.fromEntries(pending.map(({ scene, block }) => [scene.id, block.text])) }));
+      return;
+    }
+    let cancelled = false;
+    for (const { scene, block } of pending) {
+      setTranslationLoading(current => ({ ...current, [scene.id]: true }));
+      const key = `${script.language.toLowerCase()}\u0000${block.text}`;
+      const request = translationRequests.current.get(key) ?? api<{ portuguese: string }>("/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: block.text, source_language: script.language }),
+      }).then(result => result.portuguese);
+      translationRequests.current.set(key, request);
+      void request.then(
+        portuguese => { if (!cancelled) setTranslations(current => ({ ...current, [scene.id]: portuguese })); },
+        () => { if (!cancelled) setTranslations(current => ({ ...current, [scene.id]: block.text })); },
+      ).finally(() => {
+        translationRequests.current.delete(key);
+        if (!cancelled) setTranslationLoading(current => ({ ...current, [scene.id]: false }));
+      });
+    }
+    return () => { cancelled = true; };
+  }, [script, mediaTab, currentSceneReviewPage, translations, translationLoading]);
+
+  useEffect(() => {
+    if (!hasBrollScenes && mediaTab === "curadoria") setMediaTab("assets");
+  }, [hasBrollScenes, mediaTab]);
 
   return (
     <main className="app-shell">
@@ -1363,35 +1506,34 @@ function App() {
             <div className="scene-panel-actions">
               <span className="panel-count">{uploadedImages.length} enviada(s) nesta tela</span>
               {uploadedImages.length > 0 && (
-                <><button className="button quiet compact" onClick={clearUploadedImages}>Limpar lista</button><button className="button danger compact" onClick={() => void deleteUploadedImages()}>Apagar imagens</button></>
+                <><button className="button quiet compact" onClick={clearUploadedImages}>Limpar lista</button><button className="button danger compact" onClick={() => void deleteUploadedImages()}>Apagar mídias</button></>
               )}
             </div>
           </div>
           <div className="media-tabs" aria-label="Áreas de mídia">
-            <button className={mediaTab === "assets" ? "active" : ""} onClick={() => setMediaTab("assets")}>Imagens e vínculos</button>
+            <button className={mediaTab === "assets" ? "active" : ""} onClick={() => setMediaTab("assets")}>Biblioteca de mídias</button>
+            <button className={mediaTab === "review" ? "active" : ""} onClick={() => { setSceneReviewPage(0); setMediaTab("review"); }}>Revisão por cena{script ? ` · ${sceneCount(script)}` : ""}</button>
             {hasBrollScenes && <button className={mediaTab === "curadoria" ? "active" : ""} onClick={() => setMediaTab("curadoria")}>Curadoria B-roll{pexelsItems.length ? ` · ${pexelsItems.length}` : ""}</button>}
           </div>
           {!script && <div className="media-await"><b>Carregue o roteiro para preparar as mídias.</b><span>As cenas, os vínculos e a curadoria aparecem aqui depois da leitura do JSON.</span></div>}
           {script && mediaTab === "assets" && <>
           <div className="asset-drop" onDragOver={event => event.preventDefault()} onDrop={dropImages} onClick={() => imagesInput.current?.click()} role="button" tabIndex={0}>
-            <b>Solte as imagens IA aqui</b><span>ou clique para importar</span>
+            <b>Solte imagens ou vídeos aqui</b><span>MP4, MOV e WebM entram sem áudio</span>
           </div>
-          <input ref={imagesInput} type="file" hidden multiple accept="image/png,image/jpeg,image/webp" onChange={onImagesInput} />
+          <input ref={imagesInput} type="file" hidden multiple accept="image/png,image/jpeg,image/webp,video/mp4,video/quicktime,video/webm,.mp4,.mov,.webm" onChange={onImagesInput} />
           <div className="flow-progress image-progress" aria-label="Progresso das imagens">
             <div><span>Assets prontos</span><b>{script ? `${linkedImages}/${requiredAssets.length}` : "aguardando roteiro"}</b></div>
             <i><em style={{ width: `${imageProgress}%` }} /></i>
           </div>
-          <div className="asset-grid" aria-label="Imagens enviadas nesta tela">
+          <div className="asset-grid" aria-label="Mídias enviadas nesta tela">
             {visibleUploadedImages.map(image => (
               <figure key={image}>
-                <img
-                  src={`/assets/images/${encodeURIComponent(image)}`}
-                  title={image}
-                  alt={`Imagem enviada: ${image}`}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <figcaption>{image}</figcaption>
+                {isUploadedVideo(image) ? (
+                  <video src={uploadedMediaUrl(image)} title={image} muted playsInline preload="metadata" />
+                ) : (
+                  <img src={uploadedMediaUrl(image)} title={image} alt={`Imagem enviada: ${image}`} loading="lazy" decoding="async" />
+                )}
+                <figcaption>{isUploadedVideo(image) ? "🎬 Vídeo mudo · " : ""}{image}</figcaption>
               </figure>
             ))}
             {!uploadedImages.length && <p className="asset-grid-empty">As miniaturas aparecem somente depois de um envio nesta tela.</p>}
@@ -1419,43 +1561,55 @@ function App() {
               </div>
             </div>
           )}
-          {script && (
-            <div className="scene-bindings" aria-label="Vínculo manual de imagens por cena">
-              <div className="scene-bindings-header">
-                <span>Revisão de mídia por cena</span>
-                <button className="button quiet compact" onClick={() => void openVideosFolder()}>Abrir pasta dos vídeos</button>
-              </div>
-              {!uploadedImages.length && <p className="scene-bindings-empty">Envie imagens para liberar as opções de vínculo. Nenhuma imagem antiga é exibida aqui.</p>}
-              {uploadedImages.length > 0 && <p className="scene-bindings-note">O ID é a referência editorial da cena. O sistema compara o brief com os nomes descritivos que o Google Flow gerar; a ordem do envio não é usada.</p>}
-              <div className="scene-binding-list">
-                {script.blocks.flatMap((block, blockIndex) => block.scenes.map((scene, sceneIndex) => {
-                  if (scene.tipo_midia === "video_generico") {
-                    const downloaded = catalog.videos.includes(scene.image);
-                    return <div className={`scene-binding ${downloaded ? "ready" : "pending"}`} key={`${block.id}-${scene.id}`}>
-                      <span className="scene-binding-label"><b>Cena {blockIndex + 1} · vídeo</b><code>{scene.asset_key ?? scene.image}</code></span>
-                      <span className="scene-binding-source">{downloaded ? <>B-roll salvo: <code>{scene.image}</code></> : <>Disponível na aba Curadoria: <code>{scene.image}</code></>}</span>
-                    </div>;
-                  }
-                  const pickerKey = sceneBindingKey(blockIndex, sceneIndex);
-                  const boundImage = boundImageFor(imageBindings, blockIndex, sceneIndex, scene.image);
-                  const sourceImage = boundImage ?? scene.image;
-                  const isReady = imageIsReady(sourceImage, uploadedImages, catalog.images);
-                  const pickerImages = activeImagePickerKey === pickerKey ? uploadedImages.filter(image => image !== scene.image) : boundImage ? [boundImage] : [];
-                  return (
-                    <div className={`scene-binding${isReady ? " ready" : " pending"}`} key={`${block.id}-${scene.id}-${blockIndex}-${sceneIndex}`}>
-                      <span className="scene-binding-label"><b>Cena {blockIndex + 1} · ID {scene.image_id}</b><code>{scene.asset_key ?? scene.image}</code></span>
-                      <select aria-label={`Escolher imagem para a cena ${blockIndex + 1}`} value={boundImage ?? ""} disabled={!uploadedImages.length || Boolean(jobId)} onPointerDown={() => setActiveImagePickerKey(pickerKey)} onFocus={() => setActiveImagePickerKey(pickerKey)} onChange={event => bindUploadedImageToScene(blockIndex, sceneIndex, event.target.value)}>
-                        <option value="">Usar {scene.image} (nome do JSON)</option>{pickerImages.map(image => <option key={image} value={image}>{image}</option>)}
-                      </select>
-                      <span className="scene-binding-source">{boundImage ? <>Arquivo enviado: <code>{boundImage}</code></> : <>Referência editorial: <code>ID {scene.image_id}</code></>}</span>
-                      {boundImage && <button type="button" className="button quiet compact scene-binding-rename" disabled={Boolean(jobId)} onClick={event => { event.preventDefault(); renameJsonImageFromBinding(blockIndex, sceneIndex); }}>Trocar nome no JSON</button>}
-                    </div>
-                  );
-                }))}
-              </div>
-            </div>
-          )}
           </>}
+          {script && mediaTab === "review" && <section className="scene-review" aria-label="Revisão de mídia por cena">
+            <div className="scene-review-heading">
+              <div><b>Revisão de mídia por cena</b><small>Veja a mídia real, o bloco e a tradução antes de trocar a seleção.</small></div>
+              <button className="button quiet compact" onClick={() => void openVideosFolder()}>Abrir pasta dos vídeos</button>
+            </div>
+            {!uploadedImages.length && <p className="scene-bindings-empty">Envie imagens ou vídeos pela Biblioteca para liberar as substituições visuais.</p>}
+            <div className="scene-review-list">
+              {visibleReviewScenes.map(({ block, blockIndex, scene, sceneIndex }) => {
+                const pickerKey = sceneBindingKey(blockIndex, sceneIndex);
+                const boundImage = boundImageFor(imageBindings, blockIndex, sceneIndex, scene.image);
+                const sourceImage = boundImage ?? scene.image;
+                const isVideo = isUploadedVideo(sourceImage) || scene.tipo_midia === "video_generico";
+                const isReady = assetIsReady(scene, sourceImage, uploadedImages, catalog.images, catalog.videos);
+                const pickerOpen = activeImagePickerKey === pickerKey;
+                return <article className={`scene-review-card${isReady ? " ready" : " pending"}`} key={`${block.id}-${scene.id}-${blockIndex}-${sceneIndex}`}>
+                  <div className="scene-review-media">
+                    {isReady ? isVideo
+                      ? <video src={sceneMediaUrl(sourceImage, uploadedImages)} muted controls playsInline preload="metadata" />
+                      : <img src={sceneMediaUrl(sourceImage, uploadedImages)} alt={`Mídia escolhida para ${scene.id}`} loading="lazy" />
+                      : <div className="scene-review-missing">Mídia ainda não encontrada</div>}
+                    <small>{isVideo ? "🎬 Vídeo mudo" : "🖼 Imagem"}</small>
+                  </div>
+                  <div className="scene-review-copy">
+                    <span className="scene-review-kicker">Bloco {blockIndex + 1} · cena {sceneIndex + 1} · ID {scene.image_id}</span>
+                    <b>{scene.id}</b>
+                    <p><strong>Texto do bloco:</strong> {block.text}</p>
+                    <p className="scene-review-translation"><strong>PT-BR:</strong> {translations[scene.id] ?? (translationLoading[scene.id] ? "traduzindo…" : "abrindo tradução…")}</p>
+                    <small>Brief visual: {scene.visual?.subject ?? scene.asset_key ?? "sem descrição"}{scene.visual?.action ? ` · ${scene.visual.action}` : ""}</small>
+                  </div>
+                  {scene.tipo_midia === "imagem" && <div className="scene-review-actions">
+                    <button type="button" className="button quiet compact" disabled={!uploadedImages.length || Boolean(jobId)} onClick={() => setActiveImagePickerKey(pickerOpen ? null : pickerKey)}>{pickerOpen ? "Fechar opções" : "Trocar mídia"}</button>
+                    {boundImage && <button type="button" className="button quiet compact" disabled={Boolean(jobId)} onClick={() => bindUploadedImageToScene(blockIndex, sceneIndex, "")}>Usar mídia do JSON</button>}
+                  </div>}
+                  {scene.tipo_midia === "video_generico" && <span className="scene-review-broll">{catalog.videos.includes(scene.image) ? "B-roll salvo. Você pode revisar ou trocar na Curadoria B-roll." : "B-roll pendente na Curadoria B-roll."}</span>}
+                  {pickerOpen && <div className="scene-review-picker" aria-label={`Escolher mídia visual para ${scene.id}`}>
+                    {uploadedImages.map(image => <button type="button" key={image} className={sourceImage === image ? "selected" : ""} disabled={Boolean(jobId)} title={image} onClick={() => { bindUploadedImageToScene(blockIndex, sceneIndex, image); setActiveImagePickerKey(null); }}>
+                      {isUploadedVideo(image) ? <video src={uploadedMediaUrl(image)} muted playsInline preload="metadata" /> : <img src={uploadedMediaUrl(image)} alt={image} loading="lazy" />}
+                      <span>{isUploadedVideo(image) ? "Vídeo mudo" : "Imagem"}</span>
+                    </button>)}
+                  </div>}
+                </article>;
+              })}
+            </div>
+            {reviewScenes.length > SCENE_REVIEW_PAGE_SIZE && <div className="asset-grid-pagination scene-review-pagination" aria-label="Navegação da revisão por cena">
+              <span>Cenas {reviewStart + 1}–{Math.min(reviewStart + SCENE_REVIEW_PAGE_SIZE, reviewScenes.length)} de {reviewScenes.length}</span>
+              <div><button type="button" className="button quiet compact" disabled={currentSceneReviewPage === 0} onClick={() => setSceneReviewPage(page => Math.max(0, page - 1))}>Anteriores</button><button type="button" className="button quiet compact" disabled={currentSceneReviewPage >= sceneReviewPageCount - 1} onClick={() => setSceneReviewPage(page => Math.min(sceneReviewPageCount - 1, page + 1))}>Próximas</button></div>
+            </div>}
+          </section>}
           {script && mediaTab === "curadoria" && (
             <section className="pexels-review standalone" aria-label="Curadoria de B-roll do Pexels">
               <div className="curation-heading"><div><span className="panel-index">B-ROLL</span><b>Escolhas editoriais</b><small>O gancho e as inserções visíveis passam pela sua aprovação.</small></div><button className="button quiet compact" onClick={() => void openVideosFolder()}>Abrir pasta dos vídeos</button></div>
@@ -1503,6 +1657,7 @@ function App() {
           )}
         </article>
 
+        <aside className="settings-column" aria-label="Configurações visuais do vídeo">
         <article className="panel background-panel">
           <div className="panel-header">
             <div><span className="panel-index">03</span><h1>Fundo e movimento</h1></div>
@@ -1534,6 +1689,31 @@ function App() {
             <i><em style={{ width: `${backgroundProgress}%` }} /></i>
           </div>
         </article>
+
+        <article className="panel typography-panel">
+          <div className="panel-header">
+            <div><span className="panel-index">04</span><h1>Estilo das chamadas</h1></div>
+            <span className="type-status">selecionada</span>
+          </div>
+          <p className="panel-hint">Clique na prévia para escolher fonte, cor, borda e sombra das chamadas sobrepostas.</p>
+          <div className="type-style-picker" role="radiogroup" aria-label="Escolher estilo das chamadas">
+            {textStyleOptions.map(option => (
+              <button
+                type="button"
+                className={`type-style-option${textStyle === option.value ? " selected" : ""}`}
+                key={option.value}
+                role="radio"
+                aria-checked={textStyle === option.value}
+                onClick={() => setTextStyle(option.value)}
+              >
+                <span className={`type-style-sample ${option.value}`}>SE INSCREVA</span>
+                <span className="type-style-label"><b>{option.label}</b><small>{textStyle === option.value ? "Em uso neste projeto" : option.description}</small></span>
+              </button>
+            ))}
+          </div>
+          <small className="typography-note">A escolha também orienta os textos estratégicos em espanhol enviados ao Google Flow.</small>
+        </article>
+        </aside>
       </section>
 
       {projectDialogOpen && <div className="project-dialog-backdrop" role="presentation" onMouseDown={() => setProjectDialogOpen(false)}>

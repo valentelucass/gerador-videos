@@ -79,6 +79,29 @@ ESTRUTURA E NARRAÇÃO
   comparações e micro-reviravoltas antes da revelação principal. Feche o loop
   central antes da CTA final.
 
+VÍDEOS EM FORMATO DE LISTA — APLICAR SOMENTE QUANDO O PEDIDO FOR UMA LISTA,
+RANKING OU NÚMERO DEFINIDO DE ITENS
+- Se o pedido trouxer 5, 7, 10 ou outro número de itens, respeite esse total na
+  narração. Planeje a ordenação silenciosamente e nunca crie campos extras no
+  JSON para a lista.
+- Comece com um item reconhecível e forte; não queime a descoberta de maior
+  consequência nos primeiros blocos. Entregue valor real logo no início e
+  preserve o item mais revelador para o terço final ou o fim.
+- Plante cedo um loop aberto concreto sobre esse item tardio — um mecanismo,
+  prejuízo ou consequência que será explicado — sem usar retenção artificial,
+  contagem regressiva vazia ou "fique até o final".
+- Os itens intermediários precisam avançar a explicação. Varie prova, exemplo,
+  escala ou consequência e não repita a fórmula "número + definição" em todos
+  eles. Os itens menos impactantes podem ser agrupados por uma lógica natural,
+  mas nunca usados como enchimento.
+- Até aproximadamente os primeiros dois minutos, é permitido fazer uma única
+  pergunta específica e contextualizada para comentários sobre uma experiência
+  ligada à lista. Ela deve soar parte da conversa, não interromper revelação,
+  nem pedir like ou inscrição; a CTA final continua obrigatória e separada.
+- O último item deve fechar o loop principal por seu impacto real, seguido de
+  uma síntese curta antes da CTA final. Não o chame apenas de "o pior" sem
+  demonstrar por quê.
+
 IMAGENS E BRIEFS VISUAIS
 - Toda cena declara `asset_key` único, em inglês, com 2 a 8 palavras minúsculas
   separadas por hífen. Ele descreve o sujeito visual específico da cena.

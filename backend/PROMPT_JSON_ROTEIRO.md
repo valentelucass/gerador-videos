@@ -212,6 +212,35 @@ RETENÇÃO E LOOPS
   surpresa para o último minuto: cada virada deve responder algo e abrir uma
   camada mais interessante.
 
+VÍDEOS EM FORMATO DE LISTA — APLICAR SOMENTE QUANDO O PEDIDO FOR UMA LISTA,
+RANKING OU NÚMERO DEFINIDO DE ITENS
+- Se o tema pedir explicitamente 5, 7, 10 ou outro número de itens, respeite
+  esse total na narração. Planeje a lista internamente; não crie campos, IDs
+  ou estruturas extras no JSON para numerar itens.
+- Não abra pelo item mais fraco nem entregue o item mais surpreendente no
+  começo. Comece com um caso reconhecível e relevante, entregue valor real nos
+  primeiros dois ou três itens e guarde a revelação de maior consequência para
+  o terço final ou o último item.
+- Nos primeiros blocos, deixe um loop aberto concreto sobre o item tardio: diga
+  qual prejuízo, mecanismo ou consequência ele explica, sem antecipar a
+  resposta. Nunca use contagem regressiva vazia, ameaça genérica ou frases como
+  "fique até o fim"; o motivo para continuar deve nascer do tema.
+- Os itens do meio não podem ser enchimento. Agrupe os menos impactantes por
+  uma lógica clara, mude o tipo de prova, exemplo ou consequência entre eles e
+  faça cada item acrescentar algo que os anteriores ainda não explicaram.
+- Evite a cadência mecânica "número um, número dois" com a mesma estrutura em
+  todos os blocos. Use transições de causa, escala, contraste ou descoberta e
+  mantenha cada item ligado à promessa central do vídeo.
+- Até aproximadamente os primeiros dois minutos, faça no máximo uma pergunta
+  natural e específica que convide o espectador a responder nos comentários,
+  relacionada a uma experiência concreta da lista. Ela não substitui a CTA
+  final, não pede like/inscrição e não pode interromper uma revelação. Exemplo
+  de função: perguntar qual prática o espectador já percebeu no lugar onde faz
+  compras; adapte a pergunta ao assunto real do vídeo.
+- O último item precisa fechar o loop principal e explicar por que ele é mais
+  relevante, não apenas ser chamado de "o pior". Depois dele, faça uma síntese
+  curta e só então a CTA final específica para comentários.
+
 IDENTIFICADORES E MÍDIAS
 - Use IDs únicos e simples: `block_01`, `block_02`, … e `scene_01`,
   `scene_02`, … .

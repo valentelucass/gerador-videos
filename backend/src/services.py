@@ -9,7 +9,7 @@ from .config import BACKGROUND_DIR, DEFAULT_BACKGROUND_NAME, IMAGE_DIR, MUSIC_DI
 from .models import Script
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
-VIDEO_EXTENSIONS = {".mp4"}
+VIDEO_EXTENSIONS = {".mp4", ".mov", ".webm"}
 MEDIA_EXTENSIONS = IMAGE_EXTENSIONS | VIDEO_EXTENSIONS
 AUDIO_EXTENSIONS = {".mp3", ".wav", ".m4a", ".aac", ".ogg"}
 # Aceita tanto o nome sugerido "1 - cena" quanto a variação que o Flow
@@ -37,13 +37,15 @@ GRAPHIC_VISUAL_PRESET = (
     "few elements, accurate proportions, visually understandable, horizontal 16:9."
 )
 PSYCHOLOGY_LITHOGRAPH_VISUAL_PRESET = (
-    "Vintage cosmic lithograph illustration, therapeutic fairy-tale mood, distressed antique paper texture, "
+    "Vintage cosmic lithograph illustration, therapeutic fairy-tale mood, distressed texture embedded across the full canvas "
+    "(never a physical paper sheet or printed card), "
     "soft organic hand-drawn linework, deep silent dark void background, hopeful protagonist and symbolic tools "
-    "drawn in delicate golden lines and constellations, open flowing composition, artwork bleeding cleanly to every edge, "
+    "drawn in delicate golden lines and constellations, open flowing composition, artwork bleeding cleanly to every edge as one continuous full-bleed image, "
     "horizontal 16:9."
 )
 PSYCHOLOGY_LITHOGRAPH_NEGATIVE_PROMPT = (
-    "Avoid frames, borders, decorative margins, dividers, enclosed panels, lotus ornaments, white outlines, "
+    "Avoid frames, borders, decorative margins, dividers, enclosed panels, paper sheet edges, printed-card layout, inner rectangular image area, "
+    "mat board, parchment margin, beige or white outline, lotus ornaments, "
     "modern glossy digital illustration, neon glow, 3D render, visual clutter, tiny unreadable text and watermarks."
 )
 GRAPHIC_NEGATIVE_PROMPT = (
@@ -279,7 +281,10 @@ def semantic_image_bindings(
 
     candidates = sorted({
         name for name in uploaded_images
-        if name not in used_sources and (IMAGE_DIR / name).is_file() and Path(name).suffix.lower() in IMAGE_EXTENSIONS
+        if name not in used_sources and (
+            ((IMAGE_DIR / name).is_file() and Path(name).suffix.lower() in IMAGE_EXTENSIONS)
+            or ((VIDEO_DIR / name).is_file() and Path(name).suffix.lower() in VIDEO_EXTENSIONS)
+        )
     })
 
     # Quando o operador/Flow preserva o prefixo, ele é uma associação direta.
@@ -448,8 +453,14 @@ def expected_scene_images(script: Script) -> list[str]:
 
 
 def scene_asset_path(scene: object, source_name: str) -> Path:
-    """Resolve o acervo horizontal correto para cada tipo de mídia."""
-    return (VIDEO_DIR if scene.tipo_midia == "video_generico" else IMAGE_DIR) / source_name
+    """Resolve o acervo horizontal correto para a mídia física vinculada.
+
+    Uma cena editorialmente declarada como ``imagem`` pode receber um vídeo
+    manual no painel. Isso mantém o contrato do roteiro sem B-roll intacto,
+    mas deixa o compositor usar o MP4/MOV/WebM como fonte visual muda.
+    """
+    is_video_source = Path(source_name).suffix.lower() in VIDEO_EXTENSIONS
+    return (VIDEO_DIR if scene.tipo_midia == "video_generico" or is_video_source else IMAGE_DIR) / source_name
 
 
 def resolve_scene_image_sources(
@@ -482,7 +493,7 @@ def resolve_scene_image_sources(
             raise ValueError(
                 f"O vínculo de {expected_name} precisa apontar somente para o nome de um arquivo."
             )
-        accepted_extensions = VIDEO_EXTENSIONS if scene.tipo_midia == "video_generico" else IMAGE_EXTENSIONS
+        accepted_extensions = VIDEO_EXTENSIONS if scene.tipo_midia == "video_generico" else IMAGE_EXTENSIONS | VIDEO_EXTENSIONS
         if Path(source_name).suffix.lower() not in accepted_extensions:
             accepted = ", ".join(sorted(accepted_extensions))
             raise ValueError(
