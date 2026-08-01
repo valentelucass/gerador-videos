@@ -1,4 +1,3 @@
-import copy
 import unittest
 
 from pydantic import ValidationError
@@ -63,14 +62,6 @@ class ScriptMediaUniquenessTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ValidationError, "nome de arquivo 'image' exclusivo"):
             Script.model_validate(payload)
-
-    def test_rejects_reused_asset_key_before_curation(self) -> None:
-        payload = copy.deepcopy(valid_script_payload())
-        payload["blocks"][1]["scenes"][0]["asset_key"] = "shopper-checking-price-label"
-
-        with self.assertRaisesRegex(ValidationError, "asset_key' exclusivo"):
-            Script.model_validate(payload)
-
 
 if __name__ == "__main__":
     unittest.main()

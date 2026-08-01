@@ -164,13 +164,6 @@ class Script(BaseModel):
                 + ", ".join(repeated_images)
             )
 
-        asset_keys = [scene.asset_key for scene in scenes if scene.asset_key]
-        repeated_asset_keys = sorted({key for key in asset_keys if asset_keys.count(key) > 1})
-        if repeated_asset_keys:
-            raise ValueError(
-                "Cada cena deve usar um 'asset_key' exclusivo; chaves repetidas: "
-                + ", ".join(repeated_asset_keys)
-            )
         return self
 
 

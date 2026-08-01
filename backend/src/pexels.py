@@ -188,6 +188,8 @@ def download_selected_video(query: str, video_id: int, destination_name: str) ->
 
 
 TRANSLATION_CHUNK_SIZE = 450
+GOOGLE_TRANSLATE_URL = "https://translate.googleapis.com/translate_a/single"
+MYMEMORY_TRANSLATE_URL = "https://api.mymemory.translated.net/get"
 
 
 def _translation_chunks(text: str, maximum: int = TRANSLATION_CHUNK_SIZE) -> list[str]:
@@ -230,16 +232,34 @@ def _translation_chunks(text: str, maximum: int = TRANSLATION_CHUNK_SIZE) -> lis
 
 @lru_cache(maxsize=4_096)
 def _translate_chunk_to_portuguese(text: str, source: str) -> str:
-    """Traduz um trecho curto e memoriza somente respostas bem-sucedidas."""
-    params = urlencode({"q": text, "langpair": f"{source}|pt"})
+    """Traduz um trecho curto, com fallback para o provedor secundário."""
+    google_params = urlencode({"client": "gtx", "sl": source, "tl": "pt", "dt": "t", "q": text})
     try:
-        with urlopen(f"https://api.mymemory.translated.net/get?{params}", timeout=20) as response:
+        with urlopen(f"{GOOGLE_TRANSLATE_URL}?{google_params}", timeout=20) as response:
             payload = json.loads(response.read().decode("utf-8"))
-        if payload.get("responseStatus") not in {None, 200}:
-            raise ValueError(f"resposta de tradução inválida ({payload.get('responseStatus')})")
+        if not isinstance(payload, list) or not payload or not isinstance(payload[0], list):
+            raise ValueError("resposta principal de tradução inválida")
+        translated = "".join(
+            part[0]
+            for part in payload[0]
+            if isinstance(part, list) and part and isinstance(part[0], str)
+        ).strip()
+        if translated:
+            return unescape(translated)
+    except Exception:
+        # O provedor principal pode impor limitação transitória. Neste caso,
+        # tenta-se o serviço secundário antes de informar indisponibilidade.
+        pass
+
+    fallback_params = urlencode({"q": text, "langpair": f"{source}|pt"})
+    try:
+        with urlopen(f"{MYMEMORY_TRANSLATE_URL}?{fallback_params}", timeout=20) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+        if not isinstance(payload, dict) or payload.get("responseStatus") not in {None, 200}:
+            raise ValueError("resposta secundária de tradução inválida")
         translated = payload.get("responseData", {}).get("translatedText")
         if not isinstance(translated, str) or not translated.strip():
-            raise ValueError("resposta sem tradução")
+            raise ValueError("resposta secundária sem tradução")
         return unescape(translated).strip()
     except Exception as exc:
         raise PexelsError("A tradução não está disponível agora. O texto original continua visível.") from exc

@@ -77,6 +77,26 @@ ASSET_NAME_STOP_WORDS = frozenset({
 # autodescritivos que o Google Flow costuma baixar em inglês. O pareamento
 # nunca usa a ordem de upload.
 VISUAL_SYNONYMS = (
+    # O Google Flow salva nomes descritivos em inglês, enquanto a narração e
+    # o brief podem estar em espanhol. Estes grupos preservam a associação
+    # por conteúdo — jamais pela ordem em que o operador enviou as imagens.
+    {"pantalla", "screen"}, {"carrito", "cart"}, {"compra", "compras", "shopping"},
+    {"persona", "person"}, {"sonriendo", "sonriente", "smiling"},
+    {"telefono", "movil", "celular", "phone", "smartphone"},
+    {"iluminado", "emitiendo", "luz", "light", "glowing", "emitting"},
+    {"cronometro", "temporizador", "timer", "countdown"},
+    {"barra", "bar", "progress"}, {"progreso", "progress"},
+    {"precio", "precios", "price"}, {"etiqueta", "tag"}, {"oferta", "sale"},
+    {"rojo", "red"}, {"cerebro", "brain"}, {"datos", "data"},
+    {"basura", "trash"}, {"moneda", "monedas", "coin", "coins", "euro"},
+    {"tarjeta", "card"}, {"cartera", "wallet"}, {"descuento", "discount"},
+    {"ropa", "prenda", "garment", "clothes"}, {"vestido", "dress"},
+    {"mano", "manos", "hand", "hands"}, {"dedo", "finger"}, {"boton", "button"},
+    {"notificacion", "notification"}, {"envio", "shipping"}, {"enviando", "sending"},
+    {"perfil", "profile"}, {"permisos", "permissions"}, {"codigo", "code"},
+    {"ojos", "eyes"}, {"cansado", "cansada", "tired"},
+    {"congelado", "congelada", "frozen"}, {"edificio", "building"},
+    {"signo", "pregunta", "question"}, {"documento", "financial", "report"},
     {"farol", "lighthouse"}, {"ilha", "island"}, {"rochosa", "rocky"},
     {"onda", "ondas", "wave"}, {"penhasco", "cliff"}, {"faroleiro", "keeper"},
     {"lanterna", "lantern"}, {"navio", "ship"}, {"tripulacao", "crew"},

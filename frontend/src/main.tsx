@@ -151,6 +151,15 @@ const PEXELS_SCENES_PAGE_SIZE = 4;
 const TRANSLATION_CONCURRENCY = 2;
 const RENDER_COMPLETE_SOUND_URL = "/assets/sounds/Mountain%20Audio%20-%20New%20Idea%20Notification.mp3";
 
+function needsTranslation(original: string, translated: string | undefined, language: string): boolean {
+  if (!translated) return true;
+  if (language.toLowerCase().startsWith("pt")) return false;
+  // Versões antigas do painel salvavam o original no campo de tradução após
+  // um 503. Espaços diferentes não devem impedir que esse valor seja refeito.
+  const normalize = (value: string) => value.trim().replace(/\s+/g, " ").toLocaleLowerCase();
+  return normalize(original) === normalize(translated);
+}
+
 const formatVideoDuration = (seconds: number) => {
   const totalSeconds = Math.max(0, Math.round(seconds));
   const minutes = Math.floor(totalSeconds / 60);
@@ -1237,8 +1246,11 @@ function App() {
   useEffect(() => {
     if (!script || script.language.toLowerCase().startsWith("pt")) return;
     const missing = pexelsItems.filter(item => (
-      (!translations[item.scene_id] && !translationLoading[item.scene_id])
-      || Boolean(item.visual_reference && !visualTranslations[item.scene_id] && !visualTranslationLoading[item.scene_id])
+      (needsTranslation(item.text, translations[item.scene_id], script.language)
+        && !translationLoading[item.scene_id] && !translationFailures[item.scene_id])
+      || Boolean(item.visual_reference
+        && needsTranslation(item.visual_reference, visualTranslations[item.scene_id], script.language)
+        && !visualTranslationLoading[item.scene_id] && !visualTranslationFailures[item.scene_id])
     ));
     if (missing.length) void translatePexelsItems(script, missing);
   }, [script, pexelsItems, translations, visualTranslations, translationLoading, visualTranslationLoading]);
@@ -1447,7 +1459,10 @@ function App() {
   // o contexto antes de trocar uma imagem por outra ou por um vídeo mudo.
   useEffect(() => {
     if (!script || mediaTab !== "review") return;
-    const pending = visibleReviewScenes.filter(({ scene }) => !translations[scene.id] && !translationLoading[scene.id]);
+    const pending = visibleReviewScenes.filter(({ scene, block }) => (
+      needsTranslation(block.text, translations[scene.id], script.language)
+      && !translationLoading[scene.id] && !translationFailures[scene.id]
+    ));
     if (!pending.length) return;
     if (script.language.toLowerCase().startsWith("pt")) {
       setTranslations(current => ({ ...current, ...Object.fromEntries(pending.map(({ scene, block }) => [scene.id, block.text])) }));
@@ -1463,9 +1478,15 @@ function App() {
         body: JSON.stringify({ text: block.text, source_language: script.language }),
       }).then(result => result.portuguese);
       translationRequests.current.set(key, request);
+      setTranslationFailures(current => ({ ...current, [scene.id]: false }));
       void request.then(
         portuguese => { if (!cancelled) setTranslations(current => ({ ...current, [scene.id]: portuguese })); },
-        () => { if (!cancelled) setTranslations(current => ({ ...current, [scene.id]: block.text })); },
+        () => {
+          if (!cancelled) {
+            setTranslations(current => ({ ...current, [scene.id]: block.text }));
+            setTranslationFailures(current => ({ ...current, [scene.id]: true }));
+          }
+        },
       ).finally(() => {
         translationRequests.current.delete(key);
         if (!cancelled) setTranslationLoading(current => ({ ...current, [scene.id]: false }));
@@ -1650,14 +1671,16 @@ function App() {
                     {isReady ? isVideo
                       ? <video src={sceneMediaUrl(sourceImage, uploadedImages)} muted controls playsInline preload="metadata" />
                       : <img src={sceneMediaUrl(sourceImage, uploadedImages)} alt={`Mídia escolhida para ${scene.id}`} loading="lazy" />
-                      : <div className="scene-review-missing">Mídia ainda não encontrada</div>}
+                      : <div className="scene-review-missing">{scene.tipo_midia === "imagem" && uploadedImages.length
+                        ? "Mídia desta cena ainda não associada"
+                        : "Mídia ainda não encontrada"}</div>}
                     <small>{isVideo ? "🎬 Vídeo mudo" : "🖼 Imagem"}</small>
                   </div>
                   <div className="scene-review-copy">
                     <span className="scene-review-kicker">Bloco {blockIndex + 1} · cena {sceneIndex + 1} · ID {scene.image_id}</span>
                     <b>{scene.id}</b>
                     <p><strong>Texto do bloco:</strong> {block.text}</p>
-                    <p className="scene-review-translation"><strong>PT-BR:</strong> {translations[scene.id] ?? (translationLoading[scene.id] ? "traduzindo…" : "abrindo tradução…")}</p>
+                    <p className="scene-review-translation"><strong>{translationFailures[scene.id] || needsTranslation(block.text, translations[scene.id], script?.language ?? "pt") ? "Original:" : "PT-BR:"}</strong> {translations[scene.id] ?? (translationLoading[scene.id] ? "traduzindo…" : "abrindo tradução…")}</p>
                     <small>Brief visual: {scene.visual?.subject ?? scene.asset_key ?? "sem descrição"}{scene.visual?.action ? ` · ${scene.visual.action}` : ""}</small>
                   </div>
                   <div className="scene-review-actions">
@@ -1696,11 +1719,13 @@ function App() {
                     const saved = Boolean(scene && catalog.videos.includes(scene.image));
                     const chosen = selectedPexels[item.scene_id];
                     const collapsed = Boolean(chosen && expandedPexelsScene !== item.scene_id);
+                    const textNeedsTranslation = needsTranslation(item.text, translations[item.scene_id], script?.language ?? "pt");
+                    const visualNeedsTranslation = Boolean(item.visual_reference && needsTranslation(item.visual_reference, visualTranslations[item.scene_id], script?.language ?? "pt"));
                     return (
                       <article className={`pexels-item${chosen ? " selected" : ""}`} key={item.scene_id}>
                         <div className="pexels-copy"><b>{item.scene_id} · {saved ? "aprovado" : "aguardando aprovação"}</b><span>Original: {item.text}</span>
-                          <span>Português: {translations[item.scene_id] ?? "traduzindo…"}{translationLoading[item.scene_id] ? " (traduzindo…)" : ""}</span>
-                          {item.visual_reference && <span className="pexels-reference">REFERÊNCIA VISUAL (PT-BR): {visualTranslations[item.scene_id] ?? "traduzindo…"}{visualTranslationLoading[item.scene_id] ? " (traduzindo…)" : ""}</span>}
+                          <span>{translationFailures[item.scene_id] || textNeedsTranslation ? "Original:" : "Português:"} {translations[item.scene_id] ?? "traduzindo…"}{translationLoading[item.scene_id] ? " (traduzindo…)" : ""}</span>
+                          {item.visual_reference && <span className="pexels-reference">{visualTranslationFailures[item.scene_id] || visualNeedsTranslation ? "REFERÊNCIA VISUAL (original):" : "REFERÊNCIA VISUAL (PT-BR):"} {visualTranslations[item.scene_id] ?? "traduzindo…"}{visualTranslationLoading[item.scene_id] ? " (traduzindo…)" : ""}</span>}
                           {(translationFailures[item.scene_id] || visualTranslationFailures[item.scene_id]) && <button className="text-button" type="button" onClick={() => retryPexelsTranslation(item)}>A tradução falhou temporariamente. Tentar de novo</button>}
                         </div>
                         {chosen && <button className="pexels-selected-summary" type="button" onClick={() => setExpandedPexelsScene(current => current === item.scene_id ? null : item.scene_id)}>

@@ -1,3 +1,4 @@
+import io
 import unittest
 from unittest.mock import patch
 
@@ -6,6 +7,20 @@ from backend.src.pexels import TRANSLATION_CHUNK_SIZE, _translation_chunks, tran
 
 
 class TranslationChunkTests(unittest.TestCase):
+    def test_prefers_primary_translator_when_it_returns_a_valid_translation(self) -> None:
+        response = io.BytesIO(
+            b'[[["Voce entra no aplicativo para comprar um cabo simples por dois euros.","Entras a la aplicacion para comprar un simple cable de dos euros."]]]'
+        )
+        response.__enter__ = lambda: response  # type: ignore[attr-defined]
+        response.__exit__ = lambda *_: None  # type: ignore[attr-defined]
+
+        with patch("backend.src.pexels.urlopen", return_value=response):
+            translated = translate_to_portuguese(
+                "Entras a la aplicacion para comprar un simple cable de dos euros.", "es-ES"
+            )
+
+        self.assertEqual(translated, "Voce entra no aplicativo para comprar um cabo simples por dois euros.")
+
     def test_keeps_short_text_in_one_piece(self) -> None:
         self.assertEqual(_translation_chunks("Primeira frase. Segunda frase."), ["Primeira frase. Segunda frase."])
 
