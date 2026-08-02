@@ -36,6 +36,12 @@ button, select { cursor: pointer; }
 .appbar { border-bottom: 1px solid #26313c; background: linear-gradient(90deg, #0c1118, #0a0e13 56%, #0d131b); box-shadow: 0 8px 28px #00000026; }
 
 .brand, .appbar-actions, .background-actions { display: flex; align-items: center; gap: 10px; }
+.automation-actions { display: flex; align-items: center; gap: 6px; padding-left: 9px; border-left: 1px solid #2b3540; }
+.automation-indicator { display: inline-flex; align-items: center; gap: 5px; color: #8f9ba8; font-size: .64rem; font-weight: 750; white-space: nowrap; }
+.automation-indicator i { width: 7px; height: 7px; border-radius: 50%; background: #687481; box-shadow: 0 0 0 2px #68748124; }
+.automation-indicator.running { color: #a7e7bd; }
+.automation-indicator.running i { background: #65db8a; box-shadow: 0 0 12px #65db8aa8; animation: automation-pulse 1.25s ease-in-out infinite; }
+@keyframes automation-pulse { 50% { transform: scale(1.35); opacity: .62; } }
 
 .brand { font-size: .88rem; font-weight: 760; letter-spacing: .04em; text-transform: uppercase; }
 .brand-mark { display: grid; place-items: center; width: 26px; height: 26px; color: #111316; background: #f3d536; border-radius: 7px; font-size: .68rem; letter-spacing: -.05em; }

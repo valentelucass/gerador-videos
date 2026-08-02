@@ -1,9 +1,35 @@
 backend/.venv/
 frontend/node_modules/
 frontend/dist/
+
+# Configuração e ambientes locais
 .env
+*.env.local
+*.env.*.local
+!.env.example
 assets/images/
 assets/videos/
 workspace/
+
+# Dados locais e gerados da automação (nunca versionar mídias, sessão ou logs)
+automation/.env
+automation/.venv/
+automation/browser-profile/
+automation/artifacts/
+automation/state/
+automation/images/
+automation/logs/*
+!automation/logs/.gitkeep
+
+# Cache, logs e arquivos do sistema
 __pycache__/
-*.pyc
+*.py[cod]
+*.log
+*.jsonl
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.DS_Store
+Thumbs.db

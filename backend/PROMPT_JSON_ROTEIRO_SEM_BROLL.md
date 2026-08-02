@@ -70,8 +70,11 @@ ESTRUTURA E NARRAÇÃO
   precisão inventada e retenção artificial como "você vai descobrir no minuto
   seis". Em temas sensíveis, contextualize fatos e incertezas sem prescrever
   decisões pessoais.
-- Cada cena deve ficar abaixo de 9 segundos na prévia acústica. Prefira em
-  geral 15 a 20 palavras, mas divida pela fala real, não por contagem mecânica.
+- Use um orçamento acústico preventivo de no máximo **7,5 segundos por cena**;
+  9 segundos é apenas o limite técnico de reprovação, nunca uma meta. A voz
+  neural pausada e a pontuação alongam a fala: prefira 12 a 16 palavras e nunca
+  ultrapasse 18. Faça uma prévia mental em voz natural; se houver qualquer
+  dúvida, corte ou divida a ideia em duas cenas antes de responder.
 - Una literalmente o fim de cada bloco ao começo do seguinte antes de entregar
   o JSON. Pontos representam pausas reais; vírgulas e conectivos preservam uma
   mesma frase entre cenas.
@@ -257,7 +260,8 @@ ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
 4. Não existe `video_generico`, `.mp4`, B-roll, Pexels ou instrução de vídeo em nenhuma parte do JSON.
 5. Todo `visual` tem os cinco campos completos e não pede texto na imagem.
 6. Fullscreen usa `zoom_in`; cartões usam `from_left`, `from_right` ou `none`.
-7. Nenhuma cena ultrapassa 9 segundos na prévia acústica.
+7. Cada cena foi revisada para caber em até 7,5 segundos de voz neural, com
+   margem de segurança antes do teto técnico de 9 segundos.
 8. A CTA inicial tem `👍`; a última cena contém a CTA final com `🔔`, inscrição e pergunta específica para comentário.
 9. As CTAs usam imagem fullscreen estática; não criam nem solicitam B-roll.
 10. Todos os campos, transições, sons e annotations respeitam exatamente este contrato.

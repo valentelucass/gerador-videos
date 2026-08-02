@@ -102,8 +102,10 @@ NARRAÇÃO CONVERSACIONAL E PROGRESSÃO
   prefira 10 a 16 palavras por cena e nunca ultrapasse 18 palavras, exceto por
   uma CTA muito simples. Divida a fala depois de uma frase completa ou conectivo
   natural antes de chegar ao limite; não deixe duas frases explicativas longas
-  na mesma cena. A naturalidade continua essencial, mas não autoriza exceder
-  esse orçamento de segurança.
+  na mesma cena. Antes de responder, faça uma prévia mental em voz neural
+  pausada de cada bloco: se houver qualquer dúvida de duração, corte ou divida
+  a fala. A naturalidade continua essencial, mas não autoriza exceder esse
+  orçamento de segurança.
 - Nunca apresente primeiro um conceito econômico, jurídico, tecnológico ou
   acadêmico. A ordem preferida é: situação cotidiana, consequência prática,
   analogia simples, termo técnico somente quando necessário e evidência
@@ -631,9 +633,11 @@ ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
     campos novos no JSON nem inventar culpados.
 15. A narrativa, a quantidade de cenas e a fala natural atendem à duração alvo;
     cada cena foi revisada mentalmente para caber em até 7,5 segundos de voz
-    neural, normalmente com 10 a 16 palavras e no máximo 18. Um mesmo dado pode
-    ser desenvolvido em vários blocos sem exigir fato novo ou precisão artificial
-    a cada cena; nunca compacte duas frases explicativas só para reduzir cenas.
+    neural, normalmente com 10 a 16 palavras e no máximo 18. Se houver dúvida
+    de duração, a fala foi cortada ou dividida antes da entrega; 9 segundos é
+    teto técnico, não alvo. Um mesmo dado pode ser desenvolvido em vários blocos
+    sem exigir fato novo ou precisão artificial a cada cena; nunca compacte duas
+    frases explicativas só para reduzir cenas.
 16. Lidos em sequência, os blocos soam como uma fala única: cada etapa responde
     algo, revela uma camada e abre uma dúvida maior; não há lista de curiosidades
     reorganizável, perguntas curtas e isoladas ou loops que mencionem minutos,

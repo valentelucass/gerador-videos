@@ -115,8 +115,11 @@ RANKING OU NÚMERO DEFINIDO DE SINAIS, HÁBITOS OU SITUAÇÕES
 NARRAÇÃO E RITMO
 - `blocks[].text` é a narração oficial da cena. Escreva fala direta, natural e
   contínua, sem títulos de seção, rubricas ou instruções de edição.
-- Cada cena deve ficar abaixo de 9 segundos na prévia acústica. Prefira 15 a 20
-  palavras, mas divida pela fala real, não por contagem mecânica.
+- Use um orçamento acústico preventivo de no máximo **7,5 segundos por cena**;
+  9 segundos é apenas o limite técnico de reprovação, nunca uma meta. A voz
+  neural pausada e a pontuação alongam a fala: prefira 12 a 16 palavras e nunca
+  ultrapasse 18. Faça uma prévia mental em voz natural; se houver qualquer
+  dúvida, corte ou divida a ideia em duas cenas antes de responder.
 - Leia a junção literal entre blocos antes de responder. Use ponto apenas para
   pausa real; use conectivo, vírgula ou travessão quando a ideia continuar.
 - Não abra com definição técnica, saudação ou contexto longo. Abra pela situação
@@ -128,6 +131,34 @@ NARRAÇÃO E RITMO
   bloco deve responder, ampliar ou tensionar o anterior.
 
 IMAGENS E BRIEFS VISUAIS
+- TODAS as imagens formam uma única narrativa visual sequencial, como quadros
+  de uma HQ silenciosa — nunca um slideshow de metáforas, objetos decorativos
+  ou imagens aleatórias. Cada cena deve tornar visível um instante específico
+  do que a narração acabou de dizer.
+- Defina internamente um protagonista coerente no início (faixa etária,
+  apresentação e traços visuais). Reapresente a mesma pessoa nas cenas
+  seguintes sempre que a narrativa acompanhar sua experiência; mantenha roupas,
+  silhueta e traços reconhecíveis, salvo quando a passagem de tempo justificar
+  uma mudança. Personagens secundários também devem ter uma função clara na
+  situação, não aparecer como figuras genéricas de fundo.
+- Para CADA cena, construa primeiro esta cadeia concreta: **quem** está em
+  quadro, **o que faz ou sente visivelmente**, **com o que/alguém interage** e
+  **onde isso acontece**. Em seguida, descreva esse instante congelado no
+  `visual`. Mostre gestos, postura, expressão, olhar, distância entre pessoas,
+  objeto manipulado e consequência física da emoção quando forem relevantes.
+- Quando a narração falar de uma sensação interna (ansiedade, culpa, defesa,
+  alívio, dissociação etc.), mostre o personagem vivendo essa sensação em uma
+  situação reconhecível e deixe a metáfora surgir da interação: por exemplo,
+  uma mulher hesita com o celular enquanto fios dourados a puxam para trás — e
+  não apenas um celular, fios ou um cérebro flutuando isoladamente.
+- Objetos simbólicos, constelações, diagramas e conceitos abstratos só são
+  permitidos como apoio visual à ação de um personagem ou como breve ponte
+  entre duas situações. Não use sujeito isolado, rosto flutuante, objeto
+  genérico, decoração cósmica ou símbolo sem relação dramática com a cena.
+- A passagem entre cenas deve ter continuidade dramática: situação → reação →
+  consequência → nova interação ou compreensão. Varie enquadramentos, mas cada
+  novo quadro precisa avançar a pequena história, não apenas repetir o conceito
+  com uma imagem diferente.
 - Toda cena tem `asset_key` único em inglês, de 2 a 8 termos minúsculos com
   hífen; `image` é sempre `cena_XX.png` sem pasta ou caminho.
 - Todo `visual` possui `subject`, `action`, `setting`, `framing` e `details`.
@@ -145,9 +176,10 @@ IMAGENS E BRIEFS VISUAIS
   margem decorativa, painel, linha divisória, ornamento de lótus, contorno
   branco, margem bege/de papel, passe-partout ou qualquer elemento que pareça
   enquadrar a arte. O fundo e a textura devem continuar até cada borda 16:9.
-- Descreva sujeito, ação congelada, ambiente, posição e objetos indispensáveis.
-  Use no máximo dois ou três elementos principais e evite cenas que só funcionam
-  animadas.
+- Descreva sujeito, ação congelada, ambiente, posição e objetos indispensáveis
+  como um quadro de história: personagem + ação/interação + reação visível +
+  consequência no ambiente. Use no máximo dois ou três elementos principais e
+  evite cenas que só funcionam animadas.
 - Por padrão, não peça texto dentro da imagem. Use texto integrado SOMENTE em
   momentos de revelação/nome de conceito, dilema emocional ou alívio/fecho de
   bloco. Quando usar, escreva no `details` a palavra ou expressão EXATA EM
@@ -182,19 +214,18 @@ SOM
 ANNOTATIONS E CTAS
 - `annotation` é opcional e somente em cena `imagem` fullscreen (`in: zoom_in`).
   Use uma ou duas linhas de até 32 caracteres; `at` é `start`, `middle` ou `end`.
-- `emoji` só pode ser `👍` na CTA inicial e `🔔` na final. Outras annotations
-  não têm emoji.
+- Não use o campo `emoji` em nenhuma annotation, inclusive nas CTAs.
 - A CTA inicial entra após conflito e promessa: fala natural de like/inscrição e
-  `{"lines":["DEIXE O LIKE","E SE INSCREVA"],"at":"start","emoji":"👍"}`.
+  `{"lines":["DEIXE O LIKE","E SE INSCREVA"],"at":"start"}`.
 - A última cena contém SOMENTE CTA final. A fala pede inscrição e comentário em
   resposta a pergunta curta, instigante e específica sobre o comportamento ou
   mecanismo psicológico tratado. Nunca use “o que você acha?” ou “comente abaixo”
   sem contexto. A annotation é
-  `{"lines":["SE INSCREVA","PARA MAIS"],"at":"start","emoji":"🔔"}`.
+  `{"lines":["SE INSCREVA","PARA MAIS"],"at":"start"}`.
 
 CONTRATO EXATO
 {
-  "_instrucoes_flow": "Google Flow, gere UMA imagem horizontal 16:9 para TODAS as cenas. Não gere vídeos, MP4s ou B-roll.",
+  "_instrucoes_flow": "Google Flow, gere UMA imagem horizontal 16:9 para TODAS as cenas. Não gere vídeos, MP4s ou B-roll. Trate as imagens como quadros consecutivos de uma história visual: personagem coerente, ação, interação e reação concreta em cada cena; nunca um slideshow de símbolos isolados.",
   "title": "Por que algumas pessoas evitam responder mensagens?",
   "language": "pt-BR",
   "narrator_gender": "male",
@@ -222,7 +253,9 @@ ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
 3. Toda cena é `imagem`, usa `.png`; não existe B-roll, `video_generico` ou MP4.
 4. Todo brief visual tem os cinco campos, é específico e não pede texto na imagem.
 5. Fullscreen usa `zoom_in`; cartões usam `from_left`, `from_right` ou `none`.
-6. Nenhuma cena ultrapassa 9 segundos na prévia acústica.
+6. Cada cena foi revisada para caber em até 7,5 segundos de voz neural, com
+   margem de segurança antes do teto técnico de 9 segundos.
 7. A narrativa desenvolve 3 ou 4 mecanismos psicológicos sem diagnóstico ou causa única.
-8. A CTA inicial usa 👍; a última usa 🔔, inscrição e pergunta específica para comentário.
+8. Nenhuma annotation usa o campo `emoji`; a CTA final pede inscrição e uma
+   pergunta específica para comentário.
 ```

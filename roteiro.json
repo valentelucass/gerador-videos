@@ -1,32 +1,32 @@
 {
-  "_instrucoes_flow": "Google Flow, leia apenas as cenas com tipo_midia: imagem. IGNORE COMPLETAMENTE as cenas com tipo_midia: video_generico, não gere imagens para elas.",
-  "title": "7 Engaños Psicológicos de Temu y Shein para Vaciar tu Cuenta",
-  "language": "es-ES",
-  "narrator_gender": "male",
-  "voice": "es-ES-AlvaroNeural",
+  "_instrucoes_flow": "Google Flow, gere UMA imagem horizontal 16:9 para TODAS as cenas. Não gere vídeos, MP4s ou B-roll. Trate as imagens como quadros consecutivos de uma história visual: personagem coerente, ação, interação e reação concreta em cada cena; nunca um slideshow de símbolos isolados.",
+  "title": "The Psychology of Women Who Ignore Their Birthdays",
+  "language": "en-US",
+  "narrator_gender": "female",
+  "voice": "en-US-JennyNeural",
   "background": "black",
   "background_animation": "movimento_sutil",
   "blocks": [
     {
       "id": "block_01",
-      "text": "Entras a la aplicación para comprar un simple cable de dos euros.",
+      "text": "Your birthday is fast approaching. A coworker excitedly stops you and asks how you are going to celebrate.",
       "scenes": [
         {
           "id": "scene_01",
           "image_id": 1,
-          "tipo_midia": "video_generico",
-          "asset_key": "scrolling-smartphone-screen",
-          "image": "cena_01.mp4",
+          "tipo_midia": "imagem",
+          "asset_key": "coworker-asking-birthday-calendar",
+          "image": "cena_01.png",
           "visual": {
-            "subject": "pulgar deslizando rápidamente la pantalla de un teléfono",
-            "action": "navegando por una tienda online infinita",
-            "setting": "entorno oscuro iluminado por la pantalla",
-            "framing": "plano detalle sobre el teléfono y la mano",
-            "details": "imágenes borrosas de productos pasando a gran velocidad"
+            "subject": "protagonist (a woman in her 30s with short wavy hair) and a coworker",
+            "action": "coworker leaning in eagerly holding a glowing calendar",
+            "setting": "dark silent workspace with subtle stars",
+            "framing": "medium shot of the two women",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, protagonist looking slightly caught off guard"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_right",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
@@ -43,28 +43,30 @@
     },
     {
       "id": "block_02",
-      "text": "Pero media hora después, miras tu carrito con treinta artículos que no necesitas.",
+      "text": "Your chest tightens slightly. You force a polite smile and quickly answer that you are not doing anything special.",
       "scenes": [
         {
           "id": "scene_02",
           "image_id": 2,
           "tipo_midia": "imagem",
-          "asset_key": "shopping-cart-full-junk",
+          "asset_key": "protagonist-forcing-smile-defensive",
           "image": "cena_02.png",
           "visual": {
-            "subject": "pantalla de carrito de compras digital",
-            "action": "mostrando una lista interminable de productos de plástico",
-            "setting": "interfaz de aplicación móvil",
-            "framing": "plano detalle de la pantalla",
-            "details": "miniaturas de productos extraños y un botón de pago"
+            "subject": "protagonist",
+            "action": "forcing a stiff smile while raising one hand defensively to gently push the calendar away",
+            "setting": "same starry workspace",
+            "framing": "close up on the protagonist's face and hand",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, visible tension in her shoulders"
           },
           "transition": {
-            "in": "from_left",
-            "out": "to_left",
+            "in": "from_right",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
-            "transition": [],
+            "transition": [
+              "whoosh_fast"
+            ],
             "context": null
           }
         }
@@ -72,24 +74,24 @@
     },
     {
       "id": "block_03",
-      "text": "Sientes que engañaste al sistema porque el total es ridículamente bajo.",
+      "text": "You tell them it is just another day, hoping they will just drop the subject and move on.",
       "scenes": [
         {
           "id": "scene_03",
           "image_id": 3,
           "tipo_midia": "imagem",
-          "asset_key": "person-smiling-phone-screen",
+          "asset_key": "protagonist-turning-away-relieved",
           "image": "cena_03.png",
           "visual": {
-            "subject": "persona sonriendo con satisfacción",
-            "action": "mirando la pantalla de su móvil iluminada",
-            "setting": "habitación a oscuras",
-            "framing": "primer plano del rostro iluminado",
-            "details": "reflejo naranja de la interfaz en las gafas"
+            "subject": "protagonist",
+            "action": "turning her back to the coworker, letting out a small sigh of relief",
+            "setting": "vast dark emptiness",
+            "framing": "medium profile shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
-            "in": "from_right",
-            "out": "none",
+            "in": "none",
+            "out": "to_left",
             "speed": "slow"
           },
           "sounds": {
@@ -103,29 +105,29 @@
     },
     {
       "id": "block_04",
-      "text": "La realidad es mucho más incómoda. No estás en una tienda normal.",
+      "text": "But suddenly, the atmosphere shifts. People look at you with a strange mix of pity and subtle judgment.",
       "scenes": [
         {
           "id": "scene_04",
           "image_id": 4,
           "tipo_midia": "imagem",
-          "asset_key": "smartphone-glowing-wires",
+          "asset_key": "shadowy-figures-judging-protagonist",
           "image": "cena_04.png",
           "visual": {
-            "subject": "teléfono móvil emitiendo una luz intensa",
-            "action": "conectado a múltiples cables oscuros",
-            "setting": "superficie metálica negra",
-            "framing": "plano cenital centrado",
-            "details": "apariencia tecnológica y amenazante"
+            "subject": "protagonist surrounded by shadowy faceless figures",
+            "action": "the figures leaning in, staring at her with glowing judgmental eyes",
+            "setting": "deep starry void",
+            "framing": "wide view, protagonist isolated in the center",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, protagonist shrinking slightly under the stares"
           },
           "transition": {
-            "in": "from_left",
-            "out": "to_right",
+            "in": "from_right",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "click"
+              "whoosh_cinematic"
             ],
             "context": null
           }
@@ -134,31 +136,24 @@
     },
     {
       "id": "block_05",
-      "text": "Plataformas como Temu y Shein son sofisticadas máquinas de manipulación psicológica.",
+      "text": "Society has this deeply ingrained assumption that if you do not want a cake and a party, you must be depressed.",
       "scenes": [
         {
           "id": "scene_05",
           "image_id": 5,
-          "tipo_midia": "video_generico",
-          "asset_key": "brain-hologram-scanning",
-          "image": "cena_05.mp4",
+          "tipo_midia": "imagem",
+          "asset_key": "shadow-shoving-cake-protagonist",
+          "image": "cena_05.png",
           "visual": {
-            "subject": "holograma tridimensional de un cerebro humano",
-            "action": "siendo escaneado por líneas de luz digital",
-            "setting": "espacio cibernético oscuro",
-            "framing": "plano medio rotativo",
-            "details": "nodos brillantes y conexiones de red"
-          },
-          "annotation": {
-            "lines": [
-              "MÁQUINAS DE",
-              "MANIPULACIÓN"
-            ],
-            "at": "middle"
+            "subject": "protagonist and a large shadow figure",
+            "action": "the shadow aggressively shoving a glowing birthday cake into her reluctant hands",
+            "setting": "infinite space",
+            "framing": "medium shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, protagonist looking overwhelmed and distressed"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
+            "in": "none",
+            "out": "to_right",
             "speed": "slow"
           },
           "sounds": {
@@ -172,67 +167,32 @@
     },
     {
       "id": "block_06",
-      "text": "Hoy destriparemos los siete engaños estructurales que usan para vaciar tu cuenta bancaria.",
+      "text": "But what if there is absolutely nothing wrong with you? What if your indifference is actually highly intelligent?",
       "scenes": [
         {
           "id": "scene_06",
           "image_id": 6,
           "tipo_midia": "imagem",
-          "asset_key": "bank-account-draining",
+          "asset_key": "protagonist-shattering-cake-realization",
           "image": "cena_06.png",
           "visual": {
-            "subject": "pantalla de una aplicación bancaria",
-            "action": "mostrando un saldo disminuyendo rápidamente a rojo",
-            "setting": "teléfono sostenido por una mano",
-            "framing": "plano detalle extremo",
-            "details": "números descendentes y color rojo de alerta"
+            "subject": "protagonist",
+            "action": "standing tall as the glowing cake in her hands shatters into beautiful harmless stardust",
+            "setting": "pitch black background",
+            "framing": "close up on her face",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, her expression changing from distress to calm clarity"
           },
           "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_07",
-      "text": "Deja tu me gusta y suscríbete para proteger tu dinero de estos algoritmos.",
-      "scenes": [
-        {
-          "id": "scene_07",
-          "image_id": 7,
-          "tipo_midia": "video_generico",
-          "asset_key": "digital-security-padlock",
-          "image": "cena_07.mp4",
-          "visual": {
-            "subject": "candado digital brillante y holográfico",
-            "action": "cerrándose sobre un fondo de datos en movimiento",
-            "setting": "espacio cibernético oscuro",
-            "framing": "plano central fijo",
-            "details": "líneas de código y luz azul de seguridad"
-          },
-          "annotation": {
-            "lines": [
-              "DEJA TU ME GUSTA",
-              "Y SUSCRÍBETE"
-            ],
-            "at": "start",
-            "emoji": "👍"
-          },
-          "transition": {
-            "in": "zoom_in",
+            "in": "from_left",
             "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
-            "transition": [],
+            "transition": [
+              "whoosh_fast"
+            ],
             "context": {
-              "type": "click",
+              "type": "new_idea",
               "at": "start"
             }
           }
@@ -240,30 +200,30 @@
       ]
     },
     {
-      "id": "block_08",
-      "text": "El primer engaño te asalta nada más abrir la aplicación: la urgencia extrema.",
+      "id": "block_07",
+      "text": "Psychology shows that women who persistently ignore their birthdays usually fall into three very specific behavioral profiles.",
       "scenes": [
         {
-          "id": "scene_08",
-          "image_id": 8,
+          "id": "scene_07",
+          "image_id": 7,
           "tipo_midia": "imagem",
-          "asset_key": "red-countdown-timer",
-          "image": "cena_08.png",
+          "asset_key": "protagonist-facing-three-paths",
+          "image": "cena_07.png",
           "visual": {
-            "subject": "cronómetro digital en números rojos brillantes",
-            "action": "marcando pocos minutos restantes",
-            "setting": "pantalla negra de interfaz móvil",
-            "framing": "plano detalle extremo en los números",
-            "details": "números en rojo fuego y texto de casi agotado"
+            "subject": "protagonist from behind",
+            "action": "standing at a cosmic crossroad where three glowing stardust paths diverge",
+            "setting": "vast dark emptiness",
+            "framing": "wide shot showing the choices",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
-            "in": "from_left",
+            "in": "none",
             "out": "to_left",
-            "speed": "fast"
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
-              "click"
+              "whoosh_soft"
             ],
             "context": null
           }
@@ -271,21 +231,59 @@
       ]
     },
     {
+      "id": "block_08",
+      "text": "If you have ever felt misunderstood on your special day, leave a like and subscribe as we decode your mind.",
+      "scenes": [
+        {
+          "id": "scene_08",
+          "image_id": 8,
+          "tipo_midia": "imagem",
+          "asset_key": "protagonist-holding-golden-key",
+          "image": "cena_08.png",
+          "visual": {
+            "subject": "protagonist",
+            "action": "looking directly at the viewer while holding up a glowing vintage key",
+            "setting": "space background",
+            "framing": "centered portrait",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, expression of empathy and invitation"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "DEIXE O LIKE",
+              "E SE INSCREVA"
+            ],
+            "at": "start"
+          }
+        }
+      ]
+    },
+    {
       "id": "block_09",
-      "text": "Un cartel parpadeante grita que esa oferta relámpago termina en apenas dos horas.",
+      "text": "Let us start with the first group. For these women, ignoring the date has absolutely nothing to do with sadness.",
       "scenes": [
         {
           "id": "scene_09",
           "image_id": 9,
           "tipo_midia": "imagem",
-          "asset_key": "flash-sale-banner",
+          "asset_key": "protagonist-walking-first-path-tired",
           "image": "cena_09.png",
           "visual": {
-            "subject": "cartel digital amarillo y rojo vibrante",
-            "action": "destacando un rayo y texto de oferta relámpago",
-            "setting": "interfaz de tienda online",
-            "framing": "plano detalle horizontal",
-            "details": "colores saturados y diseño alarmante"
+            "subject": "protagonist",
+            "action": "walking down the first glowing path with her shoulders slumped in exhaustion",
+            "setting": "deep silent space",
+            "framing": "medium tracking shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
             "in": "from_right",
@@ -303,20 +301,20 @@
     },
     {
       "id": "block_10",
-      "text": "A su lado, una barra roja advierte que solo quedan tres unidades disponibles.",
+      "text": "It is driven by extreme emotional exhaustion. You are always the one managing the feelings of everyone around you.",
       "scenes": [
         {
           "id": "scene_10",
           "image_id": 10,
           "tipo_midia": "imagem",
-          "asset_key": "low-stock-warning-bar",
+          "asset_key": "protagonist-juggling-heavy-orbs",
           "image": "cena_10.png",
           "visual": {
-            "subject": "barra de progreso roja casi vacía",
-            "action": "indicando que quedan pocas existencias",
-            "setting": "debajo de una foto de producto",
-            "framing": "plano detalle enfocado en la barra",
-            "details": "icono de advertencia y colores de tensión"
+            "subject": "protagonist",
+            "action": "desperately trying to juggle multiple heavy glowing orbs representing tasks",
+            "setting": "dark void",
+            "framing": "medium shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, text EXHAUSTION in golden lines, sweat on her brow"
           },
           "transition": {
             "in": "from_left",
@@ -324,7 +322,9 @@
             "speed": "normal"
           },
           "sounds": {
-            "transition": [],
+            "transition": [
+              "whoosh_fast"
+            ],
             "context": null
           }
         }
@@ -332,62 +332,24 @@
     },
     {
       "id": "block_11",
-      "text": "Tu corazón se acelera. Es un instinto primario llamado miedo a perderse algo.",
+      "text": "By the time your own birthday finally arrives, your brain is suffering from a severe case of decision fatigue.",
       "scenes": [
         {
           "id": "scene_11",
           "image_id": 11,
           "tipo_midia": "imagem",
-          "asset_key": "anxious-person-staring-phone",
+          "asset_key": "protagonist-collapsing-under-orbs",
           "image": "cena_11.png",
           "visual": {
-            "subject": "persona sudando ligeramente mientras mira su teléfono",
-            "action": "con los ojos muy abiertos y el dedo tenso",
-            "setting": "habitación a oscuras",
-            "framing": "primer plano iluminado solo por el móvil",
-            "details": "expresión de ansiedad e impaciencia"
+            "subject": "protagonist",
+            "action": "sitting on the floor rubbing her temples, surrounded by the heavy glowing orbs resting on the ground",
+            "setting": "empty space",
+            "framing": "high angle shot looking down at her",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, expression of complete mental burnout"
           },
           "transition": {
-            "in": "from_right",
+            "in": "none",
             "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "click"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_12",
-      "text": "En psicología, esto se conoce como el sesgo de escasez.",
-      "scenes": [
-        {
-          "id": "scene_12",
-          "image_id": 12,
-          "tipo_midia": "video_generico",
-          "asset_key": "empty-cookie-jar",
-          "image": "cena_12.mp4",
-          "visual": {
-            "subject": "tarro de cristal para galletas casi vacío",
-            "action": "mostrando una única galleta en el fondo",
-            "setting": "mesa de cocina rústica",
-            "framing": "plano medio centrado",
-            "details": "cristal transparente y migas en el fondo"
-          },
-          "annotation": {
-            "lines": [
-              "EL SESGO",
-              "DE ESCASEZ"
-            ],
-            "at": "middle"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "none",
             "speed": "slow"
           },
           "sounds": {
@@ -400,29 +362,65 @@
       ]
     },
     {
+      "id": "block_12",
+      "text": "For a mind already drowning in the mental load, organizing one more event feels less like joy and more like punishment.",
+      "scenes": [
+        {
+          "id": "scene_12",
+          "image_id": 12,
+          "tipo_midia": "imagem",
+          "asset_key": "protagonist-rejecting-party-invitation",
+          "image": "cena_12.png",
+          "visual": {
+            "subject": "protagonist and a disembodied shadow hand",
+            "action": "the shadow hand offering a glowing party invitation, protagonist physically recoiling from it in distress",
+            "setting": "pitch black universe",
+            "framing": "medium close up",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": {
+              "type": "paper_flip",
+              "at": "middle"
+            }
+          }
+        }
+      ]
+    },
+    {
       "id": "block_13",
-      "text": "Nuestro cerebro valora instintivamente aquello que percibe como raro o muy limitado.",
+      "text": "You are not avoiding happiness. You are simply craving a single, quiet day of relief where nothing is expected of you.",
       "scenes": [
         {
           "id": "scene_13",
           "image_id": 13,
           "tipo_midia": "imagem",
-          "asset_key": "theater-masks-digital",
+          "asset_key": "protagonist-resting-cosmic-hammock",
           "image": "cena_13.png",
           "visual": {
-            "subject": "máscara teatral clásica",
-            "action": "flotando sobre una interfaz de carrito de compras",
-            "setting": "fondo gris neutro",
-            "framing": "plano centrado conceptual",
-            "details": "sombras duras y contraste dramático"
+            "subject": "protagonist",
+            "action": "lying back peacefully in a hammock made of constellations, eyes closed",
+            "setting": "quiet beautiful void",
+            "framing": "wide relaxing shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, text RELIEF in golden lines"
           },
           "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "slow"
           },
           "sounds": {
-            "transition": [],
+            "transition": [
+              "whoosh_cinematic"
+            ],
             "context": null
           }
         }
@@ -430,29 +428,29 @@
     },
     {
       "id": "block_14",
-      "text": "Pero en estas plataformas asiáticas, esa escasez es puro teatro programado.",
+      "text": "However, the second psychological profile is built on a much more painful and silent emotional foundation.",
       "scenes": [
         {
           "id": "scene_14",
           "image_id": 14,
           "tipo_midia": "imagem",
-          "asset_key": "puppet-strings-interface",
+          "asset_key": "protagonist-holding-cracked-heart",
           "image": "cena_14.png",
           "visual": {
-            "subject": "hilos de marioneta descendiendo desde la oscuridad",
-            "action": "controlando un botón de compra naranja",
-            "setting": "fondo negro digital",
-            "framing": "plano medio conceptual",
-            "details": "hilos tensos e iluminación cenital"
+            "subject": "protagonist",
+            "action": "walking down the second path, clutching her chest as a glowing crack appears over her heart",
+            "setting": "dark empty space",
+            "framing": "medium shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "slow"
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "paper_flip"
+              "whoosh_soft"
             ],
             "context": null
           }
@@ -461,29 +459,29 @@
     },
     {
       "id": "block_15",
-      "text": "Si te quedas esperando a que ese cronómetro rojo llegue a cero, nada ocurre.",
+      "text": "It revolves around asymmetrical relationships. You go out of your way to create magical moments for others.",
       "scenes": [
         {
           "id": "scene_15",
           "image_id": 15,
-          "tipo_midia": "video_generico",
-          "asset_key": "looping-loading-circle",
-          "image": "cena_15.mp4",
+          "tipo_midia": "imagem",
+          "asset_key": "protagonist-arranging-beautiful-table",
+          "image": "cena_15.png",
           "visual": {
-            "subject": "círculo de carga digital girando infinitamente",
-            "action": "reiniciándose una y otra vez",
-            "setting": "pantalla negra",
-            "framing": "plano centrado",
-            "details": "luz de neón naranja y movimiento constante"
+            "subject": "protagonist",
+            "action": "carefully arranging a beautiful glowing banquet table with a warm, giving smile",
+            "setting": "deep universe",
+            "framing": "wide shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "fast"
+            "in": "none",
+            "out": "to_left",
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
-              "click"
+              "whoosh_fast"
             ],
             "context": null
           }
@@ -492,24 +490,24 @@
     },
     {
       "id": "block_16",
-      "text": "La oferta simplemente se reinicia con un descuento casi idéntico. Es pánico artificial.",
+      "text": "But over the years, when it was your turn to be celebrated, you received a generic text or a forgotten promise.",
       "scenes": [
         {
           "id": "scene_16",
           "image_id": 16,
           "tipo_midia": "imagem",
-          "asset_key": "restarted-timer-screen",
+          "asset_key": "protagonist-waiting-alone-empty-table",
           "image": "cena_16.png",
           "visual": {
-            "subject": "cronómetro digital",
-            "action": "volviendo a marcar veinticuatro horas mágicamente",
-            "setting": "interfaz de tienda online oscura",
-            "framing": "plano detalle extremo",
-            "details": "números nuevos y color brillante"
+            "subject": "protagonist",
+            "action": "sitting completely alone at the same table, looking sadly at a single wilting golden rose",
+            "setting": "cold silent space",
+            "framing": "medium shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
-            "in": "from_left",
-            "out": "to_right",
+            "in": "from_right",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
@@ -523,28 +521,30 @@
     },
     {
       "id": "block_17",
-      "text": "Buscan desactivar tu pensamiento lógico para que pulses comprar por pura ansiedad.",
+      "text": "A birthday can easily become a painful emotional test, a day where you measure how much people actually care about you.",
       "scenes": [
         {
           "id": "scene_17",
           "image_id": 17,
           "tipo_midia": "imagem",
-          "asset_key": "finger-pressing-buy-button",
+          "asset_key": "protagonist-measuring-wilting-rose",
           "image": "cena_17.png",
           "visual": {
-            "subject": "dedo índice presionando un botón naranja brillante",
-            "action": "confirmando un pedido en la pantalla velozmente",
-            "setting": "superficie borrosa en el fondo",
-            "framing": "plano detalle extremo en la acción",
-            "details": "texto de comprar ahora y brillo de la interfaz"
+            "subject": "protagonist",
+            "action": "holding a glowing measuring tape next to the tiny wilting rose, looking devastated by the result",
+            "setting": "dark void",
+            "framing": "close up",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
-            "in": "from_right",
+            "in": "zoom_in",
             "out": "none",
-            "speed": "fast"
+            "speed": "slow"
           },
           "sounds": {
-            "transition": [],
+            "transition": [
+              "whoosh_cinematic"
+            ],
             "context": null
           }
         }
@@ -552,32 +552,56 @@
     },
     {
       "id": "block_18",
-      "text": "Una vez atrapado, te enfrentas al segundo engaño: el precio fantasma.",
+      "text": "To survive this repeated disappointment, your brain adopts a mechanism closely related to learned helplessness.",
       "scenes": [
         {
           "id": "scene_18",
           "image_id": 18,
-          "tipo_midia": "video_generico",
-          "asset_key": "heavy-metal-anchor-dropping",
-          "image": "cena_18.mp4",
+          "tipo_midia": "imagem",
+          "asset_key": "protagonist-throwing-tape-defensive",
+          "image": "cena_18.png",
           "visual": {
-            "subject": "ancla de metal pesado cayendo rápidamente",
-            "action": "hundiéndose en el agua oscura",
-            "setting": "profundidades del océano",
-            "framing": "plano frontal siguiendo la caída",
-            "details": "burbujas y metal oxidado"
-          },
-          "annotation": {
-            "lines": [
-              "EL PRECIO",
-              "FANTASMA"
-            ],
-            "at": "middle"
+            "subject": "protagonist",
+            "action": "throwing the measuring tape away into the dark and crossing her arms defensively",
+            "setting": "empty space",
+            "framing": "medium shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
+            "in": "from_left",
+            "out": "to_right",
             "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_19",
+      "text": "You convince yourself that you truly do not care, carefully building an impenetrable emotional armor.",
+      "scenes": [
+        {
+          "id": "scene_19",
+          "image_id": 19,
+          "tipo_midia": "imagem",
+          "asset_key": "protagonist-putting-on-armor",
+          "image": "cena_19.png",
+          "visual": {
+            "subject": "protagonist",
+            "action": "physically placing a heavy glowing piece of armor over her own shoulders",
+            "setting": "dark void",
+            "framing": "centered close up",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, text ARMOR in golden lines"
+          },
+          "transition": {
+            "in": "none",
+            "out": "to_left",
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
@@ -589,52 +613,21 @@
       ]
     },
     {
-      "id": "block_19",
-      "text": "Ves unos auriculares inalámbricos por diez euros, lo cual parece una ganga.",
-      "scenes": [
-        {
-          "id": "scene_19",
-          "image_id": 19,
-          "tipo_midia": "imagem",
-          "asset_key": "cheap-plastic-headphones",
-          "image": "cena_19.png",
-          "visual": {
-            "subject": "auriculares de plástico blanco brillante",
-            "action": "presentados sobre un fondo limpio",
-            "setting": "foto de catálogo de producto",
-            "framing": "plano centrado",
-            "details": "plástico de baja calidad visible y luces de estudio"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "click"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
       "id": "block_20",
-      "text": "Pero justo encima, aparece tachado un supuesto precio original de ciento veinte euros.",
+      "text": "It is a subconscious strategy: if you expect absolutely nothing from anyone, their lack of effort cannot break your heart.",
       "scenes": [
         {
           "id": "scene_20",
           "image_id": 20,
           "tipo_midia": "imagem",
-          "asset_key": "crossed-out-high-price",
+          "asset_key": "protagonist-armored-ignoring-shadows",
           "image": "cena_20.png",
           "visual": {
-            "subject": "número ciento veinte tachado con una línea roja",
-            "action": "colocado justo encima de un número diez brillante",
-            "setting": "fondo blanco de tienda online",
-            "framing": "plano detalle tipográfico",
-            "details": "tinta negra y línea roja gruesa"
+            "subject": "protagonist fully armored",
+            "action": "standing perfectly still and cold as shadowy figures walk past without looking at her",
+            "setting": "deep universe",
+            "framing": "wide shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
             "in": "from_right",
@@ -643,7 +636,7 @@
           },
           "sounds": {
             "transition": [
-              "paper_flip"
+              "whoosh_fast"
             ],
             "context": null
           }
@@ -652,28 +645,30 @@
     },
     {
       "id": "block_21",
-      "text": "Esa cifra gigantesca nunca fue real. Es un número completamente inventado.",
+      "text": "But there is a third group, and this profile reveals the deepest and most complex psychological scar.",
       "scenes": [
         {
           "id": "scene_21",
           "image_id": 21,
           "tipo_midia": "imagem",
-          "asset_key": "fake-price-tag-creation",
+          "asset_key": "protagonist-armor-fading-fearful",
           "image": "cena_21.png",
           "visual": {
-            "subject": "etiqueta de precio en blanco",
-            "action": "siendo escrita con un bolígrafo oscuro",
-            "setting": "escritorio de madera",
-            "framing": "plano cenital cercano",
-            "details": "tinta fresca y papel texturizado"
+            "subject": "protagonist",
+            "action": "stepping onto the third path, her armor dissolving as she shrinks into a fearful posture",
+            "setting": "pitch black background",
+            "framing": "medium shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
-            "in": "from_left",
-            "out": "none",
-            "speed": "fast"
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
           },
           "sounds": {
-            "transition": [],
+            "transition": [
+              "whoosh_cinematic"
+            ],
             "context": null
           }
         }
@@ -681,25 +676,25 @@
     },
     {
       "id": "block_22",
-      "text": "Su único objetivo es activar lo que los neurocientíficos llaman el efecto ancla.",
+      "text": "These women do not ignore their birthdays out of exhaustion, but because of a paralyzing guilt.",
       "scenes": [
         {
           "id": "scene_22",
           "image_id": 22,
           "tipo_midia": "imagem",
-          "asset_key": "brain-processing-numbers",
+          "asset_key": "protagonist-curled-under-spotlight",
           "image": "cena_22.png",
           "visual": {
-            "subject": "diagrama de un cerebro humano",
-            "action": "leyendo un número gigante y enfocándose en él",
-            "setting": "página de estudio psicológico",
-            "framing": "plano detalle de la ilustración",
-            "details": "líneas de visión esquemáticas y tinta negra"
+            "subject": "protagonist",
+            "action": "curling into a tight ball on the ground as a bright, aggressive spotlight shines directly on her",
+            "setting": "dark empty stage",
+            "framing": "wide dramatic angle",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, text GUILT in golden lines"
           },
           "transition": {
-            "in": "from_right",
-            "out": "to_right",
-            "speed": "normal"
+            "in": "from_left",
+            "out": "none",
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
@@ -712,28 +707,30 @@
     },
     {
       "id": "block_23",
-      "text": "Para tomar decisiones rápidas, la mente humana necesita un punto de referencia inicial.",
+      "text": "When the spotlight is suddenly put on them, their nervous system detects a massive, overwhelming threat.",
       "scenes": [
         {
           "id": "scene_23",
           "image_id": 23,
           "tipo_midia": "imagem",
-          "asset_key": "person-holding-head-confused",
+          "asset_key": "protagonist-blocking-spotlight",
           "image": "cena_23.png",
           "visual": {
-            "subject": "persona sujetando su cabeza",
-            "action": "intentando procesar múltiples etiquetas de precio flotantes",
-            "setting": "fondo gris neutro",
-            "framing": "plano medio lateral",
-            "details": "expresión de duda y números borrosos alrededor"
+            "subject": "protagonist",
+            "action": "covering her face with both hands in a panic to block the intense, burning spotlight",
+            "setting": "claustrophobic dark space",
+            "framing": "close up on her hands and face",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
-            "in": "from_left",
-            "out": "to_left",
-            "speed": "slow"
+            "in": "none",
+            "out": "to_right",
+            "speed": "fast"
           },
           "sounds": {
-            "transition": [],
+            "transition": [
+              "whoosh_fast"
+            ],
             "context": null
           }
         }
@@ -741,29 +738,29 @@
     },
     {
       "id": "block_24",
-      "text": "Al ver el número ciento veinte, esos diez euros parecen un regalo divino.",
+      "text": "This usually traces back to childhood. You learned early on that asking for attention caused conflict.",
       "scenes": [
         {
           "id": "scene_24",
           "image_id": 24,
           "tipo_midia": "imagem",
-          "asset_key": "brain-celebrating-discount",
+          "asset_key": "little-girl-hiding-under-table",
           "image": "cena_24.png",
           "visual": {
-            "subject": "ilustración de un cerebro humano",
-            "action": "rodeado de luces brillantes y flechas rojas de descuento",
-            "setting": "fondo naranja y rojo",
-            "framing": "plano centrado brillante",
-            "details": "colores saturados de fiesta"
+            "subject": "a little girl with short wavy hair (the protagonist as a child) and giant adult shadows",
+            "action": "the child hiding under a glowing table while two giant shadows argue above her",
+            "setting": "empty expansive void",
+            "framing": "wide distant shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, child looking terrified"
           },
           "transition": {
             "in": "from_right",
-            "out": "none",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "click"
+              "whoosh_soft"
             ],
             "context": null
           }
@@ -772,28 +769,30 @@
     },
     {
       "id": "block_25",
-      "text": "Ya no estás evaluando la baja calidad del plástico que vas a recibir.",
+      "text": "In clinical psychology, this is linked to the fawning trauma response: the urge to constantly appease others to stay safe.",
       "scenes": [
         {
           "id": "scene_25",
           "image_id": 25,
           "tipo_midia": "imagem",
-          "asset_key": "cheap-broken-gadget",
+          "asset_key": "little-girl-offering-white-flag",
           "image": "cena_25.png",
           "visual": {
-            "subject": "aparato de plástico con bordes mal terminados",
-            "action": "sostenido por una mano decepcionada",
-            "setting": "luz natural de ventana",
-            "framing": "plano detalle en la textura del objeto",
-            "details": "defectos de fábrica visibles"
+            "subject": "the little girl",
+            "action": "stepping out and trembling while offering a glowing white flag of surrender to a looming shadow",
+            "setting": "stormy cosmic background",
+            "framing": "medium shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
-            "in": "from_left",
+            "in": "none",
             "out": "to_right",
-            "speed": "fast"
+            "speed": "slow"
           },
           "sounds": {
-            "transition": [],
+            "transition": [
+              "whoosh_fast"
+            ],
             "context": null
           }
         }
@@ -801,29 +800,29 @@
     },
     {
       "id": "block_26",
-      "text": "Tu cerebro simplemente está celebrando un descuento imaginario de ciento diez euros.",
+      "text": "You spent a lifetime silencing your own needs, making sure you never inconvenienced the adults around you.",
       "scenes": [
         {
           "id": "scene_26",
           "image_id": 26,
           "tipo_midia": "imagem",
-          "asset_key": "imaginary-discount-bubble",
+          "asset_key": "little-girl-locking-her-lips",
           "image": "cena_26.png",
           "visual": {
-            "subject": "burbuja de pensamiento sobre una persona",
-            "action": "conteniendo un billete de cien euros tachado",
-            "setting": "fondo gris neutro",
-            "framing": "plano medio conceptual",
-            "details": "trazos de cómic y expresión ilusa"
+            "subject": "the little girl",
+            "action": "physically placing a heavy golden padlock over her own mouth with a sad expression",
+            "setting": "pitch black darkness",
+            "framing": "close up portrait",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "normal"
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "whoosh_cinematic"
             ],
             "context": null
           }
@@ -832,29 +831,29 @@
     },
     {
       "id": "block_27",
-      "text": "El tercer engaño ataca directamente cuando intentas cerrar tu compra.",
+      "text": "So, receiving undivided attention now feels unsafe. It disrupts your emotional balance.",
       "scenes": [
         {
           "id": "scene_27",
           "image_id": 27,
           "tipo_midia": "imagem",
-          "asset_key": "shopping-cart-checkout-screen",
+          "asset_key": "adult-protagonist-surrounded-by-candles",
           "image": "cena_27.png",
           "visual": {
-            "subject": "pantalla de pago final en un móvil",
-            "action": "mostrando el botón verde de confirmar pago",
-            "setting": "interfaz minimalista oscura",
-            "framing": "plano detalle de la zona inferior",
-            "details": "icono de candado y precio total"
+            "subject": "the adult protagonist",
+            "action": "trembling defensively as multiple floating hands point glowing birthday candles at her like weapons",
+            "setting": "dark void",
+            "framing": "medium shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
             "in": "from_left",
-            "out": "none",
-            "speed": "slow"
+            "out": "to_right",
+            "speed": "fast"
           },
           "sounds": {
             "transition": [
-              "click"
+              "whoosh_fast"
             ],
             "context": null
           }
@@ -863,28 +862,30 @@
     },
     {
       "id": "block_28",
-      "text": "Es la famosa trampa de la barra de envío gratuito.",
+      "text": "Erasing your birthday becomes a subconscious survival mechanism to remain invisible, quiet, and perfectly protected.",
       "scenes": [
         {
           "id": "scene_28",
           "image_id": 28,
           "tipo_midia": "imagem",
-          "asset_key": "free-shipping-progress-bar",
+          "asset_key": "protagonist-wearing-invisibility-cloak",
           "image": "cena_28.png",
           "visual": {
-            "subject": "barra amarilla de envío gratuito",
-            "action": "indicando que faltan pocos euros para llenarse",
-            "setting": "encabezado de la página de carrito",
-            "framing": "plano detalle horizontal",
-            "details": "texto promocional y pequeño camión"
+            "subject": "protagonist",
+            "action": "wrapping a cosmic cloak made of the night sky tightly around herself, fading into the background",
+            "setting": "deep universe",
+            "framing": "centered",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, text INVISIBLE in golden lines"
           },
           "transition": {
-            "in": "from_right",
-            "out": "to_right",
-            "speed": "normal"
+            "in": "none",
+            "out": "to_left",
+            "speed": "slow"
           },
           "sounds": {
-            "transition": [],
+            "transition": [
+              "whoosh_soft"
+            ],
             "context": null
           }
         }
@@ -892,29 +893,29 @@
     },
     {
       "id": "block_29",
-      "text": "Una notificación te avisa que faltan cinco euros para no pagar los portes.",
+      "text": "As we can see, avoiding your birthday is rarely just a simple, superficial dislike for cake or social gatherings.",
       "scenes": [
         {
           "id": "scene_29",
           "image_id": 29,
           "tipo_midia": "imagem",
-          "asset_key": "red-alert-notification-phone",
+          "asset_key": "protagonist-removing-cloak-peaceful",
           "image": "cena_29.png",
           "visual": {
-            "subject": "notificación emergente roja en la pantalla",
-            "action": "exigiendo añadir más productos para salvar el envío",
-            "setting": "fondo borroso de la tienda",
-            "framing": "plano detalle centrado",
-            "details": "texto imperativo y diseño de alerta"
+            "subject": "protagonist",
+            "action": "sitting calmly on a glowing crescent moon, lowering the cloak to reveal a peaceful expression",
+            "setting": "dark cosmic ocean",
+            "framing": "wide shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
-            "in": "from_left",
+            "in": "from_right",
             "out": "to_left",
-            "speed": "fast"
+            "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "whoosh_fast"
             ],
             "context": null
           }
@@ -923,36 +924,29 @@
     },
     {
       "id": "block_30",
-      "text": "Aquí entra en juego la falacia del costo hundido.",
+      "text": "It can be a desperate plea for mental rest, a heavy shield against heartbreak, or an echo from a wounded inner child.",
       "scenes": [
         {
           "id": "scene_30",
           "image_id": 30,
-          "tipo_midia": "video_generico",
-          "asset_key": "money-falling-into-trash",
-          "image": "cena_30.mp4",
+          "tipo_midia": "imagem",
+          "asset_key": "protagonist-holding-hands-inner-child",
+          "image": "cena_30.png",
           "visual": {
-            "subject": "monedas de euro cayendo en un cubo de basura",
-            "action": "desapareciendo en la oscuridad del recipiente",
-            "setting": "fondo gris oscuro",
-            "framing": "plano frontal conceptual",
-            "details": "metal brillante y movimiento descendente"
-          },
-          "annotation": {
-            "lines": [
-              "EL COSTO",
-              "HUNDIDO"
-            ],
-            "at": "middle"
+            "subject": "protagonist and her younger self",
+            "action": "holding hands and smiling gently at each other",
+            "setting": "pitch black void",
+            "framing": "medium shot of the two",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "normal"
+            "in": "none",
+            "out": "to_right",
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
-              "cash_register"
+              "whoosh_soft"
             ],
             "context": null
           }
@@ -961,28 +955,30 @@
     },
     {
       "id": "block_31",
-      "text": "Odias la idea de pagar cuatro euros por el envío, porque parece dinero perdido.",
+      "text": "The next time the calendar marks your special day, remember that you do not need to force a celebration to prove your worth.",
       "scenes": [
         {
           "id": "scene_31",
           "image_id": 31,
           "tipo_midia": "imagem",
-          "asset_key": "person-looking-empty-wallet",
+          "asset_key": "protagonist-pushing-calendar-peacefully",
           "image": "cena_31.png",
           "visual": {
-            "subject": "manos sosteniendo unas pocas monedas",
-            "action": "persona mirando el dinero con frustración",
-            "setting": "fondo difuminado",
-            "framing": "plano detalle de las manos abiertas",
-            "details": "metal y expresión corporal de pérdida"
+            "subject": "protagonist",
+            "action": "gently and peacefully pushing the glowing calendar away, this time with a sincere smile",
+            "setting": "dark peaceful space",
+            "framing": "medium shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, her body language is relaxed, not defensive"
           },
           "transition": {
-            "in": "from_right",
+            "in": "from_left",
             "out": "to_right",
-            "speed": "slow"
+            "speed": "normal"
           },
           "sounds": {
-            "transition": [],
+            "transition": [
+              "whoosh_fast"
+            ],
             "context": null
           }
         }
@@ -990,29 +986,29 @@
     },
     {
       "id": "block_32",
-      "text": "Así que terminas agregando quince euros en baratijas que jamás habrías buscado.",
+      "text": "True self-care might just be staying home, reading a book in silence, and accepting that your peace is enough.",
       "scenes": [
         {
           "id": "scene_32",
           "image_id": 32,
           "tipo_midia": "imagem",
-          "asset_key": "adding-random-items-cart",
+          "asset_key": "protagonist-reading-by-window-crown",
           "image": "cena_32.png",
           "visual": {
-            "subject": "dedo pulsando el botón de añadir furiosamente",
-            "action": "seleccionando productos extraños recomendados",
-            "setting": "interfaz móvil iluminada",
-            "framing": "plano detalle extremo en la pantalla",
-            "details": "iconos de más y miniaturas de objetos inútiles"
+            "subject": "protagonist",
+            "action": "sitting by an ethereal window, reading a glowing book in total silence",
+            "setting": "silent void",
+            "framing": "wide serene shot",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, text PEACE in golden lines, a delicate golden crown resting on the sill"
           },
           "transition": {
-            "in": "from_left",
-            "out": "to_left",
-            "speed": "fast"
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
-              "click"
+              "whoosh_cinematic"
             ],
             "context": null
           }
@@ -1021,1180 +1017,38 @@
     },
     {
       "id": "block_33",
-      "text": "Gastaste diez euros de más, pero te sientes inteligente por ahorrar cuatro.",
+      "text": "Do you ignore your birthday out of exhaustion, or to protect yourself from disappointment? Subscribe for more and let me know below.",
       "scenes": [
         {
           "id": "scene_33",
           "image_id": 33,
           "tipo_midia": "imagem",
-          "asset_key": "pile-of-plastic-junk",
+          "asset_key": "protagonist-smiling-empathetic-camera",
           "image": "cena_33.png",
           "visual": {
-            "subject": "montaña de objetos de plástico inservibles",
-            "action": "acumulándose sobre una mesa de salón",
-            "setting": "casa desordenada",
-            "framing": "plano general de la mesa",
-            "details": "colores chillones y bolsas de envío rotas"
+            "subject": "protagonist",
+            "action": "looking directly into the camera with an empathetic, understanding smile",
+            "setting": "beautiful vast universe",
+            "framing": "close up portrait",
+            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, bathed in soft starlight"
           },
           "transition": {
-            "in": "from_right",
+            "in": "zoom_in",
             "out": "none",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "whoosh_cinematic"
             ],
             "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_34",
-      "text": "El cuarto mecanismo transforma una simple tienda en un casino de Las Vegas.",
-      "scenes": [
-        {
-          "id": "scene_34",
-          "image_id": 34,
-          "tipo_midia": "video_generico",
-          "asset_key": "casino-slot-machine-spinning",
-          "image": "cena_34.mp4",
-          "visual": {
-            "subject": "tambores de una máquina tragaperras de casino",
-            "action": "girando rápidamente bajo luces de neón",
-            "setting": "sala de apuestas oscura",
-            "framing": "plano detalle extremo en los rodillos",
-            "details": "colores dorados y movimiento borroso constante"
           },
           "annotation": {
             "lines": [
-              "EL CASINO",
-              "DIGITAL"
+              "SUBSCRIBE",
+              "FOR MORE"
             ],
             "at": "start"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_35",
-      "text": "Es la gamificación del consumo a través de ruletas y granjas virtuales.",
-      "scenes": [
-        {
-          "id": "scene_35",
-          "image_id": 35,
-          "tipo_midia": "imagem",
-          "asset_key": "digital-roulette-wheel-phone",
-          "image": "cena_35.png",
-          "visual": {
-            "subject": "ruleta de la fortuna digital con premios exagerados",
-            "action": "girando en la pantalla de un teléfono",
-            "setting": "manos sosteniendo el móvil de frente",
-            "framing": "plano detalle centrado",
-            "details": "colores vibrantes amarillos y confeti digital"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_36",
-      "text": "Te prometen regalos si riegas plantas digitales o giras una rueda de colores.",
-      "scenes": [
-        {
-          "id": "scene_36",
-          "image_id": 36,
-          "tipo_midia": "imagem",
-          "asset_key": "virtual-farm-game-screen",
-          "image": "cena_36.png",
-          "visual": {
-            "subject": "minijuego de una granja virtual en la app",
-            "action": "mostrando una regadera de agua flotante",
-            "setting": "interfaz verde y luminosa",
-            "framing": "plano cerrado en la animación",
-            "details": "plantas digitales y monedas cayendo"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "click"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_37",
-      "text": "Al principio, la aplicación es extremadamente generosa y tu progreso es veloz.",
-      "scenes": [
-        {
-          "id": "scene_37",
-          "image_id": 37,
-          "tipo_midia": "imagem",
-          "asset_key": "fast-progress-bar-game",
-          "image": "cena_37.png",
-          "visual": {
-            "subject": "barra de progreso verde llenándose rápidamente",
-            "action": "avanzando grandes bloques con cada toque",
-            "setting": "interfaz de recompensa de la tienda",
-            "framing": "plano detalle horizontal",
-            "details": "números subiendo velozmente al noventa por ciento"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "none",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_38",
-      "text": "Cada clic libera dopamina en tu cerebro, creando una falsa sensación de logro.",
-      "scenes": [
-        {
-          "id": "scene_38",
-          "image_id": 38,
-          "tipo_midia": "imagem",
-          "asset_key": "dopamine-brain-glowing",
-          "image": "cena_38.png",
-          "visual": {
-            "subject": "silueta de cabeza humana",
-            "action": "con el centro del cerebro brillando con intensidad",
-            "setting": "fondo oscuro con destellos",
-            "framing": "plano medio lateral",
-            "details": "luz azul y amarilla pulsante de satisfacción"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_39",
-      "text": "Pero cuando estás a un milímetro de ganar el premio, todo se frena.",
-      "scenes": [
-        {
-          "id": "scene_39",
-          "image_id": 39,
-          "tipo_midia": "imagem",
-          "asset_key": "progress-bar-stuck-99",
-          "image": "cena_39.png",
-          "visual": {
-            "subject": "barra de progreso en una pantalla",
-            "action": "estancada exactamente antes del cien por cien",
-            "setting": "interfaz gráfica frustrante",
-            "framing": "plano detalle cerrado",
-            "details": "número 99 coma 9 y espacio vacío diminuto"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "click"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_40",
-      "text": "Para dar el último paso, la aplicación te exige invitar a tus contactos.",
-      "scenes": [
-        {
-          "id": "scene_40",
-          "image_id": 40,
-          "tipo_midia": "imagem",
-          "asset_key": "person-sending-invites-phone",
-          "image": "cena_40.png",
-          "visual": {
-            "subject": "dedo pulsando múltiples botones de enviar",
-            "action": "mandando invitaciones a una larga lista de amigos",
-            "setting": "aplicación de mensajería social",
-            "framing": "plano detalle sobre la pantalla",
-            "details": "iconos verdes de envío y avatares pequeños"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "paper_flip"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_41",
-      "text": "Te han convertido en su publicista no remunerado. Trabajas para ellos gratis.",
-      "scenes": [
-        {
-          "id": "scene_41",
-          "image_id": 41,
-          "tipo_midia": "video_generico",
-          "asset_key": "factory-assembly-line",
-          "image": "cena_41.mp4",
-          "visual": {
-            "subject": "línea de ensamblaje industrial monótona",
-            "action": "moviendo productos idénticos en un ciclo sin fin",
-            "setting": "fábrica automatizada gris",
-            "framing": "plano de seguimiento aéreo",
-            "details": "brazos robóticos y ritmo mecánico constante"
-          },
-          "annotation": {
-            "lines": [
-              "TRABAJO",
-              "GRATUITO"
-            ],
-            "at": "middle"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_42",
-      "text": "El quinto engaño es un asalto directo a tus sentidos: la sobrecarga cognitiva.",
-      "scenes": [
-        {
-          "id": "scene_42",
-          "image_id": 42,
-          "tipo_midia": "video_generico",
-          "asset_key": "chaotic-popup-interface",
-          "image": "cena_42.mp4",
-          "visual": {
-            "subject": "docenas de ventanas emergentes brillantes",
-            "action": "superponiéndose unas sobre otras caóticamente",
-            "setting": "pantalla de dispositivo digital",
-            "framing": "plano cerrado lleno de elementos visuales",
-            "details": "colores rojo y naranja, botones falsos de cerrar"
-          },
-          "annotation": {
-            "lines": [
-              "SOBRECARGA",
-              "VISUAL"
-            ],
-            "at": "start"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_43",
-      "text": "Estas plataformas están diseñadas exactamente con el mismo código adictivo que TikTok.",
-      "scenes": [
-        {
-          "id": "scene_43",
-          "image_id": 43,
-          "tipo_midia": "video_generico",
-          "asset_key": "infinite-scroll-finger",
-          "image": "cena_43.mp4",
-          "visual": {
-            "subject": "mano deslizando hacia arriba sin parar en un móvil",
-            "action": "viendo contenido pasar como un flujo continuo",
-            "setting": "fondo oscuro neutro",
-            "framing": "plano detalle lateral",
-            "details": "movimiento repetitivo y pantalla emitiendo luz"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_44",
-      "text": "La interfaz es un laberinto de colores brillantes y un scroll infinito.",
-      "scenes": [
-        {
-          "id": "scene_44",
-          "image_id": 44,
-          "tipo_midia": "imagem",
-          "asset_key": "bizarre-products-grid",
-          "image": "cena_44.png",
-          "visual": {
-            "subject": "cuadrícula de productos absurdos y coloridos",
-            "action": "mostrados simultáneamente en una cuadrícula densa",
-            "setting": "interfaz de descubrimientos de la tienda",
-            "framing": "plano frontal a la pantalla",
-            "details": "colores saturados y falta de coherencia lógica"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "click"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_45",
-      "text": "Buscas unas tijeras y el algoritmo te inyecta masajes faciales y luces led.",
-      "scenes": [
-        {
-          "id": "scene_45",
-          "image_id": 45,
-          "tipo_midia": "imagem",
-          "asset_key": "weird-recommendations-app",
-          "image": "cena_45.png",
-          "visual": {
-            "subject": "barra de búsqueda de tijeras",
-            "action": "arrojando resultados de luces de neón y gadgets extraños",
-            "setting": "aplicación de compras blanca",
-            "framing": "plano detalle de los resultados de búsqueda",
-            "details": "imágenes incoherentes debajo de la lupa"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_right",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_46",
-      "text": "Es una cascada de información absurda que agota tu capacidad de análisis.",
-      "scenes": [
-        {
-          "id": "scene_46",
-          "image_id": 46,
-          "tipo_midia": "imagem",
-          "asset_key": "tired-eyes-smartphone-glare",
-          "image": "cena_46.png",
-          "visual": {
-            "subject": "ojos cansados de una persona parpadeando",
-            "action": "reflejando la luz naranja de una pantalla caótica",
-            "setting": "oscuridad total",
-            "framing": "primer plano extremo en la mirada",
-            "details": "ojeras leves y mirada perdida"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "none",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_47",
-      "text": "Llegará un punto en que tu cerebro cederá a la compra por simple agotamiento.",
-      "scenes": [
-        {
-          "id": "scene_47",
-          "image_id": 47,
-          "tipo_midia": "imagem",
-          "asset_key": "stressed-shopper-giving-up",
-          "image": "cena_47.png",
-          "visual": {
-            "subject": "persona suspirando y cerrando los ojos",
-            "action": "dejando caer el dedo sobre el botón de pago",
-            "setting": "habitación difuminada",
-            "framing": "plano medio lateral",
-            "details": "postura de rendición física y pantalla brillante"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "cash_register"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_48",
-      "text": "El sexto mecanismo sostiene todo el modelo de la moda rápida actual.",
-      "scenes": [
-        {
-          "id": "scene_48",
-          "image_id": 48,
-          "tipo_midia": "video_generico",
-          "asset_key": "glamorous-fashion-shoot",
-          "image": "cena_48.mp4",
-          "visual": {
-            "subject": "sesión fotográfica de moda con luces brillantes",
-            "action": "modelo posando en un estudio profesional",
-            "setting": "estudio de fotografía de alto nivel",
-            "framing": "plano general con flashes disparándose",
-            "details": "focos, fondo blanco y pose estilizada"
-          },
-          "annotation": {
-            "lines": [
-              "ILUSIÓN DE",
-              "CALIDAD"
-            ],
-            "at": "middle"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_49",
-      "text": "Es la ilusión visual de calidad extrema a precios imposibles.",
-      "scenes": [
-        {
-          "id": "scene_49",
-          "image_id": 49,
-          "tipo_midia": "imagem",
-          "asset_key": "perfect-dress-phone-screen",
-          "image": "cena_49.png",
-          "visual": {
-            "subject": "fotografía perfecta de un vestido elegante",
-            "action": "mostrándose inmaculado en el catálogo de la aplicación",
-            "setting": "pantalla de móvil brillante",
-            "framing": "plano detalle centrado",
-            "details": "colores vibrantes, tejido sedoso y precio bajo"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "none",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "click"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_50",
-      "text": "Ves una chaqueta espectacular que parece alta costura gracias a una edición perfecta.",
-      "scenes": [
-        {
-          "id": "scene_50",
-          "image_id": 50,
-          "tipo_midia": "imagem",
-          "asset_key": "retouched-fashion-photo",
-          "image": "cena_50.png",
-          "visual": {
-            "subject": "chaqueta de cuero brillante excesivamente retocada",
-            "action": "flotando en un fondo digital blanco",
-            "setting": "interfaz de tienda de ropa",
-            "framing": "plano frontal comercial",
-            "details": "luces artificiales irreales y ausencia de arrugas"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_51",
-      "text": "Pero al abrir el paquete, descubres un poliéster brillante que no resistirá tres lavados.",
-      "scenes": [
-        {
-          "id": "scene_51",
-          "image_id": 51,
-          "tipo_midia": "imagem",
-          "asset_key": "cheap-fabric-tearing",
-          "image": "cena_51.png",
-          "visual": {
-            "subject": "tejido sintético de muy baja calidad",
-            "action": "arrugado y deshilachándose levemente al sacarlo",
-            "setting": "manos abriendo un paquete de plástico gris",
-            "framing": "plano detalle extremo en la textura",
-            "details": "hilos sueltos, costuras torcidas y brillo barato"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "paper_flip"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_52",
-      "text": "Esta obsolescencia programada te obliga a comprar ropa nueva todos los meses.",
-      "scenes": [
-        {
-          "id": "scene_52",
-          "image_id": 52,
-          "tipo_midia": "video_generico",
-          "asset_key": "trash-can-full-clothes",
-          "image": "cena_52.mp4",
-          "visual": {
-            "subject": "bolsa de basura grande rebosando de ropa",
-            "action": "prendas siendo arrojadas y descartadas sin cuidado",
-            "setting": "rincón de una calle o habitación gris",
-            "framing": "plano medio apuntando al recipiente",
-            "details": "telas coloridas pero arruinadas"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_53",
-      "text": "Creías ahorrar, pero estás atrapado en un ciclo de consumo que te empobrece.",
-      "scenes": [
-        {
-          "id": "scene_53",
-          "image_id": 53,
-          "tipo_midia": "imagem",
-          "asset_key": "cycle-of-debt-concept",
-          "image": "cena_53.png",
-          "visual": {
-            "subject": "rueda de hámster humana hecha de billetes",
-            "action": "persona corriendo dentro sin avanzar",
-            "setting": "fondo gris neutro",
-            "framing": "plano conceptual centrado",
-            "details": "sombras duras y billetes esparcidos"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_54",
-      "text": "Esto nos lleva a la séptima trampa, y es la revelación del negocio.",
-      "scenes": [
-        {
-          "id": "scene_54",
-          "image_id": 54,
-          "tipo_midia": "video_generico",
-          "asset_key": "burning-money-flames",
-          "image": "cena_54.mp4",
-          "visual": {
-            "subject": "fajos de billetes ardiendo en llamas",
-            "action": "quemándose lentamente hasta volverse ceniza",
-            "setting": "fondo negro absoluto",
-            "framing": "plano detalle centrado",
-            "details": "fuego real y billetes reconocibles"
-          },
-          "annotation": {
-            "lines": [
-              "EXTRACCIÓN",
-              "MASIVA"
-            ],
-            "at": "middle"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_55",
-      "text": "Informes financieros estiman que Temu pierde treinta dólares por cada pedido enviado.",
-      "scenes": [
-        {
-          "id": "scene_55",
-          "image_id": 55,
-          "tipo_midia": "imagem",
-          "asset_key": "financial-report-thirty-dollars",
-          "image": "cena_55.png",
-          "visual": {
-            "subject": "informe impreso con letras rojas",
-            "action": "mostrando un saldo negativo marcado con un círculo",
-            "setting": "mesa de analista iluminada",
-            "framing": "plano cenital enfocado en el texto",
-            "details": "marcador rojo y gráficos cayendo"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "none",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "paper_flip"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_56",
-      "text": "¿Por qué una corporación aceptaría quemar miles de millones de dólares a propósito?",
-      "scenes": [
-        {
-          "id": "scene_56",
-          "image_id": 56,
-          "tipo_midia": "imagem",
-          "asset_key": "question-mark-corporate-building",
-          "image": "cena_56.png",
-          "visual": {
-            "subject": "enorme rascacielos corporativo sin logos",
-            "action": "proyectando una sombra ominosa sobre la calle",
-            "setting": "ciudad de noche fría",
-            "framing": "plano contrapicado hacia la cima",
-            "details": "cristales oscuros y luces frías"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_57",
-      "text": "Porque su negocio principal no es venderte cables. Eres tú.",
-      "scenes": [
-        {
-          "id": "scene_57",
-          "image_id": 57,
-          "tipo_midia": "video_generico",
-          "asset_key": "fishing-hook-underwater",
-          "image": "cena_57.mp4",
-          "visual": {
-            "subject": "anzuelo de pesca afilado y brillante",
-            "action": "sumergiéndose en aguas oscuras y quietas",
-            "setting": "profundidades submarinas",
-            "framing": "plano detalle siguiendo el anzuelo",
-            "details": "metal brillando sutilmente en el agua"
-          },
-          "annotation": {
-            "lines": [
-              "ERES EL",
-              "PRODUCTO"
-            ],
-            "at": "start"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_58",
-      "text": "Estas empresas operan como máquinas de extracción masiva de datos globales.",
-      "scenes": [
-        {
-          "id": "scene_58",
-          "image_id": 58,
-          "tipo_midia": "video_generico",
-          "asset_key": "data-servers-glowing",
-          "image": "cena_58.mp4",
-          "visual": {
-            "subject": "hileras masivas de servidores informáticos",
-            "action": "procesando información con luces parpadeantes azules",
-            "setting": "centro de datos gigante y frío",
-            "framing": "plano general en perspectiva",
-            "details": "cables estructurados y luces led constantes"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_59",
-      "text": "Si revisas los permisos de tu teléfono, notarás exigencias increíblemente invasivas.",
-      "scenes": [
-        {
-          "id": "scene_59",
-          "image_id": 59,
-          "tipo_midia": "imagem",
-          "asset_key": "invasive-permissions-screen",
-          "image": "cena_59.png",
-          "visual": {
-            "subject": "lista de permisos de seguridad en un teléfono",
-            "action": "todos los interruptores encendidos en verde alarmante",
-            "setting": "pantalla de ajustes del móvil",
-            "framing": "plano detalle extremo en los botones",
-            "details": "texto claro de advertencia de sistema"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_left",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "click"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_60",
-      "text": "Piden acceso a tu cámara, tus contactos, tu ubicación y tu red wifi.",
-      "scenes": [
-        {
-          "id": "scene_60",
-          "image_id": 60,
-          "tipo_midia": "imagem",
-          "asset_key": "camera-location-icons",
-          "image": "cena_60.png",
-          "visual": {
-            "subject": "iconos digitales de cámara y radar de ubicación",
-            "action": "brillando en rojo sobre un fondo oscuro",
-            "setting": "interfaz de privacidad vulnerada",
-            "framing": "plano centrado de los iconos",
-            "details": "diseño minimalista pero agresivo"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_61",
-      "text": "Cada artículo que miras y cada milisegundo que dudas frente a un descuento se registra.",
-      "scenes": [
-        {
-          "id": "scene_61",
-          "image_id": 61,
-          "tipo_midia": "imagem",
-          "asset_key": "binary-code-over-face",
-          "image": "cena_61.png",
-          "visual": {
-            "subject": "rostro humano inexpresivo",
-            "action": "iluminado por líneas de código digital cayendo como lluvia",
-            "setting": "fondo completamente oscuro",
-            "framing": "primer plano frontal",
-            "details": "números reflejados en la piel y los ojos"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_62",
-      "text": "Construyen un perfil psicológico sobre tus debilidades, impulsos y nivel de ansiedad.",
-      "scenes": [
-        {
-          "id": "scene_62",
-          "image_id": 62,
-          "tipo_midia": "imagem",
-          "asset_key": "psychological-profile-folder",
-          "image": "cena_62.png",
-          "visual": {
-            "subject": "carpeta digital de un perfil de usuario",
-            "action": "mostrando gráficos de debilidades y comportamiento",
-            "setting": "interfaz de software analítico militar",
-            "framing": "plano detalle en los gráficos del perfil",
-            "details": "silueta humana y barras de estadísticas rojas"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "paper_flip"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_63",
-      "text": "Por eso pueden permitirse venderte un reloj por dos euros, asumiendo pérdidas.",
-      "scenes": [
-        {
-          "id": "scene_63",
-          "image_id": 63,
-          "tipo_midia": "imagem",
-          "asset_key": "cheap-watch-hook",
-          "image": "cena_63.png",
-          "visual": {
-            "subject": "reloj de pulsera de plástico muy barato",
-            "action": "colgando de un grueso anzuelo de pescar",
-            "setting": "fondo negro metálico",
-            "framing": "plano detalle centrado",
-            "details": "material plástico y metal del anzuelo"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "click"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_64",
-      "text": "El reloj barato es solo el anzuelo de plástico para pescarte a ti.",
-      "scenes": [
-        {
-          "id": "scene_64",
-          "image_id": 64,
-          "tipo_midia": "imagem",
-          "asset_key": "fish-biting-bait",
-          "image": "cena_64.png",
-          "visual": {
-            "subject": "pez de escamas oscuras",
-            "action": "a punto de morder un cebo artificial brillante",
-            "setting": "agua turbia",
-            "framing": "plano lateral cercano al anzuelo",
-            "details": "tensión en la cuerda y mandíbula abierta"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_right",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_65",
-      "text": "La próxima vez que veas una oferta relámpago con un cronómetro rojo, respira.",
-      "scenes": [
-        {
-          "id": "scene_65",
-          "image_id": 65,
-          "tipo_midia": "imagem",
-          "asset_key": "red-alert-notification-phone",
-          "image": "cena_65.png",
-          "visual": {
-            "subject": "teléfono mostrando una notificación roja parpadeante",
-            "action": "sostenido por una mano firme que no pulsa la pantalla",
-            "setting": "fondo gris tranquilo",
-            "framing": "plano detalle del dispositivo",
-            "details": "texto de alerta ignorado"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "none",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_66",
-      "text": "Detente a pensar si realmente necesitas esa baratija o si estás siendo manipulado.",
-      "scenes": [
-        {
-          "id": "scene_66",
-          "image_id": 66,
-          "tipo_midia": "imagem",
-          "asset_key": "person-stopping-to-think",
-          "image": "cena_66.png",
-          "visual": {
-            "subject": "persona cerrando los ojos y apagando el móvil",
-            "action": "alejando el dispositivo de su vista",
-            "setting": "habitación serena con luz natural",
-            "framing": "plano medio frontal",
-            "details": "pantalla negra y expresión de calma"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "click"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_67",
-      "text": "Puede que pagues con tu tarjeta, pero la verdadera factura es otra.",
-      "scenes": [
-        {
-          "id": "scene_67",
-          "image_id": 67,
-          "tipo_midia": "imagem",
-          "asset_key": "credit-card-melting-data",
-          "image": "cena_67.png",
-          "visual": {
-            "subject": "tarjeta de crédito de plástico",
-            "action": "desintegrándose visualmente en partículas de datos",
-            "setting": "vacío negro",
-            "framing": "plano detalle flotante",
-            "details": "números de tarjeta y bits digitales azules perdiéndose"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_68",
-      "text": "La estás pagando con tu tiempo, tus datos personales y tu paz mental.",
-      "scenes": [
-        {
-          "id": "scene_68",
-          "image_id": 68,
-          "tipo_midia": "imagem",
-          "asset_key": "mental-peace-concept",
-          "image": "cena_68.png",
-          "visual": {
-            "subject": "silueta de un cerebro humano",
-            "action": "siendo vaciado de luz brillante hacia un servidor oscuro",
-            "setting": "fondo cibernético abstracto",
-            "framing": "plano conceptual centrado",
-            "details": "luces tenues y sensación de pérdida de energía"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_69",
-      "text": "¿Qué engaño de estos has sufrido? Comenta abajo y suscríbete para más.",
-      "scenes": [
-        {
-          "id": "scene_69",
-          "image_id": 69,
-          "tipo_midia": "video_generico",
-          "asset_key": "abstract-digital-maze",
-          "image": "cena_69.mp4",
-          "visual": {
-            "subject": "laberinto tridimensional hecho de luz digital",
-            "action": "cámara avanzando lentamente por los pasillos",
-            "setting": "espacio cibernético sin fin",
-            "framing": "plano subjetivo moviéndose por el laberinto",
-            "details": "líneas de neón brillantes y fondo oscuro"
-          },
-          "annotation": {
-            "lines": [
-              "SE INSCREVA",
-              "PARA MAIS"
-            ],
-            "at": "start",
-            "emoji": "🔔"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": {
-              "type": "click",
-              "at": "start"
-            }
           }
         }
       ]

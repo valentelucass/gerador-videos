@@ -61,6 +61,20 @@ type RenderJob = {
   log_url?: string;
   events_url?: string;
 };
+type AnimationAutomationStatus = {
+  running: boolean;
+  pid: number | null;
+  started_at: number | null;
+  last_return_code: number | null;
+  completed_images: number;
+  total_images: number;
+  current_state: string | null;
+  current_image: string | null;
+  last_event: string | null;
+  message: string;
+  resume_available: boolean;
+  resume_url: string | null;
+};
 type TimingScene = {
   id: string;
   duration: number;
@@ -557,6 +571,13 @@ function App() {
   const [pexelsPage, setPexelsPage] = useState(0);
   const [pexelsExpectedCount, setPexelsExpectedCount] = useState(0);
   const [pexelsBusy, setPexelsBusy] = useState(false);
+  const [automation, setAutomation] = useState<AnimationAutomationStatus>({
+    running: false, pid: null, started_at: null, last_return_code: null,
+    completed_images: 0, total_images: 0, current_state: null, current_image: null, last_event: null,
+    resume_available: false, resume_url: null, message: "Consultando automação…",
+  });
+  const [automationBusy, setAutomationBusy] = useState(false);
+  const animationImageNames = uploadedImages.filter(filename => /\.(?:jpg|jpeg|png|webp)$/i.test(filename));
   const [mediaTab, setMediaTab] = useState<MediaTab>("assets");
   const [musicPreviewPlaying, setMusicPreviewPlaying] = useState(false);
   const [musicPreviewVolume, setMusicPreviewVolume] = useState(0.14);
@@ -638,7 +659,52 @@ function App() {
     }
   };
 
+  const refreshAutomation = async () => {
+    try {
+      setAutomation(await api<AnimationAutomationStatus>("/api/automation"));
+    } catch {
+      setAutomation(current => ({ ...current, message: "Automação indisponível; inicie o backend." }));
+    }
+  };
+
+  const automationCommand = async (command: "start" | "stop" | "open-log") => {
+    if (command === "start" && !animationImageNames.length) {
+      setStatus("Envie ao menos uma imagem em Mídias das cenas antes de animar.");
+      return;
+    }
+    if (command === "start" && automation.resume_available && automation.completed_images < animationImageNames.length) {
+      const destination = automation.resume_url ? `\n\n${automation.resume_url}` : "";
+      const shouldResume = window.confirm(
+        `Existe trabalho pendente no Vibes. Deseja continuar de onde a automação parou, sem reenviar as mídias?${destination}`,
+      );
+      if (!shouldResume) {
+        setStatus("Retomada cancelada. Nenhum projeto ou upload foi alterado.");
+        return;
+      }
+    }
+    setAutomationBusy(true);
+    try {
+      const init: RequestInit = command === "start"
+        ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ filenames: animationImageNames }) }
+        : { method: "POST" };
+      const result = await api<AnimationAutomationStatus | { path: string }>(`/api/automation/${command}`, init);
+      if ("running" in result) setAutomation(result);
+      else await refreshAutomation();
+      setStatus(command === "start" ? "Automação de animação iniciada." : command === "stop" ? "Automação interrompida." : "Pasta/arquivo da automação aberto.");
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Não foi possível executar o comando da automação.");
+      await refreshAutomation();
+    } finally {
+      setAutomationBusy(false);
+    }
+  };
+
   useEffect(() => { void refreshCatalog(); }, []);
+  useEffect(() => {
+    void refreshAutomation();
+    const timer = window.setInterval(() => { void refreshAutomation(); }, 3_000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   // Apaga somente a chave antiga que causava miniaturas fantasma. A lista de
   // arquivos enviados deixa de sobreviver a recarregamentos da página.
@@ -1506,6 +1572,11 @@ function App() {
         <div className="appbar-actions">
           <button className="project-trigger" onClick={() => setProjectDialogOpen(true)} title="Abrir projetos salvos"><span>Projetos</span><b>{projectName}</b><i>⌄</i></button>
           <span className="scene-indicator">{script ? `${sceneCount(script)} cenas` : "sem roteiro"}</span>
+          <div className="automation-actions" aria-label="Controles da automação de animação">
+            <span className={`automation-indicator${automation.running ? " running" : ""}`} title={automation.message}><i />IA {automation.completed_images}/{animationImageNames.length}</span>
+            <button className="button quiet compact" disabled={automationBusy} onClick={() => void automationCommand("open-log")}>Log IA</button>
+            <button className={`button compact ${automation.running ? "danger" : "primary"}`} disabled={automationBusy} onClick={() => void automationCommand(automation.running ? "stop" : "start")}>{automationBusy ? "Aguarde…" : automation.running ? "Parar IA" : "Animar IA"}</button>
+          </div>
           <button className="button quiet" onClick={() => void validate()}>Validar</button>
           {hasBrollScenes && <button className="button quiet" disabled={pexelsBusy} onClick={() => void searchPexels()}>{pexelsBusy ? "Buscando…" : "Buscar B-roll"}</button>}
           <button className="button primary" disabled={Boolean(jobId)} onClick={render}>{jobId ? "Renderizando…" : "Gerar vídeo"}</button>

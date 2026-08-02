@@ -298,3 +298,18 @@ class TranslationRequest(BaseModel):
     # de tradução. O adaptador os divide internamente, sem descartar texto.
     text: str = Field(min_length=1, max_length=12_000)
     source_language: str = Field(min_length=2, max_length=10)
+
+
+class AnimationAutomationRequest(BaseModel):
+    """Nomes já presentes na biblioteca de imagens do painel atual."""
+
+    filenames: list[str] = Field(min_length=1)
+
+    @field_validator("filenames")
+    @classmethod
+    def only_image_filenames(cls, value: list[str]) -> list[str]:
+        names = list(dict.fromkeys(value))
+        for name in names:
+            if not name or Path(name).name != name or Path(name).suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp"}:
+                raise ValueError("A automação aceita somente nomes de imagens já enviados ao painel.")
+        return names

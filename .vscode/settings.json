@@ -1,3 +1,4 @@
 {
-  "cSpell.enabled": false
+  "cSpell.enabled": false,
+  "python.defaultInterpreterPath": "${workspaceFolder}/automation/.venv/Scripts/python.exe"
 }

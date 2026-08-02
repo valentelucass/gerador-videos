@@ -24,9 +24,10 @@ from fastapi.responses import PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
 from .config import BACKGROUND_DIR, FINAL_OUTPUT_DIR, IMAGE_DIR, MUSIC_DIR, ROOT, SOUND_DIR, VIDEO_DIR, VOICE_PREVIEW_DIR, WORKSPACE
+from .automation_runner import AutomationRunner
 from .core.horizontal_renderer import narration_duration, preview_scene_timing, render
 from .core.tts_neural import TTSNeuralEngine, VOICE_CATALOG
-from .models import PexelsCandidatesRequest, PexelsDownloadRequest, RenderRequest, Script, TranslationRequest, ValidationRequest
+from .models import AnimationAutomationRequest, PexelsCandidatesRequest, PexelsDownloadRequest, RenderRequest, Script, TranslationRequest, ValidationRequest
 from .pexels import PexelsError, download_selected_video, search_videos, translate_to_portuguese
 from .services import (
     AUDIO_EXTENSIONS,
@@ -49,6 +50,7 @@ app.mount("/assets/sounds", StaticFiles(directory=SOUND_DIR), name="sounds")
 app.mount("/assets/voice-previews", StaticFiles(directory=VOICE_PREVIEW_DIR), name="voice-previews")
 app.mount("/outputs", StaticFiles(directory=FINAL_OUTPUT_DIR), name="outputs")
 LOGGER = logging.getLogger("synthreel.api")
+AUTOMATION = AutomationRunner(ROOT)
 
 # A fila é intencionalmente exclusiva da esteira horizontal. Um render 1080p
 # abre muitos streams e não pode disputar memória com outro FFmpeg pesado no
@@ -279,6 +281,35 @@ def open_outputs_folder() -> dict[str, str]:
     except OSError as exc:
         raise HTTPException(status_code=500, detail="Não foi possível abrir a pasta dos vídeos finalizados.") from exc
     return {"folder": str(FINAL_OUTPUT_DIR)}
+
+
+@app.get("/api/automation")
+def automation_status() -> dict[str, object]:
+    """Estado da automação Playwright externa, sem relação com jobs de render."""
+    return AUTOMATION.status()
+
+
+@app.post("/api/automation/start")
+def start_automation(request: AnimationAutomationRequest) -> dict[str, object]:
+    try:
+        return AUTOMATION.start(request.filenames)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/api/automation/stop")
+def stop_automation() -> dict[str, object]:
+    return AUTOMATION.stop()
+
+
+@app.post("/api/automation/open-log")
+def open_automation_log() -> dict[str, str]:
+    try:
+        return AUTOMATION.open_log()
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
 @app.post("/api/images")
