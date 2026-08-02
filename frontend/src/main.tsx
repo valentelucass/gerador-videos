@@ -722,9 +722,10 @@ function App() {
   useEffect(() => { void refreshCatalog(); }, []);
   useEffect(() => {
     void refreshAutomation();
+    if (!automation.running) return;
     const timer = window.setInterval(() => { void refreshAutomation(); }, 3_000);
     return () => window.clearInterval(timer);
-  }, []);
+  }, [automation.running]);
 
   // Apaga somente a chave antiga que causava miniaturas fantasma. A lista de
   // arquivos enviados deixa de sobreviver a recarregamentos da página.

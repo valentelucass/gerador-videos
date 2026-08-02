@@ -1,322 +1,1139 @@
-[
-  {
-    "cena": 1,
-    "layout": "fullscreen",
-    "animacao": "zoom_in",
-    "texto_narrado": "¿Crees que estás comprando una simple cena al usar tu móvil? Te equivocas por completo.",
-    "anotacao": "",
-    "prompt_imagem": "Close-up of a stressed person looking at a glowing smartphone in a dark room, cinematic lighting, 8k resolution."
-  },
-  {
-    "cena": 2,
-    "layout": "video_generico",
-    "animacao": "pan_right",
-    "texto_narrado": "En 2026, las aplicaciones de delivery operan como casinos financieros disfrazados de extrema conveniencia.",
-    "anotacao": "",
-    "prompt_imagem": "A glowing neon casino slot machine merging seamlessly with a modern food delivery app interface, cyberpunk aesthetic."
-  },
-  {
-    "cena": 3,
-    "layout": "fullscreen",
-    "animacao": "zoom_out",
-    "texto_narrado": "Están diseñadas con una precisión algorítmica militar para vaciar tu billetera sin piedad alguna.",
-    "anotacao": "",
-    "prompt_imagem": "Abstract digital grid showing money draining from a wallet into a glowing smartphone, dark corporate aesthetic."
-  },
-  {
-    "cena": 4,
-    "layout": "video_generico",
-    "animacao": "zoom_in",
-    "texto_narrado": "Operan usando ingeniería psicológica avanzada para extraer silenciosamente el dinero de la clase media.",
-    "anotacao": "EL SISTEMA",
-    "prompt_imagem": "A human brain connected to digital wires and algorithms, dark futuristic laboratory."
-  },
-  {
-    "cena": 5,
-    "layout": "fullscreen",
-    "animacao": "pan_left",
-    "texto_narrado": "Hoy vamos a desmontar las cinco trampas invisibles que destruyen tu sueldo mensual sistemáticamente.",
-    "anotacao": "",
-    "prompt_imagem": "Five glowing red digital locks hovering over a modern bank statement, dramatic lighting."
-  },
-  {
-    "cena": 6,
-    "layout": "video_generico",
-    "animacao": "pan_right",
-    "texto_narrado": "La primera trampa es el fraccionamiento de precios, mundialmente conocido en tecnología como Drip Pricing.",
-    "anotacao": "",
-    "prompt_imagem": "A receipt being sliced into multiple tiny glowing pieces by a digital laser, dark background."
-  },
-  {
-    "cena": 7,
-    "layout": "video_generico",
-    "animacao": "zoom_in",
-    "texto_narrado": "Las tarifas de servicio y alta demanda se ocultan intencionalmente durante toda tu navegación.",
-    "anotacao": "TARIFAS OCULTAS",
-    "prompt_imagem": "A magnifying glass revealing hidden numbers and fees in the shadow of a glowing app menu."
-  },
-  {
-    "cena": 8,
-    "layout": "fullscreen",
-    "animacao": "zoom_out",
-    "texto_narrado": "Solamente ves el costo real y final en el último segundo de la pantalla de pago.",
-    "anotacao": "",
-    "prompt_imagem": "A massive, terrifying final total appearing suddenly on a phone screen, casting a red light on a shocked face."
-  },
-  {
-    "cena": 9,
-    "layout": "video_generico",
-    "animacao": "pan_right",
-    "texto_narrado": "Esto destruye tu capacidad cognitiva inmediata para comparar los precios reales de los alimentos.",
-    "anotacao": "",
-    "prompt_imagem": "A distorted, blurry view of multiple price tags spinning out of control, causing visual confusion."
-  },
-  {
-    "cena": 10,
-    "layout": "fullscreen",
-    "animacao": "pan_left",
-    "texto_narrado": "Terminas pagando el pedido por puro cansancio mental al final del embudo de decisión.",
-    "anotacao": "",
-    "prompt_imagem": "An exhausted finger pressing a glowing 'Buy' button on a cracked phone screen."
-  },
-  {
-    "cena": 11,
-    "layout": "video_generico",
-    "animacao": "zoom_in",
-    "texto_narrado": "Es un impuesto silencioso y agresivo que absorbe tu dinero sin que apenas lo notes.",
-    "anotacao": "IMPUESTO INVISIBLE",
-    "prompt_imagem": "A digital vacuum cleaner sucking golden coins out of a digital wallet inside a phone."
-  },
-  {
-    "cena": 12,
-    "layout": "video_generico",
-    "animacao": "zoom_in",
-    "texto_narrado": "Si ya caíste en esta trampa alguna vez, deja tu me gusta en este momento.",
-    "anotacao": "👍",
-    "prompt_imagem": "A neon thumbs up glowing against a dark, gritty brick wall."
-  },
-  {
-    "cena": 13,
-    "layout": "fullscreen",
-    "animacao": "zoom_in",
-    "texto_narrado": "La segunda táctica letal es la escasez artificial programada directamente en la interfaz visual.",
-    "anotacao": "",
-    "prompt_imagem": "A digital hourglass running out of red sand, floating over a plate of food, high contrast."
-  },
-  {
-    "cena": 14,
-    "layout": "video_generico",
-    "animacao": "pan_left",
-    "texto_narrado": "Utilizan un uso militarizado de temporizadores rápidos y falsas alertas de demanda masiva.",
-    "anotacao": "",
-    "prompt_imagem": "Multiple aggressive red notification banners popping up on a dark digital interface."
-  },
-  {
-    "cena": 15,
-    "layout": "fullscreen",
-    "animacao": "zoom_out",
-    "texto_narrado": "Crean un ambiente de profundo estrés y ansiedad visual directamente en tu propia pantalla.",
-    "anotacao": "",
-    "prompt_imagem": "A person sweating in the dark, illuminated by a flashing red phone screen."
-  },
-  {
-    "cena": 16,
-    "layout": "video_generico",
-    "animacao": "zoom_in",
-    "texto_narrado": "Finalizas el pedido rápidamente por el miedo irracional a perder esa supuesta oferta única.",
-    "anotacao": "PATRONES OSCUROS",
-    "prompt_imagem": "A golden ticket dissolving into ashes inside a smartphone display."
-  },
-  {
-    "cena": 17,
-    "layout": "fullscreen",
-    "animacao": "pan_right",
-    "texto_narrado": "No estás comprando porque tienes hambre real, sino por pura aversión a la pérdida financiera.",
-    "anotacao": "",
-    "prompt_imagem": "A chain linking a person's wrist to a glowing food delivery app icon."
-  },
-  {
-    "cena": 18,
-    "layout": "video_generico",
-    "animacao": "zoom_in",
-    "texto_narrado": "Los algoritmos manipulan tu cerebro para forzarte a realizar compras altamente impulsivas y emocionales.",
-    "anotacao": "IMPULSO",
-    "prompt_imagem": "A stylized human brain glowing with aggressive red nodes being controlled by digital strings."
-  },
-  {
-    "cena": 19,
-    "layout": "fullscreen",
-    "animacao": "zoom_in",
-    "texto_narrado": "La tercera trampa es el agresivo efecto señuelo implementado en todos los menús digitales.",
-    "anotacao": "",
-    "prompt_imagem": "Three burgers floating in a dark void; the middle one is distorted and glowing ominously."
-  },
-  {
-    "cena": 20,
-    "layout": "video_generico",
-    "animacao": "zoom_in",
-    "texto_narrado": "Los restaurantes insertan una opción intermedia con un precio completamente desproporcional al producto real.",
-    "anotacao": "EL SEÑUELO",
-    "prompt_imagem": "A glowing digital menu where the middle price tag is massive and aggressively red."
-  },
-  {
-    "cena": 21,
-    "layout": "fullscreen",
-    "animacao": "pan_left",
-    "texto_narrado": "Su único propósito estratégico es anclar el valor más alto directamente en tu mente subconsciente.",
-    "anotacao": "",
-    "prompt_imagem": "A heavy iron anchor crashing through a glass screen displaying a restaurant menu."
-  },
-  {
-    "cena": 22,
-    "layout": "video_generico",
-    "animacao": "pan_right",
-    "texto_narrado": "Esto crea la falsa ilusión de que comprar el combo más caro es una decisión inteligente.",
-    "anotacao": "",
-    "prompt_imagem": "A glowing optical illusion representing a giant meal combo looking like a gold bar."
-  },
-  {
-    "cena": 23,
-    "layout": "fullscreen",
-    "animacao": "zoom_out",
-    "texto_narrado": "Es una herramienta de ventas agresiva que infla sus márgenes de ganancia enormemente cada día.",
-    "anotacao": "",
-    "prompt_imagem": "A digital chart showing profit lines skyrocketing out of a delivery bag."
-  },
-  {
-    "cena": 24,
-    "layout": "video_generico",
-    "animacao": "zoom_in",
-    "texto_narrado": "Crees que eliges libremente, pero la arquitectura de decisión ya decidió la compra por ti.",
-    "anotacao": "ILUSIÓN",
-    "prompt_imagem": "A puppet master composed of digital code manipulating a consumer's hand."
-  },
-  {
-    "cena": 25,
-    "layout": "fullscreen",
-    "animacao": "zoom_in",
-    "texto_narrado": "La cuarta trampa es la gamificación tóxica y el peligroso efecto dotación del usuario.",
-    "anotacao": "",
-    "prompt_imagem": "A glowing video game health bar and points system hovering over a real dinner plate."
-  },
-  {
-    "cena": 26,
-    "layout": "video_generico",
-    "animacao": "pan_left",
-    "texto_narrado": "El sistema no te vende conveniencia real, te vende un falso estatus digital programado.",
-    "anotacao": "",
-    "prompt_imagem": "A fake plastic crown glowing inside a futuristic food delivery box."
-  },
-  {
-    "cena": 27,
-    "layout": "fullscreen",
-    "animacao": "zoom_out",
-    "texto_narrado": "Los sistemas de puntos y suscripciones mensuales generan el miedo a perder tu progreso acumulado.",
-    "anotacao": "",
-    "prompt_imagem": "A digital padlock chaining golden loyalty points to a user's profile, dark neon colors."
-  },
-  {
-    "cena": 28,
-    "layout": "video_generico",
-    "animacao": "zoom_in",
-    "texto_narrado": "Te niegas rotundamente a cancelar por el miedo a perder beneficios que no tienen valor real.",
-    "anotacao": "RETENCIÓN",
-    "prompt_imagem": "A person trapped inside an infinite loop of digital calendars and monthly subscription bills."
-  },
-  {
-    "cena": 29,
-    "layout": "fullscreen",
-    "animacao": "pan_right",
-    "texto_narrado": "Terminas pidiendo mucha más comida solamente para justificar tu mensualidad que ya fue pagada.",
-    "anotacao": "",
-    "prompt_imagem": "A scale weighing a pile of junk food against a monthly subscription invoice."
-  },
-  {
-    "cena": 30,
-    "layout": "video_generico",
-    "animacao": "zoom_in",
-    "texto_narrado": "Suscríbete al canal ahora si quieres seguir desmontando estos sistemas abusivos de extracción financiera.",
-    "anotacao": "🔔",
-    "prompt_imagem": "A metallic bell glowing with a neon light, breaking out of digital chains."
-  },
-  {
-    "cena": 31,
-    "layout": "fullscreen",
-    "animacao": "zoom_in",
-    "texto_narrado": "La quinta y más oscura trampa es la temida fijación de precios dinámica e invisible.",
-    "anotacao": "",
-    "prompt_imagem": "A digital price tag wildly changing numbers in a dark, ominous cyber environment."
-  },
-  {
-    "cena": 32,
-    "layout": "video_generico",
-    "animacao": "pan_left",
-    "texto_narrado": "La inteligencia artificial altera la realidad de tu precio final en tiempo completamente real.",
-    "anotacao": "",
-    "prompt_imagem": "A glowing AI brain calculating equations over a map of delivery routes."
-  },
-  {
-    "cena": 33,
-    "layout": "fullscreen",
-    "animacao": "zoom_out",
-    "texto_narrado": "Los algoritmos cruzan tus datos de clima, tráfico actual y todo tu historial financiero personal.",
-    "anotacao": "",
-    "prompt_imagem": "A massive floating server scanning weather patterns and credit cards simultaneously."
-  },
-  {
-    "cena": 34,
-    "layout": "video_generico",
-    "animacao": "zoom_in",
-    "texto_narrado": "Incluso utilizan el nivel de batería actual de tu móvil para subirte los precios drásticamente.",
-    "anotacao": "EXTRACCIÓN",
-    "prompt_imagem": "A smartphone with 1% battery showing a drastically inflated price for a burger."
-  },
-  {
-    "cena": 35,
-    "layout": "fullscreen",
-    "animacao": "pan_right",
-    "texto_narrado": "Empujan el valor exacto hasta el límite máximo absoluto de tu tolerancia personal al pago.",
-    "anotacao": "",
-    "prompt_imagem": "A pressure gauge hitting the red critical zone, overlaying a digital receipt."
-  },
-  {
-    "cena": 36,
-    "layout": "video_generico",
-    "animacao": "zoom_in",
-    "texto_narrado": "Es una extracción de renta quirúrgica, agresiva y cien por ciento personalizada contra tu bolsillo.",
-    "anotacao": "ALGORITMO PREDADOR",
-    "prompt_imagem": "A robotic hand operating a glowing digital scalpel to extract coins from a wallet."
-  },
-  {
-    "cena": 37,
-    "layout": "video_generico",
-    "animacao": "pan_right",
-    "texto_narrado": "En 2026, pedir comida a domicilio se ha convertido en un auténtico campo minado financiero.",
-    "anotacao": "",
-    "prompt_imagem": "A glowing digital map of a city resembling an active military minefield."
-  },
-  {
-    "cena": 38,
-    "layout": "video_generico",
-    "animacao": "zoom_in",
-    "texto_narrado": "Las interfaces están diseñadas en tu contra para maximizar siempre las ganancias de la corporación.",
-    "anotacao": "DESPIERTA",
-    "prompt_imagem": "A dark, labyrinthine maze representing a UI, leading into a giant corporate mouth."
-  },
-  {
-    "cena": 39,
-    "layout": "fullscreen",
-    "animacao": "zoom_out",
-    "texto_narrado": "Reconocer estas cinco trampas de consumo es el primer paso vital para protegerte financieramente hoy.",
-    "anotacao": "",
-    "prompt_imagem": "A glowing futuristic shield protecting a credit card from digital red lasers."
-  },
-  {
-    "cena": 40,
-    "layout": "video_generico",
-    "animacao": "pan_left",
-    "texto_narrado": "Toma el control absoluto de tu dinero ahora y no alimentes nunca más al algoritmo.",
-    "anotacao": "",
-    "prompt_imagem": "A person un-plugging a massive glowing cable from the back of a delivery drone."
-  }
-]
+{
+  "_instrucoes_flow": "Google Flow, leia apenas as cenas com tipo_midia: imagem. IGNORE COMPLETAMENTE as cenas com tipo_midia: video_generico, não gere imagens para elas.",
+  "title": "El Fraude del Delivery en 2026: 5 Trampas Ocultas en Tu Aplicación",
+  "language": "es-ES",
+  "narrator_gender": "male",
+  "voice": "es-ES-AlvaroNeural",
+  "background": "black",
+  "background_animation": "movimento_sutil",
+  "blocks": [
+    {
+      "id": "block_01",
+      "text": "Abres tu aplicación de comida favorita y eliges una hamburguesa de doce dólares.",
+      "scenes": [
+        {
+          "id": "scene_01",
+          "image_id": 1,
+          "tipo_midia": "video_generico",
+          "asset_key": "food-delivery-app-ordering-smartphone",
+          "image": "cena_01.mp4",
+          "visual": {
+            "subject": "persona usando aplicación de comida en teléfono",
+            "action": "seleccionando una hamburguesa en la pantalla",
+            "setting": "cocina moderna con iluminación tenue",
+            "framing": "primer plano de la pantalla del smartphone",
+            "details": "interfaz de app de comida visible en la pantalla"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": {
+              "type": "click",
+              "at": "start"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_02",
+      "text": "Parece una cena económica, pero al pulsar pagar la cuenta marca veintiún dólares.",
+      "scenes": [
+        {
+          "id": "scene_02",
+          "image_id": 2,
+          "tipo_midia": "imagem",
+          "asset_key": "delivery-checkout-screen-high-price",
+          "image": "cena_02.png",
+          "visual": {
+            "subject": "pantalla de pago de aplicación de delivery",
+            "action": "mostrando aumento repentino de precio total de doce a veintiuno dólares",
+            "setting": "mesa de comedor sencilla",
+            "framing": "plano detalle de la pantalla iluminada",
+            "details": "número total resaltado en rojo"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "cash_register"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_03",
+      "text": "Ese aumento misterioso no es un error, sino un diseño algorítmico calculado.",
+      "scenes": [
+        {
+          "id": "scene_03",
+          "image_id": 3,
+          "tipo_midia": "imagem",
+          "asset_key": "algorithm-code-financial-data-screen",
+          "image": "cena_03.png",
+          "visual": {
+            "subject": "líneas de código informático y gráficos financieros",
+            "action": "reflejándose en la pantalla de una computadora",
+            "setting": "oficina oscura de tecnología",
+            "framing": "plano medio de la pantalla con código analítico",
+            "details": "gráficos de precios y código algorítmico visos"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_04",
+      "text": "Deja tu me gusta y suscríbete para descubrir cómo proteger tu dinero hoy.",
+      "scenes": [
+        {
+          "id": "scene_04",
+          "image_id": 4,
+          "tipo_midia": "video_generico",
+          "asset_key": "smartphone-hand-tech-background",
+          "image": "cena_04.mp4",
+          "visual": {
+            "subject": "persona sosteniendo smartphone con luz de fondo",
+            "action": "tocando la pantalla con fluidez",
+            "setting": "ambiente neutro iluminado",
+            "framing": "plano medio centrado",
+            "details": "pantalla brillante y movimiento sutil"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "click"
+            ],
+            "context": {
+              "type": "click",
+              "at": "start"
+            }
+          },
+          "annotation": {
+            "lines": [
+              "DEJA TU LIKE",
+              "Y SUSCRÍBETE"
+            ],
+            "at": "start",
+            "emoji": "👍"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_05",
+      "text": "En dos mil veintiséis las aplicaciones de entrega utilizan cinco trampas invisibles.",
+      "scenes": [
+        {
+          "id": "scene_05",
+          "image_id": 5,
+          "tipo_midia": "imagem",
+          "asset_key": "delivery-courier-motorcycle-night-city",
+          "image": "cena_05.png",
+          "visual": {
+            "subject": "repartidor de comida en motocicleta con mochila de entrega",
+            "action": "conduciendo por calle urbana de noche",
+            "setting": "ciudad moderna nocturna con luces de neón",
+            "framing": "plano general de la motocicleta en movimiento",
+            "details": "mochila de reparto y luces urbanas"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_06",
+      "text": "La primera estrategia se conoce como precio por goteo o Drip Pricing.",
+      "scenes": [
+        {
+          "id": "scene_06",
+          "image_id": 6,
+          "tipo_midia": "imagem",
+          "asset_key": "digital-receipt-itemized-fees",
+          "image": "cena_06.png",
+          "visual": {
+            "subject": "recibo digital de compra extendiéndose verticalmente",
+            "action": "revelando múltiples cargos pequeños",
+            "setting": "escritorio sencillo con teléfono",
+            "framing": "plano medio centrado en el recibo",
+            "details": "varias tarifas desgrosadas en la lista"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "paper_flip"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_07",
+      "text": "La pantalla inicial muestra un precio bajo para capturar rápidamente tu atención.",
+      "scenes": [
+        {
+          "id": "scene_07",
+          "image_id": 7,
+          "tipo_midia": "imagem",
+          "asset_key": "cheeseburger-menu-item-price-tag",
+          "image": "cena_07.png",
+          "visual": {
+            "subject": "fotografía de hamburguesa apetitosa con etiqueta de precio bajo",
+            "action": "destacando el valor de doce dólares",
+            "setting": "menú digital en pantalla",
+            "framing": "primer plano de la hamburguesa y el precio",
+            "details": "precio destacado en verde"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_08",
+      "text": "Cuando ya invertiste tiempo eligiendo, comienzan a sumar tarifas adicionales al final.",
+      "scenes": [
+        {
+          "id": "scene_08",
+          "image_id": 8,
+          "tipo_midia": "imagem",
+          "asset_key": "finger-scrolling-delivery-app-cart",
+          "image": "cena_08.png",
+          "visual": {
+            "subject": "dedo desplazándose por el carrito de compras de la aplicación",
+            "action": "agregando opciones y llegando a la pantalla final",
+            "setting": "sala de estar por la noche",
+            "framing": "primer plano de la mano y el teléfono",
+            "details": "pantalla del carrito lleno de productos"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_09",
+      "text": "Aparecen cargos de servicio, envío, pedido pequeño e incluso respuestas regulatorias.",
+      "scenes": [
+        {
+          "id": "scene_09",
+          "image_id": 9,
+          "tipo_midia": "video_generico",
+          "asset_key": "calculator-money-financial-documents",
+          "image": "cena_09.mp4",
+          "visual": {
+            "subject": "manos sumando cifras en calculadora junto a facturas",
+            "action": "presionando teclas rápidamente para calcular costos",
+            "setting": "escritorio con documentos financieros",
+            "framing": "plano medio cenital",
+            "details": "calculadora y documentos de gastos"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "cash_register"
+            ],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "PRECIO POR GOTEO",
+              "CARGOS OCULTOS"
+            ],
+            "at": "start"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_10",
+      "text": "Tu cerebro ya decidió comer esa hamburguesa y se niega a cancelar.",
+      "scenes": [
+        {
+          "id": "scene_10",
+          "image_id": 10,
+          "tipo_midia": "imagem",
+          "asset_key": "pensive-person-looking-at-phone",
+          "image": "cena_10.png",
+          "visual": {
+            "subject": "persona pensativa mirando la pantalla de su teléfono",
+            "action": "dudando con el dedo sobre el botón de confirmar pedido",
+            "setting": "comedor con luz cálida",
+            "framing": "plano medio rostro y teléfono",
+            "details": "expresión de duda y resignación"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_11",
+      "text": "Aceptas un sobreprecio irracional porque sientes que perderías el tiempo invertido.",
+      "scenes": [
+        {
+          "id": "scene_11",
+          "image_id": 11,
+          "tipo_midia": "imagem",
+          "asset_key": "hand-pressing-pay-button-phone",
+          "image": "cena_11.png",
+          "visual": {
+            "subject": "dedo presionando el botón verde de pagar en la pantalla",
+            "action": "confirmando la transacción a pesar del sobreprecio",
+            "setting": "interior de vivienda",
+            "framing": "primer plano del botón pagar",
+            "details": "botón pagar iluminado"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "click"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_12",
+      "text": "La segunda trampa es la inflación oculta directamente dentro del menú.",
+      "scenes": [
+        {
+          "id": "scene_12",
+          "image_id": 12,
+          "tipo_midia": "imagem",
+          "asset_key": "restaurant-menu-board-prices",
+          "image": "cena_12.png",
+          "visual": {
+            "subject": "tablero de menú impreso en la pared de un restaurante",
+            "action": "mostrando precios presenciales tradicionales",
+            "setting": "interior de restaurante local",
+            "framing": "plano medio del menú en la pared",
+            "details": "precios impresos visibles claramente"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_13",
+      "text": "Aunque pidas recoger la comida tú mismo, los precios del menú son más altos.",
+      "scenes": [
+        {
+          "id": "scene_13",
+          "image_id": 13,
+          "tipo_midia": "imagem",
+          "asset_key": "takeout-food-bag-counter",
+          "image": "cena_13.png",
+          "visual": {
+            "subject": "bolsa de papel de comida para llevar sobre mostrador",
+            "action": "descansando junto a una pantalla de teléfono",
+            "setting": "mostrador de restaurante de comida rápida",
+            "framing": "plano medio del mostrador",
+            "details": "bolsa de papel y teléfono al lado"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_14",
+      "text": "Un combo de diez dólares en el local cuesta trece dólares en la pantalla.",
+      "scenes": [
+        {
+          "id": "scene_14",
+          "image_id": 14,
+          "tipo_midia": "video_generico",
+          "asset_key": "comparison-shopping-chart-data",
+          "image": "cena_14.mp4",
+          "visual": {
+            "subject": "gráfico comparativo simple de dos precios",
+            "action": "mostrando la barra de precio digital más alta que la presencial",
+            "setting": "fundo neutro de datos",
+            "framing": "plano medio centrado",
+            "details": "dos barras de gráfico comparativas"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "INFLACIÓN DE MENÚ",
+              "+30% EN EL APP"
+            ],
+            "at": "start"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_15",
+      "text": "Las plataformas trasladan las comisiones del restaurante directamente a tu cuenta final.",
+      "scenes": [
+        {
+          "id": "scene_15",
+          "image_id": 15,
+          "tipo_midia": "imagem",
+          "asset_key": "restaurant-kitchen-chef-cooking",
+          "image": "cena_15.png",
+          "visual": {
+            "subject": "cocinero preparando hamburguesas en cocina comercial",
+            "action": "trabajando rápidamente en la parrilla",
+            "setting": "cocina de restaurante concurrida",
+            "framing": "plano medio del cocinero en acción",
+            "details": "utensilios de cocina y alimentos en parrilla"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_16",
+      "text": "Pagas un impuesto silencioso en cada ingrediente sin ver el valor real.",
+      "scenes": [
+        {
+          "id": "scene_16",
+          "image_id": 16,
+          "tipo_midia": "imagem",
+          "asset_key": "magnifying-glass-over-credit-card-statement",
+          "image": "cena_16.png",
+          "visual": {
+            "subject": "lupa examinando estado de cuenta impreso",
+            "action": "resaltando montos adicionales no explicados",
+            "setting": "mesa de trabajo",
+            "framing": "primer plano a través del cristal de la lupa",
+            "details": "números ampliados por la lupa"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_17",
+      "text": "La tercera trampa es la más oscura: los precios de vigilancia mediante inteligencia artificial.",
+      "scenes": [
+        {
+          "id": "scene_17",
+          "image_id": 17,
+          "tipo_midia": "imagem",
+          "asset_key": "ai-surveillance-data-network-visualization",
+          "image": "cena_17.png",
+          "visual": {
+            "subject": "red digital de datos y perfilamiento de usuario",
+            "action": "conectando nodos de información personal",
+            "setting": "espacio cibernético oscuro",
+            "framing": "plano general de la red de datos",
+            "details": "nodos luminosos y silueta de usuario"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_18",
+      "text": "Las aplicaciones rastrean tu ubicación, tu historial de compras y tu nivel de ingresos.",
+      "scenes": [
+        {
+          "id": "scene_18",
+          "image_id": 18,
+          "tipo_midia": "imagem",
+          "asset_key": "gps-location-map-tracking-phone",
+          "image": "cena_18.png",
+          "visual": {
+            "subject": "mapa GPS interactivo en pantalla de smartphone",
+            "action": "mostrando ubicación precisa y perfil de usuario",
+            "setting": "teléfono sostenido con la mano",
+            "framing": "primer plano de la interfaz del mapa",
+            "details": "pincel de ubicación y datos de ruta"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_19",
+      "text": "Con esos datos el algoritmo calcula el precio máximo que estás dispuesto a pagar.",
+      "scenes": [
+        {
+          "id": "scene_19",
+          "image_id": 19,
+          "tipo_midia": "video_generico",
+          "asset_key": "ai-algorithm-data-processing-server",
+          "image": "cena_19.mp4",
+          "visual": {
+            "subject": "servidores informáticos procesando algoritmos de inteligencia artificial",
+            "action": "luces parpadeando rápidamente durante el procesamiento de datos",
+            "setting": "centro de datos moderno",
+            "framing": "plano medio de pasillo de servidores",
+            "details": "racks de servidores y luces indicadoras"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "PRECIOS PERSONALIZADOS",
+              "RASTREO POR IA"
+            ],
+            "at": "start"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_20",
+      "text": "Dos personas pidiendo el mismo plato al mismo tiempo ven precios diferentes.",
+      "scenes": [
+        {
+          "id": "scene_20",
+          "image_id": 20,
+          "tipo_midia": "imagem",
+          "asset_key": "two-smartphones-side-by-side-different-prices",
+          "image": "cena_20.png",
+          "visual": {
+            "subject": "dos teléfonos inteligentes colocados lado a lado",
+            "action": "mostrando el mismo platillo con precios distintos",
+            "setting": "mesa redonda de madera",
+            "framing": "plano cenital de ambos teléfonos",
+            "details": "pantallas comparativas con catorce y dieciocho dólares"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "wrong_answer"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_21",
+      "text": "Si detecta día de pago o alta vulnerabilidad, el costo sube automáticamente.",
+      "scenes": [
+        {
+          "id": "scene_21",
+          "image_id": 21,
+          "tipo_midia": "imagem",
+          "asset_key": "calendar-payday-marked-date",
+          "image": "cena_21.png",
+          "visual": {
+            "subject": "calendario de escritorio con fecha de día de pago marcada",
+            "action": "resaltando la fecha en rojo",
+            "setting": "oficina de trabajo",
+            "framing": "primer plano de la hoja del calendario",
+            "details": "marca de círculo rojo en el día quince"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_22",
+      "text": "Las ofertas relámpago no buscan ahorrarte dinero, sino capturar tu momento de hambre.",
+      "scenes": [
+        {
+          "id": "scene_22",
+          "image_id": 22,
+          "tipo_midia": "imagem",
+          "asset_key": "flash-sale-notification-banner-phone",
+          "image": "cena_22.png",
+          "visual": {
+            "subject": "notificación de oferta relámpago emergente en pantalla",
+            "action": "mostrando descuento temporal llamativo",
+            "setting": "teléfono sostenido con mano nocturna",
+            "framing": "primer plano de la notificación",
+            "details": "banner brillante de oferta especial"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_23",
+      "text": "La cuarta trampa utiliza patrones oscuros para simular una escasez dinámica.",
+      "scenes": [
+        {
+          "id": "scene_23",
+          "image_id": 23,
+          "tipo_midia": "imagem",
+          "asset_key": "countdown-timer-banner-app",
+          "image": "cena_23.png",
+          "visual": {
+            "subject": "reloj contador regresivo digital en tono rojo",
+            "action": "marcando últimos minutos para completar orden",
+            "setting": "interfaz de aplicación móvil",
+            "framing": "primer plano del reloj digital",
+            "details": "números digitales parpadeando en rojo"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_24",
+      "text": "Ves avisos como casi agotado o contadores regresivos para obtener envío gratuito.",
+      "scenes": [
+        {
+          "id": "scene_24",
+          "image_id": 24,
+          "tipo_midia": "video_generico",
+          "asset_key": "digital-clock-timer-ticking",
+          "image": "cena_24.mp4",
+          "visual": {
+            "subject": "cronómetro digital avanzando en pantalla",
+            "action": "descontando segundos rápidamente",
+            "setting": "fondo oscuro abstracto",
+            "framing": "plano medio centrado",
+            "details": "cronómetro en cuenta regresiva"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "FALSA ESCASEZ",
+              "PATRONES OSCUROS"
+            ],
+            "at": "start"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_25",
+      "text": "La cocina del restaurante está llena, pero el sistema crea urgencia artificial.",
+      "scenes": [
+        {
+          "id": "scene_25",
+          "image_id": 25,
+          "tipo_midia": "imagem",
+          "asset_key": "full-restaurant-pantry-food-stock",
+          "image": "cena_25.png",
+          "visual": {
+            "subject": "estantes de restaurante repletos de ingredientes y comida",
+            "action": "mostrando abundancia real de insumos",
+            "setting": "despensa de restaurante bien abastecida",
+            "framing": "plano general de los estantes",
+            "details": "cajas e ingredientes ordenados"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_26",
+      "text": "El miedo a perder la oferta anula la parte lógica que cuestionaría el gasto.",
+      "scenes": [
+        {
+          "id": "scene_26",
+          "image_id": 26,
+          "tipo_midia": "imagem",
+          "asset_key": "anxious-person-ordering-fast-food",
+          "image": "cena_26.png",
+          "visual": {
+            "subject": "persona apresurada pulsando botones en su teléfono",
+            "action": "comprando bajo presión de tiempo percibida",
+            "setting": "sofá de casa con luz tenue",
+            "framing": "plano medio de la persona apresurada",
+            "details": "expresión de urgencia en el rostro"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_27",
+      "text": "Terminas pagando treinta dólares un martes por la noche impulsado por la prisa.",
+      "scenes": [
+        {
+          "id": "scene_27",
+          "image_id": 27,
+          "tipo_midia": "imagem",
+          "asset_key": "delivered-fast-food-bag-living-room",
+          "image": "cena_27.png",
+          "visual": {
+            "subject": "bolsa de comida a domicilio sobre mesa de centro",
+            "action": "reposando entregada en la sala",
+            "setting": "sala de estar de noche",
+            "framing": "plano medio de la bolsa sobre la mesa",
+            "details": "bolsa de entrega y recibo de treinta dólares"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_28",
+      "text": "La quinta trampa sella la jaula mediante gamificación y suscripciones mensuales.",
+      "scenes": [
+        {
+          "id": "scene_28",
+          "image_id": 28,
+          "tipo_midia": "imagem",
+          "asset_key": "loyalty-points-rewards-program-screen",
+          "image": "cena_28.png",
+          "visual": {
+            "subject": "pantalla de programa de lealtad con nivel VIP y medallas",
+            "action": "destacando estatus dorado del usuario",
+            "setting": "interfaz de app inteligente",
+            "framing": "primer plano de la medalla dorada",
+            "details": "insignias de nivel y puntos acumulados"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_29",
+      "text": "Te ofrecen envíos gratis a cambio de una membresía fija cada mes.",
+      "scenes": [
+        {
+          "id": "scene_29",
+          "image_id": 29,
+          "tipo_midia": "video_generico",
+          "asset_key": "credit-card-online-subscription-payment",
+          "image": "cena_29.mp4",
+          "visual": {
+            "subject": "tarjeta de crédito realizando pago de suscripción mensual",
+            "action": "procesando cargo recurrente en pantalla",
+            "setting": "escritorio iluminado suavemente",
+            "framing": "plano medio de la tarjeta y lector",
+            "details": "tarjeta de crédito e interfaz de pago"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          },
+          "annotation": {
+            "lines": [
+              "SUSCRIPCIONES",
+              "COSTO HUNDIDO"
+            ],
+            "at": "start"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_30",
+      "text": "Al pagar la suscripción se activa la falacia del costo hundido en tu mente.",
+      "scenes": [
+        {
+          "id": "scene_30",
+          "image_id": 30,
+          "tipo_midia": "imagem",
+          "asset_key": "brain-psychology-cognitive-bias-illustration",
+          "image": "cena_30.png",
+          "visual": {
+            "subject": "ilustración esquemática de toma de decisiones humanas",
+            "action": "representando la falacia psicológica del costo invertido",
+            "setting": "fundo editorial neutro",
+            "framing": "plano medio centrado",
+            "details": "esquema gráfico de sesgo cognitivo"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_31",
+      "text": "Sientes que debes pedir más comida por aplicación para no desperdiciar la membresía.",
+      "scenes": [
+        {
+          "id": "scene_31",
+          "image_id": 31,
+          "tipo_midia": "imagem",
+          "asset_key": "multiple-delivery-boxes-stacked-home",
+          "image": "cena_31.png",
+          "visual": {
+            "subject": "varias cajas de comida a domicilio acumuladas en la cocina",
+            "action": "mostrando consumo frecuente repetido",
+            "setting": "cocina residencial",
+            "framing": "plano medio de la pila de empaques",
+            "details": "empaques de comida apilados"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_32",
+      "text": "Gastas cientos de dólares adicionales al mes para justificar una tarifa de diez.",
+      "scenes": [
+        {
+          "id": "scene_32",
+          "image_id": 32,
+          "tipo_midia": "imagem",
+          "asset_key": "wallet-empty-with-delivery-receipts",
+          "image": "cena_32.png",
+          "visual": {
+            "subject": "billetera abierta sobre mesa junto a recibos acumulados",
+            "action": "revelando gastos mensuales excesivos",
+            "setting": "escritorio personal",
+            "framing": "plano medio de la billetera y recibos",
+            "details": "billetera de cuero y tira de recibos"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_33",
+      "text": "Pedir comida a domicilio dejó de ser un servicio de transporte conveniente.",
+      "scenes": [
+        {
+          "id": "scene_33",
+          "image_id": 33,
+          "tipo_midia": "imagem",
+          "asset_key": "delivery-app-icon-smartphone-screen",
+          "image": "cena_33.png",
+          "visual": {
+            "subject": "icono de aplicación de delivery en pantalla principal de teléfono",
+            "action": "permaneciendo como centro de atención digital",
+            "setting": "pantalla de inicio de smartphone",
+            "framing": "primer plano del icono de la app",
+            "details": "icono iluminado en el centro"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_34",
+      "text": "Se convirtió en una industria de extracción de datos y capital personalizado.",
+      "scenes": [
+        {
+          "id": "scene_34",
+          "image_id": 34,
+          "tipo_midia": "imagem",
+          "asset_key": "corporate-tech-data-center-network",
+          "image": "cena_34.png",
+          "visual": {
+            "subject": "servidores corporativos globales conectados en red",
+            "action": "gestionando transacciones masivas de usuarios",
+            "setting": "centro de servidores tecnologico",
+            "framing": "plano general de la sala de servidores",
+            "details": "estantes de servidores e iluminación azul"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_35",
+      "text": "Reconocer estos algoritmos es el primer paso para proteger tu presupuesto mensual.",
+      "scenes": [
+        {
+          "id": "scene_35",
+          "image_id": 35,
+          "tipo_midia": "imagem",
+          "asset_key": "person-closing-delivery-app-phone",
+          "image": "cena_35.png",
+          "visual": {
+            "subject": "persona cerrando conscientemente la aplicación de delivery en su teléfono",
+            "action": "desconectando la pantalla con determinación",
+            "setting": "comedor de casa ilumando",
+            "framing": "plano medio de la persona y el teléfono",
+            "details": "pantalla apágandose progresivamente"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_36",
+      "text": "¿Qué cobro oculto has detectado en tu aplicación? Comenta y suscríbete.",
+      "scenes": [
+        {
+          "id": "scene_36",
+          "image_id": 36,
+          "tipo_midia": "video_generico",
+          "asset_key": "capital-ciego-channel-end-screen",
+          "image": "cena_36.mp4",
+          "visual": {
+            "subject": "logotipo de Capital Ciego con elementos gráficos de alerta",
+            "action": "animándose en el centro sobre fondo oscuro",
+            "setting": "pantalla de cierre de canal",
+            "framing": "plano medio centrado",
+            "details": "logotipo y elementos gráficos de cierre"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [],
+            "context": {
+              "type": "click",
+              "at": "start"
+            }
+          },
+          "annotation": {
+            "lines": [
+              "SUSCRÍBETE",
+              "PARA MÁS"
+            ],
+            "at": "start",
+            "emoji": "🔔"
+          }
+        }
+      ]
+    }
+  ]
+}
