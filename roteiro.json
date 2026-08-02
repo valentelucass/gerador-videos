@@ -1,28 +1,28 @@
 {
-  "_instrucoes_flow": "Google Flow, leia apenas as cenas com tipo_midia: imagem. IGNORE COMPLETAMENTE as cenas com tipo_midia: video_generico, não gere imagens para elas.",
-  "title": "El Fraude del Delivery en 2026: 5 Trampas Ocultas en Tu Aplicación",
-  "language": "es-ES",
+  "_instrucoes_flow": "Google Flow, generate ONE 16:9 horizontal image for ALL scenes. Do not generate videos, MP4s, or B-roll. Keep the same cat and the same recurring owner when they appear; treat the images as consecutive frames of a clear visual story.",
+  "title": "Why Your Cat Sleeps On Your Feet (It's Not For Warmth)",
+  "language": "en-US",
   "narrator_gender": "male",
-  "voice": "es-ES-AlvaroNeural",
+  "voice": "en-US-GuyNeural",
   "background": "black",
   "background_animation": "movimento_sutil",
   "blocks": [
     {
       "id": "block_01",
-      "text": "Abres tu aplicación de comida favorita y eliges una hamburguesa de doce dólares.",
+      "text": "You probably think your cat sleeps on your feet because they want more space in bed.",
       "scenes": [
         {
           "id": "scene_01",
           "image_id": 1,
-          "tipo_midia": "video_generico",
-          "asset_key": "food-delivery-app-ordering-smartphone",
-          "image": "cena_01.mp4",
+          "tipo_midia": "imagem",
+          "asset_key": "cat-sleeping-feet-bed",
+          "image": "cena_01.png",
           "visual": {
-            "subject": "persona usando aplicación de comida en teléfono",
-            "action": "seleccionando una hamburguesa en la pantalla",
-            "setting": "cocina moderna con iluminación tenue",
-            "framing": "primer plano de la pantalla del smartphone",
-            "details": "interfaz de app de comida visible en la pantalla"
+            "subject": "cat lying on the foot of a covered bed",
+            "action": "sleeping curled up over the elevation of the feet under the blanket",
+            "setting": "bed with white sheets in a bright bedroom",
+            "framing": "focus on the cat at the foot of the bed with natural lighting",
+            "details": "ilustração felina editorial, orange cat with green eyes wearing a blue collar, feet under a white blanket"
           },
           "transition": {
             "in": "zoom_in",
@@ -43,29 +43,29 @@
     },
     {
       "id": "block_02",
-      "text": "Parece una cena económica, pero al pulsar pagar la cuenta marca veintiún dólares.",
+      "text": "Or maybe you believe they just like the warmth of the blanket. You are completely wrong.",
       "scenes": [
         {
           "id": "scene_02",
           "image_id": 2,
           "tipo_midia": "imagem",
-          "asset_key": "delivery-checkout-screen-high-price",
+          "asset_key": "human-confused-cat-blanket",
           "image": "cena_02.png",
           "visual": {
-            "subject": "pantalla de pago de aplicación de delivery",
-            "action": "mostrando aumento repentino de precio total de doce a veintiuno dólares",
-            "setting": "mesa de comedor sencilla",
-            "framing": "plano detalle de la pantalla iluminada",
-            "details": "número total resaltado en rojo"
+            "subject": "owner looking at the cat at the foot of the bed",
+            "action": "owner with a confused expression while the cat rests peacefully",
+            "setting": "same bright bedroom on the bed",
+            "framing": "medium shot showing the owner sitting and the cat in the background",
+            "details": "ilustração felina editorial, orange cat with green eyes, young male owner with dark hair and a white t-shirt"
           },
           "transition": {
-            "in": "from_left",
-            "out": "to_right",
+            "in": "zoom_in",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "cash_register"
+              "whoosh_fast"
             ],
             "context": null
           }
@@ -74,49 +74,20 @@
     },
     {
       "id": "block_03",
-      "text": "Ese aumento misterioso no es un error, sino un diseño algorítmico calculado.",
+      "text": "When they trade your pillow for the edge of the bed, it's not just about comfort.",
       "scenes": [
         {
           "id": "scene_03",
           "image_id": 3,
           "tipo_midia": "imagem",
-          "asset_key": "algorithm-code-financial-data-screen",
+          "asset_key": "cat-walking-away-pillow",
           "image": "cena_03.png",
           "visual": {
-            "subject": "líneas de código informático y gráficos financieros",
-            "action": "reflejándose en la pantalla de una computadora",
-            "setting": "oficina oscura de tecnología",
-            "framing": "plano medio de la pantalla con código analítico",
-            "details": "gráficos de precios y código algorítmico visos"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_04",
-      "text": "Deja tu me gusta y suscríbete para descubrir cómo proteger tu dinero hoy.",
-      "scenes": [
-        {
-          "id": "scene_04",
-          "image_id": 4,
-          "tipo_midia": "video_generico",
-          "asset_key": "smartphone-hand-tech-background",
-          "image": "cena_04.mp4",
-          "visual": {
-            "subject": "persona sosteniendo smartphone con luz de fondo",
-            "action": "tocando la pantalla con fluidez",
-            "setting": "ambiente neutro iluminado",
-            "framing": "plano medio centrado",
-            "details": "pantalla brillante y movimiento sutil"
+            "subject": "cat walking across the bed",
+            "action": "cat walking away from the pillow towards the foot of the bed",
+            "setting": "bed with white sheets",
+            "framing": "shot tracking the cat's movement from top to bottom of the bed",
+            "details": "ilustração felina editorial, orange cat with green eyes, soft white pillow"
           },
           "transition": {
             "in": "zoom_in",
@@ -125,40 +96,1195 @@
           },
           "sounds": {
             "transition": [
-              "click"
+              "whoosh_soft"
             ],
-            "context": {
-              "type": "click",
-              "at": "start"
-            }
+            "context": null
           },
           "annotation": {
             "lines": [
-              "DEJA TU LIKE",
-              "Y SUSCRÍBETE"
+              "LEAVE A LIKE",
+              "AND SUBSCRIBE"
             ],
-            "at": "start",
-            "emoji": "👍"
+            "at": "start"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_04",
+      "text": "They are making a tactical, instinctive decision based on thousands of years of survival biology.",
+      "scenes": [
+        {
+          "id": "scene_04",
+          "image_id": 4,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-alert-edge-bed",
+          "image": "cena_04.png",
+          "visual": {
+            "subject": "cat sitting on the edge of the bed",
+            "action": "straight and alert posture observing the room",
+            "setting": "illuminated foot of the bed",
+            "framing": "close-up on the feline's concentrated and attentive expression",
+            "details": "ilustração felina editorial, orange cat with raised ears, firm observing posture"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
           }
         }
       ]
     },
     {
       "id": "block_05",
-      "text": "En dos mil veintiséis las aplicaciones de entrega utilizan cinco trampas invisibles.",
+      "text": "And if your cat suddenly stops sleeping there, you need to pay very close attention.",
       "scenes": [
         {
           "id": "scene_05",
           "image_id": 5,
           "tipo_midia": "imagem",
-          "asset_key": "delivery-courier-motorcycle-night-city",
+          "asset_key": "human-looking-empty-feet",
           "image": "cena_05.png",
           "visual": {
-            "subject": "repartidor de comida en motocicleta con mochila de entrega",
-            "action": "conduciendo por calle urbana de noche",
-            "setting": "ciudad moderna nocturna con luces de neón",
-            "framing": "plano general de la motocicleta en movimiento",
-            "details": "mochila de reparto y luces urbanas"
+            "subject": "owner observing the empty foot of the bed",
+            "action": "owner with a worried expression looking at the space without the cat",
+            "setting": "bedroom at night with soft light",
+            "framing": "medium shot focused on the owner's reaction to noticing the absence",
+            "details": "ilustração felina editorial, young owner with dark hair, empty blanket at the edge"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_06",
+      "text": "This could be a massive red flag regarding their physical health or territorial stress.",
+      "scenes": [
+        {
+          "id": "scene_06",
+          "image_id": 6,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-hiding-under-bed",
+          "image": "cena_06.png",
+          "visual": {
+            "subject": "cat hiding in the shadows",
+            "action": "cat curled up under the bed, looking out cautiously",
+            "setting": "dark wooden floor under the bed",
+            "framing": "low angle showing the cat in the hiding spot",
+            "details": "ilustração felina editorial, orange cat with green eyes shining in the dark"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_07",
+      "text": "Let's understand what this nightly ritual really means. First, abandon the warmth theory.",
+      "scenes": [
+        {
+          "id": "scene_07",
+          "image_id": 7,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-ignoring-sunbeam",
+          "image": "cena_07.png",
+          "visual": {
+            "subject": "cat walking right past a sunbeam",
+            "action": "cat walking in the bedroom ignoring a warm sun patch on the rug",
+            "setting": "bright bedroom with a rug on the floor",
+            "framing": "wide shot showing the sunlight and the cat's path",
+            "details": "ilustração felina editorial, orange cat walking with purpose, textured rug"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": {
+              "type": "new_idea",
+              "at": "start"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_08",
+      "text": "Cats are masters at finding heat. They use sunny rugs, warm laptops, and fresh laundry.",
+      "scenes": [
+        {
+          "id": "scene_08",
+          "image_id": 8,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-sleeping-laptop",
+          "image": "cena_08.png",
+          "visual": {
+            "subject": "cat lying down comfortably",
+            "action": "sleeping sprawled out over the keyboard of an open laptop",
+            "setting": "simple office desk",
+            "framing": "close-up on the cat enjoying the heat from the machine",
+            "details": "ilustração felina editorial, orange cat with eyes closed, silver laptop"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_09",
+      "text": "If temperature was their only goal, they would have much better options around the house.",
+      "scenes": [
+        {
+          "id": "scene_09",
+          "image_id": 9,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-looking-laundry",
+          "image": "cena_09.png",
+          "visual": {
+            "subject": "cat looking at a laundry basket",
+            "action": "cat ignoring a basket of freshly folded clothes to focus on the bed",
+            "setting": "corner of the bedroom with a laundry basket",
+            "framing": "composition showing the cat's visual choice",
+            "details": "ilustração felina editorial, focused orange cat, basket with folded towels"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_10",
+      "text": "So why do they choose the exact spot where your feet move all night long?",
+      "scenes": [
+        {
+          "id": "scene_10",
+          "image_id": 10,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-watching-moving-feet",
+          "image": "cena_10.png",
+          "visual": {
+            "subject": "cat staring at feet under the blanket",
+            "action": "cat sitting attentively while the volume of the feet moves under the fabric",
+            "setting": "bed illuminated by a nightlight",
+            "framing": "focus on the visual interaction between the cat and the moving blanket",
+            "details": "ilustração felina editorial, concentrated orange cat, crumpled blanket texture"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_11",
+      "text": "To understand this, you need to stop looking at your cat as just a cute pet.",
+      "scenes": [
+        {
+          "id": "scene_11",
+          "image_id": 11,
+          "tipo_midia": "imagem",
+          "asset_key": "human-petting-cat-cute",
+          "image": "cena_11.png",
+          "visual": {
+            "subject": "owner petting the cat",
+            "action": "owner smiling while petting the harmless cat on the bed",
+            "setting": "bright and cozy bedroom",
+            "framing": "close shot showing human affection and feline passivity",
+            "details": "ilustração felina editorial, young owner in a white t-shirt, relaxed orange cat"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_12",
+      "text": "Start seeing them as the tactical predator they biologically still are.",
+      "scenes": [
+        {
+          "id": "scene_12",
+          "image_id": 12,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-predator-silhouette",
+          "image": "cena_12.png",
+          "visual": {
+            "subject": "silhouette of the cat in the bedroom",
+            "action": "imposing hunter posture observing the darkness of the hallway",
+            "setting": "bedroom with hard night shadows",
+            "framing": "profile highlighting the instinctive and alert anatomy of the feline",
+            "details": "ilustração felina editorial, orange cat in contrast with the shadow, rigid posture"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_13",
+      "text": "In the wild, sleep is the moment of greatest vulnerability for absolutely any animal.",
+      "scenes": [
+        {
+          "id": "scene_13",
+          "image_id": 13,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-sleeping-curled-tight",
+          "image": "cena_13.png",
+          "visual": {
+            "subject": "cat sleeping tightly curled up",
+            "action": "body tensioned in a perfect ball hiding vital organs",
+            "setting": "safe corner of the bed",
+            "framing": "close-up on the circular defensive shape of the sleeping cat",
+            "details": "ilustração felina editorial, orange cat protecting its belly, tucked paws"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_14",
+      "text": "It is the only time a feline is truly defenseless against outside threats.",
+      "scenes": [
+        {
+          "id": "scene_14",
+          "image_id": 14,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-ears-twitching-sleep",
+          "image": "cena_14.png",
+          "visual": {
+            "subject": "cat with closed eyes",
+            "action": "sleeping, but with one ear turned backwards listening to the environment",
+            "setting": "pillow in the dim light",
+            "framing": "extreme close-up on the face and active ears of the cat",
+            "details": "ilustração felina editorial, orange cat with eyes closed, left ear slightly rotated"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_15",
+      "text": "Therefore, when your cat chooses where to sleep, they run a strict risk assessment.",
+      "scenes": [
+        {
+          "id": "scene_15",
+          "image_id": 15,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-scanning-bedroom",
+          "image": "cena_15.png",
+          "visual": {
+            "subject": "cat standing on the bed",
+            "action": "scanning the bedroom visually before deciding where to lie down",
+            "setting": "wide bed in the center of the bedroom",
+            "framing": "wide shot of the bedroom seen from the perspective of the bed",
+            "details": "ilustração felina editorial, orange cat analyzing the territory from above"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_16",
+      "text": "Look closely at your bedroom's geometry. The foot of the bed offers the best advantage.",
+      "scenes": [
+        {
+          "id": "scene_16",
+          "image_id": 16,
+          "tipo_midia": "imagem",
+          "asset_key": "bedroom-geometry-view",
+          "image": "cena_16.png",
+          "visual": {
+            "subject": "view from the foot of the bed to the door",
+            "action": "the cat positioned on the edge observing the bedroom entrance",
+            "setting": "bedroom aligned with the closed door",
+            "framing": "view from behind the cat, showing the bedroom door straight ahead",
+            "details": "ilustração felina editorial, silhouette of the orange cat in the foreground, door visible"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_17",
+      "text": "From there, your cat has the widest possible field of vision of the entire room.",
+      "scenes": [
+        {
+          "id": "scene_17",
+          "image_id": 17,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-wide-field-vision",
+          "image": "cena_17.png",
+          "visual": {
+            "subject": "cat with panoramic vision",
+            "action": "looking attentively, visually dominating the corners of the room",
+            "setting": "elevated foot of the bed",
+            "framing": "cat centered, showing absolute visual control of the frontal space",
+            "details": "ilustração felina editorial, sentinel posture, observant orange cat"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_18",
+      "text": "Usually, the edge of the bed points directly toward the main door or the hallway.",
+      "scenes": [
+        {
+          "id": "scene_18",
+          "image_id": 18,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-staring-door",
+          "image": "cena_18.png",
+          "visual": {
+            "subject": "cat focusing on the doorknob",
+            "action": "staring fixedly at the closed bedroom door",
+            "setting": "bed pointing to the exit",
+            "framing": "close-up on the gaze directed to the only entry route of the room",
+            "details": "ilustração felina editorial, orange cat with green eyes, light wooden door"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_19",
+      "text": "Your cat is literally establishing a security perimeter to protect you and the territory.",
+      "scenes": [
+        {
+          "id": "scene_19",
+          "image_id": 19,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-guarding-perimeter",
+          "image": "cena_19.png",
+          "visual": {
+            "subject": "cat in a guarding posture",
+            "action": "sitting tall and firm on the edge, while the owner sleeps behind",
+            "setting": "bed in the middle of the night",
+            "framing": "imposing cat in the foreground, owner out of focus sleeping in the background",
+            "details": "ilustração felina editorial, protective orange cat, owner with dark hair resting"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_20",
+      "text": "But it's not just about playing bodyguard. It is about their own escape route.",
+      "scenes": [
+        {
+          "id": "scene_20",
+          "image_id": 20,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-looking-floor-escape",
+          "image": "cena_20.png",
+          "visual": {
+            "subject": "cat looking at the floor",
+            "action": "measuring the distance from the edge of the bed to the wooden floor",
+            "setting": "side of the foot of the bed",
+            "framing": "top-down angle following the cat's gaze towards the free route",
+            "details": "ilustração felina editorial, orange cat focused on the empty floor, clear height"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_21",
+      "text": "If a real threat enters the room, the edge of the bed offers an immediate escape.",
+      "scenes": [
+        {
+          "id": "scene_21",
+          "image_id": 21,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-escape-route-card",
+          "image": "cena_21.png",
+          "visual": {
+            "subject": "cat ready to jump",
+            "action": "tense muscles, ready to leap off the bed at the slightest sign",
+            "setting": "edge of the mattress",
+            "framing": "dynamic profile showing the physics of the imminent jump",
+            "details": "ilustração felina editorial, orange cat in a spring position, evident tension"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_left",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_22",
+      "text": "In a fraction of a second, they can jump to the floor and vanish safely.",
+      "scenes": [
+        {
+          "id": "scene_22",
+          "image_id": 22,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-jumping-floor-blur",
+          "image": "cena_22.png",
+          "visual": {
+            "subject": "cat landing on the floor",
+            "action": "agile movement jumping from the bed to the dark bedroom floor",
+            "setting": "floor next to the bed",
+            "framing": "capture of the rapid movement at the moment of landing",
+            "details": "ilustração felina editorial, silhouette of the agile orange cat escaping"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_23",
+      "text": "If they were curled around your neck or under the heavy blanket, they’d be trapped.",
+      "scenes": [
+        {
+          "id": "scene_23",
+          "image_id": 23,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-trapped-human-arms",
+          "image": "cena_23.png",
+          "visual": {
+            "subject": "cat hugged tightly",
+            "action": "cat with an uncomfortable expression trapped in the owner's arms under the blanket",
+            "setting": "headboard of the bed",
+            "framing": "close-up showing the feline's restriction of movement",
+            "details": "ilustração felina editorial, owner hugging an orange cat, front paws trapped"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": {
+              "type": "paper_flip",
+              "at": "start"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_24",
+      "text": "By sleeping on your feet, the cat achieves the perfect balance between wild instinct and affection.",
+      "scenes": [
+        {
+          "id": "scene_24",
+          "image_id": 24,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-perfect-balance-feet",
+          "image": "cena_24.png",
+          "visual": {
+            "subject": "cat sleeping serenely on feet",
+            "action": "resting in harmony on the edge, keeping the body slightly raised",
+            "setting": "illuminated foot of the bed",
+            "framing": "calm shot highlighting the peace and safety of the moment",
+            "details": "ilustração felina editorial, relaxed but strategic orange cat, white sheets"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_25",
+      "text": "They maintain constant physical contact with you, the most important member of their survival group.",
+      "scenes": [
+        {
+          "id": "scene_25",
+          "image_id": 25,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-paw-touching-foot",
+          "image": "cena_25.png",
+          "visual": {
+            "subject": "cat's paw on the human's foot",
+            "action": "front paw resting delicately on the volume of the owner's foot under the blanket",
+            "setting": "bed detail",
+            "framing": "extreme close-up evidencing the subtle physical contact",
+            "details": "ilustração felina editorial, orange paw gently touching the textured blanket"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_26",
+      "text": "They also take the chance to blend their scent with yours, reinforcing your colony bond.",
+      "scenes": [
+        {
+          "id": "scene_26",
+          "image_id": 26,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-rubbing-scent-feet",
+          "image": "cena_26.png",
+          "visual": {
+            "subject": "cat rubbing its face",
+            "action": "rubbing its cheek against the blanket in the exact spot where the feet are",
+            "setting": "cozy bed",
+            "framing": "close angle highlighting the scent marking with closed eyes",
+            "details": "ilustração felina editorial, orange cat's face in contact with the white fabric"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_27",
+      "text": "And there's more: their body weight on your feet acts as a motion monitor.",
+      "scenes": [
+        {
+          "id": "scene_27",
+          "image_id": 27,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-chin-resting-foot",
+          "image": "cena_27.png",
+          "visual": {
+            "subject": "cat using foot as support",
+            "action": "cat with its chin and weight anchored on the elevation of the human's feet",
+            "setting": "mattress surface",
+            "framing": "focus on the distribution of the feline's weight on the owner",
+            "details": "ilustração felina editorial, orange cat feeling the firmness under the white fabric"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_28",
+      "text": "So, if you wake up startled and move, they feel it immediately and react with you.",
+      "scenes": [
+        {
+          "id": "scene_28",
+          "image_id": 28,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-waking-up-sudden-movement",
+          "image": "cena_28.png",
+          "visual": {
+            "subject": "cat waking up suddenly",
+            "action": "wide eyes and raised body reacting to a sudden movement of the blanket",
+            "setting": "moving bed",
+            "framing": "expression of tactical startle of the cat reacting to the vibration",
+            "details": "ilustração felina editorial, awake orange cat, white fabric waving fast"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": {
+              "type": "boxing_bell",
+              "at": "start"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_29",
+      "text": "All this allows them to keep one hundred percent of their survival instincts operational while sleeping.",
+      "scenes": [
+        {
+          "id": "scene_29",
+          "image_id": 29,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-sleeping-ears-alert",
+          "image": "cena_29.png",
+          "visual": {
+            "subject": "cat resting with active ears",
+            "action": "relaxed body, but both ears pointing upwards capturing sound",
+            "setting": "calm foot of the bed",
+            "framing": "serene shot showing the paradox of relaxation and instinctive alertness",
+            "details": "ilustração felina editorial, orange cat resting, active peripheral hearing"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_30",
+      "text": "Compare this to a cat that decides to sleep sprawled belly-up, right on your chest.",
+      "scenes": [
+        {
+          "id": "scene_30",
+          "image_id": 30,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-sleeping-chest-belly-up",
+          "image": "cena_30.png",
+          "visual": {
+            "subject": "cat sleeping on the human's chest",
+            "action": "exposed belly-up and stretched paws on the owner's chest",
+            "setting": "headboard of the bed",
+            "framing": "frontal view evidencing the extreme vulnerability of the position",
+            "details": "ilustração felina editorial, young owner sleeping, exposed belly of the orange cat"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_31",
+      "text": "Sleeping on the chest is absolute surrender. In this position, the cat gives up any escape route.",
+      "scenes": [
+        {
+          "id": "scene_31",
+          "image_id": 31,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-vulnerable-belly-close",
+          "image": "cena_31.png",
+          "visual": {
+            "subject": "detail of the cat's exposed belly",
+            "action": "calm breathing with all vital organs completely unprotected",
+            "setting": "on top of the owner in bed",
+            "framing": "extreme close-up on the fur of the vulnerable belly",
+            "details": "ilustração felina editorial, orange cat's fur facing up, zero defense"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_32",
+      "text": "They only do this when they have unshakeable certainty that the environment is completely safe.",
+      "scenes": [
+        {
+          "id": "scene_32",
+          "image_id": 32,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-completely-relaxed-chest",
+          "image": "cena_32.png",
+          "visual": {
+            "subject": "cat passed out asleep",
+            "action": "paws hanging limply over the owner's shoulder, total trust",
+            "setting": "safe headboard of the bed",
+            "framing": "shot evidencing the complete lack of muscle tension",
+            "details": "ilustração felina editorial, surrendered orange cat, young owner in a white t-shirt"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_33",
+      "text": "Sleeping on your feet, on the other hand, means they deeply trust you as pack.",
+      "scenes": [
+        {
+          "id": "scene_33",
+          "image_id": 33,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-affectionate-look-feet",
+          "image": "cena_33.png",
+          "visual": {
+            "subject": "cat looking from the foot of the bed",
+            "action": "cat resting on the feet, casting an affectionate look towards the owner's face",
+            "setting": "perspective looking up the bed",
+            "framing": "visual connection between the feline on the edge and the safe human at the headboard",
+            "details": "ilustração felina editorial, calm look of the orange cat with green eyes"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_34",
+      "text": "But they still prefer to keep at least ten percent of their wild instinct active.",
+      "scenes": [
+        {
+          "id": "scene_34",
+          "image_id": 34,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-one-eye-open-sleep",
+          "image": "cena_34.png",
+          "visual": {
+            "subject": "cat with one eye half-open",
+            "action": "sleeping in the darkness with a slit of the eye open monitoring",
+            "setting": "dark bedroom",
+            "framing": "close-up highlighting the residual vigilance in the gaze",
+            "details": "ilustração felina editorial, green eye shining slightly, preserved instinct"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_35",
+      "text": "And they endure all your kicks and involuntary midnight movements just to hold this post.",
+      "scenes": [
+        {
+          "id": "scene_35",
+          "image_id": 35,
+          "tipo_midia": "imagem",
+          "asset_key": "human-kicking-cat-dodging",
+          "image": "cena_35.png",
+          "visual": {
+            "subject": "leg kicking the blanket and the cat dodging",
+            "action": "owner kicking while asleep, the cat adjusting quickly to avoid falling off the bed",
+            "setting": "messy bed",
+            "framing": "turbulent movement of the sheets contrasting with the cat's persistence",
+            "details": "ilustração felina editorial, tolerant orange cat, visible leg under the sheet"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": {
+              "type": "crumpled_paper",
+              "at": "start"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_36",
+      "text": "They definitely prefer your uncomfortable company over the flawless safety of sleeping untouched on the couch.",
+      "scenes": [
+        {
+          "id": "scene_36",
+          "image_id": 36,
+          "tipo_midia": "imagem",
+          "asset_key": "empty-living-room-sofa",
+          "image": "cena_36.png",
+          "visual": {
+            "subject": "empty sofa in the living room",
+            "action": "quiet living room, with no sign of the cat that chose to stay in the chaotic bedroom",
+            "setting": "dark living room at night",
+            "framing": "wide shot showing the perfectly clean, calm, and rejected environment",
+            "details": "ilustração felina editorial, empty cream sofa, absence of the orange cat"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_37",
+      "text": "It's the feline's silent way of saying: I am with you, while securing our tactical safety.",
+      "scenes": [
+        {
+          "id": "scene_37",
+          "image_id": 37,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-human-sleeping-peacefully",
+          "image": "cena_37.png",
+          "visual": {
+            "subject": "owner and cat sleeping peacefully",
+            "action": "both resting calmly in their respective strategic positions on the bed",
+            "setting": "overview of the bed",
+            "framing": "wide shot of the bedroom showing the safe human and the guarding cat",
+            "details": "ilustração felina editorial, young owner with dark hair, orange cat at the foot"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_38",
+      "text": "But here is the crucial detail for your cat's health and well-being. Pay close attention.",
+      "scenes": [
+        {
+          "id": "scene_38",
+          "image_id": 38,
+          "tipo_midia": "imagem",
+          "asset_key": "human-looking-serious-cat",
+          "image": "cena_38.png",
+          "visual": {
+            "subject": "owner looking seriously",
+            "action": "owner paying attention to the movements and behaviors of their cat",
+            "setting": "bedroom during the day",
+            "framing": "close-up on the worried and attentive look of the human",
+            "details": "ilustração felina editorial, observant young owner in a white t-shirt"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_39",
+      "text": "Cats are creatures of consistent habits. Their chosen sleeping spot perfectly reflects their mental safety map.",
+      "scenes": [
+        {
+          "id": "scene_39",
+          "image_id": 39,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-curling-usual-spot",
+          "image": "cena_39.png",
+          "visual": {
+            "subject": "cat returning to the usual spot",
+            "action": "nestling securely in the exact same crease of the blanket as every night",
+            "setting": "routine foot of the bed",
+            "framing": "focus on the repetition and comfort of the mapped space",
+            "details": "ilustração felina editorial, orange cat confident in its spatial routine"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_40",
+      "text": "If your cat always slept relaxed on your chest, and suddenly shifted their routine to your feet...",
+      "scenes": [
+        {
+          "id": "scene_40",
+          "image_id": 40,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-moving-chest-to-feet",
+          "image": "cena_40.png",
+          "visual": {
+            "subject": "cat walking down the bed",
+            "action": "cat walking from the owner's chest towards the feet, abandoning the intimate spot",
+            "setting": "bed under lighting",
+            "framing": "shot following the deliberate change of territory",
+            "details": "ilustração felina editorial, back of the orange cat walking down the white mattress"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_41",
+      "text": "Or if they always slept calmly on your feet, and started hiding isolated on the floor...",
+      "scenes": [
+        {
+          "id": "scene_41",
+          "image_id": 41,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-sleeping-isolated-floor-card",
+          "image": "cena_41.png",
+          "visual": {
+            "subject": "cat sleeping alone on the floor",
+            "action": "curled up and isolated under a chair in the furthest corner of the room",
+            "setting": "cold floor away from the bed",
+            "framing": "isolation evidenced by the distance from the safe bed",
+            "details": "ilustração felina editorial, distant and defensive orange cat, dark chair"
           },
           "transition": {
             "in": "from_left",
@@ -175,186 +1301,30 @@
       ]
     },
     {
-      "id": "block_06",
-      "text": "La primera estrategia se conoce como precio por goteo o Drip Pricing.",
+      "id": "block_42",
+      "text": "Do not ignore this. This abrupt territorial shift is not just your cat acting moody or unpredictable.",
       "scenes": [
         {
-          "id": "scene_06",
-          "image_id": 6,
+          "id": "scene_42",
+          "image_id": 42,
           "tipo_midia": "imagem",
-          "asset_key": "digital-receipt-itemized-fees",
-          "image": "cena_06.png",
+          "asset_key": "human-worried-cat-floor",
+          "image": "cena_42.png",
           "visual": {
-            "subject": "recibo digital de compra extendiéndose verticalmente",
-            "action": "revelando múltiples cargos pequeños",
-            "setting": "escritorio sencillo con teléfono",
-            "framing": "plano medio centrado en el recibo",
-            "details": "varias tarifas desgrosadas en la lista"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "paper_flip"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_07",
-      "text": "La pantalla inicial muestra un precio bajo para capturar rápidamente tu atención.",
-      "scenes": [
-        {
-          "id": "scene_07",
-          "image_id": 7,
-          "tipo_midia": "imagem",
-          "asset_key": "cheeseburger-menu-item-price-tag",
-          "image": "cena_07.png",
-          "visual": {
-            "subject": "fotografía de hamburguesa apetitosa con etiqueta de precio bajo",
-            "action": "destacando el valor de doce dólares",
-            "setting": "menú digital en pantalla",
-            "framing": "primer plano de la hamburguesa y el precio",
-            "details": "precio destacado en verde"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_08",
-      "text": "Cuando ya invertiste tiempo eligiendo, comienzan a sumar tarifas adicionales al final.",
-      "scenes": [
-        {
-          "id": "scene_08",
-          "image_id": 8,
-          "tipo_midia": "imagem",
-          "asset_key": "finger-scrolling-delivery-app-cart",
-          "image": "cena_08.png",
-          "visual": {
-            "subject": "dedo desplazándose por el carrito de compras de la aplicación",
-            "action": "agregando opciones y llegando a la pantalla final",
-            "setting": "sala de estar por la noche",
-            "framing": "primer plano de la mano y el teléfono",
-            "details": "pantalla del carrito lleno de productos"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_09",
-      "text": "Aparecen cargos de servicio, envío, pedido pequeño e incluso respuestas regulatorias.",
-      "scenes": [
-        {
-          "id": "scene_09",
-          "image_id": 9,
-          "tipo_midia": "video_generico",
-          "asset_key": "calculator-money-financial-documents",
-          "image": "cena_09.mp4",
-          "visual": {
-            "subject": "manos sumando cifras en calculadora junto a facturas",
-            "action": "presionando teclas rápidamente para calcular costos",
-            "setting": "escritorio con documentos financieros",
-            "framing": "plano medio cenital",
-            "details": "calculadora y documentos de gastos"
+            "subject": "distressed owner looking at the floor",
+            "action": "sitting on the bed observing the isolated cat, showing concern for the change",
+            "setting": "bed contrasting with the floor",
+            "framing": "connection of concern from top to bottom",
+            "details": "ilustração felina editorial, young owner confused by the break in pattern"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_right",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "cash_register"
-            ],
-            "context": null
-          },
-          "annotation": {
-            "lines": [
-              "PRECIO POR GOTEO",
-              "CARGOS OCULTOS"
-            ],
-            "at": "start"
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_10",
-      "text": "Tu cerebro ya decidió comer esa hamburguesa y se niega a cancelar.",
-      "scenes": [
-        {
-          "id": "scene_10",
-          "image_id": 10,
-          "tipo_midia": "imagem",
-          "asset_key": "pensive-person-looking-at-phone",
-          "image": "cena_10.png",
-          "visual": {
-            "subject": "persona pensativa mirando la pantalla de su teléfono",
-            "action": "dudando con el dedo sobre el botón de confirmar pedido",
-            "setting": "comedor con luz cálida",
-            "framing": "plano medio rostro y teléfono",
-            "details": "expresión de duda y resignación"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_11",
-      "text": "Aceptas un sobreprecio irracional porque sientes que perderías el tiempo invertido.",
-      "scenes": [
-        {
-          "id": "scene_11",
-          "image_id": 11,
-          "tipo_midia": "imagem",
-          "asset_key": "hand-pressing-pay-button-phone",
-          "image": "cena_11.png",
-          "visual": {
-            "subject": "dedo presionando el botón verde de pagar en la pantalla",
-            "action": "confirmando la transacción a pesar del sobreprecio",
-            "setting": "interior de vivienda",
-            "framing": "primer plano del botón pagar",
-            "details": "botón pagar iluminado"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "click"
+              "whoosh_soft"
             ],
             "context": null
           }
@@ -362,24 +1332,24 @@
       ]
     },
     {
-      "id": "block_12",
-      "text": "La segunda trampa es la inflación oculta directamente dentro del menú.",
+      "id": "block_43",
+      "text": "Generally, retreating to isolated areas or avoiding spots where they might get kicked indicates silent physical pain.",
       "scenes": [
         {
-          "id": "scene_12",
-          "image_id": 12,
+          "id": "scene_43",
+          "image_id": 43,
           "tipo_midia": "imagem",
-          "asset_key": "restaurant-menu-board-prices",
-          "image": "cena_12.png",
+          "asset_key": "cat-licking-joints-distressed",
+          "image": "cena_43.png",
           "visual": {
-            "subject": "tablero de menú impreso en la pared de un restaurante",
-            "action": "mostrando precios presenciales tradicionales",
-            "setting": "interior de restaurante local",
-            "framing": "plano medio del menú en la pared",
-            "details": "precios impresos visibles claramente"
+            "subject": "cat in pain",
+            "action": "licking its own joint with a tense and uncomfortable expression",
+            "setting": "isolated corner",
+            "framing": "close-up revealing the discomfort and excessive licking at the point of pain",
+            "details": "ilustração felina editorial, orange cat focused on its front paw"
           },
           "transition": {
-            "in": "from_left",
+            "in": "zoom_in",
             "out": "to_right",
             "speed": "normal"
           },
@@ -393,149 +1363,88 @@
       ]
     },
     {
-      "id": "block_13",
-      "text": "Aunque pidas recoger la comida tú mismo, los precios del menú son más altos.",
+      "id": "block_44",
+      "text": "Older cats with joint pain flee the foot of the bed simply to avoid being crushed accidentally.",
       "scenes": [
         {
-          "id": "scene_13",
-          "image_id": 13,
+          "id": "scene_44",
+          "image_id": 44,
           "tipo_midia": "imagem",
-          "asset_key": "takeout-food-bag-counter",
-          "image": "cena_13.png",
+          "asset_key": "older-cat-avoiding-moving-feet",
+          "image": "cena_44.png",
           "visual": {
-            "subject": "bolsa de papel de comida para llevar sobre mostrador",
-            "action": "descansando junto a una pantalla de teléfono",
-            "setting": "mostrador de restaurante de comida rápida",
-            "framing": "plano medio del mostrador",
-            "details": "bolsa de papel y teléfono al lado"
+            "subject": "cat backing away from legs",
+            "action": "cat looking cautiously at the moving feet, preferring to keep a safe distance",
+            "setting": "floor next to the unstable bed",
+            "framing": "defensive view of the cat in relation to the bed that became dangerous",
+            "details": "ilustração felina editorial, cautious orange cat, messy sheets"
           },
           "transition": {
-            "in": "from_right",
-            "out": "none",
+            "in": "zoom_in",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
-            "transition": [],
+            "transition": [
+              "whoosh_soft"
+            ],
             "context": null
           }
         }
       ]
     },
     {
-      "id": "block_14",
-      "text": "Un combo de diez dólares en el local cuesta trece dólares en la pantalla.",
+      "id": "block_45",
+      "text": "It can also indicate severe environmental stress, like a new scent, another animal, or excessive noise.",
       "scenes": [
         {
-          "id": "scene_14",
-          "image_id": 14,
-          "tipo_midia": "video_generico",
-          "asset_key": "comparison-shopping-chart-data",
-          "image": "cena_14.mp4",
+          "id": "scene_45",
+          "image_id": 45,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-scared-window-noise",
+          "image": "cena_45.png",
           "visual": {
-            "subject": "gráfico comparativo simple de dos precios",
-            "action": "mostrando la barra de precio digital más alta que la presencial",
-            "setting": "fundo neutro de datos",
-            "framing": "plano medio centrado",
-            "details": "dos barras de gráfico comparativas"
+            "subject": "cat scared by sound",
+            "action": "crouching posture and apprehensive look directed towards the bedroom window",
+            "setting": "defensive bedroom",
+            "framing": "focus on the cat's tension generated by an invisible external stimulus",
+            "details": "ilustração felina editorial, tense orange cat, night window"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_46",
+      "text": "If this location change comes with extreme isolation or appetite loss, consult a vet immediately.",
+      "scenes": [
+        {
+          "id": "scene_46",
+          "image_id": 46,
+          "tipo_midia": "imagem",
+          "asset_key": "untouched-food-bowl-kitchen",
+          "image": "cena_46.png",
+          "visual": {
+            "subject": "full bowl of kibble",
+            "action": "untouched food in the kitchen, evidencing the ignored veterinary alert",
+            "setting": "bright and clean kitchen",
+            "framing": "dramatic close-up on the full bowl the cat refuses to touch",
+            "details": "ilustração felina editorial, blue bowl full of kibble, absence of the orange cat"
           },
           "transition": {
             "in": "zoom_in",
             "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          },
-          "annotation": {
-            "lines": [
-              "INFLACIÓN DE MENÚ",
-              "+30% EN EL APP"
-            ],
-            "at": "start"
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_15",
-      "text": "Las plataformas trasladan las comisiones del restaurante directamente a tu cuenta final.",
-      "scenes": [
-        {
-          "id": "scene_15",
-          "image_id": 15,
-          "tipo_midia": "imagem",
-          "asset_key": "restaurant-kitchen-chef-cooking",
-          "image": "cena_15.png",
-          "visual": {
-            "subject": "cocinero preparando hamburguesas en cocina comercial",
-            "action": "trabajando rápidamente en la parrilla",
-            "setting": "cocina de restaurante concurrida",
-            "framing": "plano medio del cocinero en acción",
-            "details": "utensilios de cocina y alimentos en parrilla"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_16",
-      "text": "Pagas un impuesto silencioso en cada ingrediente sin ver el valor real.",
-      "scenes": [
-        {
-          "id": "scene_16",
-          "image_id": 16,
-          "tipo_midia": "imagem",
-          "asset_key": "magnifying-glass-over-credit-card-statement",
-          "image": "cena_16.png",
-          "visual": {
-            "subject": "lupa examinando estado de cuenta impreso",
-            "action": "resaltando montos adicionales no explicados",
-            "setting": "mesa de trabajo",
-            "framing": "primer plano a través del cristal de la lupa",
-            "details": "números ampliados por la lupa"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_17",
-      "text": "La tercera trampa es la más oscura: los precios de vigilancia mediante inteligencia artificial.",
-      "scenes": [
-        {
-          "id": "scene_17",
-          "image_id": 17,
-          "tipo_midia": "imagem",
-          "asset_key": "ai-surveillance-data-network-visualization",
-          "image": "cena_17.png",
-          "visual": {
-            "subject": "red digital de datos y perfilamiento de usuario",
-            "action": "conectando nodos de información personal",
-            "setting": "espacio cibernético oscuro",
-            "framing": "plano general de la red de datos",
-            "details": "nodos luminosos y silueta de usuario"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
@@ -547,330 +1456,24 @@
       ]
     },
     {
-      "id": "block_18",
-      "text": "Las aplicaciones rastrean tu ubicación, tu historial de compras y tu nivel de ingresos.",
+      "id": "block_47",
+      "text": "Where your cat sleeps is pure communication. Does yours sleep on your feet, chest, or pillow?",
       "scenes": [
         {
-          "id": "scene_18",
-          "image_id": 18,
+          "id": "scene_47",
+          "image_id": 47,
           "tipo_midia": "imagem",
-          "asset_key": "gps-location-map-tracking-phone",
-          "image": "cena_18.png",
+          "asset_key": "cat-looking-camera-cta",
+          "image": "cena_47.png",
           "visual": {
-            "subject": "mapa GPS interactivo en pantalla de smartphone",
-            "action": "mostrando ubicación precisa y perfil de usuario",
-            "setting": "teléfono sostenido con la mano",
-            "framing": "primer plano de la interfaz del mapa",
-            "details": "pincel de ubicación y datos de ruta"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_19",
-      "text": "Con esos datos el algoritmo calcula el precio máximo que estás dispuesto a pagar.",
-      "scenes": [
-        {
-          "id": "scene_19",
-          "image_id": 19,
-          "tipo_midia": "video_generico",
-          "asset_key": "ai-algorithm-data-processing-server",
-          "image": "cena_19.mp4",
-          "visual": {
-            "subject": "servidores informáticos procesando algoritmos de inteligencia artificial",
-            "action": "luces parpadeando rápidamente durante el procesamiento de datos",
-            "setting": "centro de datos moderno",
-            "framing": "plano medio de pasillo de servidores",
-            "details": "racks de servidores y luces indicadoras"
+            "subject": "cat looking at the screen",
+            "action": "cat sitting on the bed, staring directly at the viewer with intelligence",
+            "setting": "neutral bedroom background",
+            "framing": "portrait of the cat that invites the owner to answer the final question",
+            "details": "ilustração felina editorial, orange cat with bright green eyes, blue collar"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          },
-          "annotation": {
-            "lines": [
-              "PRECIOS PERSONALIZADOS",
-              "RASTREO POR IA"
-            ],
-            "at": "start"
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_20",
-      "text": "Dos personas pidiendo el mismo plato al mismo tiempo ven precios diferentes.",
-      "scenes": [
-        {
-          "id": "scene_20",
-          "image_id": 20,
-          "tipo_midia": "imagem",
-          "asset_key": "two-smartphones-side-by-side-different-prices",
-          "image": "cena_20.png",
-          "visual": {
-            "subject": "dos teléfonos inteligentes colocados lado a lado",
-            "action": "mostrando el mismo platillo con precios distintos",
-            "setting": "mesa redonda de madera",
-            "framing": "plano cenital de ambos teléfonos",
-            "details": "pantallas comparativas con catorce y dieciocho dólares"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "wrong_answer"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_21",
-      "text": "Si detecta día de pago o alta vulnerabilidad, el costo sube automáticamente.",
-      "scenes": [
-        {
-          "id": "scene_21",
-          "image_id": 21,
-          "tipo_midia": "imagem",
-          "asset_key": "calendar-payday-marked-date",
-          "image": "cena_21.png",
-          "visual": {
-            "subject": "calendario de escritorio con fecha de día de pago marcada",
-            "action": "resaltando la fecha en rojo",
-            "setting": "oficina de trabajo",
-            "framing": "primer plano de la hoja del calendario",
-            "details": "marca de círculo rojo en el día quince"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_22",
-      "text": "Las ofertas relámpago no buscan ahorrarte dinero, sino capturar tu momento de hambre.",
-      "scenes": [
-        {
-          "id": "scene_22",
-          "image_id": 22,
-          "tipo_midia": "imagem",
-          "asset_key": "flash-sale-notification-banner-phone",
-          "image": "cena_22.png",
-          "visual": {
-            "subject": "notificación de oferta relámpago emergente en pantalla",
-            "action": "mostrando descuento temporal llamativo",
-            "setting": "teléfono sostenido con mano nocturna",
-            "framing": "primer plano de la notificación",
-            "details": "banner brillante de oferta especial"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_23",
-      "text": "La cuarta trampa utiliza patrones oscuros para simular una escasez dinámica.",
-      "scenes": [
-        {
-          "id": "scene_23",
-          "image_id": 23,
-          "tipo_midia": "imagem",
-          "asset_key": "countdown-timer-banner-app",
-          "image": "cena_23.png",
-          "visual": {
-            "subject": "reloj contador regresivo digital en tono rojo",
-            "action": "marcando últimos minutos para completar orden",
-            "setting": "interfaz de aplicación móvil",
-            "framing": "primer plano del reloj digital",
-            "details": "números digitales parpadeando en rojo"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_24",
-      "text": "Ves avisos como casi agotado o contadores regresivos para obtener envío gratuito.",
-      "scenes": [
-        {
-          "id": "scene_24",
-          "image_id": 24,
-          "tipo_midia": "video_generico",
-          "asset_key": "digital-clock-timer-ticking",
-          "image": "cena_24.mp4",
-          "visual": {
-            "subject": "cronómetro digital avanzando en pantalla",
-            "action": "descontando segundos rápidamente",
-            "setting": "fondo oscuro abstracto",
-            "framing": "plano medio centrado",
-            "details": "cronómetro en cuenta regresiva"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          },
-          "annotation": {
-            "lines": [
-              "FALSA ESCASEZ",
-              "PATRONES OSCUROS"
-            ],
-            "at": "start"
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_25",
-      "text": "La cocina del restaurante está llena, pero el sistema crea urgencia artificial.",
-      "scenes": [
-        {
-          "id": "scene_25",
-          "image_id": 25,
-          "tipo_midia": "imagem",
-          "asset_key": "full-restaurant-pantry-food-stock",
-          "image": "cena_25.png",
-          "visual": {
-            "subject": "estantes de restaurante repletos de ingredientes y comida",
-            "action": "mostrando abundancia real de insumos",
-            "setting": "despensa de restaurante bien abastecida",
-            "framing": "plano general de los estantes",
-            "details": "cajas e ingredientes ordenados"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_26",
-      "text": "El miedo a perder la oferta anula la parte lógica que cuestionaría el gasto.",
-      "scenes": [
-        {
-          "id": "scene_26",
-          "image_id": 26,
-          "tipo_midia": "imagem",
-          "asset_key": "anxious-person-ordering-fast-food",
-          "image": "cena_26.png",
-          "visual": {
-            "subject": "persona apresurada pulsando botones en su teléfono",
-            "action": "comprando bajo presión de tiempo percibida",
-            "setting": "sofá de casa con luz tenue",
-            "framing": "plano medio de la persona apresurada",
-            "details": "expresión de urgencia en el rostro"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_27",
-      "text": "Terminas pagando treinta dólares un martes por la noche impulsado por la prisa.",
-      "scenes": [
-        {
-          "id": "scene_27",
-          "image_id": 27,
-          "tipo_midia": "imagem",
-          "asset_key": "delivered-fast-food-bag-living-room",
-          "image": "cena_27.png",
-          "visual": {
-            "subject": "bolsa de comida a domicilio sobre mesa de centro",
-            "action": "reposando entregada en la sala",
-            "setting": "sala de estar de noche",
-            "framing": "plano medio de la bolsa sobre la mesa",
-            "details": "bolsa de entrega y recibo de treinta dólares"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_28",
-      "text": "La quinta trampa sella la jaula mediante gamificación y suscripciones mensuales.",
-      "scenes": [
-        {
-          "id": "scene_28",
-          "image_id": 28,
-          "tipo_midia": "imagem",
-          "asset_key": "loyalty-points-rewards-program-screen",
-          "image": "cena_28.png",
-          "visual": {
-            "subject": "pantalla de programa de lealtad con nivel VIP y medallas",
-            "action": "destacando estatus dorado del usuario",
-            "setting": "interfaz de app inteligente",
-            "framing": "primer plano de la medalla dorada",
-            "details": "insignias de nivel y puntos acumulados"
-          },
-          "transition": {
-            "in": "from_right",
             "out": "none",
             "speed": "normal"
           },
@@ -879,258 +1482,13 @@
               "whoosh_soft"
             ],
             "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_29",
-      "text": "Te ofrecen envíos gratis a cambio de una membresía fija cada mes.",
-      "scenes": [
-        {
-          "id": "scene_29",
-          "image_id": 29,
-          "tipo_midia": "video_generico",
-          "asset_key": "credit-card-online-subscription-payment",
-          "image": "cena_29.mp4",
-          "visual": {
-            "subject": "tarjeta de crédito realizando pago de suscripción mensual",
-            "action": "procesando cargo recurrente en pantalla",
-            "setting": "escritorio iluminado suavemente",
-            "framing": "plano medio de la tarjeta y lector",
-            "details": "tarjeta de crédito e interfaz de pago"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
           },
           "annotation": {
             "lines": [
-              "SUSCRIPCIONES",
-              "COSTO HUNDIDO"
+              "SUBSCRIBE",
+              "FOR MORE"
             ],
             "at": "start"
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_30",
-      "text": "Al pagar la suscripción se activa la falacia del costo hundido en tu mente.",
-      "scenes": [
-        {
-          "id": "scene_30",
-          "image_id": 30,
-          "tipo_midia": "imagem",
-          "asset_key": "brain-psychology-cognitive-bias-illustration",
-          "image": "cena_30.png",
-          "visual": {
-            "subject": "ilustración esquemática de toma de decisiones humanas",
-            "action": "representando la falacia psicológica del costo invertido",
-            "setting": "fundo editorial neutro",
-            "framing": "plano medio centrado",
-            "details": "esquema gráfico de sesgo cognitivo"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_31",
-      "text": "Sientes que debes pedir más comida por aplicación para no desperdiciar la membresía.",
-      "scenes": [
-        {
-          "id": "scene_31",
-          "image_id": 31,
-          "tipo_midia": "imagem",
-          "asset_key": "multiple-delivery-boxes-stacked-home",
-          "image": "cena_31.png",
-          "visual": {
-            "subject": "varias cajas de comida a domicilio acumuladas en la cocina",
-            "action": "mostrando consumo frecuente repetido",
-            "setting": "cocina residencial",
-            "framing": "plano medio de la pila de empaques",
-            "details": "empaques de comida apilados"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_32",
-      "text": "Gastas cientos de dólares adicionales al mes para justificar una tarifa de diez.",
-      "scenes": [
-        {
-          "id": "scene_32",
-          "image_id": 32,
-          "tipo_midia": "imagem",
-          "asset_key": "wallet-empty-with-delivery-receipts",
-          "image": "cena_32.png",
-          "visual": {
-            "subject": "billetera abierta sobre mesa junto a recibos acumulados",
-            "action": "revelando gastos mensuales excesivos",
-            "setting": "escritorio personal",
-            "framing": "plano medio de la billetera y recibos",
-            "details": "billetera de cuero y tira de recibos"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_33",
-      "text": "Pedir comida a domicilio dejó de ser un servicio de transporte conveniente.",
-      "scenes": [
-        {
-          "id": "scene_33",
-          "image_id": 33,
-          "tipo_midia": "imagem",
-          "asset_key": "delivery-app-icon-smartphone-screen",
-          "image": "cena_33.png",
-          "visual": {
-            "subject": "icono de aplicación de delivery en pantalla principal de teléfono",
-            "action": "permaneciendo como centro de atención digital",
-            "setting": "pantalla de inicio de smartphone",
-            "framing": "primer plano del icono de la app",
-            "details": "icono iluminado en el centro"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_34",
-      "text": "Se convirtió en una industria de extracción de datos y capital personalizado.",
-      "scenes": [
-        {
-          "id": "scene_34",
-          "image_id": 34,
-          "tipo_midia": "imagem",
-          "asset_key": "corporate-tech-data-center-network",
-          "image": "cena_34.png",
-          "visual": {
-            "subject": "servidores corporativos globales conectados en red",
-            "action": "gestionando transacciones masivas de usuarios",
-            "setting": "centro de servidores tecnologico",
-            "framing": "plano general de la sala de servidores",
-            "details": "estantes de servidores e iluminación azul"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_35",
-      "text": "Reconocer estos algoritmos es el primer paso para proteger tu presupuesto mensual.",
-      "scenes": [
-        {
-          "id": "scene_35",
-          "image_id": 35,
-          "tipo_midia": "imagem",
-          "asset_key": "person-closing-delivery-app-phone",
-          "image": "cena_35.png",
-          "visual": {
-            "subject": "persona cerrando conscientemente la aplicación de delivery en su teléfono",
-            "action": "desconectando la pantalla con determinación",
-            "setting": "comedor de casa ilumando",
-            "framing": "plano medio de la persona y el teléfono",
-            "details": "pantalla apágandose progresivamente"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_36",
-      "text": "¿Qué cobro oculto has detectado en tu aplicación? Comenta y suscríbete.",
-      "scenes": [
-        {
-          "id": "scene_36",
-          "image_id": 36,
-          "tipo_midia": "video_generico",
-          "asset_key": "capital-ciego-channel-end-screen",
-          "image": "cena_36.mp4",
-          "visual": {
-            "subject": "logotipo de Capital Ciego con elementos gráficos de alerta",
-            "action": "animándose en el centro sobre fondo oscuro",
-            "setting": "pantalla de cierre de canal",
-            "framing": "plano medio centrado",
-            "details": "logotipo y elementos gráficos de cierre"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [],
-            "context": {
-              "type": "click",
-              "at": "start"
-            }
-          },
-          "annotation": {
-            "lines": [
-              "SUSCRÍBETE",
-              "PARA MÁS"
-            ],
-            "at": "start",
-            "emoji": "🔔"
           }
         }
       ]

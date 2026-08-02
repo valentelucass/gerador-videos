@@ -129,10 +129,19 @@ IDENTIDADE VISUAL — ILUSTRAÇÕES RECORRENTES
   obrigatório, inclua somente a identidade recorrente e objetos indispensáveis.
 
 LAYOUT, SOM E ANOTAÇÕES
-- `transition.in: "zoom_in"` cria fullscreen; use no hook, explicação biológica,
-  revelação, alerta e CTAs. `from_left`, `from_right` ou `none` criam cartões.
-  Mantenha cartões como maioria, com no máximo dois fullscreen e três cartões
-  consecutivos.
+- Fullscreen é o layout padrão desta série. Use `transition.in: "zoom_in"` em
+  pelo menos 80% das cenas: hook, comportamento observado, mistério, vínculo,
+  reação do gato, revelação, alerta e CTAs. Fullscreens consecutivos são
+  esperados porque as ilustrações contam uma história visual contínua.
+- `from_left`, `from_right` ou `none` criam cartões. Use cartão somente quando
+  a imagem precisar explicar algo que ganha clareza ao ser isolado: mecanismo
+  biológico simples, comparação direta, sequência causa/efeito, dado visual ou
+  detalhe que o espectador precisa examinar. Nunca use cartão apenas para variar
+  o layout, abrir uma fase, mostrar uma ação cotidiana ou preencher uma cena.
+- Como referência prática, em cada grupo de cinco cenas use normalmente quatro
+  ou cinco fullscreen e no máximo um cartão. Os cartões não devem aparecer em
+  sequência, salvo se dois passos explicativos dependerem literalmente um do
+  outro.
 - Toda transição declara `out` como `to_left`, `to_right` ou `none`, e `speed`
   como `fast`, `normal` ou `slow`.
 - Toda cena declara `sounds.transition` (lista) e `sounds.context` (objeto ou
@@ -201,4 +210,7 @@ ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
    canal. Não há texto dentro das imagens.
 9. A primeira cena possui click de contexto; existe uma única CTA inicial e a
    última cena contém somente a CTA final com pergunta específica para comentário.
+10. Pelo menos 80% das cenas usam fullscreen (`transition.in: "zoom_in"`). Todo
+   cartão restante existe para explicar um mecanismo, comparação, dado ou detalhe
+   visual específico; não foi usado apenas como alternância decorativa.
 ```
