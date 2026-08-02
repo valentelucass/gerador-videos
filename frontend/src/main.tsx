@@ -569,6 +569,7 @@ function App() {
   const [jobId, setJobId] = useState("");
   const [renderProgress, setRenderProgress] = useState(0);
   const [renderStage, setRenderStage] = useState("");
+  const [renderElapsedSeconds, setRenderElapsedSeconds] = useState<number | null>(null);
   const [renderEtaSeconds, setRenderEtaSeconds] = useState<number | null>(null);
   const [outputUrl, setOutputUrl] = useState("");
   const [renderError, setRenderError] = useState("");
@@ -862,6 +863,11 @@ function App() {
           setRenderProgress(Math.min(100, Math.max(0, job.progress)));
         }
         if (job.stage) setRenderStage(job.stage);
+        setRenderElapsedSeconds(
+          typeof job.render_elapsed_seconds === "number"
+            ? Math.max(0, job.render_elapsed_seconds)
+            : null,
+        );
         setRenderEtaSeconds(
           typeof job.estimated_remaining_seconds === "number"
             ? Math.max(0, job.estimated_remaining_seconds)
@@ -1502,6 +1508,7 @@ function App() {
       setRenderLogUrl("");
       setRenderProgress(2);
       setRenderStage("Enviando trabalho para renderização");
+      setRenderElapsedSeconds(null);
       setRenderEtaSeconds(null);
       const result = await api<{ job_id: string }>("/api/render", {
         method: "POST",
@@ -1523,6 +1530,7 @@ function App() {
     } catch (error) {
       setRenderProgress(0);
       setRenderStage("");
+      setRenderElapsedSeconds(null);
       setRenderEtaSeconds(null);
       const message = readableError(error);
       playRenderErrorSound();
@@ -1995,7 +2003,7 @@ function App() {
             <div className={`render-progress${jobId ? " active" : ""}`} aria-label="Andamento da renderização">
               <div>
                 <span>{renderStage || "Aguardando renderização"}</span>
-                <b>{renderEtaSeconds !== null ? `~${formatRemainingTime(renderEtaSeconds)} · ` : ""}{Math.round(renderProgress)}%</b>
+                <b>{renderElapsedSeconds !== null ? `${formatVideoDuration(renderElapsedSeconds)} decorridos` : "calculando…"}{renderEtaSeconds !== null ? ` · ~${formatRemainingTime(renderEtaSeconds)} restantes` : ""} · {Math.round(renderProgress)}%</b>
               </div>
               <i><em style={{ width: `${renderProgress}%` }} /></i>
             </div>
