@@ -37,6 +37,10 @@ class PlatformPageError(RuntimeError):
     """Tela fatal do Vibes que deve ser recarregada, não tratada como sucesso."""
 
 
+class BrowserSessionClosed(RuntimeError):
+    """A janela do robô foi fechada; não existe recuperação automática segura."""
+
+
 class AnimationWorkflow:
     def __init__(self, page: Page, settings: Settings, logger: logging.Logger) -> None:
         self.page = page
@@ -69,8 +73,10 @@ class AnimationWorkflow:
         project_id = parsed.path.split(marker, 1)[1].split("/", 1)[0]
         return f"{parsed.scheme}://{parsed.netloc}{marker}{project_id}"
 
-    async def _locator(self, name: str, group):
-        return await self.retry.retry_locator(name, lambda: self._wait_for_visible(group, self.settings.timeout_ms), self._recover)
+    async def _locator(self, name: str, group, *, recover: bool = True):
+        return await self.retry.retry_locator(
+            name, lambda: self._wait_for_visible(group, self.settings.timeout_ms), self._recover if recover else None,
+        )
 
     async def _raise_if_platform_error(self) -> None:
         """Detecta a tela fatal do Vibes e agenda o refresh com calma."""
@@ -100,6 +106,8 @@ class AnimationWorkflow:
 
     async def _recover(self, exc: Exception) -> None:
         """Salva evidência e recarrega sem descartar a sessão ou o checkpoint."""
+        if self.page.is_closed():
+            raise BrowserSessionClosed("A janela do Firefox da automação foi fechada.") from exc
         stamp = time.strftime("%Y%m%d-%H%M%S")
         self.audit.record("recovery_started", state=self.state.value, error_type=type(exc).__name__, error=str(exc))
         try:
@@ -507,8 +515,10 @@ class AnimationWorkflow:
             await show_click_target(locator, self.settings.click_highlight_duration_ms)
         await locator.click()
 
-    async def _find_image(self, image: Path):
-        return await self.retry.retry_locator(f"card da imagem {image.name}", lambda: self._find_image_once(image), self._recover)
+    async def _find_image(self, image: Path, *, recover: bool = True):
+        return await self.retry.retry_locator(
+            f"card da imagem {image.name}", lambda: self._find_image_once(image), self._recover if recover else None,
+        )
 
     async def _find_image_once(self, image: Path):
         if self.settings.image_card_selector:
@@ -661,6 +671,15 @@ class AnimationWorkflow:
         while round_images:
             round_number += 1
             deferred: list[Path] = []
+            # A reserva começa uma rodada nova com cinco chances novas. Já
+            # uma execução interrompida no meio da rodada normal preserva o
+            # contador no checkpoint e retoma exatamente de onde parou.
+            for image in round_images:
+                if round_number > 1 or self.checkpoint.status_for(image) == "deferred":
+                    self.checkpoint.update(
+                        image, "retrying", attempts=0, generation_error_count=0,
+                        reason="deferred_round_started", deferred_round=max(0, round_number - 1),
+                    )
             pending_by_name = {image.name: image for image in round_images}
             self.logger.info(
                 "Rodada de animação %s iniciada | mídias=%s", round_number, len(pending_by_name)
@@ -795,18 +814,24 @@ class AnimationWorkflow:
 
     async def _animate_image(self, image: Path) -> bool:
         """Anima uma mídia; retorna ``False`` quando ela deve ser adiada."""
-        attempts = 0
-        consecutive_generation_errors = 0
+        previous = self.checkpoint.details_for(image)
+        attempts = int(previous.get("attempts", previous.get("attempt", 0)) or 0)
+        # ``consecutive_errors`` é o nome gravado por versões anteriores;
+        # mantemos a migração para que uma mídia já em falha não volte a zero.
+        consecutive_generation_errors = int(
+            previous.get("generation_error_count", previous.get("consecutive_errors", 0)) or 0
+        )
         while not self.checkpoint.is_complete(image):
             attempts += 1
             self.checkpoint.update(image, self.state.value, attempt=attempts)
             try:
                 self._set_state(State.SELECT_IMAGE, image)
-                await self.retry.retry_click(
+                await self._bounded_image_step(
                     f"selecionar {image.name}",
-                    lambda: self._find_image(image),
-                    verify=lambda: self._selected_editor_for(image),
-                    recovery=self._recover,
+                    self.retry.retry_click(
+                        f"selecionar {image.name}", lambda: self._find_image(image, recover=False),
+                        verify=lambda: self._selected_editor_for(image), recovery=None,
+                    ),
                 )
                 if await self._selected_editor_for(image) == "video":
                     self.checkpoint.update(image, "skipped_video", attempts=attempts)
@@ -814,14 +839,26 @@ class AnimationWorkflow:
                     self.audit.record("video_skipped", image=image.name, attempts=attempts)
                     return True
                 self._set_state(State.MANUAL_ANIMATE, image)
-                await self.retry.retry_click(
-                    "Manual animate", lambda: self._locator("Manual animate", MANUAL_ANIMATE_BUTTON),
-                    verify=lambda: self._wait_for_visible(PROMPT_TEXTAREA, self.settings.timeout_ms), recovery=self._recover,
+                await self._bounded_image_step(
+                    "Manual animate",
+                    self.retry.retry_click(
+                        "Manual animate", lambda: self._locator("Manual animate", MANUAL_ANIMATE_BUTTON, recover=False),
+                        verify=lambda: self._wait_for_visible(PROMPT_TEXTAREA, self.settings.timeout_ms), recovery=None,
+                    ),
                 )
                 self._set_state(State.INSERT_PROMPT, image)
-                await self.retry.retry_fill("preencher prompt", lambda: self._locator("textarea do prompt", PROMPT_TEXTAREA), self.prompt, self._recover)
+                await self._bounded_image_step(
+                    "preencher prompt",
+                    self.retry.retry_fill(
+                        "preencher prompt", lambda: self._locator("textarea do prompt", PROMPT_TEXTAREA, recover=False),
+                        self.prompt, None,
+                    ),
+                )
                 self._set_state(State.CLICK_ANIMATE, image)
-                await self.retry.retry_click("Animate", lambda: self._locator("Animate", ANIMATE_BUTTON), recovery=self._recover)
+                await self._bounded_image_step(
+                    "Animate",
+                    self.retry.retry_click("Animate", lambda: self._locator("Animate", ANIMATE_BUTTON, recover=False), recovery=None),
+                )
                 self._set_state(State.WAIT_RESULT, image)
                 outcome = await self._wait_for_result()
                 if outcome == "success":
@@ -835,46 +872,11 @@ class AnimationWorkflow:
                     raise RateLimitDetected()
                 self._set_state(State.ERROR, image)
                 consecutive_generation_errors += 1
-                self.checkpoint.update(image, "retrying", attempts=attempts, reason="error_alert")
+                self.checkpoint.update(image, "retrying", attempts=attempts, reason="error_alert",
+                                       generation_error_count=consecutive_generation_errors, consecutive_errors=consecutive_generation_errors)
                 await self._dismiss_and_refresh()
-                if consecutive_generation_errors >= self.settings.max_generation_errors_per_round:
-                    self._set_state(State.DEFERRED, image)
-                    self.checkpoint.update(
-                        image, "deferred", attempts=attempts, reason="generation_error_exhausted",
-                        consecutive_errors=consecutive_generation_errors,
-                    )
-                    self.logger.warning(
-                        "Mídia adiada após %s falhas de geração nesta rodada: %s. "
-                        "Seguindo para a próxima; ela voltará na rodada de pendências.",
-                        consecutive_generation_errors, image.name,
-                    )
-                    self.audit.record(
-                        "image_deferred_after_generation_errors", image=image.name,
-                        attempts=attempts, consecutive_errors=consecutive_generation_errors,
-                    )
+                if not await self._retry_or_defer_image(image, attempts, consecutive_generation_errors, "generation_error"):
                     return False
-                if consecutive_generation_errors >= self.settings.repeated_error_threshold:
-                    wait_seconds = self.settings.repeated_error_wait
-                    self.logger.warning(
-                        "%s falhas consecutivas de geração para %s. "
-                        "Pausa de proteção de %ss antes de repetir a MESMA imagem.",
-                        consecutive_generation_errors, image.name, wait_seconds,
-                    )
-                    self.audit.record(
-                        "repeated_generation_error_cooldown",
-                        image=image.name,
-                        attempts=attempts,
-                        consecutive_errors=consecutive_generation_errors,
-                        wait_seconds=wait_seconds,
-                    )
-                else:
-                    wait_seconds = self.settings.error_retry_delay
-                    self.logger.info(
-                        "Falha de geração %s/%s; aguardando %ss antes de repetir a mesma imagem.",
-                        consecutive_generation_errors, self.settings.repeated_error_threshold,
-                        wait_seconds,
-                    )
-                await asyncio.sleep(wait_seconds)
             except RateLimitDetected:
                 self._set_state(State.RATE_LIMIT, image)
                 self.checkpoint.update(image, "rate_limit", attempts=attempts)
@@ -886,11 +888,48 @@ class AnimationWorkflow:
                 raise
             except Exception as exc:
                 self.logger.exception("Falha recuperável em %s: %s", image.name, exc)
-                self.checkpoint.update(image, "retrying", attempts=attempts, reason=str(exc))
+                consecutive_generation_errors += 1
+                self._set_state(State.ERROR, image)
+                self.checkpoint.update(
+                    image, "retrying", attempts=attempts, reason=f"technical_failure:{type(exc).__name__}",
+                    generation_error_count=consecutive_generation_errors, consecutive_errors=consecutive_generation_errors,
+                )
                 self.audit.record("image_recovery", image=image.name, attempts=attempts, error_type=type(exc).__name__, error=str(exc))
-                await self._recover(exc)
-                self.logger.info("Aguardando %ss antes de retomar a imagem.", self.settings.error_retry_delay)
-                await asyncio.sleep(self.settings.error_retry_delay)
+                try:
+                    await self._recover(exc)
+                except BrowserSessionClosed:
+                    self.logger.error("Firefox fechado; automação encerrada sem ficar em retry infinito.")
+                    raise
+                if not await self._retry_or_defer_image(image, attempts, consecutive_generation_errors, "technical_failure"):
+                    return False
+
+    async def _bounded_image_step(self, name: str, operation) -> None:
+        """Evita que um botão instável consuma a foto inteira em retry infinito."""
+        try:
+            await asyncio.wait_for(operation, timeout=self.settings.image_step_timeout)
+        except TimeoutError as exc:
+            raise PlaywrightTimeoutError(
+                f"{name} não se estabilizou em {self.settings.image_step_timeout}s."
+            ) from exc
+
+    async def _retry_or_defer_image(self, image: Path, attempts: int, errors: int, reason: str) -> bool:
+        """Aplica o orçamento de cinco falhas a qualquer erro da mesma mídia."""
+        if errors >= self.settings.max_generation_errors_per_round:
+            self._set_state(State.DEFERRED, image)
+            self.checkpoint.update(
+                image, "deferred", attempts=attempts, reason=f"{reason}_exhausted",
+                generation_error_count=errors, consecutive_errors=errors,
+            )
+            self.logger.warning("Mídia adiada após %s/%s falhas: %s", errors, self.settings.max_generation_errors_per_round, image.name)
+            self.audit.record("image_deferred_after_errors", image=image.name, attempts=attempts, errors=errors, reason=reason)
+            return False
+        wait_seconds = self.settings.repeated_error_wait if errors >= self.settings.repeated_error_threshold else self.settings.error_retry_delay
+        self.logger.warning(
+            "Falha %s/%s (%s) em %s; aguardando %ss antes de repetir a mesma imagem.",
+            errors, self.settings.max_generation_errors_per_round, reason, image.name, wait_seconds,
+        )
+        await asyncio.sleep(wait_seconds)
+        return True
 
     async def _wait_for_result(self) -> str:
         deadline = time.monotonic() + self.settings.result_timeout

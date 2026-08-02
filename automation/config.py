@@ -35,6 +35,7 @@ class Settings:
     max_generation_errors_per_round: int
     deferred_round_wait: int
     max_deferred_rounds: int
+    image_step_timeout: int
     platform_error_refresh_delay: int
     upload_result_timeout: int
     result_timeout: int
@@ -71,6 +72,7 @@ class Settings:
             max_generation_errors_per_round=int(os.getenv("MAX_GENERATION_ERRORS_PER_ROUND", "5")),
             deferred_round_wait=int(os.getenv("DEFERRED_ROUND_WAIT_SECONDS", "60")),
             max_deferred_rounds=int(os.getenv("MAX_DEFERRED_ROUNDS", "3")),
+            image_step_timeout=int(os.getenv("IMAGE_STEP_TIMEOUT_SECONDS", "90")),
             platform_error_refresh_delay=int(os.getenv("PLATFORM_ERROR_REFRESH_DELAY_SECONDS", "5")),
             upload_result_timeout=int(os.getenv("UPLOAD_RESULT_TIMEOUT_SECONDS", "60")),
             result_timeout=int(os.getenv("RESULT_TIMEOUT_SECONDS", "900")),
@@ -94,6 +96,8 @@ class Settings:
             raise ValueError("DEFERRED_ROUND_WAIT_SECONDS não pode ser negativo.")
         if settings.max_deferred_rounds < 1:
             raise ValueError("MAX_DEFERRED_ROUNDS deve ser no mínimo 1.")
+        if settings.image_step_timeout < 10:
+            raise ValueError("IMAGE_STEP_TIMEOUT_SECONDS deve ser no mínimo 10.")
         return settings
 
     def ensure_directories(self) -> None:

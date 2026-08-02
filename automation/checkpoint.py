@@ -25,6 +25,11 @@ class CheckpointStore:
         entry = self._data["images"].get(str(image.resolve()), {})
         return entry.get("status") if entry.get("source_signature") == self.signature_for(image) else None
 
+    def details_for(self, image: Path) -> dict:
+        """Metadados válidos da imagem, inclusive contadores recuperáveis."""
+        entry = self._data["images"].get(str(image.resolve()), {})
+        return dict(entry) if entry.get("source_signature") == self.signature_for(image) else {}
+
     def is_uploaded(self, image: Path) -> bool:
         """Indica se esta versão física do arquivo já teve upload confirmado."""
         entry = self._data["images"].get(str(image.resolve()), {})
