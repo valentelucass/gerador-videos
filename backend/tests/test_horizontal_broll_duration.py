@@ -38,8 +38,11 @@ class HorizontalBrollDurationTests(unittest.TestCase):
                 patch.object(renderer, "_duration", return_value=4.56),
                 patch.object(renderer, "_run_compositor") as run_compositor,
             ):
+                # Mantém a janela editorial de 9,633 s que antes equivalia a
+                # 289 quadros na grade antiga de 30 fps.
+                extended_scene_frames = round((289 / 30) * renderer.FPS)
                 renderer._native_render_scene_clips(
-                    [scene], root / "clips", root / "assets", ["fullscreen"], [289]
+                    [scene], root / "clips", root / "assets", ["fullscreen"], [extended_scene_frames]
                 )
 
             run_compositor.assert_called_once()

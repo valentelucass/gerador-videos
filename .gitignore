@@ -33,3 +33,5 @@ __pycache__/
 htmlcov/
 .DS_Store
 Thumbs.db
+# Pacotes locais e assinados da extensão Firefox.
+media-collector/dist/

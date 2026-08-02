@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="popup.css">
+    <title>Media Collector</title>
+  </head>
+  <body>
+    <header>
+      <strong>Media Collector</strong>
+      <div class="actions">
+        <button id="scan" title="Varrer vídeos que já foram carregados na página">Varrer página</button>
+        <button id="download-all" title="Baixar a melhor variante direta detectada de cada vídeo">Baixar todos</button>
+        <button id="clear" title="Limpar itens desta aba">Limpar</button>
+      </div>
+    </header>
+    <p class="notice">Somente vídeos diretos não protegidos. “Baixar todos” usa a maior variante direta reconhecida por vídeo; HLS/DASH é apenas informado.</p>
+    <p id="status" role="status">Varrendo vídeos detectados…</p>
+    <main id="items"></main>
+    <script src="popup.js"></script>
+  </body>
+</html>

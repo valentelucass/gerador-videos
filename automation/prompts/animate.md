@@ -1,19 +1,21 @@
-Transform this still image into a natural, high-quality cinematic animation while preserving the original composition, art style, lighting, colors, camera angle, framing, and overall atmosphere.
+Create a refined, natural cinematic animation from this still image. Preserve the original composition, illustration style, characters, objects, lighting, colors, camera angle, framing, and story exactly as they are.
 
-Every existing character should feel genuinely alive. Use natural full-body motion with realistic timing, including breathing, blinking, eye movement, facial micro-expressions, subtle posture adjustments, weight shifts, natural arm and hand movement, hair and clothing physics, and continuous body motion. Avoid stiffness or frozen poses. Characters should move at normal speed, not in slow motion, unless the original image clearly suggests slow motion.
+The motion must feel intentional and layered, never like every part of the image is moving at once. Use one subtle, deliberate cinematic camera movement when it supports the scene: a slow push-in for emotional focus, a gentle pull-back to reveal the environment, or a restrained lateral drift to create depth. Keep the original framing and perspective recognizable. Never use abrupt zooms, fast pans, heavy shake, aggressive reframing, or disorienting camera motion.
 
-Continue and enhance the action already present in the image instead of creating a new one. If a character is walking, let them continue walking naturally within the existing scene. If they are talking, reacting, working, fighting, dancing, hugging, sitting, or performing any visible action, make that action flow smoothly and realistically.
+First identify the main action already implied by the image. Animate that action with believable timing. Characters should have subtle life: gentle breathing, occasional blinking, small eye movement, a slight natural posture shift, and minimal hair or clothing response. If the scene clearly contains people walking, passing by, working, dancing, interacting, or moving through the composition, allow that existing action to continue naturally.
 
-When multiple characters are present, respect the context of the scene. If they are interacting, preserve and enhance that interaction through natural eye contact, gestures, timing, body language, and synchronized movement. If they are not interacting in the original image, they should remain independent and not suddenly acknowledge each other.
+Prioritize elegant environmental motion so the scene feels alive even when the character remains mostly still. Select two to four appropriate secondary motions from the existing scene, such as:
+- faint drifting dust, mist, smoke, pollen, snow, rain, or floating particles;
+- a soft moving glow or shimmer from existing lamps, candles, stars, magical objects, reflections, neon, or fireflies;
+- subtle light flicker, slow shadow movement, and gentle atmospheric light variation;
+- slight movement in existing fabric, hair, foliage, water, clouds, fire, or reflections.
 
-Bring the environment to life. Animate all existing dynamic elements naturally. Hair, clothing, fabric, leaves, grass, trees, smoke, fog, fire, rain, snow, water, reflections, dust, particles, clouds, shadows, and lighting should all move realistically whenever appropriate.
+For magical or celestial artwork, make the existing glow breathe softly: tiny sparks drift, stars twinkle at different moments, and light pulses slowly and irregularly. Keep effects delicate, sparse, and premium. Do not add new effects, objects, particles, characters, symbols, or scenery that are not already visible.
 
-If the scene contains magical effects, glowing objects, energy, sparks, stars, reflections, neon lights, fireflies, crystals, or any luminous elements, enhance them with rich, elegant animation. Light should shimmer, pulse gently, sparkle, flicker naturally, emit subtle particles, and create a magical sense of life without becoming distracting or exaggerated.
+Create depth through parallax-like motion only within existing layers: foreground particles can drift slowly, the background can have barely perceptible atmospheric movement, and the focal subject must remain crisp and stable. Avoid exaggerated motion, fast movement, slow-motion melodrama, or looping behavior.
 
-Allow subtle secondary motion throughout the scene so nothing important appears unnaturally frozen. Every animated element should contribute to the feeling that the image is a living moment rather than a static picture.
+STRICT FACE AND HAND PROTECTION: Preserve every face, expression, eye, mouth, hand, finger, and limb exactly. Facial animation must be minimal and anatomically stable: occasional blink, tiny eye shift, or gentle breath only. Hands must not be redesigned, reshaped, enlarged, hidden, duplicated, fused, or made to perform new gestures. If clean hand or face motion is uncertain, keep that area still and animate the surrounding atmosphere instead.
 
-Do not alter identities, clothing, facial features, body proportions, art style, camera framing, or the story being told. Do not introduce new characters, objects, creatures, or background elements. Do not remove anything already present.
+STRICT TEXT PROTECTION: Any existing text, title, subtitle, logo, sign, written word, number, typography, interface element, or graphic lettering must remain pixel-stable and completely unchanged. Do not animate, redraw, morph, translate, distort, glow, flicker, blur, cover, replace, or move any text or font. Preserve its exact spelling, position, color, size, and readability.
 
-Any visible text, logos, signs, subtitles, or written elements must remain perfectly unchanged and completely static to preserve readability.
-
-Maintain temporal consistency across every frame. Avoid morphing, flickering, warping, jitter, random motion, unstable anatomy, duplicated limbs, or inconsistent animation. The final result should feel like professionally directed live-action footage or a premium animated film, where every movement is purposeful, fluid, physically believable, and faithful to the original image.
+Do not alter identity, face, anatomy, hands, clothing, body proportions, image style, object placement, or the narrative. Maintain temporal consistency in every frame: no morphing, warping, flickering, jitter, duplicated limbs, unstable anatomy, or random changes. The result should feel like a premium animated illustration with a calm living atmosphere, not an AI-generated transformation.

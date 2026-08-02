@@ -25,10 +25,11 @@ from ..models import Script
 from ..services import VIDEO_EXTENSIONS, missing_scene_images, resolve_scene_image_sources, scene_asset_path
 from .tts_neural import TTSNeuralEngine, WordBoundary
 
-# A cadência de 30 fps é importante para o zoom do cartão: a 24 fps a borda
-# percorria quatro ou mais pixels por amostra e aparentava vibrar, mesmo sem
-# frames descartados. Os time-codes continuam quantizados uma única vez.
-FPS = 30
+# A entrega horizontal é 1080p60. Isso deixa zooms, transições, textos e
+# animações produzidas pelo compositor fluidos; os time-codes continuam
+# quantizados uma única vez nessa grade. Uma fonte a 24/30 fps não ganha
+# movimento nativo: seus quadros são somente distribuídos na saída de 60 fps.
+FPS = 60
 WIDTH, HEIGHT = 1920, 1080
 CARD_W, CARD_H = 1500, 844
 CARD_RADIUS = 48
@@ -55,7 +56,7 @@ CARD_BLUR_AT_FOCUS = 0.84
 FULLSCREEN_RATIO = 0.40
 MAX_FULLSCREEN_RUN = 2
 MAX_CARD_RUN = 3
-# Mantemos as durações editoriais anteriores em uma grade de 30 fps inteira.
+# Mantemos as durações editoriais em uma grade inteira de 60 fps.
 TRANSITION_FRAMES = 12
 TRANSITION_SECONDS = TRANSITION_FRAMES / FPS
 # Cartões não usam xfade: o anterior é sugado e o próximo ocupa o espaço
@@ -142,8 +143,12 @@ SCENE_RENDER_WORKERS = 2
 # paralelo em nenhuma etapa do job.
 SEGMENT_RENDER_WORKERS = SCENE_RENDER_WORKERS
 VIDEO_ENCODER_ARGS = (
-    "-c:v", "h264_amf", "-usage", "transcoding", "-quality", "speed",
-    "-rc", "cqp", "-qp_i", "20", "-qp_p", "22", "-qp_b", "24",
+    # A RX 7600 codifica por hardware, mas a saída é um master de qualidade:
+    # a análise AMF e os QPs menores preservam textura, gradientes e detalhes
+    # de movimento antes da recompressão normal das plataformas de vídeo.
+    "-c:v", "h264_amf", "-usage", "high_quality", "-quality", "quality",
+    "-profile:v", "high", "-rc", "cqp", "-qp_i", "18", "-qp_p", "20", "-qp_b", "22",
+    "-preanalysis", "1", "-vbaq", "1", "-high_motion_quality_boost_enable", "1",
     "-pix_fmt", "yuv420p",
 )
 FOCUS_POINTS = (
@@ -2859,7 +2864,7 @@ def _native_composite(
     visual_start_frames = [_nearest_frame(start) for start in starts]
     visual_start_frames[0] = 0
     if any(next_frame <= frame for frame, next_frame in zip(visual_start_frames, visual_start_frames[1:])):
-        raise ValueError("Os time-codes acústicos ficaram curtos demais para a grade de 24 fps.")
+        raise ValueError("Os time-codes acústicos ficaram curtos demais para a grade de 60 fps.")
     narration_frames = _frames_for_duration(narration_seconds)
     visual_total_frames = _frames_for_duration(narration_seconds + tail_seconds)
     if narration_frames <= visual_start_frames[-1]:

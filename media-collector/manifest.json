@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+  "name": "Media Collector (teste local)",
+  "version": "0.2.0",
+  "description": "Coleta mídias diretas não protegidas vistas nas requisições da aba e as envia à fila de downloads do Firefox.",
+  "permissions": [
+    "activeTab",
+    "downloads",
+    "storage",
+    "tabs",
+    "webRequest",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_title": "Media Collector",
+    "default_popup": "popup.html"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "media-collector-test@synthreel.local",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  }
+}
