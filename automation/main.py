@@ -25,26 +25,35 @@ else:
 import asyncio
 
 
-def input_images(manifest_path: Path) -> list[Path]:
+def input_manifest(manifest_path: Path) -> tuple[list[Path], Path | None, str | None]:
     """Recebe o manifesto seguro criado pela API a partir da biblioteca do painel."""
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))
     paths = [Path(item) for item in payload.get("images", [])]
     if not paths or any(not path.is_file() for path in paths):
         raise ValueError("O manifesto da automação não contém mídias de cena válidas.")
-    return paths
+    checkpoint_value = payload.get("checkpoint_path")
+    checkpoint_path = Path(checkpoint_value) if isinstance(checkpoint_value, str) and checkpoint_value else None
+    resume_url = payload.get("resume_url")
+    if resume_url is not None and not isinstance(resume_url, str):
+        raise ValueError("O manifesto da automação possui uma URL de retomada inválida.")
+    return paths, checkpoint_path, resume_url or None
 
 
 async def main(manifest: Path) -> None:
     settings = Settings.load()
     settings.ensure_directories()
     logger = build_logger(settings.logs_dir)
-    source_images = input_images(manifest)
+    source_images, checkpoint_path, resume_url = input_manifest(manifest)
     images, duplicates = unique_files_by_content(source_images)
     if duplicates:
         logger.warning("%s duplicata(s) exata(s) ignorada(s): %s", len(duplicates), ", ".join(item.name for item in duplicates))
     logger.info("Abrindo navegador em nova guia. Headless=%s | imagens únicas=%s", settings.headless, len(images))
     async with persistent_page(settings) as (_, page):
-        await AnimationWorkflow(page, settings, logger).run(images, duplicates=duplicates)
+        await AnimationWorkflow(page, settings, logger, checkpoint_path=checkpoint_path).run(
+            images,
+            duplicates=duplicates,
+            resume_target_url=resume_url,
+        )
 
 
 if __name__ == "__main__":

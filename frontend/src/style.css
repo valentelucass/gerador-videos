@@ -98,6 +98,7 @@ button, select { cursor: pointer; }
 .panel-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 30px; }
 .panel-header > div { display: flex; align-items: center; min-width: 0; gap: 9px; }
 .json-header-actions { display: flex; align-items: center; gap: 6px; }
+.prompt-picker { min-width: 156px; padding: 7px 28px 7px 9px; color: #dbe4ec; border-color: #34404c; background: #101821; font-size: .68rem; }
 .prompt-copy-button { position: relative; overflow: hidden; min-width: 96px; }
 .prompt-copy-button.copied { color: #14191b; border-color: #f3d536; background: #f3d536; animation: prompt-copy-pop .42s cubic-bezier(.18,.89,.32,1.28); }
 .prompt-copy-button.copied::after { content: ""; position: absolute; inset: -35% auto -35% -45%; width: 34%; background: #fff8bdc7; transform: skewX(-20deg); animation: prompt-copy-shine .72s ease-out; }

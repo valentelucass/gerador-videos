@@ -1,1057 +1,322 @@
-{
-  "_instrucoes_flow": "Google Flow, gere UMA imagem horizontal 16:9 para TODAS as cenas. Não gere vídeos, MP4s ou B-roll. Trate as imagens como quadros consecutivos de uma história visual: personagem coerente, ação, interação e reação concreta em cada cena; nunca um slideshow de símbolos isolados.",
-  "title": "The Psychology of Women Who Ignore Their Birthdays",
-  "language": "en-US",
-  "narrator_gender": "female",
-  "voice": "en-US-JennyNeural",
-  "background": "black",
-  "background_animation": "movimento_sutil",
-  "blocks": [
-    {
-      "id": "block_01",
-      "text": "Your birthday is fast approaching. A coworker excitedly stops you and asks how you are going to celebrate.",
-      "scenes": [
-        {
-          "id": "scene_01",
-          "image_id": 1,
-          "tipo_midia": "imagem",
-          "asset_key": "coworker-asking-birthday-calendar",
-          "image": "cena_01.png",
-          "visual": {
-            "subject": "protagonist (a woman in her 30s with short wavy hair) and a coworker",
-            "action": "coworker leaning in eagerly holding a glowing calendar",
-            "setting": "dark silent workspace with subtle stars",
-            "framing": "medium shot of the two women",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, protagonist looking slightly caught off guard"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": {
-              "type": "click",
-              "at": "start"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_02",
-      "text": "Your chest tightens slightly. You force a polite smile and quickly answer that you are not doing anything special.",
-      "scenes": [
-        {
-          "id": "scene_02",
-          "image_id": 2,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-forcing-smile-defensive",
-          "image": "cena_02.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "forcing a stiff smile while raising one hand defensively to gently push the calendar away",
-            "setting": "same starry workspace",
-            "framing": "close up on the protagonist's face and hand",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, visible tension in her shoulders"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_03",
-      "text": "You tell them it is just another day, hoping they will just drop the subject and move on.",
-      "scenes": [
-        {
-          "id": "scene_03",
-          "image_id": 3,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-turning-away-relieved",
-          "image": "cena_03.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "turning her back to the coworker, letting out a small sigh of relief",
-            "setting": "vast dark emptiness",
-            "framing": "medium profile shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_04",
-      "text": "But suddenly, the atmosphere shifts. People look at you with a strange mix of pity and subtle judgment.",
-      "scenes": [
-        {
-          "id": "scene_04",
-          "image_id": 4,
-          "tipo_midia": "imagem",
-          "asset_key": "shadowy-figures-judging-protagonist",
-          "image": "cena_04.png",
-          "visual": {
-            "subject": "protagonist surrounded by shadowy faceless figures",
-            "action": "the figures leaning in, staring at her with glowing judgmental eyes",
-            "setting": "deep starry void",
-            "framing": "wide view, protagonist isolated in the center",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, protagonist shrinking slightly under the stares"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_05",
-      "text": "Society has this deeply ingrained assumption that if you do not want a cake and a party, you must be depressed.",
-      "scenes": [
-        {
-          "id": "scene_05",
-          "image_id": 5,
-          "tipo_midia": "imagem",
-          "asset_key": "shadow-shoving-cake-protagonist",
-          "image": "cena_05.png",
-          "visual": {
-            "subject": "protagonist and a large shadow figure",
-            "action": "the shadow aggressively shoving a glowing birthday cake into her reluctant hands",
-            "setting": "infinite space",
-            "framing": "medium shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, protagonist looking overwhelmed and distressed"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_right",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_06",
-      "text": "But what if there is absolutely nothing wrong with you? What if your indifference is actually highly intelligent?",
-      "scenes": [
-        {
-          "id": "scene_06",
-          "image_id": 6,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-shattering-cake-realization",
-          "image": "cena_06.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "standing tall as the glowing cake in her hands shatters into beautiful harmless stardust",
-            "setting": "pitch black background",
-            "framing": "close up on her face",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, her expression changing from distress to calm clarity"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": {
-              "type": "new_idea",
-              "at": "start"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_07",
-      "text": "Psychology shows that women who persistently ignore their birthdays usually fall into three very specific behavioral profiles.",
-      "scenes": [
-        {
-          "id": "scene_07",
-          "image_id": 7,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-facing-three-paths",
-          "image": "cena_07.png",
-          "visual": {
-            "subject": "protagonist from behind",
-            "action": "standing at a cosmic crossroad where three glowing stardust paths diverge",
-            "setting": "vast dark emptiness",
-            "framing": "wide shot showing the choices",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_08",
-      "text": "If you have ever felt misunderstood on your special day, leave a like and subscribe as we decode your mind.",
-      "scenes": [
-        {
-          "id": "scene_08",
-          "image_id": 8,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-holding-golden-key",
-          "image": "cena_08.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "looking directly at the viewer while holding up a glowing vintage key",
-            "setting": "space background",
-            "framing": "centered portrait",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, expression of empathy and invitation"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          },
-          "annotation": {
-            "lines": [
-              "DEIXE O LIKE",
-              "E SE INSCREVA"
-            ],
-            "at": "start"
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_09",
-      "text": "Let us start with the first group. For these women, ignoring the date has absolutely nothing to do with sadness.",
-      "scenes": [
-        {
-          "id": "scene_09",
-          "image_id": 9,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-walking-first-path-tired",
-          "image": "cena_09.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "walking down the first glowing path with her shoulders slumped in exhaustion",
-            "setting": "deep silent space",
-            "framing": "medium tracking shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "none",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_10",
-      "text": "It is driven by extreme emotional exhaustion. You are always the one managing the feelings of everyone around you.",
-      "scenes": [
-        {
-          "id": "scene_10",
-          "image_id": 10,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-juggling-heavy-orbs",
-          "image": "cena_10.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "desperately trying to juggle multiple heavy glowing orbs representing tasks",
-            "setting": "dark void",
-            "framing": "medium shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, text EXHAUSTION in golden lines, sweat on her brow"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_11",
-      "text": "By the time your own birthday finally arrives, your brain is suffering from a severe case of decision fatigue.",
-      "scenes": [
-        {
-          "id": "scene_11",
-          "image_id": 11,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-collapsing-under-orbs",
-          "image": "cena_11.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "sitting on the floor rubbing her temples, surrounded by the heavy glowing orbs resting on the ground",
-            "setting": "empty space",
-            "framing": "high angle shot looking down at her",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, expression of complete mental burnout"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_12",
-      "text": "For a mind already drowning in the mental load, organizing one more event feels less like joy and more like punishment.",
-      "scenes": [
-        {
-          "id": "scene_12",
-          "image_id": 12,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-rejecting-party-invitation",
-          "image": "cena_12.png",
-          "visual": {
-            "subject": "protagonist and a disembodied shadow hand",
-            "action": "the shadow hand offering a glowing party invitation, protagonist physically recoiling from it in distress",
-            "setting": "pitch black universe",
-            "framing": "medium close up",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": {
-              "type": "paper_flip",
-              "at": "middle"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_13",
-      "text": "You are not avoiding happiness. You are simply craving a single, quiet day of relief where nothing is expected of you.",
-      "scenes": [
-        {
-          "id": "scene_13",
-          "image_id": 13,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-resting-cosmic-hammock",
-          "image": "cena_13.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "lying back peacefully in a hammock made of constellations, eyes closed",
-            "setting": "quiet beautiful void",
-            "framing": "wide relaxing shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, text RELIEF in golden lines"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_14",
-      "text": "However, the second psychological profile is built on a much more painful and silent emotional foundation.",
-      "scenes": [
-        {
-          "id": "scene_14",
-          "image_id": 14,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-holding-cracked-heart",
-          "image": "cena_14.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "walking down the second path, clutching her chest as a glowing crack appears over her heart",
-            "setting": "dark empty space",
-            "framing": "medium shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_15",
-      "text": "It revolves around asymmetrical relationships. You go out of your way to create magical moments for others.",
-      "scenes": [
-        {
-          "id": "scene_15",
-          "image_id": 15,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-arranging-beautiful-table",
-          "image": "cena_15.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "carefully arranging a beautiful glowing banquet table with a warm, giving smile",
-            "setting": "deep universe",
-            "framing": "wide shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_16",
-      "text": "But over the years, when it was your turn to be celebrated, you received a generic text or a forgotten promise.",
-      "scenes": [
-        {
-          "id": "scene_16",
-          "image_id": 16,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-waiting-alone-empty-table",
-          "image": "cena_16.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "sitting completely alone at the same table, looking sadly at a single wilting golden rose",
-            "setting": "cold silent space",
-            "framing": "medium shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_17",
-      "text": "A birthday can easily become a painful emotional test, a day where you measure how much people actually care about you.",
-      "scenes": [
-        {
-          "id": "scene_17",
-          "image_id": 17,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-measuring-wilting-rose",
-          "image": "cena_17.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "holding a glowing measuring tape next to the tiny wilting rose, looking devastated by the result",
-            "setting": "dark void",
-            "framing": "close up",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_18",
-      "text": "To survive this repeated disappointment, your brain adopts a mechanism closely related to learned helplessness.",
-      "scenes": [
-        {
-          "id": "scene_18",
-          "image_id": 18,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-throwing-tape-defensive",
-          "image": "cena_18.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "throwing the measuring tape away into the dark and crossing her arms defensively",
-            "setting": "empty space",
-            "framing": "medium shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_19",
-      "text": "You convince yourself that you truly do not care, carefully building an impenetrable emotional armor.",
-      "scenes": [
-        {
-          "id": "scene_19",
-          "image_id": 19,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-putting-on-armor",
-          "image": "cena_19.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "physically placing a heavy glowing piece of armor over her own shoulders",
-            "setting": "dark void",
-            "framing": "centered close up",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, text ARMOR in golden lines"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_20",
-      "text": "It is a subconscious strategy: if you expect absolutely nothing from anyone, their lack of effort cannot break your heart.",
-      "scenes": [
-        {
-          "id": "scene_20",
-          "image_id": 20,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-armored-ignoring-shadows",
-          "image": "cena_20.png",
-          "visual": {
-            "subject": "protagonist fully armored",
-            "action": "standing perfectly still and cold as shadowy figures walk past without looking at her",
-            "setting": "deep universe",
-            "framing": "wide shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_21",
-      "text": "But there is a third group, and this profile reveals the deepest and most complex psychological scar.",
-      "scenes": [
-        {
-          "id": "scene_21",
-          "image_id": 21,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-armor-fading-fearful",
-          "image": "cena_21.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "stepping onto the third path, her armor dissolving as she shrinks into a fearful posture",
-            "setting": "pitch black background",
-            "framing": "medium shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_22",
-      "text": "These women do not ignore their birthdays out of exhaustion, but because of a paralyzing guilt.",
-      "scenes": [
-        {
-          "id": "scene_22",
-          "image_id": 22,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-curled-under-spotlight",
-          "image": "cena_22.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "curling into a tight ball on the ground as a bright, aggressive spotlight shines directly on her",
-            "setting": "dark empty stage",
-            "framing": "wide dramatic angle",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, text GUILT in golden lines"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "none",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_23",
-      "text": "When the spotlight is suddenly put on them, their nervous system detects a massive, overwhelming threat.",
-      "scenes": [
-        {
-          "id": "scene_23",
-          "image_id": 23,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-blocking-spotlight",
-          "image": "cena_23.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "covering her face with both hands in a panic to block the intense, burning spotlight",
-            "setting": "claustrophobic dark space",
-            "framing": "close up on her hands and face",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_right",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_24",
-      "text": "This usually traces back to childhood. You learned early on that asking for attention caused conflict.",
-      "scenes": [
-        {
-          "id": "scene_24",
-          "image_id": 24,
-          "tipo_midia": "imagem",
-          "asset_key": "little-girl-hiding-under-table",
-          "image": "cena_24.png",
-          "visual": {
-            "subject": "a little girl with short wavy hair (the protagonist as a child) and giant adult shadows",
-            "action": "the child hiding under a glowing table while two giant shadows argue above her",
-            "setting": "empty expansive void",
-            "framing": "wide distant shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, child looking terrified"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_25",
-      "text": "In clinical psychology, this is linked to the fawning trauma response: the urge to constantly appease others to stay safe.",
-      "scenes": [
-        {
-          "id": "scene_25",
-          "image_id": 25,
-          "tipo_midia": "imagem",
-          "asset_key": "little-girl-offering-white-flag",
-          "image": "cena_25.png",
-          "visual": {
-            "subject": "the little girl",
-            "action": "stepping out and trembling while offering a glowing white flag of surrender to a looming shadow",
-            "setting": "stormy cosmic background",
-            "framing": "medium shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_right",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_26",
-      "text": "You spent a lifetime silencing your own needs, making sure you never inconvenienced the adults around you.",
-      "scenes": [
-        {
-          "id": "scene_26",
-          "image_id": 26,
-          "tipo_midia": "imagem",
-          "asset_key": "little-girl-locking-her-lips",
-          "image": "cena_26.png",
-          "visual": {
-            "subject": "the little girl",
-            "action": "physically placing a heavy golden padlock over her own mouth with a sad expression",
-            "setting": "pitch black darkness",
-            "framing": "close up portrait",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_27",
-      "text": "So, receiving undivided attention now feels unsafe. It disrupts your emotional balance.",
-      "scenes": [
-        {
-          "id": "scene_27",
-          "image_id": 27,
-          "tipo_midia": "imagem",
-          "asset_key": "adult-protagonist-surrounded-by-candles",
-          "image": "cena_27.png",
-          "visual": {
-            "subject": "the adult protagonist",
-            "action": "trembling defensively as multiple floating hands point glowing birthday candles at her like weapons",
-            "setting": "dark void",
-            "framing": "medium shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_28",
-      "text": "Erasing your birthday becomes a subconscious survival mechanism to remain invisible, quiet, and perfectly protected.",
-      "scenes": [
-        {
-          "id": "scene_28",
-          "image_id": 28,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-wearing-invisibility-cloak",
-          "image": "cena_28.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "wrapping a cosmic cloak made of the night sky tightly around herself, fading into the background",
-            "setting": "deep universe",
-            "framing": "centered",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, text INVISIBLE in golden lines"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_29",
-      "text": "As we can see, avoiding your birthday is rarely just a simple, superficial dislike for cake or social gatherings.",
-      "scenes": [
-        {
-          "id": "scene_29",
-          "image_id": 29,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-removing-cloak-peaceful",
-          "image": "cena_29.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "sitting calmly on a glowing crescent moon, lowering the cloak to reveal a peaceful expression",
-            "setting": "dark cosmic ocean",
-            "framing": "wide shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_30",
-      "text": "It can be a desperate plea for mental rest, a heavy shield against heartbreak, or an echo from a wounded inner child.",
-      "scenes": [
-        {
-          "id": "scene_30",
-          "image_id": 30,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-holding-hands-inner-child",
-          "image": "cena_30.png",
-          "visual": {
-            "subject": "protagonist and her younger self",
-            "action": "holding hands and smiling gently at each other",
-            "setting": "pitch black void",
-            "framing": "medium shot of the two",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames"
-          },
-          "transition": {
-            "in": "none",
-            "out": "to_right",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_31",
-      "text": "The next time the calendar marks your special day, remember that you do not need to force a celebration to prove your worth.",
-      "scenes": [
-        {
-          "id": "scene_31",
-          "image_id": 31,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-pushing-calendar-peacefully",
-          "image": "cena_31.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "gently and peacefully pushing the glowing calendar away, this time with a sincere smile",
-            "setting": "dark peaceful space",
-            "framing": "medium shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, her body language is relaxed, not defensive"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_32",
-      "text": "True self-care might just be staying home, reading a book in silence, and accepting that your peace is enough.",
-      "scenes": [
-        {
-          "id": "scene_32",
-          "image_id": 32,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-reading-by-window-crown",
-          "image": "cena_32.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "sitting by an ethereal window, reading a glowing book in total silence",
-            "setting": "silent void",
-            "framing": "wide serene shot",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, text PEACE in golden lines, a delicate golden crown resting on the sill"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_33",
-      "text": "Do you ignore your birthday out of exhaustion, or to protect yourself from disappointment? Subscribe for more and let me know below.",
-      "scenes": [
-        {
-          "id": "scene_33",
-          "image_id": 33,
-          "tipo_midia": "imagem",
-          "asset_key": "protagonist-smiling-empathetic-camera",
-          "image": "cena_33.png",
-          "visual": {
-            "subject": "protagonist",
-            "action": "looking directly into the camera with an empathetic, understanding smile",
-            "setting": "beautiful vast universe",
-            "framing": "close up portrait",
-            "details": "litografia cósmica vintage, golden organic lines, open composition to the edges, no frames, bathed in soft starlight"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          },
-          "annotation": {
-            "lines": [
-              "SUBSCRIBE",
-              "FOR MORE"
-            ],
-            "at": "start"
-          }
-        }
-      ]
-    }
-  ]
-}
+[
+  {
+    "cena": 1,
+    "layout": "fullscreen",
+    "animacao": "zoom_in",
+    "texto_narrado": "¿Crees que estás comprando una simple cena al usar tu móvil? Te equivocas por completo.",
+    "anotacao": "",
+    "prompt_imagem": "Close-up of a stressed person looking at a glowing smartphone in a dark room, cinematic lighting, 8k resolution."
+  },
+  {
+    "cena": 2,
+    "layout": "video_generico",
+    "animacao": "pan_right",
+    "texto_narrado": "En 2026, las aplicaciones de delivery operan como casinos financieros disfrazados de extrema conveniencia.",
+    "anotacao": "",
+    "prompt_imagem": "A glowing neon casino slot machine merging seamlessly with a modern food delivery app interface, cyberpunk aesthetic."
+  },
+  {
+    "cena": 3,
+    "layout": "fullscreen",
+    "animacao": "zoom_out",
+    "texto_narrado": "Están diseñadas con una precisión algorítmica militar para vaciar tu billetera sin piedad alguna.",
+    "anotacao": "",
+    "prompt_imagem": "Abstract digital grid showing money draining from a wallet into a glowing smartphone, dark corporate aesthetic."
+  },
+  {
+    "cena": 4,
+    "layout": "video_generico",
+    "animacao": "zoom_in",
+    "texto_narrado": "Operan usando ingeniería psicológica avanzada para extraer silenciosamente el dinero de la clase media.",
+    "anotacao": "EL SISTEMA",
+    "prompt_imagem": "A human brain connected to digital wires and algorithms, dark futuristic laboratory."
+  },
+  {
+    "cena": 5,
+    "layout": "fullscreen",
+    "animacao": "pan_left",
+    "texto_narrado": "Hoy vamos a desmontar las cinco trampas invisibles que destruyen tu sueldo mensual sistemáticamente.",
+    "anotacao": "",
+    "prompt_imagem": "Five glowing red digital locks hovering over a modern bank statement, dramatic lighting."
+  },
+  {
+    "cena": 6,
+    "layout": "video_generico",
+    "animacao": "pan_right",
+    "texto_narrado": "La primera trampa es el fraccionamiento de precios, mundialmente conocido en tecnología como Drip Pricing.",
+    "anotacao": "",
+    "prompt_imagem": "A receipt being sliced into multiple tiny glowing pieces by a digital laser, dark background."
+  },
+  {
+    "cena": 7,
+    "layout": "video_generico",
+    "animacao": "zoom_in",
+    "texto_narrado": "Las tarifas de servicio y alta demanda se ocultan intencionalmente durante toda tu navegación.",
+    "anotacao": "TARIFAS OCULTAS",
+    "prompt_imagem": "A magnifying glass revealing hidden numbers and fees in the shadow of a glowing app menu."
+  },
+  {
+    "cena": 8,
+    "layout": "fullscreen",
+    "animacao": "zoom_out",
+    "texto_narrado": "Solamente ves el costo real y final en el último segundo de la pantalla de pago.",
+    "anotacao": "",
+    "prompt_imagem": "A massive, terrifying final total appearing suddenly on a phone screen, casting a red light on a shocked face."
+  },
+  {
+    "cena": 9,
+    "layout": "video_generico",
+    "animacao": "pan_right",
+    "texto_narrado": "Esto destruye tu capacidad cognitiva inmediata para comparar los precios reales de los alimentos.",
+    "anotacao": "",
+    "prompt_imagem": "A distorted, blurry view of multiple price tags spinning out of control, causing visual confusion."
+  },
+  {
+    "cena": 10,
+    "layout": "fullscreen",
+    "animacao": "pan_left",
+    "texto_narrado": "Terminas pagando el pedido por puro cansancio mental al final del embudo de decisión.",
+    "anotacao": "",
+    "prompt_imagem": "An exhausted finger pressing a glowing 'Buy' button on a cracked phone screen."
+  },
+  {
+    "cena": 11,
+    "layout": "video_generico",
+    "animacao": "zoom_in",
+    "texto_narrado": "Es un impuesto silencioso y agresivo que absorbe tu dinero sin que apenas lo notes.",
+    "anotacao": "IMPUESTO INVISIBLE",
+    "prompt_imagem": "A digital vacuum cleaner sucking golden coins out of a digital wallet inside a phone."
+  },
+  {
+    "cena": 12,
+    "layout": "video_generico",
+    "animacao": "zoom_in",
+    "texto_narrado": "Si ya caíste en esta trampa alguna vez, deja tu me gusta en este momento.",
+    "anotacao": "👍",
+    "prompt_imagem": "A neon thumbs up glowing against a dark, gritty brick wall."
+  },
+  {
+    "cena": 13,
+    "layout": "fullscreen",
+    "animacao": "zoom_in",
+    "texto_narrado": "La segunda táctica letal es la escasez artificial programada directamente en la interfaz visual.",
+    "anotacao": "",
+    "prompt_imagem": "A digital hourglass running out of red sand, floating over a plate of food, high contrast."
+  },
+  {
+    "cena": 14,
+    "layout": "video_generico",
+    "animacao": "pan_left",
+    "texto_narrado": "Utilizan un uso militarizado de temporizadores rápidos y falsas alertas de demanda masiva.",
+    "anotacao": "",
+    "prompt_imagem": "Multiple aggressive red notification banners popping up on a dark digital interface."
+  },
+  {
+    "cena": 15,
+    "layout": "fullscreen",
+    "animacao": "zoom_out",
+    "texto_narrado": "Crean un ambiente de profundo estrés y ansiedad visual directamente en tu propia pantalla.",
+    "anotacao": "",
+    "prompt_imagem": "A person sweating in the dark, illuminated by a flashing red phone screen."
+  },
+  {
+    "cena": 16,
+    "layout": "video_generico",
+    "animacao": "zoom_in",
+    "texto_narrado": "Finalizas el pedido rápidamente por el miedo irracional a perder esa supuesta oferta única.",
+    "anotacao": "PATRONES OSCUROS",
+    "prompt_imagem": "A golden ticket dissolving into ashes inside a smartphone display."
+  },
+  {
+    "cena": 17,
+    "layout": "fullscreen",
+    "animacao": "pan_right",
+    "texto_narrado": "No estás comprando porque tienes hambre real, sino por pura aversión a la pérdida financiera.",
+    "anotacao": "",
+    "prompt_imagem": "A chain linking a person's wrist to a glowing food delivery app icon."
+  },
+  {
+    "cena": 18,
+    "layout": "video_generico",
+    "animacao": "zoom_in",
+    "texto_narrado": "Los algoritmos manipulan tu cerebro para forzarte a realizar compras altamente impulsivas y emocionales.",
+    "anotacao": "IMPULSO",
+    "prompt_imagem": "A stylized human brain glowing with aggressive red nodes being controlled by digital strings."
+  },
+  {
+    "cena": 19,
+    "layout": "fullscreen",
+    "animacao": "zoom_in",
+    "texto_narrado": "La tercera trampa es el agresivo efecto señuelo implementado en todos los menús digitales.",
+    "anotacao": "",
+    "prompt_imagem": "Three burgers floating in a dark void; the middle one is distorted and glowing ominously."
+  },
+  {
+    "cena": 20,
+    "layout": "video_generico",
+    "animacao": "zoom_in",
+    "texto_narrado": "Los restaurantes insertan una opción intermedia con un precio completamente desproporcional al producto real.",
+    "anotacao": "EL SEÑUELO",
+    "prompt_imagem": "A glowing digital menu where the middle price tag is massive and aggressively red."
+  },
+  {
+    "cena": 21,
+    "layout": "fullscreen",
+    "animacao": "pan_left",
+    "texto_narrado": "Su único propósito estratégico es anclar el valor más alto directamente en tu mente subconsciente.",
+    "anotacao": "",
+    "prompt_imagem": "A heavy iron anchor crashing through a glass screen displaying a restaurant menu."
+  },
+  {
+    "cena": 22,
+    "layout": "video_generico",
+    "animacao": "pan_right",
+    "texto_narrado": "Esto crea la falsa ilusión de que comprar el combo más caro es una decisión inteligente.",
+    "anotacao": "",
+    "prompt_imagem": "A glowing optical illusion representing a giant meal combo looking like a gold bar."
+  },
+  {
+    "cena": 23,
+    "layout": "fullscreen",
+    "animacao": "zoom_out",
+    "texto_narrado": "Es una herramienta de ventas agresiva que infla sus márgenes de ganancia enormemente cada día.",
+    "anotacao": "",
+    "prompt_imagem": "A digital chart showing profit lines skyrocketing out of a delivery bag."
+  },
+  {
+    "cena": 24,
+    "layout": "video_generico",
+    "animacao": "zoom_in",
+    "texto_narrado": "Crees que eliges libremente, pero la arquitectura de decisión ya decidió la compra por ti.",
+    "anotacao": "ILUSIÓN",
+    "prompt_imagem": "A puppet master composed of digital code manipulating a consumer's hand."
+  },
+  {
+    "cena": 25,
+    "layout": "fullscreen",
+    "animacao": "zoom_in",
+    "texto_narrado": "La cuarta trampa es la gamificación tóxica y el peligroso efecto dotación del usuario.",
+    "anotacao": "",
+    "prompt_imagem": "A glowing video game health bar and points system hovering over a real dinner plate."
+  },
+  {
+    "cena": 26,
+    "layout": "video_generico",
+    "animacao": "pan_left",
+    "texto_narrado": "El sistema no te vende conveniencia real, te vende un falso estatus digital programado.",
+    "anotacao": "",
+    "prompt_imagem": "A fake plastic crown glowing inside a futuristic food delivery box."
+  },
+  {
+    "cena": 27,
+    "layout": "fullscreen",
+    "animacao": "zoom_out",
+    "texto_narrado": "Los sistemas de puntos y suscripciones mensuales generan el miedo a perder tu progreso acumulado.",
+    "anotacao": "",
+    "prompt_imagem": "A digital padlock chaining golden loyalty points to a user's profile, dark neon colors."
+  },
+  {
+    "cena": 28,
+    "layout": "video_generico",
+    "animacao": "zoom_in",
+    "texto_narrado": "Te niegas rotundamente a cancelar por el miedo a perder beneficios que no tienen valor real.",
+    "anotacao": "RETENCIÓN",
+    "prompt_imagem": "A person trapped inside an infinite loop of digital calendars and monthly subscription bills."
+  },
+  {
+    "cena": 29,
+    "layout": "fullscreen",
+    "animacao": "pan_right",
+    "texto_narrado": "Terminas pidiendo mucha más comida solamente para justificar tu mensualidad que ya fue pagada.",
+    "anotacao": "",
+    "prompt_imagem": "A scale weighing a pile of junk food against a monthly subscription invoice."
+  },
+  {
+    "cena": 30,
+    "layout": "video_generico",
+    "animacao": "zoom_in",
+    "texto_narrado": "Suscríbete al canal ahora si quieres seguir desmontando estos sistemas abusivos de extracción financiera.",
+    "anotacao": "🔔",
+    "prompt_imagem": "A metallic bell glowing with a neon light, breaking out of digital chains."
+  },
+  {
+    "cena": 31,
+    "layout": "fullscreen",
+    "animacao": "zoom_in",
+    "texto_narrado": "La quinta y más oscura trampa es la temida fijación de precios dinámica e invisible.",
+    "anotacao": "",
+    "prompt_imagem": "A digital price tag wildly changing numbers in a dark, ominous cyber environment."
+  },
+  {
+    "cena": 32,
+    "layout": "video_generico",
+    "animacao": "pan_left",
+    "texto_narrado": "La inteligencia artificial altera la realidad de tu precio final en tiempo completamente real.",
+    "anotacao": "",
+    "prompt_imagem": "A glowing AI brain calculating equations over a map of delivery routes."
+  },
+  {
+    "cena": 33,
+    "layout": "fullscreen",
+    "animacao": "zoom_out",
+    "texto_narrado": "Los algoritmos cruzan tus datos de clima, tráfico actual y todo tu historial financiero personal.",
+    "anotacao": "",
+    "prompt_imagem": "A massive floating server scanning weather patterns and credit cards simultaneously."
+  },
+  {
+    "cena": 34,
+    "layout": "video_generico",
+    "animacao": "zoom_in",
+    "texto_narrado": "Incluso utilizan el nivel de batería actual de tu móvil para subirte los precios drásticamente.",
+    "anotacao": "EXTRACCIÓN",
+    "prompt_imagem": "A smartphone with 1% battery showing a drastically inflated price for a burger."
+  },
+  {
+    "cena": 35,
+    "layout": "fullscreen",
+    "animacao": "pan_right",
+    "texto_narrado": "Empujan el valor exacto hasta el límite máximo absoluto de tu tolerancia personal al pago.",
+    "anotacao": "",
+    "prompt_imagem": "A pressure gauge hitting the red critical zone, overlaying a digital receipt."
+  },
+  {
+    "cena": 36,
+    "layout": "video_generico",
+    "animacao": "zoom_in",
+    "texto_narrado": "Es una extracción de renta quirúrgica, agresiva y cien por ciento personalizada contra tu bolsillo.",
+    "anotacao": "ALGORITMO PREDADOR",
+    "prompt_imagem": "A robotic hand operating a glowing digital scalpel to extract coins from a wallet."
+  },
+  {
+    "cena": 37,
+    "layout": "video_generico",
+    "animacao": "pan_right",
+    "texto_narrado": "En 2026, pedir comida a domicilio se ha convertido en un auténtico campo minado financiero.",
+    "anotacao": "",
+    "prompt_imagem": "A glowing digital map of a city resembling an active military minefield."
+  },
+  {
+    "cena": 38,
+    "layout": "video_generico",
+    "animacao": "zoom_in",
+    "texto_narrado": "Las interfaces están diseñadas en tu contra para maximizar siempre las ganancias de la corporación.",
+    "anotacao": "DESPIERTA",
+    "prompt_imagem": "A dark, labyrinthine maze representing a UI, leading into a giant corporate mouth."
+  },
+  {
+    "cena": 39,
+    "layout": "fullscreen",
+    "animacao": "zoom_out",
+    "texto_narrado": "Reconocer estas cinco trampas de consumo es el primer paso vital para protegerte financieramente hoy.",
+    "anotacao": "",
+    "prompt_imagem": "A glowing futuristic shield protecting a credit card from digital red lasers."
+  },
+  {
+    "cena": 40,
+    "layout": "video_generico",
+    "animacao": "pan_left",
+    "texto_narrado": "Toma el control absoluto de tu dinero ahora y no alimentes nunca más al algoritmo.",
+    "anotacao": "",
+    "prompt_imagem": "A person un-plugging a massive glowing cable from the back of a delivery drone."
+  }
+]

@@ -304,6 +304,13 @@ class AnimationAutomationRequest(BaseModel):
     """Nomes já presentes na biblioteca de imagens do painel atual."""
 
     filenames: list[str] = Field(min_length=1)
+    # O checkpoint da automação é isolado por projeto do painel. Sem esse
+    # escopo, um RESUME_URL ou uma imagem com o mesmo nome poderia fazer um
+    # projeto novo continuar a animação de outro.
+    project_id: str = Field(min_length=1, max_length=128, pattern=r"^[a-zA-Z0-9_-]+$")
+    # Retomada de um projeto Vibes externo nunca é implícita: o botão normal
+    # sempre cria/usa o fluxo limpo deste projeto local.
+    resume_existing: bool = False
 
     @field_validator("filenames")
     @classmethod

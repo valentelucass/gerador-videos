@@ -42,7 +42,14 @@ class BrowserSessionClosed(RuntimeError):
 
 
 class AnimationWorkflow:
-    def __init__(self, page: Page, settings: Settings, logger: logging.Logger) -> None:
+    def __init__(
+        self,
+        page: Page,
+        settings: Settings,
+        logger: logging.Logger,
+        *,
+        checkpoint_path: Path | None = None,
+    ) -> None:
         self.page = page
         self.settings = settings
         self.logger = logger
@@ -51,7 +58,7 @@ class AnimationWorkflow:
             logger, settings.retry_initial_delay, settings.retry_max_delay,
             settings.show_click_highlight, settings.click_highlight_duration_ms, self.audit.record,
         )
-        self.checkpoint = CheckpointStore(settings.state_path)
+        self.checkpoint = CheckpointStore(checkpoint_path or settings.state_path)
         self.prompt = prompt_text(settings.prompt_path)
         self.state = State.HOME
         self._media_order: list[Path] = []
@@ -122,7 +129,13 @@ class AnimationWorkflow:
         await self.retry.retry_refresh(self.page)
         self.audit.record("recovery_completed", state=self.state.value)
 
-    async def run(self, files: list[Path], *, duplicates: list[Path] | None = None) -> None:
+    async def run(
+        self,
+        files: list[Path],
+        *,
+        duplicates: list[Path] | None = None,
+        resume_target_url: str | None = None,
+    ) -> None:
         if not files:
             raise ValueError("Nenhuma mídia de cena foi recebida da biblioteca do painel.")
         duplicates = duplicates or []
@@ -140,7 +153,6 @@ class AnimationWorkflow:
         self.logger.info("Vibes carregado | status=%s | título=%s | url=%s", navigation["http_status"], navigation["title"], navigation["url"])
         self.audit.record("navigation_completed", **navigation)
         await self._wait_for_authenticated_session()
-        resume_target_url = self.settings.resume_url or None
         if resume_target_url:
             self.logger.info("Retomada explícita solicitada | url=%s", resume_target_url)
             self.audit.record("explicit_resume_requested", url=resume_target_url, image_count=len(files))
@@ -594,14 +606,21 @@ class AnimationWorkflow:
           let node = element.parentElement;
           while (node) {
             const overflow = getComputedStyle(node).overflowY;
-            if (/(auto|scroll)/.test(overflow) && node.scrollHeight > node.clientHeight) {
-              node.scrollTop = node.scrollHeight;
+            if (/(auto|scroll)/.test(overflow)) {
+              const scrollable = node.scrollHeight > node.clientHeight;
+              if (scrollable) {
+                node.scrollTop = node.scrollHeight;
+              }
               return {
                 found: true,
+                scrollable,
                 top: node.scrollTop,
                 height: node.scrollHeight,
                 client: node.clientHeight,
-                atBottom: node.scrollTop + node.clientHeight >= node.scrollHeight - 2,
+                // Quando todos os thumbnails cabem na tela, não existe
+                // scroll físico a executar: a lista já está integralmente no
+                // seu fim e pode ser usada como uma coluna normal.
+                atBottom: !scrollable || node.scrollTop + node.clientHeight >= node.scrollHeight - 2,
               };
             }
             node = node.parentElement;
@@ -625,15 +644,17 @@ class AnimationWorkflow:
                 "elements => elements.map(element => element.querySelector('img[alt]')?.getAttribute('alt') || '')"
             )
             last_name = media_names[-1] if media_names else ""
-            if metrics.get("atBottom") and last_name and last_name == previous_last:
+            if metrics.get("atBottom") and last_name and (
+                not metrics.get("scrollable") or last_name == previous_last
+            ):
                 stable_reads += 1
             else:
                 stable_reads = 0
             previous_last = last_name
             if stable_reads >= 1:
                 self.logger.info(
-                    "Fim real da coluna esquerda confirmado | tentativa=%s | scroll=%s/%s | último=%s",
-                    attempt, metrics.get("top"), metrics.get("height"), last_name,
+                    "Coluna esquerda pronta | tentativa=%s | rolável=%s | scroll=%s/%s | último=%s",
+                    attempt, metrics.get("scrollable"), metrics.get("top"), metrics.get("height"), last_name,
                 )
                 self.audit.record(
                     "editor_sidebar_bottom_reached", attempt=attempt, scroll_top=metrics.get("top"),

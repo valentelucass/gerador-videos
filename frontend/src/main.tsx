@@ -5,7 +5,7 @@ import "./style.css";
 type BackgroundAnimation = "none" | "movimento_sutil" | "movimento_lateral" | "pulsacao";
 type TextStyle = "impact" | "serif_vintage" | "minimalista" | "constelacao_dourada" | "impact_sem_borda" | "branco_limpo" | "neon_violeta" | "coral_contorno" | "ouro_sem_contorno" | "prata_azul" | "verde_lima" | "azul_eletrico" | "vermelho_alerta" | "rosa_chiclete" | "laranja_energia" | "cinza_aco" | "azul_marinho" | "roxo_real" | "verde_menta" | "amarelo_retro";
 type MediaTab = "assets" | "review" | "curadoria";
-type PromptMode = "with_broll" | "without_broll" | "psychology_without_broll";
+type PromptMode = "with_broll" | "without_broll" | "psychology_without_broll" | "cats_without_broll";
 
 type MediaType = "imagem" | "video_generico";
 type Scene = {
@@ -56,11 +56,22 @@ type RenderJob = {
   error?: string;
   progress?: number;
   stage?: string;
+  render_elapsed_seconds?: number;
+  estimated_remaining_seconds?: number;
   error_code?: string;
   error_detail?: string;
   log_url?: string;
   events_url?: string;
 };
+
+function formatRemainingTime(seconds: number): string {
+  const rounded = Math.max(0, Math.ceil(seconds / 5) * 5);
+  const minutes = Math.floor(rounded / 60);
+  const remainingSeconds = rounded % 60;
+  if (minutes >= 60) return `${Math.floor(minutes / 60)} h ${minutes % 60} min`;
+  if (minutes) return remainingSeconds ? `${minutes} min ${remainingSeconds} s` : `${minutes} min`;
+  return `${remainingSeconds} s`;
+}
 type AnimationAutomationStatus = {
   running: boolean;
   pid: number | null;
@@ -74,6 +85,7 @@ type AnimationAutomationStatus = {
   message: string;
   resume_available: boolean;
   resume_url: string | null;
+  project_id?: string | null;
 };
 type TimingScene = {
   id: string;
@@ -187,6 +199,8 @@ const GRAPHIC_VISUAL_PRESET = "Simple editorial data visualization, clean neutra
 const GRAPHIC_NEGATIVE_PROMPT = "Avoid 3D charts, floating objects, metaphorical graphics, decorative illustrations, futuristic dashboards, excessive colors, perspective distortion, tiny labels, visual clutter and complex interfaces.";
 const PSYCHOLOGY_LITHOGRAPH_VISUAL_PRESET = "Vintage cosmic lithograph illustration, therapeutic fairy-tale mood, distressed texture embedded across the full canvas (never a physical paper sheet or printed card), soft organic hand-drawn linework, deep silent dark void background, hopeful protagonist and symbolic tools drawn in delicate golden lines and constellations, open flowing composition, artwork bleeding cleanly to every edge as one continuous full-bleed image, horizontal 16:9.";
 const PSYCHOLOGY_LITHOGRAPH_NEGATIVE_PROMPT = "Avoid frames, borders, decorative margins, dividers, enclosed panels, paper sheet edges, printed-card layout, inner rectangular image area, mat board, parchment margin, beige or white outline, lotus ornaments, modern glossy digital illustration, neon glow, 3D render, visual clutter, tiny unreadable text and watermarks.";
+const CAT_EDITORIAL_ILLUSTRATION_PRESET = "Expressive editorial cat-behavior illustration, warm hand-drawn 2D look, clean cream or white background, high contrast, simple readable silhouettes, anatomically correct domestic cat posture and paws, consistent recurring cat and caretaker characters, subtle facial expressions, few objects, uncluttered composition, horizontal 16:9.";
+const CAT_EDITORIAL_ILLUSTRATION_NEGATIVE_PROMPT = "Avoid photorealism, glossy advertising, 3D render, anime proportions, childish baby style, dark or busy backgrounds, excessive objects, extra limbs, deformed paws, distorted cat anatomy, human-like cat hands, scary expressions, text, captions, logos, watermarks and complex interfaces.";
 const GRAPHIC_VISUAL_TERMS = new Set([
   "grafico", "graficos", "grafica", "graficas", "graph", "graphs", "chart", "charts",
   "barras", "barra", "bars", "bar", "linha", "linhas", "line", "lines", "lineas",
@@ -259,6 +273,9 @@ function flowVisualPreset(scene: Scene): { kind: string; preset: string; negativ
   );
   if (["litografia", "cosmica", "vintage"].every(term => terms.has(term))) {
     return { kind: "LITOGRAFIA CÓSMICA VINTAGE", preset: PSYCHOLOGY_LITHOGRAPH_VISUAL_PRESET, negative: PSYCHOLOGY_LITHOGRAPH_NEGATIVE_PROMPT };
+  }
+  if (["ilustracao", "felina", "editorial"].every(term => terms.has(term))) {
+    return { kind: "ILUSTRAÇÃO FELINA EDITORIAL", preset: CAT_EDITORIAL_ILLUSTRATION_PRESET, negative: CAT_EDITORIAL_ILLUSTRATION_NEGATIVE_PROMPT };
   }
   if ([...terms].some(term => GRAPHIC_VISUAL_TERMS.has(term))) {
     return { kind: "GRÁFICO", preset: GRAPHIC_VISUAL_PRESET, negative: GRAPHIC_NEGATIVE_PROMPT };
@@ -552,6 +569,7 @@ function App() {
   const [jobId, setJobId] = useState("");
   const [renderProgress, setRenderProgress] = useState(0);
   const [renderStage, setRenderStage] = useState("");
+  const [renderEtaSeconds, setRenderEtaSeconds] = useState<number | null>(null);
   const [outputUrl, setOutputUrl] = useState("");
   const [renderError, setRenderError] = useState("");
   const [timingWarnings, setTimingWarnings] = useState<TimingScene[]>([]);
@@ -565,6 +583,7 @@ function App() {
   const [visualTranslationLoading, setVisualTranslationLoading] = useState<Record<string, boolean>>({});
   const [translationFailures, setTranslationFailures] = useState<Record<string, boolean>>({});
   const [visualTranslationFailures, setVisualTranslationFailures] = useState<Record<string, boolean>>({});
+  const [selectedPromptMode, setSelectedPromptMode] = useState<PromptMode>("with_broll");
   const [selectedPexels, setSelectedPexels] = useState<Record<string, PexelsCandidate>>({});
   const [expandedPexelsScene, setExpandedPexelsScene] = useState<string | null>(null);
   const [pexelsPreviewErrors, setPexelsPreviewErrors] = useState<Record<string, boolean>>({});
@@ -574,7 +593,7 @@ function App() {
   const [automation, setAutomation] = useState<AnimationAutomationStatus>({
     running: false, pid: null, started_at: null, last_return_code: null,
     completed_images: 0, total_images: 0, current_state: null, current_image: null, last_event: null,
-    resume_available: false, resume_url: null, message: "Consultando automação…",
+    resume_available: false, resume_url: null, project_id: null, message: "Consultando automação…",
   });
   const [automationBusy, setAutomationBusy] = useState(false);
   const animationImageNames = uploadedImages.filter(filename => /\.(?:jpg|jpeg|png|webp)$/i.test(filename));
@@ -667,15 +686,15 @@ function App() {
     }
   };
 
-  const automationCommand = async (command: "start" | "stop" | "open-log") => {
-    if (command === "start" && !animationImageNames.length) {
+  const automationCommand = async (command: "start" | "resume" | "stop" | "open-log") => {
+    if ((command === "start" || command === "resume") && !animationImageNames.length) {
       setStatus("Envie ao menos uma imagem em Mídias das cenas antes de animar.");
       return;
     }
-    if (command === "start" && automation.resume_available && automation.completed_images < animationImageNames.length) {
+    if (command === "resume") {
       const destination = automation.resume_url ? `\n\n${automation.resume_url}` : "";
       const shouldResume = window.confirm(
-        `Existe trabalho pendente no Vibes. Deseja continuar de onde a automação parou, sem reenviar as mídias?${destination}`,
+        `Retomar explicitamente o projeto Vibes salvo? Isso não cria um projeto novo.${destination}`,
       );
       if (!shouldResume) {
         setStatus("Retomada cancelada. Nenhum projeto ou upload foi alterado.");
@@ -684,13 +703,14 @@ function App() {
     }
     setAutomationBusy(true);
     try {
-      const init: RequestInit = command === "start"
-        ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ filenames: animationImageNames }) }
+      const init: RequestInit = command === "start" || command === "resume"
+        ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ filenames: animationImageNames, project_id: projectId, resume_existing: command === "resume" }) }
         : { method: "POST" };
-      const result = await api<AnimationAutomationStatus | { path: string }>(`/api/automation/${command}`, init);
+      const endpoint = command === "resume" ? "start" : command;
+      const result = await api<AnimationAutomationStatus | { path: string }>(`/api/automation/${endpoint}`, init);
       if ("running" in result) setAutomation(result);
       else await refreshAutomation();
-      setStatus(command === "start" ? "Automação de animação iniciada." : command === "stop" ? "Automação interrompida." : "Pasta/arquivo da automação aberto.");
+      setStatus(command === "start" ? "Automação iniciada em um projeto Vibes novo." : command === "resume" ? "Automação retomada no projeto Vibes escolhido." : command === "stop" ? "Automação interrompida." : "Pasta/arquivo da automação aberto.");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Não foi possível executar o comando da automação.");
       await refreshAutomation();
@@ -841,6 +861,11 @@ function App() {
           setRenderProgress(Math.min(100, Math.max(0, job.progress)));
         }
         if (job.stage) setRenderStage(job.stage);
+        setRenderEtaSeconds(
+          typeof job.estimated_remaining_seconds === "number"
+            ? Math.max(0, job.estimated_remaining_seconds)
+            : null,
+        );
         if (job.status === "complete") {
           if (notifiedCompletedJob.current !== jobId) {
             playRenderCompleteSound();
@@ -848,6 +873,7 @@ function App() {
           }
           setRenderProgress(100);
           setRenderStage(job.stage ?? "Vídeo final pronto");
+          setRenderEtaSeconds(null);
           setOutputUrl(job.output_url ?? "");
           setStatus(`Vídeo final pronto. Trilha usada: ${job.music_name ?? "nenhuma"}.`);
           setRenderError("");
@@ -857,6 +883,7 @@ function App() {
         if (job.status === "failed") {
           playRenderErrorSound();
           setRenderStage(job.stage ?? "Falha na renderização");
+          setRenderEtaSeconds(null);
           const message = job.error ?? "Falha sem mensagem retornada pelo servidor.";
           setRenderError(job.error_detail && job.error_detail !== message ? job.error_detail : "");
           setRenderLogUrl(job.log_url ?? "");
@@ -916,6 +943,8 @@ function App() {
           ? "Prompt sem B-roll copiado. Ele gera somente imagens para fullscreen e cartões."
           : mode === "psychology_without_broll"
             ? "Prompt de psicologia sem B-roll copiado. Ele gera somente imagens para fullscreen e cartões."
+            : mode === "cats_without_broll"
+              ? "Prompt do canal de gatos copiado. Ele gera ilustrações felinas consistentes, sem B-roll."
             : "Prompt com B-roll copiado. Cole-o no ChatGPT e preencha o tema do vídeo.",
       );
     } catch (error) {
@@ -1472,6 +1501,7 @@ function App() {
       setRenderLogUrl("");
       setRenderProgress(2);
       setRenderStage("Enviando trabalho para renderização");
+      setRenderEtaSeconds(null);
       const result = await api<{ job_id: string }>("/api/render", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1492,6 +1522,7 @@ function App() {
     } catch (error) {
       setRenderProgress(0);
       setRenderStage("");
+      setRenderEtaSeconds(null);
       const message = readableError(error);
       playRenderErrorSound();
       setRenderError(message);
@@ -1575,6 +1606,7 @@ function App() {
           <div className="automation-actions" aria-label="Controles da automação de animação">
             <span className={`automation-indicator${automation.running ? " running" : ""}`} title={automation.message}><i />IA {automation.completed_images}/{animationImageNames.length}</span>
             <button className="button quiet compact" disabled={automationBusy} onClick={() => void automationCommand("open-log")}>Log IA</button>
+            {!automation.running && automation.resume_available && <button className="button quiet compact" disabled={automationBusy} onClick={() => void automationCommand("resume")}>Retomar Vibes</button>}
             <button className={`button compact ${automation.running ? "danger" : "primary"}`} disabled={automationBusy} onClick={() => void automationCommand(automation.running ? "stop" : "start")}>{automationBusy ? "Aguarde…" : automation.running ? "Parar IA" : "Animar IA"}</button>
           </div>
           <button className="button quiet" onClick={() => void validate()}>Validar</button>
@@ -1587,7 +1619,23 @@ function App() {
         <article className="panel json-panel">
           <div className="panel-header">
             <div><span className="panel-index">01</span><h1>Roteiro JSON</h1></div>
-            <div className="json-header-actions"><button className={`button quiet compact prompt-copy-button${promptCopied === "with_broll" ? " copied" : ""}`} onClick={() => void copyScriptPrompt("with_broll")}>{promptCopied === "with_broll" ? "✓ Copiado" : "Prompt com B-roll"}</button><button className={`button quiet compact prompt-copy-button${promptCopied === "without_broll" ? " copied" : ""}`} onClick={() => void copyScriptPrompt("without_broll")}>{promptCopied === "without_broll" ? "✓ Copiado" : "Prompt sem B-roll"}</button><button className={`button quiet compact prompt-copy-button${promptCopied === "psychology_without_broll" ? " copied" : ""}`} onClick={() => void copyScriptPrompt("psychology_without_broll")}>{promptCopied === "psychology_without_broll" ? "✓ Copiado" : "Prompt psicologia"}</button><button className="button quiet compact" onClick={() => jsonInput.current?.click()}>Importar JSON</button></div>
+            <div className="json-header-actions">
+              <select
+                className="prompt-picker"
+                aria-label="Escolha o prompt do roteiro"
+                value={selectedPromptMode}
+                onChange={event => setSelectedPromptMode(event.target.value as PromptMode)}
+              >
+                <option value="with_broll">Prompt com B-roll</option>
+                <option value="without_broll">Prompt sem B-roll</option>
+                <option value="psychology_without_broll">Prompt psicologia</option>
+                <option value="cats_without_broll">Prompt gatos</option>
+              </select>
+              <button className={`button quiet compact prompt-copy-button${promptCopied === selectedPromptMode ? " copied" : ""}`} onClick={() => void copyScriptPrompt(selectedPromptMode)}>
+                {promptCopied === selectedPromptMode ? "✓ Copiado" : "Copiar prompt"}
+              </button>
+              <button className="button quiet compact" onClick={() => jsonInput.current?.click()}>Importar JSON</button>
+            </div>
             <input ref={jsonInput} type="file" accept="application/json,.json" hidden onChange={importJson} />
           </div>
           <p className="panel-hint">Cole o JSON ou importe um arquivo.</p>
@@ -1944,7 +1992,10 @@ function App() {
           {renderError && <span className="render-error-detail" title={renderError}>{renderError}</span>}
           {(jobId || renderProgress > 0) && (
             <div className={`render-progress${jobId ? " active" : ""}`} aria-label="Andamento da renderização">
-              <div><span>{renderStage || "Aguardando renderização"}</span><b>{Math.round(renderProgress)}%</b></div>
+              <div>
+                <span>{renderStage || "Aguardando renderização"}</span>
+                <b>{renderEtaSeconds !== null ? `~${formatRemainingTime(renderEtaSeconds)} · ` : ""}{Math.round(renderProgress)}%</b>
+              </div>
               <i><em style={{ width: `${renderProgress}%` }} /></i>
             </div>
           )}

@@ -25,7 +25,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .config import BACKGROUND_DIR, FINAL_OUTPUT_DIR, IMAGE_DIR, MUSIC_DIR, ROOT, SOUND_DIR, VIDEO_DIR, VOICE_PREVIEW_DIR, WORKSPACE
 from .automation_runner import AutomationRunner
-from .core.horizontal_renderer import narration_duration, preview_scene_timing, render
+from .core.horizontal_renderer import CompositorInterruptedError, narration_duration, preview_scene_timing, render
 from .core.tts_neural import TTSNeuralEngine, VOICE_CATALOG
 from .models import AnimationAutomationRequest, PexelsCandidatesRequest, PexelsDownloadRequest, RenderRequest, Script, TranslationRequest, ValidationRequest
 from .pexels import PexelsError, download_selected_video, search_videos, translate_to_portuguese
@@ -60,6 +60,8 @@ _DEFAULT_RENDER_MIN_FREE_DISK_GIB = 8.0
 _GIB = 1024 ** 3
 _MANIFEST_REPLACE_ATTEMPTS = 8
 _MANIFEST_REPLACE_INITIAL_DELAY_SECONDS = 0.08
+_RENDER_ETA_MIN_ELAPSED_SECONDS = 45
+_RENDER_ETA_MIN_PROGRESS = 30
 
 
 @dataclass(frozen=True)
@@ -123,6 +125,7 @@ def get_script_prompt(mode: str = "with_broll") -> str:
         "with_broll": "PROMPT_JSON_ROTEIRO.md",
         "without_broll": "PROMPT_JSON_ROTEIRO_SEM_BROLL.md",
         "psychology_without_broll": "PROMPT_JSON_ROTEIRO_PSICOLOGIA_SEM_BROLL.md",
+        "cats_without_broll": "PROMPT_JSON_ROTEIRO_GATOS_SEM_BROLL.md",
     }
     prompt_name = prompt_names.get(mode)
     if prompt_name is None:
@@ -292,7 +295,11 @@ def automation_status() -> dict[str, object]:
 @app.post("/api/automation/start")
 def start_automation(request: AnimationAutomationRequest) -> dict[str, object]:
     try:
-        return AUTOMATION.start(request.filenames)
+        return AUTOMATION.start(
+            request.filenames,
+            project_id=request.project_id,
+            resume_existing=request.resume_existing,
+        )
     except FileNotFoundError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     except ValueError as exc:
@@ -627,12 +634,41 @@ def _clean_failed_job_intermediates(job_dir: Path, logger: logging.Logger) -> di
     return {"removed": removed, "errors": errors, "preserved": sorted(preserved)}
 
 
+def _estimate_render_timing(manifest: dict[str, object], progress: int, now: float) -> dict[str, int]:
+    """Calcula uma previsão dinâmica a partir da velocidade real deste job.
+
+    Os primeiros segundos concentram preparação e TTS, que não têm a mesma
+    relação tempo/progresso da composição. Por isso a previsão só é publicada
+    após uma amostra mínima; depois ela se recalibra a cada progresso salvo.
+    """
+    started_at = manifest.get("render_started_at_unix")
+    if not isinstance(started_at, (int, float)):
+        return {}
+    elapsed = max(0, now - float(started_at))
+    timing: dict[str, int] = {"render_elapsed_seconds": round(elapsed)}
+    if elapsed < _RENDER_ETA_MIN_ELAPSED_SECONDS or progress < _RENDER_ETA_MIN_PROGRESS:
+        return timing
+    # Os jobs começam em 2%; a estimativa deve usar apenas o percurso real de
+    # renderização. É uma previsão, não prazo: cenas complexas a recalibram.
+    completed_fraction = max(0.01, min(0.99, (progress - 2) / 98))
+    estimated_total = elapsed / completed_fraction
+    remaining = max(0, estimated_total - elapsed)
+    timing["estimated_total_seconds"] = round(estimated_total)
+    timing["estimated_remaining_seconds"] = round(remaining)
+    return timing
+
+
 def _update_render_progress(manifest_path: Path, progress: int, stage: str, logger: logging.Logger | None = None) -> None:
     manifest = _read_manifest(manifest_path)
     current = int(manifest.get("progress", 0))
     # Um callback tardio nunca pode fazer a barra andar para trás.
     safe_progress = max(current, min(99, int(progress)))
-    manifest.update({"status": "rendering", "progress": safe_progress, "stage": stage})
+    manifest.update({
+        "status": "rendering",
+        "progress": safe_progress,
+        "stage": stage,
+        **_estimate_render_timing(manifest, safe_progress, time.time()),
+    })
     _write_manifest(manifest_path, manifest)
     _append_job_event(manifest_path.parent, "progress", progress=safe_progress, stage=stage)
     if logger is not None:
@@ -644,6 +680,8 @@ def _public_failure(exc: Exception) -> tuple[str, str]:
     detail = str(exc).strip() or exc.__class__.__name__
     if isinstance(exc, RenderDiskSpaceError):
         return "insufficient_disk_space", detail
+    if isinstance(exc, CompositorInterruptedError):
+        return "render_interrupted", "A renderização foi interrompida antes de terminar."
     if isinstance(exc, (ValueError, FileNotFoundError)):
         return "validation_or_asset_error", detail
     if "time-codes" in detail or "narração" in detail:
@@ -670,6 +708,7 @@ def _render_in_background(
             "status": "rendering",
             "progress": max(3, int(queued_manifest.get("progress", 0))),
             "stage": "Renderização iniciada; preparando narração e composição",
+            "render_started_at_unix": time.time(),
         })
         queued_manifest.pop("queue_position", None)
         _write_manifest(manifest_path, queued_manifest)

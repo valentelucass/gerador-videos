@@ -48,6 +48,16 @@ PSYCHOLOGY_LITHOGRAPH_NEGATIVE_PROMPT = (
     "mat board, parchment margin, beige or white outline, lotus ornaments, "
     "modern glossy digital illustration, neon glow, 3D render, visual clutter, tiny unreadable text and watermarks."
 )
+CAT_EDITORIAL_ILLUSTRATION_PRESET = (
+    "Expressive editorial cat-behavior illustration, warm hand-drawn 2D look, clean cream or white background, "
+    "high contrast, simple readable silhouettes, anatomically correct domestic cat posture and paws, consistent recurring "
+    "cat and caretaker characters, subtle facial expressions, few objects, uncluttered composition, horizontal 16:9."
+)
+CAT_EDITORIAL_ILLUSTRATION_NEGATIVE_PROMPT = (
+    "Avoid photorealism, glossy advertising, 3D render, anime proportions, childish baby style, dark or busy backgrounds, "
+    "excessive objects, extra limbs, deformed paws, distorted cat anatomy, human-like cat hands, scary expressions, "
+    "text, captions, logos, watermarks and complex interfaces."
+)
 GRAPHIC_NEGATIVE_PROMPT = (
     "Avoid 3D charts, floating objects, metaphorical graphics, decorative illustrations, futuristic dashboards, "
     "excessive colors, perspective distortion, tiny labels, visual clutter and complex interfaces."
@@ -441,10 +451,21 @@ def _visual_is_psychology_lithograph(scene: object) -> bool:
     return {"litografia", "cosmica", "vintage"}.issubset(terms)
 
 
+def _visual_is_cat_editorial_illustration(scene: object) -> bool:
+    """Reconhece o marcador do canal felino sem ampliar o contrato JSON."""
+    visual = scene.visual
+    content = " ".join((visual.subject, visual.action, visual.setting, visual.framing, visual.details))
+    normalized = unicodedata.normalize("NFKD", content).encode("ascii", "ignore").decode("ascii").casefold()
+    terms = set(re.findall(r"[a-z0-9]+", normalized))
+    return {"ilustracao", "felina", "editorial"}.issubset(terms)
+
+
 def _google_flow_visual_preset(scene: object) -> tuple[str, str, str]:
     """Retorna o preset final sem contaminar os cinco campos do JSON."""
     if _visual_is_psychology_lithograph(scene):
         return "litografia cósmica vintage", PSYCHOLOGY_LITHOGRAPH_VISUAL_PRESET, PSYCHOLOGY_LITHOGRAPH_NEGATIVE_PROMPT
+    if _visual_is_cat_editorial_illustration(scene):
+        return "ilustração felina editorial", CAT_EDITORIAL_ILLUSTRATION_PRESET, CAT_EDITORIAL_ILLUSTRATION_NEGATIVE_PROMPT
     if _visual_is_graphic(scene):
         return "gráfico", GRAPHIC_VISUAL_PRESET, GRAPHIC_NEGATIVE_PROMPT
     return "fotografia documental", PHOTO_VISUAL_PRESET, PHOTO_NEGATIVE_PROMPT

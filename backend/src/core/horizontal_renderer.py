@@ -56,13 +56,15 @@ CARD_BLUR_AT_FOCUS = 0.84
 FULLSCREEN_RATIO = 0.40
 MAX_FULLSCREEN_RUN = 2
 MAX_CARD_RUN = 3
-# Mantemos as durações editoriais em uma grade inteira de 60 fps.
-TRANSITION_FRAMES = 12
+# Mantemos as durações editoriais aprovadas (0,40 s e ~0,73 s) numa grade de
+# 60 fps. Estes valores eram 12 e 22 quando a saída era 30 fps; conservá-los
+# teria encurtado silenciosamente as transições pela metade.
+TRANSITION_FRAMES = 24
 TRANSITION_SECONDS = TRANSITION_FRAMES / FPS
 # Cartões não usam xfade: o anterior é sugado e o próximo ocupa o espaço
 # liberado. A janela um pouco maior dá tempo para ambos se moverem sem que as
 # caixas se encontrem, mantendo o mesmo ritmo aprovado no preview.
-CARD_TRANSITION_FRAMES = 22
+CARD_TRANSITION_FRAMES = 44
 CARD_TRANSITION_SECONDS = CARD_TRANSITION_FRAMES / FPS
 # No fim da troca cartão→cartão, a caixa atual é absorvida pelo lado de saída.
 # A escala final menor deixa a passagem mais decidida sem encurtar a janela.
@@ -133,24 +135,36 @@ SFX_VOLUME_BOOST = 1.12
 # excessivamente paralelos em renderizações longas.
 VIDEO_FILTER_THREADS = max(2, min(4, os.cpu_count() or 4))
 # Os filtros ``perspective``/alpha dos cartões são majoritariamente CPU e cada
-# processo FFmpeg usa pouco mais de um núcleo. Dois processos independentes
-# aproveitam melhor o Ryzen sem abrir sessões AMF demais nem dobrar a memória
-# de trabalho para um nível arriscado. A fila é deliberadamente limitada: a
-# estabilidade visual e de driver vale mais que paralelismo irrestrito.
-SCENE_RENDER_WORKERS = 2
-# Segmentos só dependem das cenas já prontas e escrevem arquivos distintos.
-# Reaproveitamos o mesmo teto para não criar mais de duas sessões AMF em
-# paralelo em nenhuma etapa do job.
+# processo FFmpeg usa pouco mais de um núcleo. Com 1080p60 e AMF em
+# ``high_quality``, duas sessões simultâneas podem ficar presas no driver em
+# cenas que combinam ``perspective`` e preanalysis. Uma sessão por vez usa
+# menos pico de GPU/CPU, reduz a ventoinha e privilegia a conclusão do job.
+SCENE_RENDER_WORKERS = 1
+# Segmentos também são serializados: nenhuma etapa abre uma segunda sessão AMF
+# enquanto outra ainda estiver codificando.
 SEGMENT_RENDER_WORKERS = SCENE_RENDER_WORKERS
+# Quando o AMF falha, a composição passa a usar o libx264 na CPU. Os cartões
+# são independentes e o benchmark local em 1080p60 mediu 56,47 s em série
+# contra 37,09 s com dois processos, sem diferença no arquivo produzido.
+# Este limite só vale depois do fallback: duas sessões AMF continuam proibidas.
+SOFTWARE_FALLBACK_CARD_WORKERS = 2
 VIDEO_ENCODER_ARGS = (
     # A RX 7600 codifica por hardware, mas a saída é um master de qualidade:
-    # a análise AMF e os QPs menores preservam textura, gradientes e detalhes
-    # de movimento antes da recompressão normal das plataformas de vídeo.
+    # QPs menores preservam textura, gradientes e detalhes antes da
+    # recompressão normal das plataformas. Recursos analíticos do driver
+    # (preanalysis, high-motion boost e VBAQ) ficam fora: esta RX 7600 pode
+    # encerrar o FFmpeg com 0xC0000409 depois de várias inicializações AMF.
     "-c:v", "h264_amf", "-usage", "high_quality", "-quality", "quality",
     "-profile:v", "high", "-rc", "cqp", "-qp_i", "18", "-qp_p", "20", "-qp_b", "22",
-    "-preanalysis", "1", "-vbaq", "1", "-high_motion_quality_boost_enable", "1",
     "-pix_fmt", "yuv420p",
 )
+# Fallback por operação, usado só se o driver AMF encerrar anormalmente. CRF
+# 17 preserva um master visual muito próximo do CQP 18, sem depender da GPU.
+SOFTWARE_VIDEO_ENCODER_ARGS = (
+    "-c:v", "libx264", "-preset", "fast", "-crf", "17",
+    "-profile:v", "high", "-pix_fmt", "yuv420p",
+)
+AMF_DRIVER_CRASH_RETURN_CODES = {-1073740791, 0xC0000409}
 FOCUS_POINTS = (
     (0.22, 0.28, 72),
     (0.54, 0.45, 54),
@@ -164,6 +178,23 @@ FOCUS_POINTS = (
 
 ProgressCallback = Callable[[int, str], None]
 _COMPOSITOR_LOGGER: ContextVar[Logger | None] = ContextVar("horizontal_compositor_logger", default=None)
+# Depois de um crash/timeout do AMF, insistir em reinicializá-lo para cada
+# cena só multiplica travamentos. O estado é isolado pelo ContextVar de cada
+# job e faz as etapas restantes usarem x264 até a conclusão.
+_AMF_HEALTHY: ContextVar[bool] = ContextVar("horizontal_amf_healthy", default=True)
+
+
+def _card_render_workers(task_count: int) -> int:
+    """Escolhe concorrência segura para o passe independente dos cartões.
+
+    AMF permanece estritamente serial para não reintroduzir o travamento do
+    driver. Se o job já migrou para libx264, dois cartões podem ser compostos
+    em paralelo e aproveitam melhor a CPU sem compartilhar arquivos de saída.
+    """
+    if task_count <= 0:
+        return 0
+    limit = SOFTWARE_FALLBACK_CARD_WORKERS if not _AMF_HEALTHY.get() else 1
+    return min(limit, task_count)
 
 
 @dataclass(frozen=True)
@@ -854,21 +885,104 @@ def _nearest_frame(seconds: float) -> int:
     return max(0, math.floor(seconds * FPS + 0.5))
 
 
-def _run_compositor(command: list[str]) -> None:
-    """Executa FFmpeg sem acumular o progresso de vídeos longos na memória."""
-    result = subprocess.run(
+class CompositorInterruptedError(RuntimeError):
+    """O processo do FFmpeg foi encerrado fora do fluxo normal do renderer."""
+
+
+def _software_encoder_fallback(command: list[str]) -> list[str] | None:
+    """Troca somente o encoder AMF pelo x264, preservando o grafo e entradas."""
+    hardware_args = list(VIDEO_ENCODER_ARGS)
+    for start in range(len(command) - len(hardware_args) + 1):
+        if command[start:start + len(hardware_args)] == hardware_args:
+            return [
+                *command[:start],
+                *SOFTWARE_VIDEO_ENCODER_ARGS,
+                *command[start + len(hardware_args):],
+            ]
+    return None
+
+
+def _ffmpeg_process(
+    command: list[str], timeout_seconds: float | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Executa uma operação finita do compositor sem manter progresso em RAM."""
+    return subprocess.run(
         [command[0], "-hide_banner", "-loglevel", "error", *command[1:]],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.PIPE,
         text=True,
+        timeout=timeout_seconds,
     )
+
+
+def _run_compositor(command: list[str], *, timeout_seconds: float | None = None) -> None:
+    """Executa FFmpeg sem acumular o progresso de vídeos longos na memória."""
+    logger = _COMPOSITOR_LOGGER.get() or logging.getLogger(__name__)
+    fallback = _software_encoder_fallback(command)
+    if fallback is not None and not _AMF_HEALTHY.get():
+        logger.info("AMF já foi desativado neste job; usando libx264 nesta etapa.")
+        command = fallback
+        fallback = None
+    try:
+        result = _ffmpeg_process(command, timeout_seconds)
+    except subprocess.TimeoutExpired as exc:
+        if fallback is None:
+            raise RuntimeError(
+                "O compositor excedeu o tempo seguro desta etapa "
+                f"({timeout_seconds:.0f}s)."
+            ) from exc
+        _AMF_HEALTHY.set(False)
+        logger.warning(
+            "AMF excedeu %ss nesta etapa; usando libx264 no restante do job.",
+            f"{timeout_seconds:.0f}" if timeout_seconds is not None else "o tempo seguro",
+        )
+        try:
+            fallback_result = _ffmpeg_process(
+                fallback,
+                max(240.0, (timeout_seconds or 60.0) * 4),
+            )
+        except subprocess.TimeoutExpired as fallback_exc:
+            raise RuntimeError("O fallback libx264 excedeu o tempo seguro desta etapa.") from fallback_exc
+        if fallback_result.returncode == 0:
+            logger.info("Etapa concluída pelo fallback libx264 após timeout do AMF.")
+            return
+        result = fallback_result
+        command = fallback
+
     if result.returncode:
+        # No Windows, TerminateProcess pode chegar ao Python tanto como -1
+        # quanto como o equivalente sem sinal 0xFFFFFFFF. Não é defeito do
+        # filtro, da mídia nem do encoder: o processo foi interrompido antes
+        # de o FFmpeg terminar e merece um estado distinto no painel/log.
+        if result.returncode in {-1, 0xFFFFFFFF}:
+            logger.warning(
+                "FFmpeg interrompido externamente (exit=%s).", result.returncode
+            )
+            raise CompositorInterruptedError(
+                "A renderização foi interrompida antes de o FFmpeg concluir."
+            )
+        if result.returncode in AMF_DRIVER_CRASH_RETURN_CODES:
+            if fallback is not None:
+                _AMF_HEALTHY.set(False)
+                logger.warning(
+                    "AMF encerrou anormalmente (exit=%s); usando libx264 no restante do job.",
+                    result.returncode,
+                )
+                fallback_result = _ffmpeg_process(
+                    fallback,
+                    max(240.0, (timeout_seconds or 60.0) * 4),
+                )
+                if fallback_result.returncode == 0:
+                    logger.info("Etapa concluída pelo fallback libx264 após falha do AMF.")
+                    return
+                result = fallback_result
+                command = fallback
         detail = (result.stderr or "erro desconhecido do FFmpeg").strip()
         # Em especial para ENOMEM, o stderr do FFmpeg não informa quais
         # inputs estavam em loop nem o filter_complex efetivo. Registrar a
         # linha completa somente na falha preserva o render.log como fonte de
         # diagnóstico sem despejar milhares de caracteres em jobs saudáveis.
-        (_COMPOSITOR_LOGGER.get() or logging.getLogger(__name__)).error(
+        logger.error(
             "FFmpeg falhou (exit=%s). Comando efetivo:\n%s",
             result.returncode,
             subprocess.list2cmdline([command[0], "-hide_banner", "-loglevel", "error", *command[1:]]),
@@ -1297,7 +1411,7 @@ def _native_render_scene_clips(
             "-filter_complex", filter_graph, "-map", "[out]", "-an", "-frames:v", str(frames),
             *VIDEO_ENCODER_ARGS,
             "-r", str(FPS), str(output),
-        ])
+        ], timeout_seconds=60.0)
         return output
 
     workers = min(SCENE_RENDER_WORKERS, len(scenes))
@@ -1500,41 +1614,48 @@ def _native_render_scene_canvases(
         if modes[index] == "card" or (index == len(scenes) - 1 and tail_seconds > 0)
     ]
     prepared: list[Path | None] = list(clips)
-    workers = min(SCENE_RENDER_WORKERS, len(task_indices))
-    if workers == 1:
-        rendered_cards = 0
-        for scene_index in task_indices:
-            prepared[scene_index] = render_one(scene_index)
-            if modes[scene_index] == "card":
-                rendered_cards += 1
-                _report(
-                    progress_callback,
-                    progress_start + round((progress_end - progress_start) * rendered_cards / max(1, modes.count("card"))),
-                    f"Compondo cartão {rendered_cards}/{modes.count('card')}",
-                )
-    elif workers:
-        rendered_cards = 0
-        card_total = modes.count("card")
+    rendered_cards = 0
+    card_total = modes.count("card")
+
+    def record_result(scene_index: int, output: Path) -> None:
+        nonlocal rendered_cards
+        prepared[scene_index] = output
+        if modes[scene_index] == "card":
+            rendered_cards += 1
+            _report(
+                progress_callback,
+                progress_start + round((progress_end - progress_start) * rendered_cards / max(1, card_total)),
+                f"Compondo cartão {rendered_cards}/{card_total}",
+            )
+
+    # Normalmente o AMF faz este passe em série. Se ele cair durante um cartão,
+    # a próxima iteração já enxerga o ContextVar desativado e passa o restante
+    # independente para dois workers libx264, sem precisar esperar outro job.
+    remaining = list(task_indices)
+    while remaining:
+        workers = _card_render_workers(len(remaining))
+        if workers == 1:
+            scene_index = remaining.pop(0)
+            record_result(scene_index, render_one(scene_index))
+            continue
+
+        (_COMPOSITOR_LOGGER.get() or logging.getLogger(__name__)).info(
+            "Fallback libx264 ativo; compondo até %s cartões em paralelo.", workers
+        )
         with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="horizontal-card") as executor:
             futures = {
                 executor.submit(copy_context().run, render_one, scene_index): scene_index
-                for scene_index in task_indices
+                for scene_index in remaining
             }
             try:
                 for future in as_completed(futures):
                     scene_index = futures[future]
-                    prepared[scene_index] = future.result()
-                    if modes[scene_index] == "card":
-                        rendered_cards += 1
-                        _report(
-                            progress_callback,
-                            progress_start + round((progress_end - progress_start) * rendered_cards / max(1, card_total)),
-                            f"Compondo cartão {rendered_cards}/{card_total}",
-                        )
+                    record_result(scene_index, future.result())
             except Exception:
                 for pending in futures:
                     pending.cancel()
                 raise
+        remaining.clear()
     if any(path is None for path in prepared):
         raise RuntimeError("A fila de cartões não retornou todas as cenas preparadas.")
     return [path for path in prepared if path is not None]
@@ -3297,6 +3418,7 @@ def render(
     scene_asset_dir = render_dir / "cenas"
     resolved_sources: dict[str, str] = {}
     logger_token = _COMPOSITOR_LOGGER.set(log)
+    amf_token = _AMF_HEALTHY.set(True)
     text_style_token = _ANNOTATION_TEXT_STYLE.set(text_style)
     try:
         # Fundo e trilha também entram no cache. Assim nenhum processo FFmpeg
@@ -3376,4 +3498,5 @@ def render(
         shutil.rmtree(scene_asset_dir, ignore_errors=True)
         shutil.rmtree(render_dir, ignore_errors=True)
         _ANNOTATION_TEXT_STYLE.reset(text_style_token)
+        _AMF_HEALTHY.reset(amf_token)
         _COMPOSITOR_LOGGER.reset(logger_token)
