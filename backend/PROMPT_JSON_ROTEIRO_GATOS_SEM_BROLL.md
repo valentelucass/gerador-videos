@@ -112,18 +112,36 @@ NARRAÇÃO E RITMO
   curta e específica sobre o comportamento discutido — nunca “o que você acha?”.
 
 IDENTIDADE VISUAL — ILUSTRAÇÕES RECORRENTES
-- Todas as imagens pertencem à mesma coleção de ilustrações editoriais felinas:
-  fundo branco, creme ou muito claro; alto contraste; poucos elementos; leitura
-  imediata em menos de um segundo. Não use fotografia, realismo 3D, fundo escuro
-  carregado, texto dentro da arte, logos, interfaces ou objetos decorativos.
-- Antes de escrever, defina silenciosamente uma bíblia visual curta: o mesmo
-  gato doméstico (pelagem, cor dos olhos e coleira) e, quando aparecer, o mesmo
-  tutor (idade aproximada, cabelo e roupa). Repita essas características em
-  `visual.details` de cada cena pertinente para manter continuidade entre as
-  imagens geradas separadamente.
+- **Blueprint fixo da série — não improvise personagens ou estilo.** Todas as
+  imagens pertencem à mesma coleção de quadrinhos editoriais de alta qualidade:
+  contornos pretos pesados e ousados, hachuras cruzadas densas, pontos de
+  retícula (halftone), paleta vintage quente e saturada de ocre, verde profundo
+  e tons de madeira, sobre papel envelhecido e texturizado. Não use fotografia,
+  realismo 3D, vetores minimalistas, pintura digital lisa, estética infantil,
+  gradientes limpos, texto dentro da arte, logos ou interfaces.
+- **Tutor recorrente, imutável:** homem negro adulto na casa dos 20 anos, pele
+  negra média, cabelo preto curto, texturizado e cacheado, olhos castanhos
+  grandes e expressivos, camisa de botão de manga longa com xadrez grande verde
+  e preto. Quando estiver feliz, pode sorrir de forma calorosa com dentes
+  visíveis; cansaço, surpresa ou confusão mudam apenas a expressão e a pose,
+  nunca idade, pele, cabelo, roupa ou identidade.
+- **Gato recorrente, imutável:** gato doméstico **tabby mackerel laranja e
+  preto**, com listras pretas e marrons bem definidas sobre pelo laranja e olhos
+  grandes amarelo-esverdeados. O gato **nunca é preto sólido**, cinza, branco ou
+  de outra raça/cor. Em cenas de alerta médico, é o mesmo tabby: pode parecer
+  mais velho, magro e agitado, mas preserva integralmente as listras, a cor de
+  base e os olhos.
+- Antes de escrever, fixe silenciosamente esta bíblia visual. Em cada cena,
+  repita em `visual.details` os marcadores de estilo e a descrição completa do
+  personagem que aparece. Nunca resuma o gato como “cat”, “black cat” ou o tutor
+  como “man”; os atributos fixos devem acompanhar a cena, inclusive em close-up,
+  plano de detalhe e alerta médico. Não crie campos novos nem referências a
+  arquivos de imagem para tentar transportar essa identidade.
 - TODA cena deve conter literalmente `ilustração felina editorial` em
-  `visual.details`. Esse marcador ativa o preset correto do Google Flow; não
-  crie campo novo para estética.
+  `visual.details`, seguida dos marcadores de quadrinhos editoriais: contornos
+  pretos pesados, hachuras cruzadas, pontos halftone, paleta vintage quente e
+  papel envelhecido texturizado. Esse conjunto ativa o preset correto do Google
+  Flow; não crie campo novo para estética.
 - Cada quadro mostra uma ação concreta: gato + postura ou expressão + objeto,
   humano ou ambiente. Mostre orelhas, cauda, olhos, distância, esconderijo,
   brinquedo, tigela, caixa de areia, porta ou colo quando eles explicarem a
@@ -135,14 +153,16 @@ IDENTIDADE VISUAL — ILUSTRAÇÕES RECORRENTES
   3. Biologia: versão simples e legível do instinto, como a silhueta do gato
      observando, caçando brinquedo ou protegendo um local, sem poluição visual.
   4. Vínculo: gato e tutor interagem no mesmo ambiente, preservando os mesmos
-     personagens e iluminação clara.
+     personagens, roupa, pelagem e a linguagem de quadrinhos editorial.
   5. Alerta/fim: mude postura ou expressão do gato apenas quando a narração
      explicar o sinal; nunca use aparência doente como decoração.
 - `asset_key` é único, em inglês, minúsculo, com 2 a 8 termos separados por
   hífen. `image` é sempre `cena_XX.png`, sem caminho.
 - Todo `visual` possui `subject`, `action`, `setting`, `framing` e `details`.
   Os cinco campos descrevem o conteúdo visível; em `details`, além do marcador
-  obrigatório, inclua somente a identidade recorrente e objetos indispensáveis.
+  obrigatório, inclua a identidade recorrente completa, o blueprint de estilo e
+  apenas os objetos indispensáveis. `subject`, `action` e `framing` devem
+  concordar com essa identidade — uma cena não pode contradizer `details`.
 
 LAYOUT, SOM E ANOTAÇÕES
 - Fullscreen é o layout padrão desta série. Use `transition.in: "zoom_in"` em
@@ -185,7 +205,7 @@ LAYOUT, SOM E ANOTAÇÕES
 
 CONTRATO EXATO
 {
-  "_instrucoes_flow": "Google Flow, gere UMA imagem horizontal 16:9 para TODAS as cenas. Não gere vídeos, MP4s ou B-roll. Mantenha o mesmo gato e o mesmo tutor recorrente quando eles aparecerem; trate as imagens como quadros consecutivos de uma história visual clara.",
+  "_instrucoes_flow": "Google Flow, gere UMA imagem horizontal 16:9 para TODAS as cenas. Não gere vídeos, MP4s ou B-roll. Trate as imagens como quadros consecutivos de uma história visual clara, em quadrinhos editoriais mestres: contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado e sem texto. Preserve literalmente em todas as cenas o tutor negro adulto com cabelo preto curto cacheado e camisa xadrez verde e preta, e o gato tabby mackerel laranja e preto com listras definidas e olhos amarelo-esverdeados; o gato nunca é preto sólido.",
   "title": "Por que seu gato amassa cobertores?",
   "language": "pt-BR",
   "narrator_gender": "female",
@@ -203,11 +223,11 @@ CONTRATO EXATO
         "asset_key": "orange-cat-kneading-blanket",
         "image": "cena_01.png",
         "visual": {
-          "subject": "gato laranja de olhos verdes sobre um cobertor azul",
+          "subject": "gato tabby mackerel laranja e preto de olhos amarelo-esverdeados sobre um cobertor azul",
           "action": "pressionando o cobertor alternadamente com as patas dianteiras",
           "setting": "sofá creme em uma sala clara",
           "framing": "gato ocupando o centro e as patas visíveis em primeiro plano",
-          "details": "ilustração felina editorial, mesmo gato laranja de olhos verdes e coleira azul, cobertor azul visível, sem texto"
+          "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto com listras pretas e marrons definidas e olhos amarelo-esverdeados, cobertor azul visível, sem texto"
         },
         "transition": {"in": "zoom_in", "out": "to_right", "speed": "normal"},
         "sounds": {"transition": ["whoosh_soft"], "context": {"type": "click", "at": "start"}}
@@ -231,9 +251,12 @@ ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
    gato de modo falso, diagnostica ou prescreve.
 7. Cada `visual` tem cinco campos completos, uma ação visível e o marcador
    literal `ilustração felina editorial` em `details`.
-8. Gato e tutor mantêm as mesmas características entre cenas; os fundos claros,
-   a composição simples e a anatomia felina correta preservam a identidade do
-   canal. Não há texto dentro das imagens.
+8. Gato e tutor mantêm literalmente as mesmas características entre cenas: tutor
+   negro adulto com cabelo preto curto cacheado e camisa xadrez verde/preta;
+   gato tabby mackerel laranja/preto com listras definidas e olhos
+   amarelo-esverdeados. Nenhuma cena chama ou representa o gato como preto
+   sólido. Todas preservam contornos pesados, hachuras cruzadas, halftone,
+   paleta vintage quente e papel envelhecido texturizado. Não há texto nas imagens.
 9. A primeira cena possui click de contexto. Não existe CTA, annotation de
    inscrição, pedido de comentário ou sinal de encerramento antes da última cena;
    a última contém somente a CTA final de 6 a 9 palavras e pergunta específica.
