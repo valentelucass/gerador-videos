@@ -85,15 +85,31 @@ NARRAÇÃO E RITMO
   neural. Prefira 10 a 16 palavras e nunca ultrapasse 18. Se uma explicação
   não couber, divida-a em duas cenas conectadas naturalmente. Nove segundos é
   apenas o teto técnico de reprovação, não um alvo.
-- Faça a fala fluir entre blocos. A próxima cena deve responder, ampliar,
-  contrastar ou levar adiante a anterior. Leia mentalmente a junção literal
-  entre os blocos antes de entregar o JSON.
+- **Regra do corte rápido para imagem estática:** em toda virada, revelação,
+  contraste, alerta, mudança de causa/efeito ou troca de emoção, divida a ideia
+  em **duas ou mais cenas de 8 a 10 palavras cada**. Essas cenas são
+  microcortes: devem durar tipicamente 3 a 4 segundos e trocar de ilustração,
+  ação ou enquadramento a cada bloco. Não comprima uma virada em uma cena longa,
+  mesmo que ela ainda caiba no teto de 7,5 segundos.
+- Nas sequências de microcorte, alterne enquadramentos de modo visível e
+  específico: detalhe de patas ou cauda, close-up, **extreme close-up nos olhos
+  do gato com pupilas dilatadas**, plano médio da interação ou plano aberto de
+  consequência. Nunca repita a mesma pose, distância de câmera e composição em
+  duas cenas consecutivas. Use `transition.speed: "fast"` nessas viradas,
+  salvo quando o próprio sentido da cena exigir uma pausa deliberada.
+- Faça a fala avançar entre blocos sem frases-ponte. Cada texto deve começar com
+  uma afirmação, ação, contraste ou consequência concreta que acrescente valor
+  imediato. São proibidas aberturas vagas como “E tem mais”, “Vamos entender o
+  porquê”, “Mas espere”, “Além disso”, “Ele também”, “Isso acontece porque” ou
+  equivalentes. Em vez de anunciar a próxima ideia, entregue-a: “Além do cheiro,
+  seu gato usa seu corpo como um alarme biológico.” Leia mentalmente a junção
+  literal entre blocos para garantir continuidade sem enrolação.
 - Não invente estudos, números, recomendações médicas ou certezas sobre um gato
   individual. Use “pode”, “costuma” e “vale observar” quando o contexto variar.
-- Mantenha uma única CTA inicial depois de o conflito e a promessa estarem
-  claros, e uma única CTA final na última cena. A CTA inicial não pode cortar o
-  hook; a final pede inscrição e uma resposta curta, específica sobre o
-  comportamento discutido — nunca “o que você acha?”.
+- Não use CTA inicial, pedido de inscrição, pergunta ao público ou qualquer
+  sinal verbal de encerramento antes da última cena. A única CTA fica isolada no
+  último bloco, dura tipicamente 3 segundos e pede inscrição mais uma resposta
+  curta e específica sobre o comportamento discutido — nunca “o que você acha?”.
 
 IDENTIDADE VISUAL — ILUSTRAÇÕES RECORRENTES
 - Todas as imagens pertencem à mesma coleção de ilustrações editoriais felinas:
@@ -156,13 +172,16 @@ LAYOUT, SOM E ANOTAÇÕES
   `"transition":{"in":"zoom_in", ...}`. Nunca coloque `annotation` em
   cartão (`from_left`, `from_right` ou `none`); se a cena precisar de
   annotation, converta-a para fullscreen antes de devolver o JSON. Use uma ou
-  duas linhas curtas, sem emoji. Reserve para a CTA inicial, uma revelação
-  realmente importante e a CTA final; não transforme o vídeo em cartazes.
-- CTA inicial: após hook e promessa, fala natural e
-  `{"lines":["DEIXE O LIKE","E SE INSCREVA"],"at":"start"}`.
-- Última cena: somente CTA final, com
-  `{"lines":["SE INSCREVA","PARA MAIS"],"at":"start"}` e uma pergunta
-  breve e específica para comentário. Não introduza fato ou alerta novo nela.
+  duas linhas curtas, sem emoji, e não transforme o vídeo em cartazes.
+- **Isolamento do CTA:** nenhuma cena de explicação, conclusão técnica ou alerta
+  veterinário/comportamental pode conter a chave `annotation`. Esses blocos devem
+  permanecer visualmente limpos até a última palavra informativa. Não use antes
+  do fim texto como “inscreva-se”, “like”, “comente”, “fim”, “conclusão” ou
+  equivalente.
+- Última cena: somente CTA final, com 6 a 9 palavras em `blocks[].text`,
+  `{"lines":["SE INSCREVA","E CONTE ABAIXO"],"at":"start"}` e uma pergunta
+  breve e específica para comentário. Ela é o único sinal visual de encerramento
+  e não pode introduzir fato, alerta ou recomendação nova.
 
 CONTRATO EXATO
 {
@@ -203,7 +222,9 @@ ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
 2. Cada bloco possui uma única cena; IDs, `image_id`, `asset_key` e `image` são
    únicos e sequenciais quando aplicável.
 3. Todas as cenas são `imagem`, usam `.png` e não existe B-roll, MP4 ou Pexels.
-4. Cada fala cabe com segurança em até 7,5 segundos de voz neural.
+4. Cada fala cabe com segurança em até 7,5 segundos de voz neural; toda virada,
+   contraste, revelação, alerta ou mudança de emoção foi quebrada em microcortes
+   de 8 a 10 palavras, com `transition.speed: "fast"` quando apropriado.
 5. A história percorre as cinco fases: identificação, mistério, biologia,
    vínculo específico e conclusão/alerta quando aplicável.
 6. Nenhuma frase reduz a explicação a “ele faz isso porque te ama”, humaniza o
@@ -213,8 +234,9 @@ ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
 8. Gato e tutor mantêm as mesmas características entre cenas; os fundos claros,
    a composição simples e a anatomia felina correta preservam a identidade do
    canal. Não há texto dentro das imagens.
-9. A primeira cena possui click de contexto; existe uma única CTA inicial e a
-   última cena contém somente a CTA final com pergunta específica para comentário.
+9. A primeira cena possui click de contexto. Não existe CTA, annotation de
+   inscrição, pedido de comentário ou sinal de encerramento antes da última cena;
+   a última contém somente a CTA final de 6 a 9 palavras e pergunta específica.
 10. Pelo menos 80% das cenas usam fullscreen (`transition.in: "zoom_in"`). Todo
    cartão restante existe para explicar um mecanismo, comparação, dado ou detalhe
    visual específico; não foi usado apenas como alternância decorativa.
