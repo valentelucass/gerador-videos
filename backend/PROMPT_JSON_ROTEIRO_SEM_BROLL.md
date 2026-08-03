@@ -152,9 +152,12 @@ SOM E EFEITOS
 
 ANNOTATIONS E CTAS SEM B-ROLL
 - `annotation` é opcional e só pode aparecer em uma cena `imagem` fullscreen,
-  ou seja, com `"transition": {"in":"zoom_in", ...}`. O renderer aplica
-  blur leve e a animação do texto sobre a própria imagem estática; isso não é
-  B-roll.
+  ou seja, com `"transition": {"in":"zoom_in", ...}`. Esta é uma regra
+  obrigatória: se uma cena tiver a chave `annotation`, ela DEVE ter
+  `tipo_midia: "imagem"` e `transition.in: "zoom_in"`; nunca use
+  `from_left`, `from_right` ou `none` nessa cena. Converta a cena em fullscreen
+  antes de devolver o JSON. O renderer aplica blur leve e a animação do texto
+  sobre a própria imagem estática; isso não é B-roll.
 - Use uma ou duas linhas de no máximo 32 caracteres. `at` deve ser `start`,
   `middle` ou `end`. Não use annotation em todas as cenas.
 - O emoji só pode ser `👍` na CTA inicial e `🔔` na CTA final. Em annotations
@@ -265,4 +268,6 @@ ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
 8. A CTA inicial tem `👍`; a última cena contém a CTA final com `🔔`, inscrição e pergunta específica para comentário.
 9. As CTAs usam imagem fullscreen estática; não criam nem solicitam B-roll.
 10. Todos os campos, transições, sons e annotations respeitam exatamente este contrato.
+11. Para CADA annotation, confirme antes de responder: `tipo_midia` é `imagem`
+    e `transition.in` é exatamente `zoom_in`; nenhuma annotation está em cartão.
 ```

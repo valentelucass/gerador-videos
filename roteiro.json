@@ -1,6 +1,6 @@
 {
   "_instrucoes_flow": "Google Flow, generate ONE 16:9 horizontal image for ALL scenes. Do not generate videos, MP4s, or B-roll. Keep the same cat and the same recurring owner when they appear; treat the images as consecutive frames of a clear visual story.",
-  "title": "Why Your Cat Sleeps On Your Feet (It's Not For Warmth)",
+  "title": "Why Your Cat Doesn't Think You Are Human (The Big Cat Theory)",
   "language": "en-US",
   "narrator_gender": "male",
   "voice": "en-US-GuyNeural",
@@ -9,20 +9,20 @@
   "blocks": [
     {
       "id": "block_01",
-      "text": "You probably think your cat sleeps on your feet because they want more space in bed.",
+      "text": "When your cat rubs against your leg and meows, what do they actually see?",
       "scenes": [
         {
           "id": "scene_01",
           "image_id": 1,
           "tipo_midia": "imagem",
-          "asset_key": "cat-sleeping-feet-bed",
+          "asset_key": "cat-rubbing-owner-leg",
           "image": "cena_01.png",
           "visual": {
-            "subject": "cat lying on the foot of a covered bed",
-            "action": "sleeping curled up over the elevation of the feet under the blanket",
-            "setting": "bed with white sheets in a bright bedroom",
-            "framing": "focus on the cat at the foot of the bed with natural lighting",
-            "details": "ilustração felina editorial, orange cat with green eyes wearing a blue collar, feet under a white blanket"
+            "subject": "orange cat rubbing against a human leg",
+            "action": "cat wrapping its tail and pressing its body against the owner's calf",
+            "setting": "bright living room floor",
+            "framing": "low angle focusing on the interaction between the cat and the leg",
+            "details": "ilustração felina editorial, orange cat with green eyes and blue collar, male owner in jeans"
           },
           "transition": {
             "in": "zoom_in",
@@ -43,20 +43,20 @@
     },
     {
       "id": "block_02",
-      "text": "Or maybe you believe they just like the warmth of the blanket. You are completely wrong.",
+      "text": "Most owners assume their cat recognizes them as a completely different species.",
       "scenes": [
         {
           "id": "scene_02",
           "image_id": 2,
           "tipo_midia": "imagem",
-          "asset_key": "human-confused-cat-blanket",
+          "asset_key": "owner-looking-down-lovingly",
           "image": "cena_02.png",
           "visual": {
-            "subject": "owner looking at the cat at the foot of the bed",
-            "action": "owner with a confused expression while the cat rests peacefully",
-            "setting": "same bright bedroom on the bed",
-            "framing": "medium shot showing the owner sitting and the cat in the background",
-            "details": "ilustração felina editorial, orange cat with green eyes, young male owner with dark hair and a white t-shirt"
+            "subject": "young male owner looking down at his cat",
+            "action": "owner smiling affectionately, believing he is seen as a human parent",
+            "setting": "living room",
+            "framing": "medium shot capturing the owner's loving but mistaken expression",
+            "details": "ilustração felina editorial, young male owner with dark hair and white t-shirt"
           },
           "transition": {
             "in": "zoom_in",
@@ -74,36 +74,36 @@
     },
     {
       "id": "block_03",
-      "text": "When they trade your pillow for the edge of the bed, it's not just about comfort.",
+      "text": "But feline behaviorists have confirmed a reality that completely shatters that illusion.",
       "scenes": [
         {
           "id": "scene_03",
           "image_id": 3,
           "tipo_midia": "imagem",
-          "asset_key": "cat-walking-away-pillow",
+          "asset_key": "cat-looking-up-analytical",
           "image": "cena_03.png",
           "visual": {
-            "subject": "cat walking across the bed",
-            "action": "cat walking away from the pillow towards the foot of the bed",
-            "setting": "bed with white sheets",
-            "framing": "shot tracking the cat's movement from top to bottom of the bed",
-            "details": "ilustração felina editorial, orange cat with green eyes, soft white pillow"
+            "subject": "orange cat looking up at the owner",
+            "action": "cat staring upward with a serious, analytical expression",
+            "setting": "clean indoor background",
+            "framing": "close-up on the cat's highly observant face",
+            "details": "ilustração felina editorial, orange cat with green eyes, alert whiskers"
           },
           "transition": {
             "in": "zoom_in",
             "out": "to_right",
-            "speed": "normal"
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "whoosh_cinematic"
             ],
             "context": null
           },
           "annotation": {
             "lines": [
-              "LEAVE A LIKE",
-              "AND SUBSCRIBE"
+              "SUBSCRIBE",
+              "FOR MORE"
             ],
             "at": "start"
           }
@@ -112,55 +112,24 @@
     },
     {
       "id": "block_04",
-      "text": "They are making a tactical, instinctive decision based on thousands of years of survival biology.",
+      "text": "Your cat has absolutely no biological concept of what a human being is.",
       "scenes": [
         {
           "id": "scene_04",
           "image_id": 4,
           "tipo_midia": "imagem",
-          "asset_key": "cat-alert-edge-bed",
+          "asset_key": "cat-staring-confused-at-human",
           "image": "cena_04.png",
           "visual": {
-            "subject": "cat sitting on the edge of the bed",
-            "action": "straight and alert posture observing the room",
-            "setting": "illuminated foot of the bed",
-            "framing": "close-up on the feline's concentrated and attentive expression",
-            "details": "ilustração felina editorial, orange cat with raised ears, firm observing posture"
+            "subject": "cat staring at the standing human",
+            "action": "cat sitting still, trying to process the tall, strange creature in front of it",
+            "setting": "simple living room",
+            "framing": "wide shot showing the size difference between the small cat and tall owner",
+            "details": "ilustração felina editorial, young male owner standing, small orange cat observing"
           },
           "transition": {
             "in": "zoom_in",
             "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_05",
-      "text": "And if your cat suddenly stops sleeping there, you need to pay very close attention.",
-      "scenes": [
-        {
-          "id": "scene_05",
-          "image_id": 5,
-          "tipo_midia": "imagem",
-          "asset_key": "human-looking-empty-feet",
-          "image": "cena_05.png",
-          "visual": {
-            "subject": "owner observing the empty foot of the bed",
-            "action": "owner with a worried expression looking at the space without the cat",
-            "setting": "bedroom at night with soft light",
-            "framing": "medium shot focused on the owner's reaction to noticing the absence",
-            "details": "ilustração felina editorial, young owner with dark hair, empty blanket at the edge"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
@@ -173,26 +142,26 @@
       ]
     },
     {
-      "id": "block_06",
-      "text": "This could be a massive red flag regarding their physical health or territorial stress.",
+      "id": "block_05",
+      "text": "In their mind, you are just a massive, incredibly clumsy cat who joined their colony.",
       "scenes": [
         {
-          "id": "scene_06",
-          "image_id": 6,
+          "id": "scene_05",
+          "image_id": 5,
           "tipo_midia": "imagem",
-          "asset_key": "cat-hiding-under-bed",
-          "image": "cena_06.png",
+          "asset_key": "human-foot-clumsy-near-cat",
+          "image": "cena_05.png",
           "visual": {
-            "subject": "cat hiding in the shadows",
-            "action": "cat curled up under the bed, looking out cautiously",
-            "setting": "dark wooden floor under the bed",
-            "framing": "low angle showing the cat in the hiding spot",
-            "details": "ilustração felina editorial, orange cat with green eyes shining in the dark"
+            "subject": "large human foot stepping near the cat",
+            "action": "cat moving out of the way as a large human foot steps heavily nearby",
+            "setting": "hardwood floor",
+            "framing": "low angle emphasizing the clumsy, giant nature of the human step",
+            "details": "ilustração felina editorial, orange cat looking annoyed, large sneaker"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "none",
-            "speed": "slow"
+            "out": "to_right",
+            "speed": "fast"
           },
           "sounds": {
             "transition": [
@@ -204,21 +173,52 @@
       ]
     },
     {
+      "id": "block_06",
+      "text": "Dogs evolved specific social behaviors exclusively to interact with their human masters.",
+      "scenes": [
+        {
+          "id": "scene_06",
+          "image_id": 6,
+          "tipo_midia": "imagem",
+          "asset_key": "dog-looking-obedient-card",
+          "image": "cena_06.png",
+          "visual": {
+            "subject": "dog sitting obediently",
+            "action": "a dog looking up eagerly, wagging its tail, waiting for a command",
+            "setting": "neutral background",
+            "framing": "portrait shot highlighting the canine desire to please",
+            "details": "ilustração felina editorial, golden retriever dog, happy and submissive expression"
+          },
+          "transition": {
+            "in": "from_left",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
       "id": "block_07",
-      "text": "Let's understand what this nightly ritual really means. First, abandon the warmth theory.",
+      "text": "Cats never did. They treat you exactly the same way they treat other felines.",
       "scenes": [
         {
           "id": "scene_07",
           "image_id": 7,
           "tipo_midia": "imagem",
-          "asset_key": "cat-ignoring-sunbeam",
+          "asset_key": "cat-treating-human-like-feline",
           "image": "cena_07.png",
           "visual": {
-            "subject": "cat walking right past a sunbeam",
-            "action": "cat walking in the bedroom ignoring a warm sun patch on the rug",
-            "setting": "bright bedroom with a rug on the floor",
-            "framing": "wide shot showing the sunlight and the cat's path",
-            "details": "ilustração felina editorial, orange cat walking with purpose, textured rug"
+            "subject": "cat headbutting owner's hand",
+            "action": "cat giving a firm, affectionate headbutt to the human hand, exactly like it would to another cat",
+            "setting": "living room couch",
+            "framing": "close-up on the physical contact demonstrating equality",
+            "details": "ilustração felina editorial, orange cat, young male owner hand"
           },
           "transition": {
             "in": "zoom_in",
@@ -229,30 +229,27 @@
             "transition": [
               "whoosh_soft"
             ],
-            "context": {
-              "type": "new_idea",
-              "at": "start"
-            }
+            "context": null
           }
         }
       ]
     },
     {
       "id": "block_08",
-      "text": "Cats are masters at finding heat. They use sunny rugs, warm laptops, and fresh laundry.",
+      "text": "But if they think you are just a big cat, why do they constantly meow at you?",
       "scenes": [
         {
           "id": "scene_08",
           "image_id": 8,
           "tipo_midia": "imagem",
-          "asset_key": "cat-sleeping-laptop",
+          "asset_key": "cat-meowing-loudly-at-owner",
           "image": "cena_08.png",
           "visual": {
-            "subject": "cat lying down comfortably",
-            "action": "sleeping sprawled out over the keyboard of an open laptop",
-            "setting": "simple office desk",
-            "framing": "close-up on the cat enjoying the heat from the machine",
-            "details": "ilustração felina editorial, orange cat with eyes closed, silver laptop"
+            "subject": "cat meowing up at the owner",
+            "action": "cat sitting with its mouth wide open, demanding attention vocally",
+            "setting": "kitchen floor",
+            "framing": "medium shot showing the cat communicating upward",
+            "details": "ilustração felina editorial, orange cat vocalizing strongly, looking up"
           },
           "transition": {
             "in": "zoom_in",
@@ -270,60 +267,63 @@
     },
     {
       "id": "block_09",
-      "text": "If temperature was their only goal, they would have much better options around the house.",
+      "text": "Here is the brilliant survival adaptation that changes how you see your pet.",
       "scenes": [
         {
           "id": "scene_09",
           "image_id": 9,
           "tipo_midia": "imagem",
-          "asset_key": "cat-looking-laundry",
+          "asset_key": "cat-looking-smart-calculated",
           "image": "cena_09.png",
           "visual": {
-            "subject": "cat looking at a laundry basket",
-            "action": "cat ignoring a basket of freshly folded clothes to focus on the bed",
-            "setting": "corner of the bedroom with a laundry basket",
-            "framing": "composition showing the cat's visual choice",
-            "details": "ilustração felina editorial, focused orange cat, basket with folded towels"
+            "subject": "cat with a calculated expression",
+            "action": "cat staring intelligently, demonstrating problem-solving behavior",
+            "setting": "living room",
+            "framing": "close-up on the cat's confident, calculating eyes",
+            "details": "ilustração felina editorial, orange cat looking exceptionally smart"
           },
           "transition": {
             "in": "zoom_in",
             "out": "to_left",
-            "speed": "normal"
+            "speed": "slow"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "whoosh_cinematic"
             ],
-            "context": null
+            "context": {
+              "type": "new_idea",
+              "at": "start"
+            }
           }
         }
       ]
     },
     {
       "id": "block_10",
-      "text": "So why do they choose the exact spot where your feet move all night long?",
+      "text": "In the wild, adult cats almost never meow to communicate with each other.",
       "scenes": [
         {
           "id": "scene_10",
           "image_id": 10,
           "tipo_midia": "imagem",
-          "asset_key": "cat-watching-moving-feet",
+          "asset_key": "feral-cats-silent-interaction",
           "image": "cena_10.png",
           "visual": {
-            "subject": "cat staring at feet under the blanket",
-            "action": "cat sitting attentively while the volume of the feet moves under the fabric",
-            "setting": "bed illuminated by a nightlight",
-            "framing": "focus on the visual interaction between the cat and the moving blanket",
-            "details": "ilustração felina editorial, concentrated orange cat, crumpled blanket texture"
+            "subject": "two feral cats interacting silently",
+            "action": "cats communicating entirely through posture and tail position, without opening their mouths",
+            "setting": "outdoor natural environment",
+            "framing": "wide shot showing silent, tension-filled feline communication",
+            "details": "ilustração felina editorial, orange cat and a grey cat, stiff body language"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
+            "in": "from_right",
+            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
+              "whoosh_soft"
             ],
             "context": null
           }
@@ -332,113 +332,20 @@
     },
     {
       "id": "block_11",
-      "text": "To understand this, you need to stop looking at your cat as just a cute pet.",
+      "text": "They use complex chemical pheromones, micro-expressions, and specific ear angles to talk.",
       "scenes": [
         {
           "id": "scene_11",
           "image_id": 11,
           "tipo_midia": "imagem",
-          "asset_key": "human-petting-cat-cute",
+          "asset_key": "cat-ear-twitch-communication",
           "image": "cena_11.png",
           "visual": {
-            "subject": "owner petting the cat",
-            "action": "owner smiling while petting the harmless cat on the bed",
-            "setting": "bright and cozy bedroom",
-            "framing": "close shot showing human affection and feline passivity",
-            "details": "ilustração felina editorial, young owner in a white t-shirt, relaxed orange cat"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_12",
-      "text": "Start seeing them as the tactical predator they biologically still are.",
-      "scenes": [
-        {
-          "id": "scene_12",
-          "image_id": 12,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-predator-silhouette",
-          "image": "cena_12.png",
-          "visual": {
-            "subject": "silhouette of the cat in the bedroom",
-            "action": "imposing hunter posture observing the darkness of the hallway",
-            "setting": "bedroom with hard night shadows",
-            "framing": "profile highlighting the instinctive and alert anatomy of the feline",
-            "details": "ilustração felina editorial, orange cat in contrast with the shadow, rigid posture"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_13",
-      "text": "In the wild, sleep is the moment of greatest vulnerability for absolutely any animal.",
-      "scenes": [
-        {
-          "id": "scene_13",
-          "image_id": 13,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-sleeping-curled-tight",
-          "image": "cena_13.png",
-          "visual": {
-            "subject": "cat sleeping tightly curled up",
-            "action": "body tensioned in a perfect ball hiding vital organs",
-            "setting": "safe corner of the bed",
-            "framing": "close-up on the circular defensive shape of the sleeping cat",
-            "details": "ilustração felina editorial, orange cat protecting its belly, tucked paws"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_14",
-      "text": "It is the only time a feline is truly defenseless against outside threats.",
-      "scenes": [
-        {
-          "id": "scene_14",
-          "image_id": 14,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-ears-twitching-sleep",
-          "image": "cena_14.png",
-          "visual": {
-            "subject": "cat with closed eyes",
-            "action": "sleeping, but with one ear turned backwards listening to the environment",
-            "setting": "pillow in the dim light",
-            "framing": "extreme close-up on the face and active ears of the cat",
-            "details": "ilustração felina editorial, orange cat with eyes closed, left ear slightly rotated"
+            "subject": "cat twitching its ear",
+            "action": "cat rotating one ear backwards to signal discomfort silently",
+            "setting": "clean bright room",
+            "framing": "macro close-up on the subtle movement of the feline ear",
+            "details": "ilustração felina editorial, orange cat demonstrating silent micro-expression"
           },
           "transition": {
             "in": "zoom_in",
@@ -455,25 +362,118 @@
       ]
     },
     {
+      "id": "block_12",
+      "text": "But your cat quickly realized that you, the giant primate, are practically blind to this.",
+      "scenes": [
+        {
+          "id": "scene_12",
+          "image_id": 12,
+          "tipo_midia": "imagem",
+          "asset_key": "owner-ignoring-cat-body-language",
+          "image": "cena_12.png",
+          "visual": {
+            "subject": "owner oblivious to the cat",
+            "action": "owner looking at his phone, completely missing the cat's subtle tail flicks",
+            "setting": "living room couch",
+            "framing": "medium shot showing the communication disconnect",
+            "details": "ilustração felina editorial, young male owner distracted, orange cat annoyed"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_13",
+      "text": "You cannot smell their scent markers, and you completely ignore their subtle tail signals.",
+      "scenes": [
+        {
+          "id": "scene_13",
+          "image_id": 13,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-swishing-tail-ignored",
+          "image": "cena_13.png",
+          "visual": {
+            "subject": "cat swishing its tail",
+            "action": "cat swishing tail rapidly in frustration while the human walks right past",
+            "setting": "hallway",
+            "framing": "low angle focusing on the agitated tail and the human legs walking away",
+            "details": "ilustração felina editorial, orange cat expressing silent frustration"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_14",
+      "text": "To survive, they had to manipulate your biology by using the one thing you respond to: sound.",
+      "scenes": [
+        {
+          "id": "scene_14",
+          "image_id": 14,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-meowing-getting-reaction",
+          "image": "cena_14.png",
+          "visual": {
+            "subject": "cat meowing to get the owner's attention",
+            "action": "cat meowing loudly, and the owner finally turning around to look",
+            "setting": "living room",
+            "framing": "medium shot showing the successful vocal manipulation",
+            "details": "ilustração felina editorial, orange cat, young male owner finally responding"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
       "id": "block_15",
-      "text": "Therefore, when your cat chooses where to sleep, they run a strict risk assessment.",
+      "text": "They intentionally regressed to their kittenhood and brought back the meow just for you.",
       "scenes": [
         {
           "id": "scene_15",
           "image_id": 15,
           "tipo_midia": "imagem",
-          "asset_key": "cat-scanning-bedroom",
+          "asset_key": "kitten-meowing-card",
           "image": "cena_15.png",
           "visual": {
-            "subject": "cat standing on the bed",
-            "action": "scanning the bedroom visually before deciding where to lie down",
-            "setting": "wide bed in the center of the bedroom",
-            "framing": "wide shot of the bedroom seen from the perspective of the bed",
-            "details": "ilustração felina editorial, orange cat analyzing the territory from above"
+            "subject": "small kitten meowing for its mother",
+            "action": "a tiny kitten crying out to communicate basic needs",
+            "setting": "soft neutral background",
+            "framing": "close-up highlighting the juvenile nature of the sound",
+            "details": "ilustração felina editorial, small orange kitten with wide mouth"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
+            "in": "from_left",
+            "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
@@ -487,237 +487,20 @@
     },
     {
       "id": "block_16",
-      "text": "Look closely at your bedroom's geometry. The foot of the bed offers the best advantage.",
+      "text": "Your cat doesn't meow because it's natural. They meow because it trains you effectively.",
       "scenes": [
         {
           "id": "scene_16",
           "image_id": 16,
           "tipo_midia": "imagem",
-          "asset_key": "bedroom-geometry-view",
+          "asset_key": "owner-feeding-meowing-cat",
           "image": "cena_16.png",
           "visual": {
-            "subject": "view from the foot of the bed to the door",
-            "action": "the cat positioned on the edge observing the bedroom entrance",
-            "setting": "bedroom aligned with the closed door",
-            "framing": "view from behind the cat, showing the bedroom door straight ahead",
-            "details": "ilustração felina editorial, silhouette of the orange cat in the foreground, door visible"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_17",
-      "text": "From there, your cat has the widest possible field of vision of the entire room.",
-      "scenes": [
-        {
-          "id": "scene_17",
-          "image_id": 17,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-wide-field-vision",
-          "image": "cena_17.png",
-          "visual": {
-            "subject": "cat with panoramic vision",
-            "action": "looking attentively, visually dominating the corners of the room",
-            "setting": "elevated foot of the bed",
-            "framing": "cat centered, showing absolute visual control of the frontal space",
-            "details": "ilustração felina editorial, sentinel posture, observant orange cat"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_18",
-      "text": "Usually, the edge of the bed points directly toward the main door or the hallway.",
-      "scenes": [
-        {
-          "id": "scene_18",
-          "image_id": 18,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-staring-door",
-          "image": "cena_18.png",
-          "visual": {
-            "subject": "cat focusing on the doorknob",
-            "action": "staring fixedly at the closed bedroom door",
-            "setting": "bed pointing to the exit",
-            "framing": "close-up on the gaze directed to the only entry route of the room",
-            "details": "ilustração felina editorial, orange cat with green eyes, light wooden door"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_19",
-      "text": "Your cat is literally establishing a security perimeter to protect you and the territory.",
-      "scenes": [
-        {
-          "id": "scene_19",
-          "image_id": 19,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-guarding-perimeter",
-          "image": "cena_19.png",
-          "visual": {
-            "subject": "cat in a guarding posture",
-            "action": "sitting tall and firm on the edge, while the owner sleeps behind",
-            "setting": "bed in the middle of the night",
-            "framing": "imposing cat in the foreground, owner out of focus sleeping in the background",
-            "details": "ilustração felina editorial, protective orange cat, owner with dark hair resting"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_20",
-      "text": "But it's not just about playing bodyguard. It is about their own escape route.",
-      "scenes": [
-        {
-          "id": "scene_20",
-          "image_id": 20,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-looking-floor-escape",
-          "image": "cena_20.png",
-          "visual": {
-            "subject": "cat looking at the floor",
-            "action": "measuring the distance from the edge of the bed to the wooden floor",
-            "setting": "side of the foot of the bed",
-            "framing": "top-down angle following the cat's gaze towards the free route",
-            "details": "ilustração felina editorial, orange cat focused on the empty floor, clear height"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_21",
-      "text": "If a real threat enters the room, the edge of the bed offers an immediate escape.",
-      "scenes": [
-        {
-          "id": "scene_21",
-          "image_id": 21,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-escape-route-card",
-          "image": "cena_21.png",
-          "visual": {
-            "subject": "cat ready to jump",
-            "action": "tense muscles, ready to leap off the bed at the slightest sign",
-            "setting": "edge of the mattress",
-            "framing": "dynamic profile showing the physics of the imminent jump",
-            "details": "ilustração felina editorial, orange cat in a spring position, evident tension"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_22",
-      "text": "In a fraction of a second, they can jump to the floor and vanish safely.",
-      "scenes": [
-        {
-          "id": "scene_22",
-          "image_id": 22,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-jumping-floor-blur",
-          "image": "cena_22.png",
-          "visual": {
-            "subject": "cat landing on the floor",
-            "action": "agile movement jumping from the bed to the dark bedroom floor",
-            "setting": "floor next to the bed",
-            "framing": "capture of the rapid movement at the moment of landing",
-            "details": "ilustração felina editorial, silhouette of the agile orange cat escaping"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_23",
-      "text": "If they were curled around your neck or under the heavy blanket, they’d be trapped.",
-      "scenes": [
-        {
-          "id": "scene_23",
-          "image_id": 23,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-trapped-human-arms",
-          "image": "cena_23.png",
-          "visual": {
-            "subject": "cat hugged tightly",
-            "action": "cat with an uncomfortable expression trapped in the owner's arms under the blanket",
-            "setting": "headboard of the bed",
-            "framing": "close-up showing the feline's restriction of movement",
-            "details": "ilustração felina editorial, owner hugging an orange cat, front paws trapped"
+            "subject": "owner pouring food for the meowing cat",
+            "action": "owner obeying the meow command and filling the blue bowl with kibble",
+            "setting": "kitchen",
+            "framing": "medium shot showing the cat successfully training the human",
+            "details": "ilustração felina editorial, young male owner, orange cat, blue food bowl"
           },
           "transition": {
             "in": "zoom_in",
@@ -737,26 +520,88 @@
       ]
     },
     {
-      "id": "block_24",
-      "text": "By sleeping on your feet, the cat achieves the perfect balance between wild instinct and affection.",
+      "id": "block_17",
+      "text": "They view you as an incredibly dense colony member who needs things spelled out loudly.",
       "scenes": [
         {
-          "id": "scene_24",
-          "image_id": 24,
+          "id": "scene_17",
+          "image_id": 17,
           "tipo_midia": "imagem",
-          "asset_key": "cat-perfect-balance-feet",
-          "image": "cena_24.png",
+          "asset_key": "cat-yelling-at-dense-human",
+          "image": "cena_17.png",
           "visual": {
-            "subject": "cat sleeping serenely on feet",
-            "action": "resting in harmony on the edge, keeping the body slightly raised",
-            "setting": "illuminated foot of the bed",
-            "framing": "calm shot highlighting the peace and safety of the moment",
-            "details": "ilustração felina editorial, relaxed but strategic orange cat, white sheets"
+            "subject": "cat meowing emphatically",
+            "action": "cat standing on its hind legs slightly to meow directly at the dense owner",
+            "setting": "living room",
+            "framing": "low angle from the cat's perspective looking up at the slow human",
+            "details": "ilustração felina editorial, orange cat putting effort into communication"
           },
           "transition": {
             "in": "zoom_in",
             "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_18",
+      "text": "And this feline superiority complex explains another deeply misunderstood behavior: staring.",
+      "scenes": [
+        {
+          "id": "scene_18",
+          "image_id": 18,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-staring-intently",
+          "image": "cena_18.png",
+          "visual": {
+            "subject": "cat staring blankly",
+            "action": "cat sitting on the couch, staring unblinkingly directly at the owner's face",
+            "setting": "living room",
+            "framing": "close-up on the cat's intense, unmoving eyes",
+            "details": "ilustração felina editorial, orange cat with green eyes locked forward"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
             "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_19",
+      "text": "When your cat sits a few inches from your face and stares, you think they recognize you.",
+      "scenes": [
+        {
+          "id": "scene_19",
+          "image_id": 19,
+          "tipo_midia": "imagem",
+          "asset_key": "owner-smiling-close-to-cat",
+          "image": "cena_19.png",
+          "visual": {
+            "subject": "owner putting face close to cat",
+            "action": "owner smiling warmly right in front of the cat's face, expecting recognition",
+            "setting": "living room couch",
+            "framing": "close shot showing the proximity between human face and cat face",
+            "details": "ilustração felina editorial, young male owner, orange cat looking blank"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
           },
           "sounds": {
             "transition": [
@@ -768,21 +613,83 @@
       ]
     },
     {
-      "id": "block_25",
-      "text": "They maintain constant physical contact with you, the most important member of their survival group.",
+      "id": "block_20",
+      "text": "But structurally, feline eyes are designed to track a mouse in the dark from thirty feet away.",
       "scenes": [
         {
-          "id": "scene_25",
-          "image_id": 25,
+          "id": "scene_20",
+          "image_id": 20,
           "tipo_midia": "imagem",
-          "asset_key": "cat-paw-touching-foot",
-          "image": "cena_25.png",
+          "asset_key": "cat-hunting-mouse-distance-card",
+          "image": "cena_20.png",
           "visual": {
-            "subject": "cat's paw on the human's foot",
-            "action": "front paw resting delicately on the volume of the owner's foot under the blanket",
-            "setting": "bed detail",
-            "framing": "extreme close-up evidencing the subtle physical contact",
-            "details": "ilustração felina editorial, orange paw gently touching the textured blanket"
+            "subject": "cat hunting a mouse far away",
+            "action": "cat locked onto the movement of a tiny mouse scurrying in the distance",
+            "setting": "dimly lit outdoor environment",
+            "framing": "wide shot demonstrating the extreme focal distance of a predator",
+            "details": "ilustração felina editorial, orange cat silhouette, sharp focus on distant prey"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "to_left",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_21",
+      "text": "Because they are incredibly farsighted, anything closer than a foot is completely out of focus.",
+      "scenes": [
+        {
+          "id": "scene_21",
+          "image_id": 21,
+          "tipo_midia": "imagem",
+          "asset_key": "blurry-human-face-pov",
+          "image": "cena_21.png",
+          "visual": {
+            "subject": "blurry vision of the owner's face",
+            "action": "the owner's smiling face seen entirely out of focus, like a soft blob",
+            "setting": "abstract living room background",
+            "framing": "point of view shot from the cat's perspective, extremely blurry up close",
+            "details": "ilustração felina editorial, visually blurred young male owner's face"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_22",
+      "text": "When you put your face right up to theirs, they literally cannot see your features.",
+      "scenes": [
+        {
+          "id": "scene_22",
+          "image_id": 22,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-looking-confused-at-blur",
+          "image": "cena_22.png",
+          "visual": {
+            "subject": "cat squinting slightly",
+            "action": "cat looking slightly confused at the large, blurry object in front of its nose",
+            "setting": "living room",
+            "framing": "close-up on the cat's eyes adjusting poorly to the proximity",
+            "details": "ilustração felina editorial, orange cat, unfocused expression"
           },
           "transition": {
             "in": "zoom_in",
@@ -799,21 +706,114 @@
       ]
     },
     {
+      "id": "block_23",
+      "text": "They recognize you entirely by the sound of your heavy footsteps and your unique scent.",
+      "scenes": [
+        {
+          "id": "scene_23",
+          "image_id": 23,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-smelling-owner-hand",
+          "image": "cena_23.png",
+          "visual": {
+            "subject": "cat relying on scent to recognize owner",
+            "action": "cat closing its eyes and sniffing the owner's hand deeply to confirm identity",
+            "setting": "bright interior",
+            "framing": "macro close-up on the cat's nose inhaling near the human skin",
+            "details": "ilustração felina editorial, orange cat using olfactory senses"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_24",
+      "text": "To them, you are a blurry, loud giant that vibrates the floor when you walk.",
+      "scenes": [
+        {
+          "id": "scene_24",
+          "image_id": 24,
+          "tipo_midia": "imagem",
+          "asset_key": "heavy-footsteps-vibrating-floor",
+          "image": "cena_24.png",
+          "visual": {
+            "subject": "cat feeling floor vibrations",
+            "action": "cat looking down at the floor as heavy human feet approach, sensing the tremor",
+            "setting": "hardwood floor",
+            "framing": "low angle highlighting the weight of the human steps",
+            "details": "ilustração felina editorial, orange cat alert to vibrations, owner's shoes"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_25",
+      "text": "This leads to the most primal misunderstanding in the entire human-feline relationship.",
+      "scenes": [
+        {
+          "id": "scene_25",
+          "image_id": 25,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-carrying-toy-mouse",
+          "image": "cena_25.png",
+          "visual": {
+            "subject": "cat carrying a toy mouse in its mouth",
+            "action": "cat walking proudly toward the owner, holding a toy mouse like a fresh kill",
+            "setting": "living room rug",
+            "framing": "medium shot showing the cat delivering the object",
+            "details": "ilustração felina editorial, orange cat with toy mouse, confident posture"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
       "id": "block_26",
-      "text": "They also take the chance to blend their scent with yours, reinforcing your colony bond.",
+      "text": "When your cat drops a dead mouse or a toy at your feet, you think it's a gift.",
       "scenes": [
         {
           "id": "scene_26",
           "image_id": 26,
           "tipo_midia": "imagem",
-          "asset_key": "cat-rubbing-scent-feet",
+          "asset_key": "cat-dropping-toy-at-feet",
           "image": "cena_26.png",
           "visual": {
-            "subject": "cat rubbing its face",
-            "action": "rubbing its cheek against the blanket in the exact spot where the feet are",
-            "setting": "cozy bed",
-            "framing": "close angle highlighting the scent marking with closed eyes",
-            "details": "ilustração felina editorial, orange cat's face in contact with the white fabric"
+            "subject": "cat dropping the toy at the owner's feet",
+            "action": "cat releasing the toy mouse right in front of the human's toes and looking up",
+            "setting": "living room floor",
+            "framing": "low angle focusing on the dropped item and the owner's feet",
+            "details": "ilustração felina editorial, orange cat looking expectant, toy mouse on the floor"
           },
           "transition": {
             "in": "zoom_in",
@@ -831,20 +831,51 @@
     },
     {
       "id": "block_27",
-      "text": "And there's more: their body weight on your feet acts as a motion monitor.",
+      "text": "You assume they are showing gratitude or affection. But evolution says otherwise.",
       "scenes": [
         {
           "id": "scene_27",
           "image_id": 27,
           "tipo_midia": "imagem",
-          "asset_key": "cat-chin-resting-foot",
+          "asset_key": "owner-smiling-at-toy",
           "image": "cena_27.png",
           "visual": {
-            "subject": "cat using foot as support",
-            "action": "cat with its chin and weight anchored on the elevation of the human's feet",
-            "setting": "mattress surface",
-            "framing": "focus on the distribution of the feline's weight on the owner",
-            "details": "ilustração felina editorial, orange cat feeling the firmness under the white fabric"
+            "subject": "owner smiling at the dropped toy",
+            "action": "owner looking down with a touched, grateful smile, completely misinterpreting the act",
+            "setting": "living room",
+            "framing": "medium close-up on the owner's sentimental reaction",
+            "details": "ilustração felina editorial, young male owner in white t-shirt, naive expression"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_28",
+      "text": "In a wild colony, queens bring stunned, half-alive prey back to the den.",
+      "scenes": [
+        {
+          "id": "scene_28",
+          "image_id": 28,
+          "tipo_midia": "imagem",
+          "asset_key": "mother-cat-bringing-prey-card",
+          "image": "cena_28.png",
+          "visual": {
+            "subject": "mother cat with prey",
+            "action": "a feral mother cat dropping a stunned mouse in front of her kittens",
+            "setting": "outdoor natural den",
+            "framing": "wide shot showing the maternal teaching dynamic",
+            "details": "ilustração felina editorial, feral mother cat, small kittens observing"
           },
           "transition": {
             "in": "from_left",
@@ -861,21 +892,365 @@
       ]
     },
     {
-      "id": "block_28",
-      "text": "So, if you wake up startled and move, they feel it immediately and react with you.",
+      "id": "block_29",
+      "text": "They do this specifically for kittens who have not yet learned how to hunt.",
       "scenes": [
         {
-          "id": "scene_28",
-          "image_id": 28,
+          "id": "scene_29",
+          "image_id": 29,
           "tipo_midia": "imagem",
-          "asset_key": "cat-waking-up-sudden-movement",
-          "image": "cena_28.png",
+          "asset_key": "kittens-learning-to-hunt",
+          "image": "cena_29.png",
           "visual": {
-            "subject": "cat waking up suddenly",
-            "action": "wide eyes and raised body reacting to a sudden movement of the blanket",
-            "setting": "moving bed",
-            "framing": "expression of tactical startle of the cat reacting to the vibration",
-            "details": "ilustração felina editorial, awake orange cat, white fabric waving fast"
+            "subject": "kittens practicing hunting",
+            "action": "clumsy kittens trying to pounce on the stunned prey while the mother watches",
+            "setting": "outdoor natural den",
+            "framing": "close-up on the kittens learning survival skills",
+            "details": "ilustração felina editorial, small orange kittens awkwardly jumping"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_30",
+      "text": "Now, look at how your cat views your daily routine.",
+      "scenes": [
+        {
+          "id": "scene_30",
+          "image_id": 30,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-watching-owner-routine",
+          "image": "cena_30.png",
+          "visual": {
+            "subject": "cat observing the owner",
+            "action": "cat sitting quietly on a chair, intently watching the owner go about their day",
+            "setting": "kitchen",
+            "framing": "over-the-shoulder shot from the cat looking at the human",
+            "details": "ilustração felina editorial, orange cat evaluating the human's actions"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_31",
+      "text": "They watch you closely. You never stalk, you never hide, and you never pounce.",
+      "scenes": [
+        {
+          "id": "scene_31",
+          "image_id": 31,
+          "tipo_midia": "imagem",
+          "asset_key": "owner-walking-loudly",
+          "image": "cena_31.png",
+          "visual": {
+            "subject": "owner walking loudly with zero stealth",
+            "action": "owner stomping through the house carelessly, displaying zero predatory skill",
+            "setting": "living room",
+            "framing": "wide shot showing the human's complete lack of grace",
+            "details": "ilustração felina editorial, young male owner walking heavily, cat watching"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_32",
+      "text": "You simply pull food out of a loud, cold metal box every single day.",
+      "scenes": [
+        {
+          "id": "scene_32",
+          "image_id": 32,
+          "tipo_midia": "imagem",
+          "asset_key": "owner-opening-fridge",
+          "image": "cena_32.png",
+          "visual": {
+            "subject": "owner getting food from the fridge",
+            "action": "owner opening a refrigerator to get food, while the cat judges from the floor",
+            "setting": "kitchen",
+            "framing": "medium shot capturing the un-predatory act of getting human food",
+            "details": "ilustração felina editorial, young male owner, open silver fridge, orange cat"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_33",
+      "text": "In their evolutionary mind, you are a defective, severely incompetent predator.",
+      "scenes": [
+        {
+          "id": "scene_33",
+          "image_id": 33,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-judging-incompetent-human",
+          "image": "cena_33.png",
+          "visual": {
+            "subject": "cat judging the human",
+            "action": "cat squinting with a look of pure judgment and pity towards the owner",
+            "setting": "kitchen floor",
+            "framing": "close-up on the cat's highly judgmental expression",
+            "details": "ilustração felina editorial, orange cat, disappointed feline face"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_34",
+      "text": "If a colony relies on you for survival, they are going to starve to death.",
+      "scenes": [
+        {
+          "id": "scene_34",
+          "image_id": 34,
+          "tipo_midia": "imagem",
+          "asset_key": "empty-food-bowl-starving",
+          "image": "cena_34.png",
+          "visual": {
+            "subject": "empty food bowl",
+            "action": "a completely empty blue bowl sitting on the floor, symbolizing the cat's fear",
+            "setting": "kitchen floor",
+            "framing": "close-up on the empty bowl, conveying the risk of relying on the human",
+            "details": "ilustração felina editorial, empty blue bowl, dramatic lighting"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": {
+              "type": "paper_flip",
+              "at": "start"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_35",
+      "text": "So, they step in to train you. They drop the toy and wait.",
+      "scenes": [
+        {
+          "id": "scene_35",
+          "image_id": 35,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-waiting-for-owner-to-hunt",
+          "image": "cena_35.png",
+          "visual": {
+            "subject": "cat waiting for human to practice",
+            "action": "cat sitting next to the dropped toy, staring at the owner, expecting them to pounce",
+            "setting": "living room floor",
+            "framing": "medium shot showing the cat acting as an instructor",
+            "details": "ilustração felina editorial, orange cat, toy mouse, expectant gaze"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_36",
+      "text": "They want you to practice your killing bite. They are literally trying to raise you.",
+      "scenes": [
+        {
+          "id": "scene_36",
+          "image_id": 36,
+          "tipo_midia": "imagem",
+          "asset_key": "owner-holding-toy-confused",
+          "image": "cena_36.png",
+          "visual": {
+            "subject": "owner holding the toy mouse",
+            "action": "owner picking up the toy by the tail, looking confused, failing the hunting test",
+            "setting": "living room",
+            "framing": "close-up on the human hand awkwardly holding the toy",
+            "details": "ilustração felina editorial, young male owner hand, toy mouse dangling"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_37",
+      "text": "It is an act of colony survival, not a cute Christmas present.",
+      "scenes": [
+        {
+          "id": "scene_37",
+          "image_id": 37,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-sighing-at-human-failure",
+          "image": "cena_37.png",
+          "visual": {
+            "subject": "cat reacting to human failure",
+            "action": "cat turning its head away slightly, as if sighing at the human's inability to hunt",
+            "setting": "living room floor",
+            "framing": "medium close-up on the cat's resigned posture",
+            "details": "ilustração felina editorial, orange cat looking disappointed"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "slow"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_38",
+      "text": "This means your cat genuinely sees you as an equal, but one that needs constant supervision.",
+      "scenes": [
+        {
+          "id": "scene_38",
+          "image_id": 38,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-supervising-owner",
+          "image": "cena_38.png",
+          "visual": {
+            "subject": "cat supervising the owner from a high spot",
+            "action": "cat sitting on a tall shelf, watching the owner work at a desk below",
+            "setting": "home office",
+            "framing": "wide shot showing the cat in a position of supervisory authority",
+            "details": "ilustração felina editorial, orange cat looking down, young male owner at desk"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_39",
+      "text": "But because they created a vocal language exclusively to manage you, you must be careful.",
+      "scenes": [
+        {
+          "id": "scene_39",
+          "image_id": 39,
+          "tipo_midia": "imagem",
+          "asset_key": "owner-listening-carefully-cat",
+          "image": "cena_39.png",
+          "visual": {
+            "subject": "owner listening to the cat",
+            "action": "owner kneeling down to carefully listen to the cat meowing",
+            "setting": "living room",
+            "framing": "medium shot emphasizing the vocal connection",
+            "details": "ilustração felina editorial, young male owner looking serious, orange cat meowing"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_40",
+      "text": "If their vocal pattern suddenly changes, it is no longer communication. It is an alarm.",
+      "scenes": [
+        {
+          "id": "scene_40",
+          "image_id": 40,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-yowling-distressed",
+          "image": "cena_40.png",
+          "visual": {
+            "subject": "cat yowling in distress",
+            "action": "cat with a tense body, yowling loudly with a distressed facial expression",
+            "setting": "dark hallway",
+            "framing": "close-up on the cat's open mouth and tense eyes",
+            "details": "ilustração felina editorial, orange cat, urgent and unnatural vocalization"
           },
           "transition": {
             "in": "zoom_in",
@@ -895,21 +1270,21 @@
       ]
     },
     {
-      "id": "block_29",
-      "text": "All this allows them to keep one hundred percent of their survival instincts operational while sleeping.",
+      "id": "block_41",
+      "text": "If your cat starts howling loudly in the middle of the night for no reason...",
       "scenes": [
         {
-          "id": "scene_29",
-          "image_id": 29,
+          "id": "scene_41",
+          "image_id": 41,
           "tipo_midia": "imagem",
-          "asset_key": "cat-sleeping-ears-alert",
-          "image": "cena_29.png",
+          "asset_key": "cat-howling-at-night",
+          "image": "cena_41.png",
           "visual": {
-            "subject": "cat resting with active ears",
-            "action": "relaxed body, but both ears pointing upwards capturing sound",
-            "setting": "calm foot of the bed",
-            "framing": "serene shot showing the paradox of relaxation and instinctive alertness",
-            "details": "ilustração felina editorial, orange cat resting, active peripheral hearing"
+            "subject": "cat howling in the dark",
+            "action": "cat standing alone in a dark room, vocalizing loudly into the void",
+            "setting": "midnight living room",
+            "framing": "wide shot showing the isolation and unnatural behavior",
+            "details": "ilustração felina editorial, orange cat silhouette, moonlight"
           },
           "transition": {
             "in": "zoom_in",
@@ -926,21 +1301,83 @@
       ]
     },
     {
-      "id": "block_30",
-      "text": "Compare this to a cat that decides to sleep sprawled belly-up, right on your chest.",
+      "id": "block_42",
+      "text": "Or if they begin pacing and meowing repeatedly at blank walls or empty corners...",
       "scenes": [
         {
-          "id": "scene_30",
-          "image_id": 30,
+          "id": "scene_42",
+          "image_id": 42,
           "tipo_midia": "imagem",
-          "asset_key": "cat-sleeping-chest-belly-up",
-          "image": "cena_30.png",
+          "asset_key": "cat-meowing-at-blank-wall",
+          "image": "cena_42.png",
           "visual": {
-            "subject": "cat sleeping on the human's chest",
-            "action": "exposed belly-up and stretched paws on the owner's chest",
-            "setting": "headboard of the bed",
-            "framing": "frontal view evidencing the extreme vulnerability of the position",
-            "details": "ilustração felina editorial, young owner sleeping, exposed belly of the orange cat"
+            "subject": "cat staring and meowing at a wall",
+            "action": "cat sitting awkwardly close to a blank white wall, meowing at nothing",
+            "setting": "empty corner of a room",
+            "framing": "medium shot highlighting the confusion and cognitive disconnect",
+            "details": "ilustração felina editorial, orange cat facing a flat wall"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_left",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_43",
+      "text": "This is a severe clinical red flag, especially in cats over eight years old.",
+      "scenes": [
+        {
+          "id": "scene_43",
+          "image_id": 43,
+          "tipo_midia": "imagem",
+          "asset_key": "owner-looking-worried-at-phone",
+          "image": "cena_43.png",
+          "visual": {
+            "subject": "owner looking worried",
+            "action": "owner holding a phone, looking extremely concerned about the cat's strange behavior",
+            "setting": "living room",
+            "framing": "close-up on the owner's anxious face",
+            "details": "ilustração felina editorial, young male owner realizing it's a medical issue"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_44",
+      "text": "It strongly indicates feline cognitive dysfunction, which is essentially cat Alzheimer's, or severe hyperthyroidism.",
+      "scenes": [
+        {
+          "id": "scene_44",
+          "image_id": 44,
+          "tipo_midia": "imagem",
+          "asset_key": "vet-examining-older-cat-card",
+          "image": "cena_44.png",
+          "visual": {
+            "subject": "vet examining the cat",
+            "action": "veterinarian checking the cat's throat and eyes to diagnose the sudden vocal changes",
+            "setting": "veterinary clinic",
+            "framing": "medium shot showing professional medical care",
+            "details": "ilustração felina editorial, vet in white coat, orange cat looking slightly disoriented"
           },
           "transition": {
             "in": "from_right",
@@ -957,462 +1394,25 @@
       ]
     },
     {
-      "id": "block_31",
-      "text": "Sleeping on the chest is absolute surrender. In this position, the cat gives up any escape route.",
-      "scenes": [
-        {
-          "id": "scene_31",
-          "image_id": 31,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-vulnerable-belly-close",
-          "image": "cena_31.png",
-          "visual": {
-            "subject": "detail of the cat's exposed belly",
-            "action": "calm breathing with all vital organs completely unprotected",
-            "setting": "on top of the owner in bed",
-            "framing": "extreme close-up on the fur of the vulnerable belly",
-            "details": "ilustração felina editorial, orange cat's fur facing up, zero defense"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_32",
-      "text": "They only do this when they have unshakeable certainty that the environment is completely safe.",
-      "scenes": [
-        {
-          "id": "scene_32",
-          "image_id": 32,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-completely-relaxed-chest",
-          "image": "cena_32.png",
-          "visual": {
-            "subject": "cat passed out asleep",
-            "action": "paws hanging limply over the owner's shoulder, total trust",
-            "setting": "safe headboard of the bed",
-            "framing": "shot evidencing the complete lack of muscle tension",
-            "details": "ilustração felina editorial, surrendered orange cat, young owner in a white t-shirt"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_33",
-      "text": "Sleeping on your feet, on the other hand, means they deeply trust you as pack.",
-      "scenes": [
-        {
-          "id": "scene_33",
-          "image_id": 33,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-affectionate-look-feet",
-          "image": "cena_33.png",
-          "visual": {
-            "subject": "cat looking from the foot of the bed",
-            "action": "cat resting on the feet, casting an affectionate look towards the owner's face",
-            "setting": "perspective looking up the bed",
-            "framing": "visual connection between the feline on the edge and the safe human at the headboard",
-            "details": "ilustração felina editorial, calm look of the orange cat with green eyes"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_34",
-      "text": "But they still prefer to keep at least ten percent of their wild instinct active.",
-      "scenes": [
-        {
-          "id": "scene_34",
-          "image_id": 34,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-one-eye-open-sleep",
-          "image": "cena_34.png",
-          "visual": {
-            "subject": "cat with one eye half-open",
-            "action": "sleeping in the darkness with a slit of the eye open monitoring",
-            "setting": "dark bedroom",
-            "framing": "close-up highlighting the residual vigilance in the gaze",
-            "details": "ilustração felina editorial, green eye shining slightly, preserved instinct"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_35",
-      "text": "And they endure all your kicks and involuntary midnight movements just to hold this post.",
-      "scenes": [
-        {
-          "id": "scene_35",
-          "image_id": 35,
-          "tipo_midia": "imagem",
-          "asset_key": "human-kicking-cat-dodging",
-          "image": "cena_35.png",
-          "visual": {
-            "subject": "leg kicking the blanket and the cat dodging",
-            "action": "owner kicking while asleep, the cat adjusting quickly to avoid falling off the bed",
-            "setting": "messy bed",
-            "framing": "turbulent movement of the sheets contrasting with the cat's persistence",
-            "details": "ilustração felina editorial, tolerant orange cat, visible leg under the sheet"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": {
-              "type": "crumpled_paper",
-              "at": "start"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_36",
-      "text": "They definitely prefer your uncomfortable company over the flawless safety of sleeping untouched on the couch.",
-      "scenes": [
-        {
-          "id": "scene_36",
-          "image_id": 36,
-          "tipo_midia": "imagem",
-          "asset_key": "empty-living-room-sofa",
-          "image": "cena_36.png",
-          "visual": {
-            "subject": "empty sofa in the living room",
-            "action": "quiet living room, with no sign of the cat that chose to stay in the chaotic bedroom",
-            "setting": "dark living room at night",
-            "framing": "wide shot showing the perfectly clean, calm, and rejected environment",
-            "details": "ilustração felina editorial, empty cream sofa, absence of the orange cat"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_37",
-      "text": "It's the feline's silent way of saying: I am with you, while securing our tactical safety.",
-      "scenes": [
-        {
-          "id": "scene_37",
-          "image_id": 37,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-human-sleeping-peacefully",
-          "image": "cena_37.png",
-          "visual": {
-            "subject": "owner and cat sleeping peacefully",
-            "action": "both resting calmly in their respective strategic positions on the bed",
-            "setting": "overview of the bed",
-            "framing": "wide shot of the bedroom showing the safe human and the guarding cat",
-            "details": "ilustração felina editorial, young owner with dark hair, orange cat at the foot"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "slow"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_38",
-      "text": "But here is the crucial detail for your cat's health and well-being. Pay close attention.",
-      "scenes": [
-        {
-          "id": "scene_38",
-          "image_id": 38,
-          "tipo_midia": "imagem",
-          "asset_key": "human-looking-serious-cat",
-          "image": "cena_38.png",
-          "visual": {
-            "subject": "owner looking seriously",
-            "action": "owner paying attention to the movements and behaviors of their cat",
-            "setting": "bedroom during the day",
-            "framing": "close-up on the worried and attentive look of the human",
-            "details": "ilustração felina editorial, observant young owner in a white t-shirt"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_39",
-      "text": "Cats are creatures of consistent habits. Their chosen sleeping spot perfectly reflects their mental safety map.",
-      "scenes": [
-        {
-          "id": "scene_39",
-          "image_id": 39,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-curling-usual-spot",
-          "image": "cena_39.png",
-          "visual": {
-            "subject": "cat returning to the usual spot",
-            "action": "nestling securely in the exact same crease of the blanket as every night",
-            "setting": "routine foot of the bed",
-            "framing": "focus on the repetition and comfort of the mapped space",
-            "details": "ilustração felina editorial, orange cat confident in its spatial routine"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_40",
-      "text": "If your cat always slept relaxed on your chest, and suddenly shifted their routine to your feet...",
-      "scenes": [
-        {
-          "id": "scene_40",
-          "image_id": 40,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-moving-chest-to-feet",
-          "image": "cena_40.png",
-          "visual": {
-            "subject": "cat walking down the bed",
-            "action": "cat walking from the owner's chest towards the feet, abandoning the intimate spot",
-            "setting": "bed under lighting",
-            "framing": "shot following the deliberate change of territory",
-            "details": "ilustração felina editorial, back of the orange cat walking down the white mattress"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_41",
-      "text": "Or if they always slept calmly on your feet, and started hiding isolated on the floor...",
-      "scenes": [
-        {
-          "id": "scene_41",
-          "image_id": 41,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-sleeping-isolated-floor-card",
-          "image": "cena_41.png",
-          "visual": {
-            "subject": "cat sleeping alone on the floor",
-            "action": "curled up and isolated under a chair in the furthest corner of the room",
-            "setting": "cold floor away from the bed",
-            "framing": "isolation evidenced by the distance from the safe bed",
-            "details": "ilustração felina editorial, distant and defensive orange cat, dark chair"
-          },
-          "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_42",
-      "text": "Do not ignore this. This abrupt territorial shift is not just your cat acting moody or unpredictable.",
-      "scenes": [
-        {
-          "id": "scene_42",
-          "image_id": 42,
-          "tipo_midia": "imagem",
-          "asset_key": "human-worried-cat-floor",
-          "image": "cena_42.png",
-          "visual": {
-            "subject": "distressed owner looking at the floor",
-            "action": "sitting on the bed observing the isolated cat, showing concern for the change",
-            "setting": "bed contrasting with the floor",
-            "framing": "connection of concern from top to bottom",
-            "details": "ilustração felina editorial, young owner confused by the break in pattern"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_43",
-      "text": "Generally, retreating to isolated areas or avoiding spots where they might get kicked indicates silent physical pain.",
-      "scenes": [
-        {
-          "id": "scene_43",
-          "image_id": 43,
-          "tipo_midia": "imagem",
-          "asset_key": "cat-licking-joints-distressed",
-          "image": "cena_43.png",
-          "visual": {
-            "subject": "cat in pain",
-            "action": "licking its own joint with a tense and uncomfortable expression",
-            "setting": "isolated corner",
-            "framing": "close-up revealing the discomfort and excessive licking at the point of pain",
-            "details": "ilustração felina editorial, orange cat focused on its front paw"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_44",
-      "text": "Older cats with joint pain flee the foot of the bed simply to avoid being crushed accidentally.",
-      "scenes": [
-        {
-          "id": "scene_44",
-          "image_id": 44,
-          "tipo_midia": "imagem",
-          "asset_key": "older-cat-avoiding-moving-feet",
-          "image": "cena_44.png",
-          "visual": {
-            "subject": "cat backing away from legs",
-            "action": "cat looking cautiously at the moving feet, preferring to keep a safe distance",
-            "setting": "floor next to the unstable bed",
-            "framing": "defensive view of the cat in relation to the bed that became dangerous",
-            "details": "ilustração felina editorial, cautious orange cat, messy sheets"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
       "id": "block_45",
-      "text": "It can also indicate severe environmental stress, like a new scent, another animal, or excessive noise.",
+      "text": "Also, if their meow suddenly sounds raspy, silent, or painful, do not wait.",
       "scenes": [
         {
           "id": "scene_45",
           "image_id": 45,
           "tipo_midia": "imagem",
-          "asset_key": "cat-scared-window-noise",
+          "asset_key": "cat-trying-to-meow-silent",
           "image": "cena_45.png",
           "visual": {
-            "subject": "cat scared by sound",
-            "action": "crouching posture and apprehensive look directed towards the bedroom window",
-            "setting": "defensive bedroom",
-            "framing": "focus on the cat's tension generated by an invisible external stimulus",
-            "details": "ilustração felina editorial, tense orange cat, night window"
+            "subject": "cat trying to meow with no sound",
+            "action": "cat opening its mouth to meow but looking strained, indicating vocal cord pain",
+            "setting": "living room",
+            "framing": "close-up on the cat's strained throat and open mouth",
+            "details": "ilustração felina editorial, orange cat, expression of discomfort"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "none",
+            "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
@@ -1426,29 +1426,29 @@
     },
     {
       "id": "block_46",
-      "text": "If this location change comes with extreme isolation or appetite loss, consult a vet immediately.",
+      "text": "Seek a veterinarian immediately. The language they built just for you is breaking down.",
       "scenes": [
         {
           "id": "scene_46",
           "image_id": 46,
           "tipo_midia": "imagem",
-          "asset_key": "untouched-food-bowl-kitchen",
+          "asset_key": "owner-putting-cat-in-carrier",
           "image": "cena_46.png",
           "visual": {
-            "subject": "full bowl of kibble",
-            "action": "untouched food in the kitchen, evidencing the ignored veterinary alert",
-            "setting": "bright and clean kitchen",
-            "framing": "dramatic close-up on the full bowl the cat refuses to touch",
-            "details": "ilustração felina editorial, blue bowl full of kibble, absence of the orange cat"
+            "subject": "owner gently putting cat in carrier",
+            "action": "owner carefully guiding the cat into a travel carrier to go to the vet",
+            "setting": "hallway",
+            "framing": "medium shot showing urgent but caring action",
+            "details": "ilustração felina editorial, young male owner, orange cat, plastic pet carrier"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_right",
+            "out": "to_left",
             "speed": "slow"
           },
           "sounds": {
             "transition": [
-              "whoosh_cinematic"
+              "whoosh_soft"
             ],
             "context": null
           }
@@ -1457,20 +1457,51 @@
     },
     {
       "id": "block_47",
-      "text": "Where your cat sleeps is pure communication. Does yours sleep on your feet, chest, or pillow?",
+      "text": "Your cat doesn't think you are a human, but they decided to keep you anyway.",
       "scenes": [
         {
           "id": "scene_47",
           "image_id": 47,
           "tipo_midia": "imagem",
-          "asset_key": "cat-looking-camera-cta",
+          "asset_key": "cat-sleeping-near-owner",
           "image": "cena_47.png",
           "visual": {
-            "subject": "cat looking at the screen",
-            "action": "cat sitting on the bed, staring directly at the viewer with intelligence",
-            "setting": "neutral bedroom background",
-            "framing": "portrait of the cat that invites the owner to answer the final question",
-            "details": "ilustração felina editorial, orange cat with bright green eyes, blue collar"
+            "subject": "cat sleeping near the owner",
+            "action": "cat curled up peacefully right next to the owner's leg, feeling safe",
+            "setting": "living room couch",
+            "framing": "wide shot showing the inter-species colony bond",
+            "details": "ilustração felina editorial, orange cat, young male owner reading"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "to_right",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_48",
+      "text": "You are a vital member of their colony. How does your cat try to talk to you?",
+      "scenes": [
+        {
+          "id": "scene_48",
+          "image_id": 48,
+          "tipo_midia": "imagem",
+          "asset_key": "cat-looking-at-camera-cta",
+          "image": "cena_48.png",
+          "visual": {
+            "subject": "orange cat looking toward viewer",
+            "action": "cat staring forward with an intelligent, inquisitive expression",
+            "setting": "neutral bright background",
+            "framing": "centered portrait shot inviting audience response",
+            "details": "ilustração felina editorial, orange cat with green eyes and blue collar"
           },
           "transition": {
             "in": "zoom_in",

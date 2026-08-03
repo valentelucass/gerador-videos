@@ -150,8 +150,13 @@ LAYOUT, SOM E ANOTAÇÕES
   `new_idea`, `boxing_bell`, `paper_flip`, `shutter_click`, `bottle_cork`,
   `celebration` e `writing`. A primeira cena usa
   `{"type":"click","at":"start"}`.
-- `annotation` é opcional e pode existir somente em imagem fullscreen. Use uma
-  ou duas linhas curtas, sem emoji. Reserve para a CTA inicial, uma revelação
+- `annotation` é opcional e pode existir somente em imagem fullscreen. Esta é
+  uma regra de estrutura, não uma sugestão: toda cena que contenha a chave
+  `annotation` DEVE usar exatamente `"tipo_midia":"imagem"` e
+  `"transition":{"in":"zoom_in", ...}`. Nunca coloque `annotation` em
+  cartão (`from_left`, `from_right` ou `none`); se a cena precisar de
+  annotation, converta-a para fullscreen antes de devolver o JSON. Use uma ou
+  duas linhas curtas, sem emoji. Reserve para a CTA inicial, uma revelação
   realmente importante e a CTA final; não transforme o vídeo em cartazes.
 - CTA inicial: após hook e promessa, fala natural e
   `{"lines":["DEIXE O LIKE","E SE INSCREVA"],"at":"start"}`.
@@ -213,4 +218,6 @@ ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
 10. Pelo menos 80% das cenas usam fullscreen (`transition.in: "zoom_in"`). Todo
    cartão restante existe para explicar um mecanismo, comparação, dado ou detalhe
    visual específico; não foi usado apenas como alternância decorativa.
+11. Para CADA cena que tenha `annotation`, `tipo_midia` é `imagem` e
+    `transition.in` é exatamente `zoom_in`. Nenhuma annotation está em cartão.
 ```

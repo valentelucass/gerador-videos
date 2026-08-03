@@ -575,6 +575,7 @@ function App() {
   const [renderError, setRenderError] = useState("");
   const [timingWarnings, setTimingWarnings] = useState<TimingScene[]>([]);
   const [narrationDuration, setNarrationDuration] = useState<number | null>(null);
+  const [validationFeedback, setValidationFeedback] = useState("");
   const [renderLogUrl, setRenderLogUrl] = useState("");
   const [pexelsItems, setPexelsItems] = useState<PexelsItem[]>([]);
   const [pexelsQueries, setPexelsQueries] = useState<Record<string, string>>({});
@@ -767,6 +768,7 @@ function App() {
     setPexelsPage(0);
     setTimingWarnings([]);
     setNarrationDuration(null);
+    setValidationFeedback("");
     setFlowExportReady(Boolean(project.source));
     setJobId("");
     setOutputUrl("");
@@ -969,6 +971,7 @@ function App() {
     setActiveImagePickerKey(null);
     setTimingWarnings([]);
     setNarrationDuration(null);
+    setValidationFeedback("");
     setFlowExportReady(false);
     setSource(text);
     void parseScript(text);
@@ -1378,10 +1381,12 @@ function App() {
   const validate = async (measureTiming = true) => {
     const activeScript = parseScript(source, false);
     if (!activeScript) {
+      setValidationFeedback("Cole ou importe um roteiro JSON antes de validar.");
       setStatus("Cole ou importe um roteiro JSON antes de validar.");
       return;
     }
     try {
+      setValidationFeedback("");
       setStatus(measureTiming ? "Medindo a narração com a voz definida no JSON…" : "Associando mídias às cenas…");
       const report = await api<{
         valid: boolean; errors: string[]; missing_images: string[]; resolved_image_sources: Record<string, string>;
@@ -1408,6 +1413,12 @@ function App() {
         ...(warnings.length ? [`${warnings.length} cena(s) ultrapassam 9 s; veja as sugestões de corte abaixo.`] : []),
         ...(report.missing_images.length ? [`Faltam: ${report.missing_images.join(", ")}`] : []),
       ];
+      const feedback = !report.valid
+        ? report.errors.join(" ")
+        : report.timing_error
+          ? report.timing_error
+          : validationNotes.join(" ");
+      setValidationFeedback(feedback);
       setStatus(
         report.valid
           ? (report.timing_error
@@ -1419,7 +1430,9 @@ function App() {
       );
     } catch (error) {
       setFlowExportReady(false);
-      setStatus(readableError(error));
+      const message = readableError(error);
+      setValidationFeedback(message);
+      setStatus(message);
     }
   };
 
@@ -1666,10 +1679,12 @@ function App() {
               setActiveImagePickerKey(null);
               setTimingWarnings([]);
               setNarrationDuration(null);
+              setValidationFeedback("");
               setFlowExportReady(false);
             }}
           />
           <section className={`script-feedback${timingWarnings.length ? " has-warnings" : ""}`} aria-label="Validação e avisos do roteiro">
+            {validationFeedback && <span>{validationFeedback}</span>}
             {narrationDuration !== null && <div className="video-duration-estimate"><b>Duração estimada do vídeo</b><span>{formatVideoDuration(narrationDuration)}</span><small>Medida pela narração com a voz selecionada.</small></div>}
             {timingWarnings.length > 0 ? <>
               <b>Prévia acústica · {timingWarnings.length} cena(s) precisam de corte</b>
@@ -1679,7 +1694,7 @@ function App() {
                   <small>Corte: “{scene.suggested_split?.first_text ?? "divida próximo à metade"}” / “{scene.suggested_split?.second_text ?? "crie a segunda cena"}”</small>
                 </div>
               ))}
-            </> : narrationDuration === null && <span>Validação, duração acústica e sugestões de corte aparecem aqui.</span>}
+            </> : narrationDuration === null && !validationFeedback && <span>Validação, duração acústica e sugestões de corte aparecem aqui.</span>}
           </section>
           {script && <section className="flow-export" aria-label="Exportação para Google Flow">
             <div><b>Google Flow</b><small>Exporta somente cenas de imagem; B-roll, transições, sons e anotações ficam de fora.</small></div>

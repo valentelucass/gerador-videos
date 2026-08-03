@@ -213,6 +213,10 @@ SOM
 
 ANNOTATIONS E CTAS
 - `annotation` é opcional e somente em cena `imagem` fullscreen (`in: zoom_in`).
+  Regra obrigatória: toda cena com a chave `annotation` DEVE usar
+  `tipo_midia: "imagem"` e `transition.in: "zoom_in"`. Nunca associe
+  annotation a um cartão (`from_left`, `from_right` ou `none`); transforme-a
+  em fullscreen antes de devolver o JSON.
   Use uma ou duas linhas de até 32 caracteres; `at` é `start`, `middle` ou `end`.
 - Não use o campo `emoji` em nenhuma annotation, inclusive nas CTAs.
 - A CTA inicial entra após conflito e promessa: fala natural de like/inscrição e
@@ -258,4 +262,6 @@ ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
 7. A narrativa desenvolve 3 ou 4 mecanismos psicológicos sem diagnóstico ou causa única.
 8. Nenhuma annotation usa o campo `emoji`; a CTA final pede inscrição e uma
    pergunta específica para comentário.
+9. Para CADA annotation, `tipo_midia` é `imagem` e `transition.in` é exatamente
+   `zoom_in`; nenhuma annotation está em cartão.
 ```
