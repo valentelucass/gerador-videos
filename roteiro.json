@@ -1,32 +1,32 @@
 {
-  "_instrucoes_flow": "Google Flow, gere UMA imagem horizontal 16:9 para TODAS as cenas. Não gere vídeos, MP4s ou B-roll. Mantenha o mesmo gato e o mesmo tutor recorrente quando eles aparecerem; trate as imagens como quadros consecutivos de uma história visual clara.",
-  "title": "Why Your Cat Walks On You At Night (The Survival Instinct)",
+  "_instrucoes_flow": "Google Flow, gere UMA imagem horizontal 16:9 para TODAS as cenas. Não gere vídeos, MP4s ou B-roll. Trate as imagens como quadros consecutivos de uma história visual clara, em quadrinhos editoriais mestres: contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado e sem texto. Preserve literalmente em todas as cenas o tutor negro adulto com cabelo preto curto cacheado e camisa xadrez verde e preta, e o gato tabby mackerel laranja e preto com listras definidas e olhos amarelo-esverdeados; o gato nunca é preto sólido.",
+  "title": "Why Your Cat Puts Their Paw On You (The 3-Paw Rule)",
   "language": "en-US",
-  "narrator_gender": "male",
-  "voice": "en-US-GuyNeural",
+  "narrator_gender": "female",
+  "voice": "en-US-JennyNeural",
   "background": "black",
   "background_animation": "movimento_sutil",
   "blocks": [
     {
       "id": "block_01",
-      "text": "You wake up at three in the morning with your cat marching heavily across your chest.",
+      "text": "When your cat gently places their paw on your arm, do you know what they mean?",
       "scenes": [
         {
           "id": "scene_01",
           "image_id": 1,
           "tipo_midia": "imagem",
-          "asset_key": "cat-marching-on-chest",
+          "asset_key": "cat-paw-on-arm",
           "image": "cena_01.png",
           "visual": {
-            "subject": "sleek black cat with yellow eyes and a red collar",
-            "action": "stepping firmly on the sleeping human's chest in the dark",
-            "setting": "dimly lit bedroom with a dark blue blanket",
-            "framing": "medium shot of the human's upper body and the cat standing over him",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes and a red collar, young man with messy brown hair, dark blue blanket, no text"
+            "subject": "gato tabby mackerel laranja e preto colocando a pata suavemente no braço do tutor",
+            "action": "gato esticando a pata para tocar o humano relaxado",
+            "setting": "sofá na sala de estar",
+            "framing": "plano médio focando na interação entre a pata e o braço",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, tutor recorrente homem negro adulto com cabelo preto curto cacheado e camisa xadrez verde e preta, gato tabby mackerel laranja e preto com listras definidas e olhos amarelo-esverdeados, sem texto"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_right",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
@@ -43,29 +43,29 @@
     },
     {
       "id": "block_02",
-      "text": "You might think they just want some affection or are deliberately trying to annoy you.",
+      "text": "Most owners assume they just want attention, food, or a quick pet on the head.",
       "scenes": [
         {
           "id": "scene_02",
           "image_id": 2,
           "tipo_midia": "imagem",
-          "asset_key": "human-annoyed-in-bed",
+          "asset_key": "owner-petting-cat",
           "image": "cena_02.png",
           "visual": {
-            "subject": "young man with messy brown hair",
-            "action": "looking tired and confused while the cat stands on him",
-            "setting": "dimly lit bedroom with a dark blue blanket",
-            "framing": "close-up of the human's face showing frustration",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes and a red collar, young man with messy brown hair, dark blue blanket, no text"
+            "subject": "tutor sorrindo e fazendo carinho na cabeça do gato",
+            "action": "humano interpretando o toque como um simples pedido de carinho",
+            "setting": "sofá",
+            "framing": "plano aberto do humano e do gato interagindo",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, tutor recorrente homem negro adulto com cabelo preto curto cacheado e camisa xadrez verde e preta sorrindo, gato tabby mackerel laranja e preto, sem texto"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_left",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "paper_flip"
             ],
             "context": null
           }
@@ -74,20 +74,20 @@
     },
     {
       "id": "block_03",
-      "text": "But when the bedroom lights go out, your sleeping body transforms completely.",
+      "text": "But this simple touch is actually one of the most emotionally loaded things they can do.",
       "scenes": [
         {
           "id": "scene_03",
           "image_id": 3,
           "tipo_midia": "imagem",
-          "asset_key": "dark-bedroom-transformation",
+          "asset_key": "emotionally-loaded-touch",
           "image": "cena_03.png",
           "visual": {
-            "subject": "sleek black cat with yellow eyes",
-            "action": "looking intensely at the human's body under the covers",
-            "setting": "dimly lit bedroom with a dark blue blanket",
-            "framing": "wide shot of the bed in shadows",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes and a red collar, young man with messy brown hair, dark blue blanket, no text"
+            "subject": "olhar profundo do gato enquanto mantém a pata no tutor",
+            "action": "gato encarando o tutor com intensidade e conexão",
+            "setting": "sala",
+            "framing": "close-up no rosto do gato e na pata apoiada",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto com olhos amarelo-esverdeados expressivos, pata tocando a camisa xadrez verde e preta, sem texto"
           },
           "transition": {
             "in": "zoom_in",
@@ -105,29 +105,29 @@
     },
     {
       "id": "block_04",
-      "text": "To your cat, you become three vital survival tools in the dark.",
+      "text": "And if you respond the wrong way, you might quietly break the trust they offered.",
       "scenes": [
         {
           "id": "scene_04",
           "image_id": 4,
           "tipo_midia": "imagem",
-          "asset_key": "cat-observing-human-tools",
+          "asset_key": "tutor-confused-response",
           "image": "cena_04.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "sitting tall on the bed, looking down at the sleeping human with focus",
-            "setting": "dimly lit bedroom",
-            "framing": "medium shot capturing the cat's dominant posture",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes and a red collar, young man with messy brown hair, dark blue blanket, no text"
+            "subject": "tutor com expressão confusa puxando o braço levemente",
+            "action": "humano não entendendo a linguagem e retraindo o contato",
+            "setting": "sofá",
+            "framing": "plano médio mostrando a desconexão entre a intenção do gato e o tutor",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, tutor recorrente homem negro adulto com camisa xadrez verde e preta com feição de bewilderment, gato tabby mackerel laranja e preto com a pata suspensa, sem texto"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_right",
-            "speed": "fast"
+            "out": "none",
+            "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
+              "wrong_answer"
             ],
             "context": null
           }
@@ -136,63 +136,60 @@
     },
     {
       "id": "block_05",
-      "text": "You are a living thermal map.",
+      "text": "Let's start with why they use their paws instead of just meowing at you.",
       "scenes": [
         {
           "id": "scene_05",
           "image_id": 5,
           "tipo_midia": "imagem",
-          "asset_key": "human-thermal-map",
+          "asset_key": "paw-instead-of-meow",
           "image": "cena_05.png",
           "visual": {
-            "subject": "cat's front paws",
-            "action": "pressing deeply into the warm, indented blanket",
-            "setting": "dark blue blanket surface",
-            "framing": "close-up of the paws isolating the concept of heat seeking",
-            "details": "ilustração felina editorial, sleek black cat paws, dark blue blanket, no text"
+            "subject": "gato em silêncio absoluto apenas tocando o tutor",
+            "action": "gato optando pela comunicação tátil em vez de vocal",
+            "setting": "colo do humano",
+            "framing": "plano médio focado na boca fechada do gato e na pata ativa",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto em postura calma, tutor negro adulto camisa xadrez verde e preta, sem texto"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "fast"
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
+              "whoosh_soft"
             ],
-            "context": {
-              "type": "camera_shutter",
-              "at": "start"
-            }
+            "context": null
           }
         }
       ]
     },
     {
       "id": "block_06",
-      "text": "A protective chemical stamp.",
+      "text": "Cats did not evolve to communicate with humans through meowing.",
       "scenes": [
         {
           "id": "scene_06",
           "image_id": 6,
           "tipo_midia": "imagem",
-          "asset_key": "paw-chemical-stamp",
+          "asset_key": "wild-cat-silhouette-fast",
           "image": "cena_06.png",
           "visual": {
-            "subject": "underside of the cat's paw pads",
-            "action": "spreading the toes slightly as they make contact with the fabric",
-            "setting": "dark blue blanket",
-            "framing": "extreme close-up of the paw pads",
-            "details": "ilustração felina editorial, sleek black cat paw pads, dark blue blanket, no text"
+            "subject": "silhueta de um gato selvagem ancestral espreitando na natureza",
+            "action": "gato ancestral caçando em silêncio absoluto",
+            "setting": "mato alto",
+            "framing": "plano aberto do ambiente selvagem hostil",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, silhueta instintiva do gato tabby mackerel laranja e preto, sem texto"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_right",
+            "out": "none",
             "speed": "fast"
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
+              "camera_shutter"
             ],
             "context": null
           }
@@ -201,20 +198,20 @@
     },
     {
       "id": "block_07",
-      "text": "And a biological watchtower.",
+      "text": "In the wild, adult cats rarely meow at each other. It attracts predators.",
       "scenes": [
         {
           "id": "scene_07",
           "image_id": 7,
           "tipo_midia": "imagem",
-          "asset_key": "cat-biological-watchtower",
+          "asset_key": "two-wild-cats-silent-fast",
           "image": "cena_07.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "standing high on the human's chest looking alert towards the bedroom door",
-            "setting": "dimly lit bedroom",
-            "framing": "medium shot showing the height advantage of the cat",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes and a red collar, dark blue blanket, no text"
+            "subject": "dois gatos na natureza se comunicando apenas com linguagem corporal",
+            "action": "gatos evitando ruídos para não chamar atenção de predadores maiores",
+            "setting": "floresta escura",
+            "framing": "plano médio dos dois felinos tensos e silenciosos",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto interagindo silenciosamente, sem texto"
           },
           "transition": {
             "in": "zoom_in",
@@ -223,7 +220,7 @@
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
+              "shutter_click"
             ],
             "context": null
           }
@@ -232,29 +229,29 @@
     },
     {
       "id": "block_08",
-      "text": "Stick around until the end of this video.",
+      "text": "Meowing is a vocal behavior they developed almost exclusively to get our attention.",
       "scenes": [
         {
           "id": "scene_08",
           "image_id": 8,
           "tipo_midia": "imagem",
-          "asset_key": "cat-staring-intensely",
+          "asset_key": "cat-meowing-human-fast",
           "image": "cena_08.png",
           "visual": {
-            "subject": "sleek black cat's yellow eyes",
-            "action": "staring directly with fully dilated pupils in the dark",
-            "setting": "shadowy background",
-            "framing": "extreme close-up of the cat's face",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes, no text"
+            "subject": "gato miando alto olhando diretamente para cima, para o rosto do tutor",
+            "action": "gato usando o miado como ferramenta artificial para humanos",
+            "setting": "cozinha",
+            "framing": "extreme close-up na boca aberta do gato miando",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto vocalizando para o humano fora de quadro, sem texto"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
+            "out": "none",
+            "speed": "fast"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "camera_shutter"
             ],
             "context": null
           }
@@ -263,54 +260,20 @@
     },
     {
       "id": "block_09",
-      "text": "I will reveal when this harmless nighttime march becomes a serious medical red flag.",
+      "text": "The paw touch is different. It is a low-pressure signal borrowed from wild feline interactions.",
       "scenes": [
         {
           "id": "scene_09",
           "image_id": 9,
           "tipo_midia": "imagem",
-          "asset_key": "veterinary-red-flag-alert",
+          "asset_key": "low-pressure-signal-paw",
           "image": "cena_09.png",
           "visual": {
-            "subject": "older black cat",
-            "action": "pacing nervously and looking distressed near the edge of the bed",
-            "setting": "dimly lit bedroom",
-            "framing": "full body shot of the cat displaying restless body language",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes, dark blue blanket, no text"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_cinematic"
-            ],
-            "context": {
-              "type": "wrong_answer",
-              "at": "start"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_10",
-      "text": "To you, the house is completely silent at two in the morning.",
-      "scenes": [
-        {
-          "id": "scene_10",
-          "image_id": 10,
-          "tipo_midia": "imagem",
-          "asset_key": "silent-house-sleeping",
-          "image": "cena_10.png",
-          "visual": {
-            "subject": "young man with messy brown hair",
-            "action": "sleeping peacefully with eyes closed under the covers",
-            "setting": "dimly lit bedroom",
-            "framing": "close-up of the human's relaxed face",
-            "details": "ilustração felina editorial, young man with messy brown hair, dark blue blanket, no text"
+            "subject": "gato encostando a pata suavemente no humano em um gesto deliberado",
+            "action": "gato aplicando a comunicação natural tátil",
+            "setting": "sala",
+            "framing": "plano médio com foco na suavidade do toque tático",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto interagindo suavemente com a camisa xadrez verde e preta do tutor recorrente homem negro adulto, sem texto"
           },
           "transition": {
             "in": "zoom_in",
@@ -320,6 +283,37 @@
           "sounds": {
             "transition": [
               "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_10",
+      "text": "It says, \"I am here, and I need something, but I am not demanding it.\"",
+      "scenes": [
+        {
+          "id": "scene_10",
+          "image_id": 10,
+          "tipo_midia": "imagem",
+          "asset_key": "polite-request-cat",
+          "image": "cena_10.png",
+          "visual": {
+            "subject": "gato com expressão educada e calma esperando resposta",
+            "action": "gato aguardando a reação do humano após o toque",
+            "setting": "perto do braço do tutor",
+            "framing": "close-up do rosto paciente do gato",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto com olhos amarelo-esverdeados serenos, sem texto"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "paper_flip"
             ],
             "context": null
           }
@@ -328,63 +322,60 @@
     },
     {
       "id": "block_11",
-      "text": "But your cat hears environmental frequencies up to sixty-four thousand hertz.",
+      "text": "But they don't just tap anyone. They only do this with someone they deeply trust.",
       "scenes": [
         {
           "id": "scene_11",
           "image_id": 11,
           "tipo_midia": "imagem",
-          "asset_key": "cat-hearing-frequency",
+          "asset_key": "deep-trust-connection",
           "image": "cena_11.png",
           "visual": {
-            "subject": "sleek black cat's ears",
-            "action": "perked up and rotated outward, capturing invisible sound waves",
-            "setting": "pure light background to isolate the biological mechanism",
-            "framing": "close-up of the cat's head emphasizing the ears",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes, no text"
+            "subject": "tutor e gato em um momento de pura confiança mútua",
+            "action": "tutor olhando com carinho para o gato que mantém a pata nele",
+            "setting": "sofá",
+            "framing": "plano aberto do vínculo inquebrável",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, tutor recorrente homem negro adulto com cabelo cacheado, sorriso caloroso e camisa xadrez verde e preta em sintonia com o gato tabby mackerel laranja e preto, sem texto"
           },
           "transition": {
-            "in": "from_left",
-            "out": "to_right",
+            "in": "zoom_in",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "whoosh_cinematic"
             ],
-            "context": {
-              "type": "paper_flip",
-              "at": "start"
-            }
+            "context": null
           }
         }
       ]
     },
     {
       "id": "block_12",
-      "text": "Human hearing completely stops at twenty thousand hertz.",
+      "text": "Beyond communication, there is a hidden biological reason for this physical contact.",
       "scenes": [
         {
           "id": "scene_12",
           "image_id": 12,
           "tipo_midia": "imagem",
-          "asset_key": "human-limited-hearing",
+          "asset_key": "hidden-biological-reason",
           "image": "cena_12.png",
           "visual": {
-            "subject": "human ear and side of face",
-            "action": "resting motionlessly on a pillow, oblivious to high frequencies",
-            "setting": "pure light background for direct comparison",
-            "framing": "close-up profile isolating the human sensory limit",
-            "details": "ilustração felina editorial, young man with messy brown hair, no text"
+            "subject": "foco nas patas dianteiras do gato",
+            "action": "gato preparando a pata para tocar o humano com intenção biológica",
+            "setting": "perto da perna do tutor",
+            "framing": "plano detalhe das patas antes do toque",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, detalhe minucioso das patas do gato tabby mackerel laranja e preto, sem texto"
           },
           "transition": {
             "in": "from_right",
-            "out": "to_left",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "new_idea"
             ],
             "context": null
           }
@@ -393,20 +384,51 @@
     },
     {
       "id": "block_13",
-      "text": "When their instinct detects a distant rustle outside or inside the walls, they react.",
+      "text": "Your cat has specialized scent glands hidden deep inside their paw pads.",
       "scenes": [
         {
           "id": "scene_13",
           "image_id": 13,
           "tipo_midia": "imagem",
-          "asset_key": "cat-reacting-to-rustle",
+          "asset_key": "scent-glands-paw-pads",
           "image": "cena_13.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "suddenly standing up on the bed, body tense and fully alert",
-            "setting": "dimly lit bedroom",
-            "framing": "medium shot showing the sudden shift in posture",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes and a red collar, dark blue blanket, no text"
+            "subject": "almofada plantar do gato exposta",
+            "action": "anatomia da pata revelando a área das glândulas",
+            "setting": "fundo neutro",
+            "framing": "extreme close-up na parte inferior da pata",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, almofadas macias do gato tabby mackerel laranja e preto em detalhe extremo, sem texto"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_14",
+      "text": "When they press that paw against your skin or clothes...",
+      "scenes": [
+        {
+          "id": "scene_14",
+          "image_id": 14,
+          "tipo_midia": "imagem",
+          "asset_key": "press-paw-skin-fast",
+          "image": "cena_14.png",
+          "visual": {
+            "subject": "pata pressionando firmemente o tecido xadrez",
+            "action": "contato direto e intencional transferindo o odor invisível",
+            "setting": "braço do tutor",
+            "framing": "extreme close-up do contato entre a pata e a camisa",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, pata do gato tabby mackerel laranja e preto afundando na camisa xadrez verde e preta, sem texto"
           },
           "transition": {
             "in": "zoom_in",
@@ -415,41 +437,7 @@
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
-            ],
-            "context": {
-              "type": "new_idea",
-              "at": "start"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_14",
-      "text": "They immediately need a high, secure vantage point to assess the potential threat.",
-      "scenes": [
-        {
-          "id": "scene_14",
-          "image_id": 14,
-          "tipo_midia": "imagem",
-          "asset_key": "seeking-vantage-point",
-          "image": "cena_14.png",
-          "visual": {
-            "subject": "sleek black cat",
-            "action": "looking around the dark room, calculating the best elevated position",
-            "setting": "dimly lit bedroom",
-            "framing": "medium shot following the cat's line of sight",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes, no text"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
+              "camera_shutter"
             ],
             "context": null
           }
@@ -458,51 +446,20 @@
     },
     {
       "id": "block_15",
-      "text": "In the pitch-black bedroom, your chest is the highest and most familiar ground available.",
+      "text": "They are leaving behind an invisible chemical signal for other animals.",
       "scenes": [
         {
           "id": "scene_15",
           "image_id": 15,
           "tipo_midia": "imagem",
-          "asset_key": "chest-highest-ground",
+          "asset_key": "chemical-signal-fast",
           "image": "cena_15.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "climbing confidently onto the human's chest",
-            "setting": "dimly lit bedroom with a dark blue blanket",
-            "framing": "wide shot showing the human's body acting as a mountain in the room",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes and a red collar, dark blue blanket, no text"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_16",
-      "text": "By standing directly on you, they are literally assuming a guard post.",
-      "scenes": [
-        {
-          "id": "scene_16",
-          "image_id": 16,
-          "tipo_midia": "imagem",
-          "asset_key": "guard-post-position",
-          "image": "cena_16.png",
-          "visual": {
-            "subject": "sleek black cat",
-            "action": "standing firm and motionless on the chest, looking like a sentinel",
-            "setting": "dimly lit bedroom",
-            "framing": "low angle shot emphasizing the cat's authority and height",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes and a red collar, no text"
+            "subject": "gato esfregando levemente a pata após o toque",
+            "action": "gato confirmando a marcação química do território",
+            "setting": "perto do ombro do tutor",
+            "framing": "plano detalhe do movimento de esfregar a pata",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto aplicando a marcação na camisa xadrez verde e preta, sem texto"
           },
           "transition": {
             "in": "zoom_in",
@@ -511,7 +468,38 @@
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
+              "shutter_click"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_16",
+      "text": "They are marking you as their personal territory in the most intimate way possible.",
+      "scenes": [
+        {
+          "id": "scene_16",
+          "image_id": 16,
+          "tipo_midia": "imagem",
+          "asset_key": "marking-personal-territory",
+          "image": "cena_16.png",
+          "visual": {
+            "subject": "gato de pé orgulhoso com a pata descansando no colo do humano",
+            "action": "gato reivindicando a propriedade sobre o tutor de forma pacífica",
+            "setting": "sala",
+            "framing": "plano médio alto mostrando o domínio tranquilo do gato",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto com ar de dono sobre as pernas do tutor recorrente homem negro adulto, sem texto"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "paper_flip"
             ],
             "context": null
           }
@@ -520,29 +508,29 @@
     },
     {
       "id": "block_17",
-      "text": "They are surveying the territory to protect the colony while you sleep.",
+      "text": "You are not just their caretaker; you are their property, and they are claiming you.",
       "scenes": [
         {
           "id": "scene_17",
           "image_id": 17,
           "tipo_midia": "imagem",
-          "asset_key": "protecting-the-colony",
+          "asset_key": "claiming-property-proud",
           "image": "cena_17.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "looking fiercely over the edge of the bed into the dark shadows",
-            "setting": "dimly lit bedroom",
-            "framing": "over-the-shoulder shot from behind the cat",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes and a red collar, no text"
+            "subject": "tutor rindo enquanto o gato mantém a pata possessiva nele",
+            "action": "humano aceitando alegremente ser a propriedade do felino",
+            "setting": "sofá",
+            "framing": "plano aberto do vínculo forte entre os dois",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, tutor recorrente homem negro adulto com cabelo cacheado e camisa xadrez verde e preta sorrindo com dentes visíveis, gato tabby mackerel laranja e preto possessivo, sem texto"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_right",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "whoosh_cinematic"
             ],
             "context": null
           }
@@ -551,24 +539,24 @@
     },
     {
       "id": "block_18",
-      "text": "Why don't they just sleep quietly next to you instead of stepping everywhere?",
+      "text": "Have you ever noticed them putting their paw on you right before you stand up?",
       "scenes": [
         {
           "id": "scene_18",
           "image_id": 18,
           "tipo_midia": "imagem",
-          "asset_key": "cat-stepping-everywhere",
+          "asset_key": "paw-before-standing-up",
           "image": "cena_18.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "walking erratically across the human's legs, leaving indentations",
-            "setting": "dimly lit bedroom with a dark blue blanket",
-            "framing": "medium shot showing the path of the cat across the legs",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes and a red collar, dark blue blanket, no text"
+            "subject": "tutor prestes a se levantar e o gato rapidamente tocando a perna dele",
+            "action": "gato interrompendo o movimento do humano com a pata",
+            "setting": "sofá",
+            "framing": "plano médio dinâmico no momento exato em que o humano faz o movimento",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, tutor recorrente homem negro adulto com camisa xadrez verde e preta prestes a levantar, gato tabby mackerel laranja e preto bloqueando com a pata, sem texto"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
+            "in": "from_left",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
@@ -582,20 +570,20 @@
     },
     {
       "id": "block_19",
-      "text": "And why do they repeatedly march over different parts of your body?",
+      "text": "Almost like they knew you were going to leave before you even moved?",
       "scenes": [
         {
           "id": "scene_19",
           "image_id": 19,
           "tipo_midia": "imagem",
-          "asset_key": "marching-different-parts",
+          "asset_key": "cat-knowing-before-move",
           "image": "cena_19.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "moving systematically from the legs up toward the stomach",
-            "setting": "dimly lit bedroom",
-            "framing": "wide shot tracking the cat's movement along the human body",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes, dark blue blanket, no text"
+            "subject": "gato encarando o humano com um olhar de quem sabe os próximos passos",
+            "action": "gato prevendo a intenção de fuga do humano",
+            "setting": "braço do sofá",
+            "framing": "close-up do rosto do gato focado",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto com olhos amarelo-esverdeados analíticos, sem texto"
           },
           "transition": {
             "in": "zoom_in",
@@ -604,7 +592,7 @@
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "paper_flip"
             ],
             "context": null
           }
@@ -613,58 +601,55 @@
     },
     {
       "id": "block_20",
-      "text": "First, those delicate paw pads are actually highly sensitive temperature sensors.",
+      "text": "Cats are apex predators, making them incredible readers of subtle body language and tension.",
       "scenes": [
         {
           "id": "scene_20",
           "image_id": 20,
           "tipo_midia": "imagem",
-          "asset_key": "paw-temperature-sensors",
+          "asset_key": "apex-predator-reading",
           "image": "cena_20.png",
           "visual": {
-            "subject": "cat's paw pad",
-            "action": "hovering just above the blanket, sensing invisible heat radiating",
-            "setting": "pure light background to isolate the biological mechanism",
-            "framing": "extreme close-up of the paw pad texture",
-            "details": "ilustração felina editorial, cat paw, no text"
+            "subject": "gato em postura de esfinge observando minuciosamente o humano",
+            "action": "gato decodificando a linguagem corporal do tutor",
+            "setting": "chão da sala",
+            "framing": "plano aberto do gato distante mas focado no humano",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto focado como um caçador, tutor negro adulto camisa xadrez verde e preta ao fundo, sem texto"
           },
           "transition": {
-            "in": "from_left",
-            "out": "to_right",
+            "in": "zoom_in",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "whoosh_cinematic"
             ],
-            "context": {
-              "type": "paper_flip",
-              "at": "start"
-            }
+            "context": null
           }
         }
       ]
     },
     {
       "id": "block_21",
-      "text": "A cat's base body temperature is around thirty-eight point five degrees Celsius.",
+      "text": "They pick up on micro-movements most humans would never even notice in themselves.",
       "scenes": [
         {
           "id": "scene_21",
           "image_id": 21,
           "tipo_midia": "imagem",
-          "asset_key": "cat-base-temperature",
+          "asset_key": "micro-movements-unnoticed",
           "image": "cena_21.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "sitting upright, displaying a calm but alert resting posture",
-            "setting": "dimly lit bedroom",
-            "framing": "medium shot of the cat isolated on the bed",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes and a red collar, dark blue blanket, no text"
+            "subject": "olhos do gato seguindo o pequeno movimento do ombro do humano",
+            "action": "gato rastreando as contrações musculares do tutor",
+            "setting": "perto do humano",
+            "framing": "close-up estreito apenas nos olhos atentos do felino",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, olhos amarelo-esverdeados dilatados do gato tabby mackerel laranja e preto focados, sem texto"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_left",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
@@ -678,29 +663,29 @@
     },
     {
       "id": "block_22",
-      "text": "This is significantly higher than yours, meaning they burn heat rapidly at night.",
+      "text": "The way you shift your weight on the couch.",
       "scenes": [
         {
           "id": "scene_22",
           "image_id": 22,
           "tipo_midia": "imagem",
-          "asset_key": "burning-heat-rapidly",
+          "asset_key": "shift-weight-couch-fast",
           "image": "cena_22.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "shivering slightly or pulling its paws inward looking for warmth",
-            "setting": "dimly lit bedroom",
-            "framing": "close-up of the cat tucking its paws",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes, dark blue blanket, no text"
+            "subject": "quadril do tutor afundando ligeiramente na almofada",
+            "action": "mudança sutil de peso preparando para levantar",
+            "setting": "almofada do sofá",
+            "framing": "extreme close-up focado no tecido do sofá sendo pressionado",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, detalhe da calça do tutor recorrente humano pressionando o sofá, sem texto"
           },
           "transition": {
             "in": "zoom_in",
             "out": "none",
-            "speed": "normal"
+            "speed": "fast"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "camera_shutter"
             ],
             "context": null
           }
@@ -709,29 +694,29 @@
     },
     {
       "id": "block_23",
-      "text": "Stepping in various spots is their tactical way of scanning your body.",
+      "text": "The subtle tension building in your leg muscles.",
       "scenes": [
         {
           "id": "scene_23",
           "image_id": 23,
           "tipo_midia": "imagem",
-          "asset_key": "tactical-body-scan",
+          "asset_key": "leg-muscles-tension-fast",
           "image": "cena_23.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "pressing one paw down firmly on the human's side, testing the temperature",
-            "setting": "dimly lit bedroom",
-            "framing": "close-up of the paw testing the fabric",
-            "details": "ilustração felina editorial, sleek black cat paw, dark blue blanket, no text"
+            "subject": "perna do humano flexionando levemente sob a calça",
+            "action": "músculo tensionando para sustentar o peso",
+            "setting": "perna perto do chão",
+            "framing": "extreme close-up na tensão muscular da perna",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, detalhe da tensão física do humano, sem texto"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_right",
+            "out": "none",
             "speed": "fast"
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
+              "shutter_click"
             ],
             "context": null
           }
@@ -740,29 +725,29 @@
     },
     {
       "id": "block_24",
-      "text": "They are actively searching for the warmest zone of your thermal core.",
+      "text": "The slight change in your breathing before you stand.",
       "scenes": [
         {
           "id": "scene_24",
           "image_id": 24,
           "tipo_midia": "imagem",
-          "asset_key": "searching-thermal-core",
+          "asset_key": "breathing-change-stand-fast",
           "image": "cena_24.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "settling both front paws directly over the human's chest area",
-            "setting": "dimly lit bedroom",
-            "framing": "medium shot showing the cat finally stopping to absorb heat",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes, dark blue blanket, no text"
+            "subject": "peito do tutor sob a camisa xadrez inspirando ar",
+            "action": "respiração mais profunda para iniciar o movimento",
+            "setting": "torso do humano",
+            "framing": "extreme close-up no padrão do xadrez subindo com a respiração",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, camisa de botão de manga longa xadrez grande verde e preta esticando no peito, sem texto"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_left",
+            "out": "none",
             "speed": "fast"
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
+              "camera_shutter"
             ],
             "context": null
           }
@@ -771,54 +756,20 @@
     },
     {
       "id": "block_25",
-      "text": "Second, their paws contain specialized scent glands hidden between the toes.",
+      "text": "Your cat sees all of it, and they place their paw to make a request.",
       "scenes": [
         {
           "id": "scene_25",
           "image_id": 25,
           "tipo_midia": "imagem",
-          "asset_key": "hidden-scent-glands",
+          "asset_key": "paw-make-request-stay",
           "image": "cena_25.png",
           "visual": {
-            "subject": "cat's front paw",
-            "action": "spreading the toes wide to expose the areas between the pads",
-            "setting": "pure light background to isolate the biological mechanism",
-            "framing": "extreme close-up of the toes spreading",
-            "details": "ilustração felina editorial, cat paw toes, no text"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": {
-              "type": "paper_flip",
-              "at": "start"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_26",
-      "text": "During the day, you showered, left the house, and completely lost the colony scent.",
-      "scenes": [
-        {
-          "id": "scene_26",
-          "image_id": 26,
-          "tipo_midia": "imagem",
-          "asset_key": "lost-colony-scent",
-          "image": "cena_26.png",
-          "visual": {
-            "subject": "young man with messy brown hair",
-            "action": "sleeping, visually disconnected from the cat's domain",
-            "setting": "dimly lit bedroom",
-            "framing": "close-up of the sleeping human looking fresh and clean",
-            "details": "ilustração felina editorial, young man with messy brown hair, white t-shirt visible under covers, dark blue blanket, no text"
+            "subject": "pata do gato bloqueando suavemente a perna do humano",
+            "action": "gato intervindo fisicamente no exato momento da decolagem",
+            "setting": "sofá",
+            "framing": "plano detalhe do toque impedindo a saída",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, pata do gato tabby mackerel laranja e preto encostando no tutor negro adulto, sem texto"
           },
           "transition": {
             "in": "zoom_in",
@@ -828,6 +779,37 @@
           "sounds": {
             "transition": [
               "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_26",
+      "text": "They are silently asking you to stay, choosing connection over their natural independence.",
+      "scenes": [
+        {
+          "id": "scene_26",
+          "image_id": 26,
+          "tipo_midia": "imagem",
+          "asset_key": "choosing-connection-stay",
+          "image": "cena_26.png",
+          "visual": {
+            "subject": "tutor sorrindo e recuando para sentar de novo",
+            "action": "humano cedendo ao pedido silencioso do felino",
+            "setting": "sofá",
+            "framing": "plano médio capturando a rendição afetiva do humano",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, tutor recorrente homem negro adulto com cabelo cacheado e camisa xadrez verde e preta com sorriso caloroso, gato tabby mackerel laranja e preto relaxado, sem texto"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "paper_flip"
             ],
             "context": null
           }
@@ -836,120 +818,24 @@
     },
     {
       "id": "block_27",
-      "text": "By marching heavily over your legs and chest, your cat takes action.",
+      "text": "Sometimes, this touch happens when you are completely asleep or resting perfectly still.",
       "scenes": [
         {
           "id": "scene_27",
           "image_id": 27,
           "tipo_midia": "imagem",
-          "asset_key": "marching-taking-action",
+          "asset_key": "touch-sleeping-human",
           "image": "cena_27.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "marching determinedly across the blanket with forceful steps",
-            "setting": "dimly lit bedroom",
-            "framing": "medium shot capturing the deliberate heavy steps",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes, dark blue blanket, no text"
+            "subject": "tutor dormindo profundamente na cama enquanto o gato observa",
+            "action": "humano inerte, gato aproximando-se com curiosidade e precaução",
+            "setting": "cama",
+            "framing": "plano geral mostrando o humano estático e o gato em movimento sutil",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, tutor recorrente homem negro adulto com camisa xadrez verde e preta adormecido, gato tabby mackerel laranja e preto vigiando, sem texto"
           },
           "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_28",
-      "text": "They are physically renewing the territorial possession contract.",
-      "scenes": [
-        {
-          "id": "scene_28",
-          "image_id": 28,
-          "tipo_midia": "imagem",
-          "asset_key": "renewing-possession-contract",
-          "image": "cena_28.png",
-          "visual": {
-            "subject": "sleek black cat",
-            "action": "kneading the blanket with purpose, eyes half closed in concentration",
-            "setting": "dimly lit bedroom",
-            "framing": "close-up of the cat's face and moving shoulders",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes and a red collar, no text"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": {
-              "type": "writing",
-              "at": "start"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_29",
-      "text": "They mix their scent with yours to ensure the group's collective security.",
-      "scenes": [
-        {
-          "id": "scene_29",
-          "image_id": 29,
-          "tipo_midia": "imagem",
-          "asset_key": "collective-security-scent",
-          "image": "cena_29.png",
-          "visual": {
-            "subject": "sleek black cat",
-            "action": "finally sitting down on the human's legs, looking satisfied and secure",
-            "setting": "dimly lit bedroom",
-            "framing": "wide shot showing the cat at rest over the human",
-            "details": "ilustração felina editorial, sleek black cat, dark blue blanket, no text"
-          },
-          "transition": {
-            "in": "zoom_in",
+            "in": "from_right",
             "out": "none",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_30",
-      "text": "Cats are crepuscular predators by their very nature.",
-      "scenes": [
-        {
-          "id": "scene_30",
-          "image_id": 30,
-          "tipo_midia": "imagem",
-          "asset_key": "crepuscular-predators",
-          "image": "cena_30.png",
-          "visual": {
-            "subject": "sleek black cat",
-            "action": "standing as a sharp silhouette against the dim moonlight of the bedroom window",
-            "setting": "bedroom at night with moonlight",
-            "framing": "medium shot showing the cat's predator profile",
-            "details": "ilustração felina editorial, sleek black cat silhouette, no text"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
             "speed": "normal"
           },
           "sounds": {
@@ -962,30 +848,123 @@
       ]
     },
     {
-      "id": "block_31",
-      "text": "Approaching dawn, usually around five in the morning, they hit peak hunting energy.",
+      "id": "block_28",
+      "text": "You might feel a soft paw pressing directly into your chest or your face.",
       "scenes": [
         {
-          "id": "scene_31",
-          "image_id": 31,
+          "id": "scene_28",
+          "image_id": 28,
           "tipo_midia": "imagem",
-          "asset_key": "peak-hunting-energy",
-          "image": "cena_31.png",
+          "asset_key": "paw-pressing-chest-face",
+          "image": "cena_28.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "crouching low, eyes wide awake with pupils fully dilated, ready to pounce",
-            "setting": "dimly lit bedroom",
-            "framing": "close-up of the intense hunting expression",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes, no text"
+            "subject": "pata do gato encostando na bochecha do tutor dormindo",
+            "action": "toque exploratório e cuidadoso no rosto inerte",
+            "setting": "travesseiro",
+            "framing": "close-up da pata e do rosto do tutor",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, pata do gato tabby mackerel laranja e preto tocando a pele negra média do rosto relaxado do humano, sem texto"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_left",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
               "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_29",
+      "text": "To a hyper-aware predator, a lack of movement and sound is a potential warning sign.",
+      "scenes": [
+        {
+          "id": "scene_29",
+          "image_id": 29,
+          "tipo_midia": "imagem",
+          "asset_key": "hyper-aware-warning-sign",
+          "image": "cena_29.png",
+          "visual": {
+            "subject": "rosto do gato tenso analisando a falta de movimento",
+            "action": "gato processando a quietude do humano como um perigo potencial",
+            "setting": "perto da cabeça do humano",
+            "framing": "plano médio do gato com orelhas voltadas para frente",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto com olhar preocupado e instintivo, sem texto"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "paper_flip"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_30",
+      "text": "They are actually running a wellness check to see if you are still breathing.",
+      "scenes": [
+        {
+          "id": "scene_30",
+          "image_id": 30,
+          "tipo_midia": "imagem",
+          "asset_key": "wellness-check-breathing",
+          "image": "cena_30.png",
+          "visual": {
+            "subject": "gato inclinado sentindo o ar da respiração do tutor",
+            "action": "gato investigando ativamente os sinais vitais do humano",
+            "setting": "cama",
+            "framing": "close-up capturando a investigação vital",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, focinho do gato tabby mackerel laranja e preto perto do nariz do tutor recorrente homem negro adulto, sem texto"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_31",
+      "text": "Their sensitive paw pads feel the rise and fall of your chest in the dark.",
+      "scenes": [
+        {
+          "id": "scene_31",
+          "image_id": 31,
+          "tipo_midia": "imagem",
+          "asset_key": "sensitive-paw-chest-rise",
+          "image": "cena_31.png",
+          "visual": {
+            "subject": "pata do gato absorvendo a elevação do peito",
+            "action": "almofada sentindo a mecânica da respiração humana",
+            "setting": "peito do tutor com a camisa xadrez",
+            "framing": "extreme close-up na interação tátil",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, pata do gato tabby mackerel laranja e preto descansando sobre o padrão xadrez verde e preto do humano, sem texto"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "click"
             ],
             "context": null
           }
@@ -994,20 +973,20 @@
     },
     {
       "id": "block_32",
-      "text": "When they walk on your face and meow loudly at this hour, it is not love.",
+      "text": "They only perform this vulnerability check on the specific humans they have bonded with.",
       "scenes": [
         {
           "id": "scene_32",
           "image_id": 32,
           "tipo_midia": "imagem",
-          "asset_key": "walking-on-face",
+          "asset_key": "bonded-human-check",
           "image": "cena_32.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "standing right next to the human's face on the pillow, meowing loudly",
-            "setting": "dimly lit bedroom pillow",
-            "framing": "close-up of the cat's open mouth and the human's annoyed face",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes, young man with messy brown hair, no text"
+            "subject": "gato relaxando ao confirmar que o humano está bem",
+            "action": "gato fechando os olhos aliviado perto do tutor",
+            "setting": "cama",
+            "framing": "plano médio selando a conexão afetiva pós-checagem",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto em paz ao lado do tutor recorrente homem negro adulto, sem texto"
           },
           "transition": {
             "in": "zoom_in",
@@ -1016,41 +995,38 @@
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "whoosh_cinematic"
             ],
-            "context": {
-              "type": "wrong_answer",
-              "at": "start"
-            }
+            "context": null
           }
         }
       ]
     },
     {
       "id": "block_33",
-      "text": "Your cat is operating on raw biology and actively training you.",
+      "text": "Why do they use this pressing motion in the first place?",
       "scenes": [
         {
           "id": "scene_33",
           "image_id": 33,
           "tipo_midia": "imagem",
-          "asset_key": "actively-training-human",
+          "asset_key": "why-pressing-motion",
           "image": "cena_33.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "looking dominant, hovering over the waking human like a strict instructor",
-            "setting": "dimly lit bedroom",
-            "framing": "low angle shot from the human's perspective looking up at the cat",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes and a red collar, no text"
+            "subject": "gato fazendo o movimento de amassar pãozinho no colo do tutor",
+            "action": "gato repetindo a compressão ritmada e instintiva",
+            "setting": "colo do humano",
+            "framing": "plano frontal médio focando nas patas em movimento alternado",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, patas do gato tabby mackerel laranja e preto amassando a camisa xadrez verde e preta do tutor negro adulto, sem texto"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_right",
-            "speed": "fast"
+            "out": "none",
+            "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_fast"
+              "paper_flip"
             ],
             "context": null
           }
@@ -1059,51 +1035,20 @@
     },
     {
       "id": "block_34",
-      "text": "If you get up and provide food or attention, you validate the behavior completely.",
+      "text": "The answer goes all the way back to the very beginning of their life.",
       "scenes": [
         {
           "id": "scene_34",
           "image_id": 34,
           "tipo_midia": "imagem",
-          "asset_key": "validating-the-behavior",
+          "asset_key": "beginning-of-life-memory",
           "image": "cena_34.png",
           "visual": {
-            "subject": "young man with messy brown hair",
-            "action": "tiredly sitting up in bed, rubbing his eyes in defeat",
-            "setting": "dimly lit bedroom",
-            "framing": "medium shot of the human yielding to the demand",
-            "details": "ilustração felina editorial, young man with messy brown hair, white t-shirt, no text"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_35",
-      "text": "You are teaching them that marching on the primate generates instant survival resources.",
-      "scenes": [
-        {
-          "id": "scene_35",
-          "image_id": 35,
-          "tipo_midia": "imagem",
-          "asset_key": "marching-generates-resources",
-          "image": "cena_35.png",
-          "visual": {
-            "subject": "sleek black cat",
-            "action": "running happily towards the bedroom door, expecting a full food bowl",
-            "setting": "dimly lit bedroom floor",
-            "framing": "wide shot showing the cat leading the way out",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes, no text"
+            "subject": "olhar nostálgico do gato, entrando em transe",
+            "action": "gato acessando a memória biológica mais antiga",
+            "setting": "sala suavemente iluminada",
+            "framing": "close-up estreito no rosto contemplativo do gato",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto com olhos semicerrados de prazer nostálgico, sem texto"
           },
           "transition": {
             "in": "zoom_in",
@@ -1114,34 +1059,62 @@
             "transition": [
               "whoosh_soft"
             ],
-            "context": {
-              "type": "cash_register",
-              "at": "start"
-            }
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_35",
+      "text": "When your cat was a blind, helpless kitten, they relied completely on their mother.",
+      "scenes": [
+        {
+          "id": "scene_35",
+          "image_id": 35,
+          "tipo_midia": "imagem",
+          "asset_key": "blind-helpless-kitten",
+          "image": "cena_35.png",
+          "visual": {
+            "subject": "um pequeno filhote de gato encolhido",
+            "action": "filhote buscando calor materno instintivamente",
+            "setting": "ninho felino",
+            "framing": "plano isolado do filhote vulnerável e cego",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, minúsculo filhote de gato tabby mackerel laranja e preto de olhos fechados, sem texto"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "new_idea"
+            ],
+            "context": null
           }
         }
       ]
     },
     {
       "id": "block_36",
-      "text": "This quickly turns a natural instinct into a highly effective twilight extortion tactic.",
+      "text": "They learned to push their paws against her belly to stimulate milk flow.",
       "scenes": [
         {
           "id": "scene_36",
           "image_id": 36,
           "tipo_midia": "imagem",
-          "asset_key": "twilight-extortion-tactic",
+          "asset_key": "kitten-push-paws-milk",
           "image": "cena_36.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "looking back over its shoulder at the human with a demanding, confident expression",
-            "setting": "bedroom doorway",
-            "framing": "close-up of the cat's face holding power",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes, no text"
+            "subject": "patinhas do filhote amassando vigorosamente",
+            "action": "filhote usando a pressão ritmada para obter alimento",
+            "setting": "barriga da mãe (fora de foco)",
+            "framing": "extreme close-up na ação vital de amassar do filhote",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, patas do filhote tabby mackerel laranja e preto em ação instintiva, sem texto"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_right",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
@@ -1155,29 +1128,29 @@
     },
     {
       "id": "block_37",
-      "text": "A cat walking across you to finally settle down and sleep is tactical but normal.",
+      "text": "Most cats outgrow the need for milk, but they never outgrow the emotional association.",
       "scenes": [
         {
           "id": "scene_37",
           "image_id": 37,
           "tipo_midia": "imagem",
-          "asset_key": "tactical-normal-sleep",
+          "asset_key": "adult-cat-emotional-association",
           "image": "cena_37.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "curled up peacefully sleeping in a tight circle on the human's legs",
-            "setting": "dimly lit bedroom with a dark blue blanket",
-            "framing": "medium shot showing a calm, relaxed environment",
-            "details": "ilustração felina editorial, sleek black cat, dark blue blanket, no text"
+            "subject": "gato adulto ronronando alto e amassando o tutor",
+            "action": "gato fundindo a memória infantil com a presença do humano",
+            "setting": "sofá",
+            "framing": "plano médio reconectando o gato adulto à ação do filhote",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto adulto expressando segurança sobre a camisa xadrez verde e preta do tutor negro, sem texto"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_left",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "paper_flip"
             ],
             "context": null
           }
@@ -1186,89 +1159,24 @@
     },
     {
       "id": "block_38",
-      "text": "Now for the dangerous red flag I promised you earlier.",
+      "text": "When they place their paw on you and slowly press down...",
       "scenes": [
         {
           "id": "scene_38",
           "image_id": 38,
           "tipo_midia": "imagem",
-          "asset_key": "dangerous-red-flag",
+          "asset_key": "slowly-press-down-paw",
           "image": "cena_38.png",
           "visual": {
-            "subject": "cat's eyes",
-            "action": "looking stressed, wide, and uncomfortable in the dark",
-            "setting": "shadowy background",
-            "framing": "extreme close-up indicating tension and distress",
-            "details": "ilustração felina editorial, yellow cat eyes, no text"
+            "subject": "pata do gato afundando lentamente no braço do tutor",
+            "action": "pressão emocional profunda sem intenção de soltar",
+            "setting": "braço do tutor",
+            "framing": "close-up focado na força suave da pata",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, pata do gato tabby mackerel laranja e preto amassando profundamente a pele e camisa xadrez verde e preta do tutor, sem texto"
           },
           "transition": {
             "in": "zoom_in",
             "out": "none",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": {
-              "type": "boxing_bell",
-              "at": "start"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_39",
-      "text": "Pay close attention if your older cat starts pacing relentlessly on your chest.",
-      "scenes": [
-        {
-          "id": "scene_39",
-          "image_id": 39,
-          "tipo_midia": "imagem",
-          "asset_key": "pacing-relentlessly-chest",
-          "image": "cena_39.png",
-          "visual": {
-            "subject": "older black cat with a slightly rougher coat",
-            "action": "pacing rapidly back and forth across the sleeping human's chest",
-            "setting": "dimly lit bedroom",
-            "framing": "medium shot capturing the frantic, non-stop movement",
-            "details": "ilustração felina editorial, older black cat, dark blue blanket, no text"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_right",
-            "speed": "fast"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_fast"
-            ],
-            "context": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_40",
-      "text": "If they march, jump off the bed, return, march again, and meow endlessly.",
-      "scenes": [
-        {
-          "id": "scene_40",
-          "image_id": 40,
-          "tipo_midia": "imagem",
-          "asset_key": "endless-meowing-jumping",
-          "image": "cena_40.png",
-          "visual": {
-            "subject": "older black cat",
-            "action": "looking highly agitated, standing at the very edge of the bed ready to jump down",
-            "setting": "dimly lit bedroom",
-            "framing": "wide shot showing the erratic trajectory of the cat",
-            "details": "ilustração felina editorial, older black cat with yellow eyes, no text"
-          },
-          "transition": {
-            "in": "zoom_in",
-            "out": "to_left",
             "speed": "normal"
           },
           "sounds": {
@@ -1281,21 +1189,83 @@
       ]
     },
     {
+      "id": "block_39",
+      "text": "They are tapping into that ancient feeling, confirming that you are their ultimate safe space.",
+      "scenes": [
+        {
+          "id": "scene_39",
+          "image_id": 39,
+          "tipo_midia": "imagem",
+          "asset_key": "ultimate-safe-space",
+          "image": "cena_39.png",
+          "visual": {
+            "subject": "tutor e gato abraçados e confortáveis",
+            "action": "humano e felino partilhando o conforto da segurança máxima",
+            "setting": "sofá aconchegante",
+            "framing": "plano aberto do abraço simbiótico e tátil",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, tutor recorrente homem negro adulto com sorriso largo com dentes e camisa xadrez verde e preta, abraçando o gato tabby mackerel laranja e preto, sem texto"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_40",
+      "text": "But there is one specific type of paw touch that most owners completely miss.",
+      "scenes": [
+        {
+          "id": "scene_40",
+          "image_id": 40,
+          "tipo_midia": "imagem",
+          "asset_key": "specific-type-missed-touch",
+          "image": "cena_40.png",
+          "visual": {
+            "subject": "tutor olhando para a pata estática do gato sem entender o peso da ação",
+            "action": "humano ignorando o sacrifício biológico do felino",
+            "setting": "sala",
+            "framing": "plano médio do tutor observando a pata repousada de forma casual",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, tutor recorrente homem negro adulto camisa xadrez verde e preta observando casualmente o gato tabby mackerel laranja e preto, sem texto"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "paper_flip"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
       "id": "block_41",
-      "text": "Extreme nighttime restlessness and the inability to find a sleeping position is never normal.",
+      "text": "It represents a level of trust so rare that it goes against their survival instincts.",
       "scenes": [
         {
           "id": "scene_41",
           "image_id": 41,
           "tipo_midia": "imagem",
-          "asset_key": "extreme-nighttime-restlessness",
+          "asset_key": "defying-survival-instincts",
           "image": "cena_41.png",
           "visual": {
-            "subject": "older black cat",
-            "action": "looking visibly uncomfortable, trying to lie down but immediately standing back up",
-            "setting": "dimly lit bedroom with a dark blue blanket",
-            "framing": "medium shot focusing on the cat's physical discomfort",
-            "details": "ilustração felina editorial, older black cat, dark blue blanket, no text"
+            "subject": "gato relaxado ignorando totalmente o ambiente ao redor",
+            "action": "gato desligando o modo de vigília e focando apenas no humano",
+            "setting": "perto do tutor",
+            "framing": "close-up do rosto desarmado e pacífico do gato",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto com olhos calmos, abdicando da postura de predador alerta, sem texto"
           },
           "transition": {
             "in": "zoom_in",
@@ -1313,63 +1283,60 @@
     },
     {
       "id": "block_42",
-      "text": "This constant pacing is a classic sign of feline hyperthyroidism.",
+      "text": "When a cat places their paw on you...",
       "scenes": [
         {
           "id": "scene_42",
           "image_id": 42,
           "tipo_midia": "imagem",
-          "asset_key": "feline-hyperthyroidism",
+          "asset_key": "places-paw-fast",
           "image": "cena_42.png",
           "visual": {
-            "subject": "older black cat",
-            "action": "standing looking unusually skinny and overly energetic, with wide eyes",
-            "setting": "pure light background to isolate the medical concept",
-            "framing": "full body shot isolating the symptoms",
-            "details": "ilustração felina editorial, older black cat, no text"
+            "subject": "pata sendo depositada e parando sem amassar",
+            "action": "momento exato em que o gato encosta e cessa o movimento",
+            "setting": "braço do tutor",
+            "framing": "extreme close-up na pausa estática do toque",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, pata do gato tabby mackerel laranja e preto parando sobre a camisa xadrez verde e preta, sem texto"
           },
           "transition": {
-            "in": "from_left",
-            "out": "to_right",
-            "speed": "normal"
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "fast"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "camera_shutter"
             ],
-            "context": {
-              "type": "paper_flip",
-              "at": "start"
-            }
+            "context": null
           }
         }
       ]
     },
     {
       "id": "block_43",
-      "text": "An accelerated metabolism causes severe internal anxiety and prevents them from resting.",
+      "text": "And just leaves it there, completely relaxed.",
       "scenes": [
         {
           "id": "scene_43",
           "image_id": 43,
           "tipo_midia": "imagem",
-          "asset_key": "accelerated-metabolism",
+          "asset_key": "leaves-paw-relaxed-fast",
           "image": "cena_43.png",
           "visual": {
-            "subject": "older black cat",
-            "action": "pacing rapidly in circles, looking internally anxious and unable to settle",
-            "setting": "dimly lit bedroom floor",
-            "framing": "high angle shot emphasizing the restless circling",
-            "details": "ilustração felina editorial, older black cat with yellow eyes, no text"
+            "subject": "pata totalmente mole e sem tensão",
+            "action": "músculos da pata relaxados, confiando o peso ao tutor",
+            "setting": "braço do humano",
+            "framing": "extreme close-up focando no relaxamento da articulação da pata",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, pata do gato tabby mackerel laranja e preto sem tensão muscular apoiada no humano, sem texto"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_left",
-            "speed": "normal"
+            "out": "none",
+            "speed": "fast"
           },
           "sounds": {
             "transition": [
-              "whoosh_soft"
+              "shutter_click"
             ],
             "context": null
           }
@@ -1378,54 +1345,20 @@
     },
     {
       "id": "block_44",
-      "text": "It can also clearly indicate chronic joint pain.",
+      "text": "They are making themselves intentionally vulnerable in a way that defies nature.",
       "scenes": [
         {
           "id": "scene_44",
           "image_id": 44,
           "tipo_midia": "imagem",
-          "asset_key": "chronic-joint-pain",
+          "asset_key": "intentionally-vulnerable-defies-nature",
           "image": "cena_44.png",
           "visual": {
-            "subject": "older cat's legs",
-            "action": "standing stiffly, showing signs of pain in the joints",
-            "setting": "pure light background to isolate the medical concept",
-            "framing": "close-up of the cat's stiff front and back legs",
-            "details": "ilustração felina editorial, older cat stiff legs, no text"
-          },
-          "transition": {
-            "in": "from_right",
-            "out": "to_left",
-            "speed": "normal"
-          },
-          "sounds": {
-            "transition": [
-              "whoosh_soft"
-            ],
-            "context": {
-              "type": "paper_flip",
-              "at": "start"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "block_45",
-      "text": "They keep moving because absolutely no position feels physically comfortable anymore.",
-      "scenes": [
-        {
-          "id": "scene_45",
-          "image_id": 45,
-          "tipo_midia": "imagem",
-          "asset_key": "no-comfortable-position",
-          "image": "cena_45.png",
-          "visual": {
-            "subject": "older black cat",
-            "action": "standing awkwardly on the blanket, looking completely exhausted but forced to stay awake",
-            "setting": "dimly lit bedroom",
-            "framing": "medium shot highlighting the physical struggle",
-            "details": "ilustração felina editorial, older black cat, dark blue blanket, no text"
+            "subject": "gato repousando lateralmente com a pata caída no colo do tutor",
+            "action": "gato exposto, abdicando de sua postura defensiva",
+            "setting": "colo do tutor",
+            "framing": "plano médio mostrando o corpo desarmado do animal",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto vulnerável sobre o tutor negro adulto com camisa xadrez verde e preta, sem texto"
           },
           "transition": {
             "in": "zoom_in",
@@ -1435,6 +1368,37 @@
           "sounds": {
             "transition": [
               "whoosh_soft"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_45",
+      "text": "Think about what a cat relies on to survive in the wild.",
+      "scenes": [
+        {
+          "id": "scene_45",
+          "image_id": 45,
+          "tipo_midia": "imagem",
+          "asset_key": "wild-cat-survival-stance",
+          "image": "cena_45.png",
+          "visual": {
+            "subject": "gato instintivo avaliando um perigo",
+            "action": "gato preparando-se para reagir a uma ameaça",
+            "setting": "chão",
+            "framing": "plano geral do gato tenso sobre as quatro pernas",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto em postura perfeita de sobrevivência, sem texto"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
             ],
             "context": null
           }
@@ -1443,24 +1407,179 @@
     },
     {
       "id": "block_46",
-      "text": "This specific endless marching requires an immediate and thorough veterinary evaluation.",
+      "text": "Speed, perfect balance, and the ability to launch in any direction instantly.",
       "scenes": [
         {
           "id": "scene_46",
           "image_id": 46,
           "tipo_midia": "imagem",
-          "asset_key": "veterinary-evaluation-needed",
+          "asset_key": "speed-perfect-balance-launch",
           "image": "cena_46.png",
           "visual": {
-            "subject": "young man with messy brown hair",
-            "action": "looking highly concerned at the pacing cat while picking up his cell phone",
-            "setting": "dimly lit bedroom",
-            "framing": "medium shot showing the human taking responsible action",
-            "details": "ilustração felina editorial, young man with messy brown hair, older black cat, no text"
+            "subject": "gato no meio de um salto explosivo ou corrida tática",
+            "action": "gato demonstrando velocidade e equilíbrio extremos",
+            "setting": "fundo abstrato sugerindo movimento",
+            "framing": "plano médio de ação dinâmica",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto no ápice de um salto evasivo com músculos tensos, sem texto"
           },
           "transition": {
             "in": "zoom_in",
-            "out": "to_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_fast"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_47",
+      "text": "Having all four paws planted firmly on the ground means they are ready for anything.",
+      "scenes": [
+        {
+          "id": "scene_47",
+          "image_id": 47,
+          "tipo_midia": "imagem",
+          "asset_key": "four-paws-planted-firmly",
+          "image": "cena_47.png",
+          "visual": {
+            "subject": "gato com as quatro patas rigidamente apoiadas",
+            "action": "gato garantindo o máximo de tração e prontidão",
+            "setting": "chão firme",
+            "framing": "plano de baixo para cima destacando o apoio perfeito das quatro patas",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, base perfeitamente aterrada do gato tabby mackerel laranja e preto pronto para fugir, sem texto"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "paper_flip"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_48",
+      "text": "But when they lift one paw to rest it on your arm...",
+      "scenes": [
+        {
+          "id": "scene_48",
+          "image_id": 48,
+          "tipo_midia": "imagem",
+          "asset_key": "lift-one-paw-rest-fast",
+          "image": "cena_48.png",
+          "visual": {
+            "subject": "gato perdendo a tração de uma das patas",
+            "action": "ato de levantar a pata tirando o equilíbrio perfeito",
+            "setting": "perto do humano",
+            "framing": "plano detalhe acompanhando a pata que se ergue",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto levantando a pata dianteira perdendo o chão, sem texto"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "camera_shutter"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_49",
+      "text": "They instantly cut their escape options and reaction time in half.",
+      "scenes": [
+        {
+          "id": "scene_49",
+          "image_id": 49,
+          "tipo_midia": "imagem",
+          "asset_key": "cut-escape-options-half-fast",
+          "image": "cena_49.png",
+          "visual": {
+            "subject": "postura do gato agora suportada apenas por três patas",
+            "action": "gato apoiado de forma relaxada, sem capacidade de arranque imediato",
+            "setting": "perna do humano servindo de descanso para a quarta pata",
+            "framing": "plano médio enfatizando a postura não-defensiva",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto em três patas relaxado, apoiado no tutor, sem texto"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "fast"
+          },
+          "sounds": {
+            "transition": [
+              "shutter_click"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_50",
+      "text": "In the wild, a cat caught off guard with only three paws grounded could die.",
+      "scenes": [
+        {
+          "id": "scene_50",
+          "image_id": 50,
+          "tipo_midia": "imagem",
+          "asset_key": "caught-off-guard-wild-danger",
+          "image": "cena_50.png",
+          "visual": {
+            "subject": "silhueta assustada de um felino escorregando ou perdendo o bote",
+            "action": "falha na fuga por falta de tração completa",
+            "setting": "cenário escuro e hostil",
+            "framing": "plano geral rápido ilustrando o erro fatal",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto em desvantagem tática imaginária, sem texto"
+          },
+          "transition": {
+            "in": "from_right",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "boxing_bell"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_51",
+      "text": "But in that quiet moment with you, they are not thinking about survival or escape.",
+      "scenes": [
+        {
+          "id": "scene_51",
+          "image_id": 51,
+          "tipo_midia": "imagem",
+          "asset_key": "quiet-moment-no-survival",
+          "image": "cena_51.png",
+          "visual": {
+            "subject": "retorno ao sofá calmo e à pata relaxada no braço do humano",
+            "action": "gato descartando completamente o instinto de fuga",
+            "setting": "sala",
+            "framing": "plano médio da paz entre as duas espécies",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto sereno ignorando o mundo exterior junto ao tutor negro adulto camisa xadrez verde e preta, sem texto"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
             "speed": "normal"
           },
           "sounds": {
@@ -1473,21 +1592,83 @@
       ]
     },
     {
-      "id": "block_47",
-      "text": "Subscribe below and tell us: does your cat march on you?",
+      "id": "block_52",
+      "text": "They are telling you, \"I do not need to run, because I am with you.\"",
       "scenes": [
         {
-          "id": "scene_47",
-          "image_id": 47,
+          "id": "scene_52",
+          "image_id": 52,
           "tipo_midia": "imagem",
-          "asset_key": "subscribe-tell-us",
-          "image": "cena_47.png",
+          "asset_key": "do-not-need-to-run",
+          "image": "cena_52.png",
           "visual": {
-            "subject": "sleek black cat",
-            "action": "sitting calmly and looking directly at the viewer",
-            "setting": "bright, clear background",
-            "framing": "centered medium shot of the cat breaking the fourth wall",
-            "details": "ilustração felina editorial, sleek black cat with yellow eyes and a red collar, no text"
+            "subject": "gato olhando para o tutor com total devoção",
+            "action": "comunicação visual de segurança plena",
+            "setting": "colo do tutor",
+            "framing": "close-up do rosto do gato mirando o humano fora de quadro",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, olhos amarelo-esverdeados do gato tabby mackerel laranja e preto brilhando de confiança, sem texto"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "paper_flip"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_53",
+      "text": "This is the ultimate display of trust, overriding millions of years of biological programming.",
+      "scenes": [
+        {
+          "id": "scene_53",
+          "image_id": 53,
+          "tipo_midia": "imagem",
+          "asset_key": "ultimate-display-trust-overriding",
+          "image": "cena_53.png",
+          "visual": {
+            "subject": "tutor passando a mão na cabeça do gato gentilmente enquanto ele mantém a pata apoiada",
+            "action": "humano validando o sacrifício de confiança do animal",
+            "setting": "sofá",
+            "framing": "plano aberto celebrando a conexão emocional",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, tutor recorrente homem negro adulto com cabelo preto curto cacheado e camisa xadrez verde e preta com sorriso muito feliz e dentes visíveis, gato tabby mackerel laranja e preto encostado, sem texto"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "whoosh_cinematic"
+            ],
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_54",
+      "text": "They are choosing their connection with you over their own instinct to stay safe.",
+      "scenes": [
+        {
+          "id": "scene_54",
+          "image_id": 54,
+          "tipo_midia": "imagem",
+          "asset_key": "connection-over-instinct-safe",
+          "image": "cena_54.png",
+          "visual": {
+            "subject": "gato fechando os olhos confortavelmente enquanto a pata repousa inerte no tutor",
+            "action": "gato dormindo em três patas, entregando a segurança ao humano",
+            "setting": "colo do humano",
+            "framing": "close-up final do rosto do gato dormindo e da pata inativa",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, gato tabby mackerel laranja e preto em paz profunda encostado no tutor negro adulto com camisa xadrez verde e preta, sem texto"
           },
           "transition": {
             "in": "zoom_in",
@@ -1498,10 +1679,38 @@
             "transition": [
               "whoosh_soft"
             ],
-            "context": {
-              "type": "celebration",
-              "at": "start"
-            }
+            "context": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_55",
+      "text": "Subscribe and tell us below: does your cat touch you?",
+      "scenes": [
+        {
+          "id": "scene_55",
+          "image_id": 55,
+          "tipo_midia": "imagem",
+          "asset_key": "cta-subscribe-tell-us",
+          "image": "cena_55.png",
+          "visual": {
+            "subject": "tutor confiante apontando com o polegar enquanto o gato está sentado orgulhoso no ombro dele",
+            "action": "humano e felino chamando a audiência para a comunidade",
+            "setting": "fundo neutro texturizado em tons de ocre",
+            "framing": "plano médio clássico de encerramento, focando na parceria",
+            "details": "ilustração felina editorial, quadrinhos editoriais mestres, contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado, tutor recorrente homem negro adulto com cabelo cacheado, sorriso largo com dentes e camisa xadrez verde e preta, gato tabby mackerel laranja e preto saudável, sem texto"
+          },
+          "transition": {
+            "in": "zoom_in",
+            "out": "none",
+            "speed": "normal"
+          },
+          "sounds": {
+            "transition": [
+              "celebration"
+            ],
+            "context": null
           },
           "annotation": {
             "lines": [

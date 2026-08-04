@@ -17,6 +17,10 @@ PEDIDO
 RESPONDA SOMENTE COM UM OBJETO JSON VÁLIDO.
 Não use Markdown, comentários, explicações, campos extras ou texto antes/depois
 do JSON. Comece estritamente com `{` e termine estritamente com `}`.
+- Toda fala em `blocks[].text` é uma string JSON: se precisar de aspas dentro
+  da fala, use aspas simples ou escape cada aspas dupla como `\"`. Nunca escreva
+  uma fala com aspas duplas internas sem escape, por exemplo:
+  `"text":"It says, \"I am here.\""`.
 
 FORMATO SEM B-ROLL — REGRA ABSOLUTA
 - TODAS as cenas usam `"tipo_midia": "imagem"` e `"image": "cena_XX.png"`.
@@ -238,7 +242,8 @@ CONTRATO EXATO
 
 ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
 1. A resposta é JSON parseável, começa com `{`, termina com `}` e não tem texto
-   externo, campos extras ou Markdown.
+   externo, campos extras ou Markdown. Toda aspas dupla dentro de valores de
+   texto está escapada como `\"` (ou foi substituída por aspas simples).
 2. Cada bloco possui uma única cena; IDs, `image_id`, `asset_key` e `image` são
    únicos e sequenciais quando aplicável.
 3. Todas as cenas são `imagem`, usam `.png` e não existe B-roll, MP4 ou Pexels.
