@@ -17,10 +17,24 @@ PEDIDO
 RESPONDA SOMENTE COM UM OBJETO JSON VÁLIDO.
 Não use Markdown, comentários, explicações, campos extras ou texto antes/depois
 do JSON. Comece estritamente com `{` e termine estritamente com `}`.
-- Toda fala em `blocks[].text` é uma string JSON: se precisar de aspas dentro
-  da fala, use aspas simples ou escape cada aspas dupla como `\"`. Nunca escreva
-  uma fala com aspas duplas internas sem escape, por exemplo:
-  `"text":"It says, \"I am here.\""`.
+- **Regra sintática inegociável:** todo valor textual de qualquer campo do JSON
+  (`title`, `text`, `asset_key`, todos os campos de `visual`, `annotation` etc.)
+  é uma string delimitada por aspas duplas. Dentro dela, nunca use aspas duplas
+  literais sem escape. Prefira reescrever sem aspas (ex.: `pela câmera`, não
+  `pela "câmera"`); se a citação for indispensável, escape cada uma como `\"`.
+  Exemplos válidos: `"subject":"olhos focados pela câmera"` e
+  `"text":"It says, \"I am here.\""`. Exemplo proibido:
+  `"subject":"olhos focados pela "câmera""`.
+- Antes de enviar a resposta, faça uma validação sintática silenciosa do objeto
+  inteiro como JSON. Se houver uma aspa dupla literal dentro de um valor, corrija
+  ou escape-a antes de responder; não entregue um rascunho parcialmente válido.
+- **Trava de produção para este canal:** não use o caractere `"` como conteúdo
+  de nenhum valor textual. Não ponha entre aspas apelidos, metáforas, termos,
+  pensamentos, títulos, exemplos ou falas — escreva `defesa tipo armadilha de
+  urso`, jamais `defesa tipo "armadilha de urso"`. As únicas aspas duplas de toda
+  a resposta devem ser as que delimitam chaves e valores na sintaxe JSON. Esta
+  regra elimina a necessidade de escapes e tem prioridade sobre qualquer escolha
+  de estilo de escrita.
 
 FORMATO SEM B-ROLL — REGRA ABSOLUTA
 - TODAS as cenas usam `"tipo_midia": "imagem"` e `"image": "cena_XX.png"`.
@@ -242,8 +256,9 @@ CONTRATO EXATO
 
 ANTES DE RESPONDER, VALIDE SILENCIOSAMENTE:
 1. A resposta é JSON parseável, começa com `{`, termina com `}` e não tem texto
-   externo, campos extras ou Markdown. Toda aspas dupla dentro de valores de
-   texto está escapada como `\"` (ou foi substituída por aspas simples).
+   externo, campos extras ou Markdown. Em **todos** os valores textuais do
+   objeto (não apenas `blocks[].text`), toda aspas dupla interna foi removida,
+   substituída por aspas simples ou escapada como `\"`.
 2. Cada bloco possui uma única cena; IDs, `image_id`, `asset_key` e `image` são
    únicos e sequenciais quando aplicável.
 3. Todas as cenas são `imagem`, usam `.png` e não existe B-roll, MP4 ou Pexels.
