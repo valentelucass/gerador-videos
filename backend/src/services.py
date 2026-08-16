@@ -12,9 +12,15 @@ IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
 VIDEO_EXTENSIONS = {".mp4", ".mov", ".webm"}
 MEDIA_EXTENSIONS = IMAGE_EXTENSIONS | VIDEO_EXTENSIONS
 AUDIO_EXTENSIONS = {".mp3", ".wav", ".m4a", ".aac", ".ogg"}
-# Aceita tanto o nome sugerido "1 - cena" quanto a variação que o Flow
-# costuma baixar, como "1_-_cena_01.png_202607...".
-IMAGE_ID_PREFIX = re.compile(r"^\s*(\d+)(?:\s*[-_]\s*)+(?:[^\s].*)?$")
+# Aceita o nome sugerido "1 - cena", os nomes de placeholder do roteiro
+# ("cena_01") e as variações que o Flow costuma baixar com sufixo de data.
+# O grupo nomeado mantém a extração inequívoca, sem inferir a cena pela ordem
+# de upload.
+IMAGE_ID_PREFIX = re.compile(
+    r"^\s*(?:(?P<label>cena|scene|imagem|image)\s*[-_ ]\s*)?"
+    r"(?P<id>\d+)(?:\s*[-_ ]\s*.*)?\s*$",
+    re.IGNORECASE,
+)
 
 # O roteiro descreve fatos visuais. A linguagem estética é adicionada apenas
 # quando o prompt chega ao Google Flow, para que a mesma cena não carregue
@@ -153,9 +159,9 @@ GENERIC_CONCEPTS = frozenset(
 
 
 def image_id_from_filename(source_name: str) -> int | None:
-    """Extrai o prefixo opcional ``ID - descrição`` de um asset."""
+    """Extrai o ID de ``ID - descrição`` ou de ``cena_XX`` em um asset."""
     match = IMAGE_ID_PREFIX.match(Path(source_name).stem)
-    return int(match.group(1)) if match else None
+    return int(match.group("id")) if match else None
 
 
 def required_asset_name(scene: object) -> str:

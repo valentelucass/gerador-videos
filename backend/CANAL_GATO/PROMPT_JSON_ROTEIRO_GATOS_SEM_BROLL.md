@@ -46,14 +46,10 @@ FORMATO SEM B-ROLL — REGRA ABSOLUTA
 
 CAMPOS DE RAIZ
 - `language`: `pt-BR`, `pl-PL`, `hr-HR`, `en-US`, `es-ES` ou `de-DE`.
-- `narrator_gender`: `male` ou `female`.
-- `voice` é obrigatória e compatível com idioma/gênero. Escolha uma voz
-  permitida: `pt-BR-AntonioNeural`/`pt-BR-FranciscaNeural`,
-  `pl-PL-MarekNeural`/`pl-PL-ZofiaNeural`,
-  `hr-HR-SreckoNeural`/`hr-HR-GabrijelaNeural`,
-  `en-US-GuyNeural`/`en-US-JennyNeural`,
-  `es-ES-AlvaroNeural`/`es-ES-ElviraNeural` ou
-  `de-DE-ConradNeural`/`de-DE-KatjaNeural`.
+- Para os roteiros em inglês deste canal, use obrigatoriamente
+  `"language": "en-US"`, `"narrator_gender": "male"` e
+  `"voice": "en-US-RogerNeural"`. Não use `en-US-GuyNeural` nem
+  `en-US-JennyNeural` neste canal.
 - Use `"background": "black"` e `"background_animation": "movimento_sutil"`.
 - Crie um `title` específico, forte e sem emojis.
 
@@ -225,9 +221,9 @@ CONTRATO EXATO
 {
   "_instrucoes_flow": "Google Flow, gere UMA imagem horizontal 16:9 para TODAS as cenas. Não gere vídeos, MP4s ou B-roll. Trate as imagens como quadros consecutivos de uma história visual clara, em quadrinhos editoriais mestres: contornos pretos pesados, hachuras cruzadas densas, pontos halftone, paleta vintage quente de ocre, verdes profundos e madeira, papel envelhecido texturizado e sem texto. Preserve literalmente em todas as cenas o tutor negro adulto com cabelo preto curto cacheado e camisa xadrez verde e preta, e o gato tabby mackerel laranja e preto com listras definidas e olhos amarelo-esverdeados; o gato nunca é preto sólido.",
   "title": "Por que seu gato amassa cobertores?",
-  "language": "pt-BR",
-  "narrator_gender": "female",
-  "voice": "pt-BR-FranciscaNeural",
+  "language": "en-US",
+  "narrator_gender": "male",
+  "voice": "en-US-RogerNeural",
   "background": "black",
   "background_animation": "movimento_sutil",
   "blocks": [

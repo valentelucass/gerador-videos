@@ -12,6 +12,7 @@ class CatPromptTests(unittest.TestCase):
         self.assertIn("Nunca use “porque ele te ama”", prompt)
         self.assertIn("TODAS as cenas usam `\"tipo_midia\": \"imagem\"`", prompt)
         self.assertIn("CONTRATO EXATO", prompt)
+        self.assertIn('"voice": "en-US-RogerNeural"', prompt)
 
 
 if __name__ == "__main__":

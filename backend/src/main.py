@@ -18,13 +18,14 @@ from tempfile import TemporaryDirectory
 from threading import Lock, Thread
 from uuid import uuid4
 
-from fastapi import BackgroundTasks, FastAPI, File, HTTPException, UploadFile
+from fastapi import BackgroundTasks, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
 from .config import BACKGROUND_DIR, FINAL_OUTPUT_DIR, IMAGE_DIR, MUSIC_DIR, ROOT, SOUND_DIR, VIDEO_DIR, VOICE_PREVIEW_DIR, WORKSPACE
 from .automation_runner import AutomationRunner
+from .flow_automation_runner import FlowAutomationRunner
 from .core.horizontal_renderer import CompositorInterruptedError, narration_duration, preview_scene_timing, render
 from .core.tts_neural import TTSNeuralEngine, VOICE_CATALOG
 from .models import AnimationAutomationRequest, PexelsCandidatesRequest, PexelsDownloadRequest, RenderRequest, Script, TranslationRequest, ValidationRequest
@@ -51,6 +52,7 @@ app.mount("/assets/voice-previews", StaticFiles(directory=VOICE_PREVIEW_DIR), na
 app.mount("/outputs", StaticFiles(directory=FINAL_OUTPUT_DIR), name="outputs")
 LOGGER = logging.getLogger("synthreel.api")
 AUTOMATION = AutomationRunner(ROOT)
+FLOW_AUTOMATION = FlowAutomationRunner(ROOT)
 
 # A fila é intencionalmente exclusiva da esteira horizontal. Um render 1080p
 # abre muitos streams e não pode disputar memória com outro FFmpeg pesado no
@@ -121,16 +123,15 @@ def get_catalog() -> dict[str, object]:
 @app.get("/api/script-prompt", response_class=PlainTextResponse)
 def get_script_prompt(mode: str = "with_broll") -> str:
     """Entrega o contrato de roteiro selecionado pelo operador."""
-    prompt_names = {
-        "with_broll": "PROMPT_JSON_ROTEIRO.md",
-        "without_broll": "PROMPT_JSON_ROTEIRO_SEM_BROLL.md",
-        "psychology_without_broll": "PROMPT_JSON_ROTEIRO_PSICOLOGIA_SEM_BROLL.md",
-        "cats_without_broll": "PROMPT_JSON_ROTEIRO_GATOS_SEM_BROLL.md",
+    prompt_paths = {
+        "with_broll": ROOT / "backend" / "PROMPT_JSON_ROTEIRO.md",
+        "without_broll": ROOT / "backend" / "PROMPT_JSON_ROTEIRO_SEM_BROLL.md",
+        "psychology_without_broll": ROOT / "backend" / "PROMPT_JSON_ROTEIRO_PSICOLOGIA_SEM_BROLL.md",
+        "cats_without_broll": ROOT / "backend" / "CANAL_GATO" / "PROMPT_JSON_ROTEIRO_GATOS_SEM_BROLL.md",
     }
-    prompt_name = prompt_names.get(mode)
-    if prompt_name is None:
+    prompt_path = prompt_paths.get(mode)
+    if prompt_path is None:
         raise HTTPException(status_code=422, detail="Modo de prompt inválido.")
-    prompt_path = ROOT / "backend" / prompt_name
     if not prompt_path.is_file():
         raise HTTPException(status_code=404, detail="O prompt solicitado não foi encontrado no projeto.")
     return prompt_path.read_text(encoding="utf-8")
@@ -315,6 +316,68 @@ def stop_automation() -> dict[str, object]:
 def open_automation_log() -> dict[str, str]:
     try:
         return AUTOMATION.open_log()
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.get("/api/flow-automation")
+def flow_automation_status() -> dict[str, object]:
+    return FLOW_AUTOMATION.status()
+
+
+@app.post("/api/flow-automation/start")
+async def start_flow_automation(flow_txt: UploadFile = File(...), target_url: str = Form(...), resume_existing: bool = Form(True)) -> dict[str, object]:
+    try:
+        return FLOW_AUTOMATION.start(filename=flow_txt.filename or "", contents=await flow_txt.read(), target_url=target_url, resume_existing=resume_existing)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/api/flow-automation/resume-info")
+async def flow_resume_info(flow_txt: UploadFile = File(...)) -> dict[str, object]:
+    try:
+        return FLOW_AUTOMATION.resume_info(filename=flow_txt.filename or "", contents=await flow_txt.read())
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/api/flow-automation/prepare-browser")
+def prepare_flow_browser() -> dict[str, object]:
+    try:
+        return FLOW_AUTOMATION.prepare_browser()
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except (RuntimeError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/api/flow-automation/confirm-selection")
+def confirm_flow_selection() -> dict[str, object]:
+    try:
+        return FLOW_AUTOMATION.confirm_user_selection()
+    except (FileNotFoundError, ValueError, RuntimeError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/api/flow-automation/continue")
+def continue_flow_automation() -> dict[str, object]:
+    try:
+        return FLOW_AUTOMATION.continue_after_group()
+    except (FileNotFoundError, ValueError, RuntimeError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/api/flow-automation/stop")
+def stop_flow_automation() -> dict[str, object]:
+    return FLOW_AUTOMATION.stop()
+
+
+@app.post("/api/flow-automation/open-log")
+def open_flow_automation_log() -> dict[str, str]:
+    try:
+        return FLOW_AUTOMATION.open_log()
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 

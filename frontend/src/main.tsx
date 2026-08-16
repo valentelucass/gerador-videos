@@ -87,6 +87,21 @@ type AnimationAutomationStatus = {
   resume_url: string | null;
   project_id?: string | null;
 };
+type FlowAutomationStatus = {
+  running: boolean;
+  pid: number | null;
+  started_at: number | null;
+  last_return_code: number | null;
+  job_id: string | null;
+  total_scenes: number;
+  completed_scenes: number;
+  completed_videos: number;
+  failed_scenes: string[];
+  message: string;
+  awaiting_continue?: boolean;
+  awaiting_user_selection?: boolean;
+};
+type FlowResumeInfo = { available: boolean; job_id: string | null; completed_scenes: number; total_scenes: number };
 type TimingScene = {
   id: string;
   duration: number;
@@ -289,67 +304,37 @@ function googleFlowText(script: Script, batchSize: number, textStyle: TextStyle)
     .filter(scene => scene.tipo_midia === "imagem")
     .map(scene => ({ blockText: block.text.trim(), scene })));
   const batchCount = Math.ceil(items.length / batchSize);
-  const batches = Array.from({ length: batchCount }, (_, batchIndex) => {
-    const start = batchIndex * batchSize;
-    const batch = items.slice(start, start + batchSize);
-    const firstId = batch[0]?.scene.image_id ?? 0;
-    const lastId = batch.at(-1)?.scene.image_id ?? 0;
-    const body = Array.from({ length: Math.ceil(batch.length / 5) }, (_, groupIndex) => {
-      const group = batch.slice(groupIndex * 5, groupIndex * 5 + 5);
-      const startNumber = groupIndex * 5 + 1;
-      const endNumber = startNumber + group.length - 1;
-      const prompts = group.map(({ blockText, scene }, sceneIndex) => {
-        const visual = scene.visual ?? {};
-        const preset = flowVisualPreset(scene);
-        const number = String(startNumber + sceneIndex).padStart(2, "0");
-        return [
-          `IMAGEM ${number} DE ${String(batch.length).padStart(2, "0")} · REFERÊNCIA FLOW ID ${scene.image_id}`,
-          `Arquivo esperado: ${scene.image}`,
-          `Narração de contexto: ${blockText}`,
-          "Cena:",
-          `- Sujeito: ${visual.subject ?? ""}`,
-          `- Ação: ${visual.action ?? ""}`,
-          `- Ambiente: ${visual.setting ?? ""}`,
-          `- Enquadramento: ${visual.framing ?? ""}`,
-          `- Detalhes: ${visual.details ?? ""}`,
-          `- Preset automático (${preset.kind}): ${preset.preset}`,
-          `- Bloco negativo: ${preset.negative}`,
-        ].join("\n");
-      }).join("\n\n────────────────────────────────────────\n\n");
-      return [
-        "────────────────────────────────────────────────────────────────────────────────",
-        `SUBLOTE ${String(groupIndex + 1).padStart(2, "0")} · GERE EXATAMENTE AS IMAGENS ${String(startNumber).padStart(2, "0")} A ${String(endNumber).padStart(2, "0")} · ${group.length} ITENS`,
-        "Depois destas 5 imagens, pare. Não avance para o próximo sublote sem novo comando.",
-        "────────────────────────────────────────────────────────────────────────────────",
-        "",
-        prompts,
-      ].join("\n");
-    }).join("\n\n\n");
-    const number = String(batchIndex + 1).padStart(2, "0");
-    const header = [
-      "================================================================================",
-      `INÍCIO — LOTE GOOGLE FLOW ${number} · ${batch.length} IMAGENS · FLOW IDs ${firstId}–${lastId}`,
-      "================================================================================",
-      "",
-      "INSTRUÇÕES DE GERAÇÃO — APLICAR A TODAS AS IMAGENS DESTE LOTE",
-      `- Este lote contém EXATAMENTE ${batch.length} imagens solicitadas. Não gere uma imagem para cada número entre os FLOW IDs ${firstId} e ${lastId}.`,
-      "- FLOW ID é somente uma etiqueta de referência; a numeração que vale é IMAGEM 01 DE N até IMAGEM N DE N.",
-      "- Gere somente 5 imagens por vez, seguindo cada SUBLOTE. Ao terminar um sublote, pare e espere um novo comando antes de iniciar o próximo.",
-      "- Siga o brief de cada cena com precisão; não misture cenas, IDs ou personagens.",
-      "- Os cinco campos do brief descrevem apenas conteúdo. Aplique somente o preset automático e o bloco negativo impressos em cada imagem; não acrescente estética, metáforas, objetos flutuantes ou cenários conceituais.",
-      `- Tipografia selecionada para este projeto (${typography.label}): ${typography.flowInstruction} Esta escolha substitui qualquer sugestão genérica de fonte no brief, mas não autoriza texto em toda cena.`,
-      "- Mantenha no máximo dois ou três elementos principais e uma composição simples, fácil de entender.",
-      "- Cenas de vídeo foram removidas intencionalmente: gere somente os itens deste lote.",
-      "",
-      body,
-      "",
-      "================================================================================",
-      `FIM DO LOTE GOOGLE FLOW ${number} · ${batch.length} IMAGENS CONCLUÍDAS`,
-      "================================================================================",
+  const scenes = items.map(({ blockText, scene }, index) => {
+    const visual = scene.visual ?? {};
+    const preset = flowVisualPreset(scene);
+    const number = String(index + 1).padStart(2, "0");
+    const imagePrompt = [
+      "Create exactly one 16:9 horizontal still image, no video and no text.",
+      `Narrative context: ${blockText}`,
+      `Subject: ${visual.subject ?? ""}.`,
+      `Action: ${visual.action ?? ""}.`,
+      `Setting: ${visual.setting ?? ""}.`,
+      `Framing: ${visual.framing ?? ""}.`,
+      `Details: ${visual.details ?? ""}.`,
+      `Visual preset (${preset.kind}): ${preset.preset}.`,
+      `Negative prompt: ${preset.negative}.`,
+      `Typography rule (${typography.label}): ${typography.flowInstruction}`,
+    ].join(" ");
+    const animationPrompt = [
+      "Animate this exact generated image only.",
+      `Show this action naturally: ${visual.action ?? "subtle natural movement"}.`,
+      "Keep the same characters, clothing, environment, framing and visual style.",
+      "Use restrained cinematic motion and a gentle camera move that supports the action.",
+      "Do not add or remove subjects, do not cut to another scene, do not add text, and generate no audio.",
+    ].join(" ");
+    return [
+      `[[SCENE ${number}]]`,
+      `IMAGE: ${imagePrompt}`,
+      `ANIMATION: ${animationPrompt}`,
+      "[[/SCENE]]",
     ].join("\n");
-    return header;
   });
-  return { text: batches.join("\n\n\n\n\n\n\n\n"), imageCount: items.length, batchCount };
+  return { text: scenes.join("\n\n"), imageCount: items.length, batchCount };
 }
 
 function playRenderCompleteSound(): void {
@@ -598,6 +583,13 @@ function App() {
     resume_available: false, resume_url: null, project_id: null, message: "Consultando automação…",
   });
   const [automationBusy, setAutomationBusy] = useState(false);
+  const [flowAutomation, setFlowAutomation] = useState<FlowAutomationStatus>({
+    running: false, pid: null, started_at: null, last_return_code: null, job_id: null,
+    total_scenes: 0, completed_scenes: 0, completed_videos: 0, failed_scenes: [],
+    message: "Valide o roteiro para ativar o Google Flow.",
+  });
+  const [flowAutomationBusy, setFlowAutomationBusy] = useState(false);
+  const [flowTargetUrl, setFlowTargetUrl] = useState(() => window.localStorage.getItem("synthreel.flowTargetUrl") ?? "");
   const animationImageNames = uploadedImages.filter(filename => /\.(?:jpg|jpeg|png|webp)$/i.test(filename));
   const [mediaTab, setMediaTab] = useState<MediaTab>("assets");
   const [musicPreviewPlaying, setMusicPreviewPlaying] = useState(false);
@@ -688,6 +680,84 @@ function App() {
     }
   };
 
+  const refreshFlowAutomation = async () => {
+    try {
+      setFlowAutomation(await api<FlowAutomationStatus>("/api/flow-automation"));
+    } catch {
+      setFlowAutomation(current => ({ ...current, message: "Google Flow indisponível; inicie o backend." }));
+    }
+  };
+
+  const flowAutomationCommand = async (command: "prepare-browser" | "start" | "restart" | "stop" | "open-log" | "confirm-selection" | "continue") => {
+    setFlowAutomationBusy(true);
+    try {
+      let init: RequestInit = { method: "POST" };
+      if (command === "start" || command === "restart") {
+        const activeScript = parseScript(source, false);
+        if (!activeScript || !flowExportReady) {
+          setStatus("Valide o JSON antes de ativar o Google Flow.");
+          return;
+        }
+        const flowText = googleFlowText(activeScript, flowBatchSize, textStyle);
+        if (!flowText.imageCount) {
+          setStatus("Este roteiro não possui cenas de imagem para enviar ao Google Flow.");
+          return;
+        }
+        const body = new FormData();
+        const targetUrl = flowTargetUrl || window.prompt("Cole o link EXATO do projeto/chat aberto no Google Flow:");
+        if (!targetUrl?.trim()) {
+          setStatus("A automação só começa depois que você informar o link exato do chat no Google Flow.");
+          return;
+        }
+        if (!flowTargetUrl) {
+          const savedTargetUrl = targetUrl.trim();
+          setFlowTargetUrl(savedTargetUrl);
+          window.localStorage.setItem("synthreel.flowTargetUrl", savedTargetUrl);
+        }
+        const filename = `google-flow_${fileSlug(activeScript.title)}_${flowText.imageCount}-imagens_lotes-${flowBatchSize}.txt`;
+        const flowFile = new File([flowText.text], filename, { type: "text/plain;charset=utf-8" });
+        const resumeBody = new FormData();
+        resumeBody.append("flow_txt", flowFile);
+        const resume = await api<FlowResumeInfo>("/api/flow-automation/resume-info", { method: "POST", body: resumeBody });
+        const resumeExisting = command === "restart"
+          ? false
+          : resume.available
+          ? window.confirm(`Há um ponto salvo deste roteiro: ${resume.completed_scenes}/${resume.total_scenes} cenas concluídas.\n\nOK: continuar de onde parou.\nCancelar: começar este roteiro do zero.`)
+          : false;
+        body.append("flow_txt", flowFile);
+        body.append("target_url", targetUrl.trim());
+        body.append("resume_existing", String(resumeExisting));
+        init = { method: "POST", body };
+      }
+      const endpoint = command === "restart" ? "start" : command;
+      const result = await api<FlowAutomationStatus | { path: string }>(`/api/flow-automation/${endpoint}`, init);
+      if ("running" in result) setFlowAutomation(result);
+      else await refreshFlowAutomation();
+      setStatus(
+        command === "prepare-browser"
+          ? "Chrome Flow preparado. Abra manualmente o projeto/chat desejado e só então ative o Flow."
+          : command === "confirm-selection"
+            ? "Chat confirmado; a automação está começando."
+            : command === "continue"
+              ? "Próximo grupo de 25 liberado."
+          : command === "restart"
+            ? "Novo começo confirmado: checkpoint anterior não será usado."
+            : command === "start"
+            ? ("running" in result && !result.running
+              ? result.message
+              : "Google Flow ativado na aba Chrome já aberta.")
+            : command === "stop"
+              ? "Google Flow interrompido; checkpoint preservado."
+              : "Log do Google Flow aberto.",
+      );
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Não foi possível executar o Google Flow.");
+      await refreshFlowAutomation();
+    } finally {
+      setFlowAutomationBusy(false);
+    }
+  };
+
   const automationCommand = async (command: "start" | "resume" | "stop" | "open-log") => {
     if ((command === "start" || command === "resume") && !animationImageNames.length) {
       setStatus("Envie ao menos uma imagem em Mídias das cenas antes de animar.");
@@ -722,12 +792,18 @@ function App() {
   };
 
   useEffect(() => { void refreshCatalog(); }, []);
+  useEffect(() => { void refreshFlowAutomation(); }, []);
   useEffect(() => {
     void refreshAutomation();
     if (!automation.running) return;
     const timer = window.setInterval(() => { void refreshAutomation(); }, 3_000);
     return () => window.clearInterval(timer);
   }, [automation.running]);
+  useEffect(() => {
+    if (!flowAutomation.running) return;
+    const timer = window.setInterval(() => { void refreshFlowAutomation(); }, 3_000);
+    return () => window.clearInterval(timer);
+  }, [flowAutomation.running]);
 
   // Apaga somente a chave antiga que causava miniaturas fantasma. A lista de
   // arquivos enviados deixa de sobreviver a recarregamentos da página.
@@ -1630,6 +1706,15 @@ function App() {
             <button className="button quiet compact" disabled={automationBusy} onClick={() => void automationCommand("open-log")}>Log IA</button>
             {!automation.running && automation.resume_available && <button className="button quiet compact" disabled={automationBusy} onClick={() => void automationCommand("resume")}>Retomar Vibes</button>}
             <button className={`button compact ${automation.running ? "danger" : "primary"}`} disabled={automationBusy} onClick={() => void automationCommand(automation.running ? "stop" : "start")}>{automationBusy ? "Aguarde…" : automation.running ? "Parar IA" : "Animar IA"}</button>
+          </div>
+          <div className="automation-actions flow-automation-actions" aria-label="Controles da automação Google Flow">
+            <span className={`automation-indicator${flowAutomation.running ? " running" : ""}`} title={flowAutomation.message}><i />Flow {flowAutomation.completed_scenes}/{flowAutomation.total_scenes}</span>
+            {!flowAutomation.awaiting_user_selection && <button className="button quiet compact" disabled={flowAutomationBusy || flowAutomation.running} onClick={() => void flowAutomationCommand("prepare-browser")} title="Abre o Chrome na página inicial do Flow; você escolhe manualmente o projeto e o chat.">Abrir Chrome Flow</button>}
+            {flowAutomation.awaiting_user_selection && <button className="button compact primary" disabled={flowAutomationBusy} onClick={() => void flowAutomationCommand("confirm-selection")}>Confirmar chat Flow</button>}
+            {flowAutomation.awaiting_continue && <button className="button compact primary" disabled={flowAutomationBusy} onClick={() => void flowAutomationCommand("continue")}>Continuar de onde parou</button>}
+            {flowAutomation.awaiting_continue && <button className="button compact danger" disabled={flowAutomationBusy || !flowExportReady} onClick={() => void flowAutomationCommand("restart")} title="Inicia o roteiro atual do zero, sem aproveitar o checkpoint pausado.">Recomeçar do zero</button>}
+            <button className="button quiet compact" disabled={flowAutomationBusy || !flowAutomation.job_id} onClick={() => void flowAutomationCommand("open-log")}>Log Flow</button>
+            {!flowAutomation.awaiting_continue && <button className={`button compact ${flowAutomation.running ? "danger" : "primary"}`} disabled={flowAutomationBusy || (!flowAutomation.running && !flowExportReady)} onClick={() => void flowAutomationCommand(flowAutomation.running ? "stop" : "start")} title={flowAutomation.running ? "Interromper e preservar o checkpoint" : "Pergunta se deseja retomar o checkpoint ou iniciar do zero."}>{flowAutomationBusy ? "Aguarde…" : flowAutomation.running ? "Parar Flow" : "Ativar Flow"}</button>}
           </div>
           <button className="button quiet" onClick={() => void validate()}>Validar</button>
           {hasBrollScenes && <button className="button quiet" disabled={pexelsBusy} onClick={() => void searchPexels()}>{pexelsBusy ? "Buscando…" : "Buscar B-roll"}</button>}

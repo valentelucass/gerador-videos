@@ -41,6 +41,11 @@ button, select { cursor: pointer; }
 .automation-indicator i { width: 7px; height: 7px; border-radius: 50%; background: #687481; box-shadow: 0 0 0 2px #68748124; }
 .automation-indicator.running { color: #a7e7bd; }
 .automation-indicator.running i { background: #65db8a; box-shadow: 0 0 12px #65db8aa8; animation: automation-pulse 1.25s ease-in-out infinite; }
+.flow-automation-actions .automation-indicator { color: #9bc6ff; }
+.flow-automation-actions .automation-indicator.running { color: #b9dbff; }
+.flow-automation-actions .automation-indicator i { background: #4b86d6; box-shadow: 0 0 0 2px #4b86d624; }
+.flow-automation-actions .automation-indicator.running i { background: #69a8ff; box-shadow: 0 0 12px #69a8ffa8; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; clip-path: inset(50%); }
 @keyframes automation-pulse { 50% { transform: scale(1.35); opacity: .62; } }
 
 .brand { font-size: .88rem; font-weight: 760; letter-spacing: .04em; text-transform: uppercase; }

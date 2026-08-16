@@ -1,0 +1,9 @@
+[[SCENE 01]]
+IMAGE: 16:9 horizontal editorial illustration. Describe only the exact still image for scene 01; no text, no video, no audio.
+ANIMATION: Preserve the original image exactly: same character, design, environment, composition, lighting and 2D style. Add only the specified subtle movement. No audio. No text.
+[[/SCENE]]
+
+[[SCENE 02]]
+IMAGE: 16:9 horizontal editorial illustration. Describe only the exact still image for scene 02; no text, no video, no audio.
+ANIMATION: Preserve the original image exactly: same character, design, environment, composition, lighting and 2D style. Add only the specified subtle movement. No audio. No text.
+[[/SCENE]]
