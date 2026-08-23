@@ -14,7 +14,7 @@ The `[i]` tag MUST be the first character of the line. Each input text block/lin
 
 # 2. ANCHOR CATALOG AND RULES
 Use EXACTLY these tags and no others to invoke characters:
-`[United States]`, `[Brazil]`, `[Russia]`, `[China]`, `[Israel]`, `[Iran]`, `[UN]`, `[United Kingdom]`, `[France]`, `[North Korea]`, `[Venezuela]`, `[Argentina]`, `[Japan]`, `[South Africa]`, `[Standard Security]`, `[Poor]`, `[Reporter]`, `[Arrows]`, `[Typography]`.
+`[United States]`, `[Brazil]`, `[Russia]`, `[China]`, `[Israel]`, `[Iran]`, `[UN]`, `[United Kingdom]`, `[France]`, `[North Korea]`, `[Venezuela]`, `[Argentina]`, `[Japan]`, `[South Africa]`, `[Standard Security]`, `[Poor]`, `[Reporter]`, `[Arrows]`, `[Typography]`, `[Mexico]`, `[Canada]`, `[Vietnam]`.
 
 *   **Anti-Human Invocation Rule:** To prevent AI from drawing real politicians instead of the 2D cat, ALWAYS describe the action by joining the species to the tag. Mandatory example: `The 2D doodle cat representing [United States] is frozen...`
 *   **General Action:** Use fully frozen impact actions (`frozen in panic`, `glaring intensely`). NEVER mention legs. Cats must NEVER have more than 4 paws.
@@ -24,6 +24,12 @@ Use EXACTLY these tags and no others to invoke characters:
 
 # 3. SCENE TYPES AND ART DIRECTION
 Alternate intelligently among these scene types to create rhythm and avoid visual fatigue.
+
+## 3.1. MANDATORY SCENE DISTRIBUTION
+- At least 60% of all scene blocks in the supplied SRT MUST be either `[CURSED CAT SHOT]` or `[SATELLITE MAP B-ROLL]`. Favor `[CURSED CAT SHOT]` whenever a character, reaction, consequence, or analogy can make the explanation clearer.
+- Use `[CLEAN B-ROLL]` and `[CLEAN TEXT CARD]` as supporting interruptions, never as the dominant visual language. Together, they may occupy only the remaining 40% or less.
+- NEVER use more than 3 `[CLEAN TEXT CARD]` scenes consecutively. After a maximum run of three text cards, the next scene MUST be a cat shot, a satellite map, or a clean B-roll.
+- When two text cards appear consecutively, make the following non-text scene visually specific and information-rich, not a generic filler image.
 
 *   **THE OPENING JOKE (Mandatory in Block 1):** When text mentions "melted brain", "TikTok", or "dancing", SCENE 1 MUST show a ridiculous cat (e.g., `The 2D doodle cat representing [Poor] is frozen in a ridiculous dancing pose staring blankly at a smartphone`). Introduce geopolitical cats ONLY from block 2 onward.
 *   **[CURSED CAT SHOT]:** Photorealistic background. Cat in `Medium Shot`, physically interacting with the 3D world (mud, table, etc.).
